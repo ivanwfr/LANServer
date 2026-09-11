@@ -1,0 +1,119 @@
+[
+  {
+    "text": "*** LISTE SAUVEGARDEE LE 10 Septembre 2016",
+    "timestamp": 1789030030565,
+    "checked": true
+  },
+  {
+    "text": "1. standout note_row:\n+ enter or mouseover\n+ table border-collapse\n+ fewer visible rows\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "2. Make status_line bigger onclick (3-steps: bright-big-dimm).\nAlso, remove the fancy cursive font!\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "3. Add current file name and the number of notes in `note_SUMMARY`\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "4. Button-Font on tablet wont show utf-8 arrows\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "5. Adjust ellipsis of note_div-text when input-textarea size is dragged.\n...showing more or less content:\n.truncated {\nwhite-space   :   nowrap;\noverflow      :   hidden;\ntext-overflow : ellipsis;\n/* width must be determinate, e.g., 100% of parent or fixed px */\n}\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "6. [id_wh]\nWhen the input-textarea has been adjuted during the edition of a note\n, save input width as a note attribute.\n..that's too much!\nSaving `input` and `saved_notes_DIV` id_wh is good enough\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "7. Find out why the green or blue check-bullet is not visible for some notes,...as for the \"Unexpected Keyboard\" message below.\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "8. save_input on visibilitychange\nto resume editing on getting back\n- standout is not working when saving a new note\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "9. save_note_button should restore last edited note\n1/2 - add an \"edit_note_button\" or\n2/2 - turn save_button into edit_note\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "10. \"from server\" should read \"loaded from server\"\n2. status_msg: \"in sync with server note\" should become status_tail_1\n...(replacing \"loaded from server\")\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "11. standout should make all note_row buttons wider\nSOLVED BY whole table hoverring\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "12. timestamp happens to wrap on 2 lines...\n- should get white-space: no-wrap\n...that was it!\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "13. status_msg: \"in sync with server note\" should become status_tail_1\n...thus, replacing \"loaded from server\"\n...see also update_summary...\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "14. standout is not working when saving a new note\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "15. `save_button` should show the note number (#n) for a new node\nwhen `input` is not empty\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "16. sandout note_row should change background color when:\n1. editing a note (note # ECC background)\n2. last saved note cleared from input => green outline or (note color)\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "17. standout new first note after deleting the perviously first note\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "18. tics_status seems bugged with cent bullet\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "19. checked is dropped by Save Note\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "20. Long-press for tooltips\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "21. Save input content before note_3_onclick_export\nto show centered PLACEHOLDER_EXPORT_CB\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "22. Store and load last saved_notes_DIV and input height when reesized\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "23. add a sarollIntoView when resuming an edit at load time\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "2r4. narr_button ● wide_button to work with both\nnote_input_TEXTAREA and\nsaved_notes_DIV\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "25. input unsaved content is not save when edit is called\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "25. DETAILS open-close sub-DETAILS needs a margin-left on tablet\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "26. DETAILS open-close sub-DETAILS\nneeds a margiVersion\n",
+    "timestamp": 1789030097247
+  },
+  {
+    "text": "27. TWIDDLER 3\thttps://www.mytwiddler.com/doc/doku.php?id=specialchords\nChord\t\tAction\n--------\t------\nN+S 0000\tHold during power up. Runs factory boot code (x.xxb) so that firmware can be updated\nN+S R000 *\tReset the Bluetooth Pairing\nN+S 0R00\tPrint the Firmware Version\nN+S 00R0 **\tToggle Test Mode. Prints a test message every 8 seconds\nN+S 000R\tProgram Flash memory from twiddler.hex\nN+S M000\tLoad factory Default Chord map until next power cycle\nN+S 0M00\tPrint Battery Status (Range:\n= vcc=96=3.7v (100% charge)\n= vcc=114=2.8v (0% charge)\nN+S 00M0\tToggle untethered-recording mode (v0.12+ firmware)\nN+S 000M\tPrint recorded data (v0.12+ firmware)\n",
+    "timestamp": 1789030097247
+  }
+]

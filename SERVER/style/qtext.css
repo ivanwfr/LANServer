@@ -1,0 +1,36 @@
+/*┌──────────────────────────────────────────────────────────────────────────┐*/
+/*│ style/qtext.css ● $APROJECTS/iwintoo/USR          ● _TAG (260911:20h:20) │*/
+/*└──────────────────────────────────────────────────────────────────────────┘*/
+BODY      { background-color: #111; }
+BODY      {    margin-bottom:  10%; }
+BODY      {    margin-bottom:  50%; }
+
+BODY *    {      font-family: monospace; }
+
+A:link    {            color: #8FF; }
+A:visited {            color: #F0F; }
+
+                     DETAILS { background-color :    #000; }
+                     SUMMARY { background-color :    #008; }
+ DETAILS:not([open])>SUMMARY { background-color :    #22B; }
+                         PRE { background-color :    #002; }
+
+                     SUMMARY { color            :    #FFA; }
+                         PRE { color            :    #FFA; }
+
+ DETAILS { cursor      : pointer; }
+ DETAILS { cursor      : pointer; }
+ SUMMARY { user-select :    none; }
+
+ DETAILS {
+  margin        :          0.2em;
+  border        : 2px solid #AAA;
+  border-radius :          1.0em;
+  width         :    fit-content;
+  padding       :          0.5em;
+ }
+
+ /* summary fills its closed details */
+  DETAILS:not(open)         { padding: 0.0em; }
+  DETAILS:not(open)>SUMMARY { padding: 0.5em 1.0em; border-radius: 1em;         outline: 2px solid #AAA; }
+  DETAILS:open     >SUMMARY {                       border-radius: 1em 1em 0 0;                          }
