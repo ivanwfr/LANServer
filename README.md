@@ -1,12 +1,12 @@
-# Vimium - The Hacker's Browser
+# **LANServer** — A Local Desktop files personal server
 
 **LANServer** — Local Area Network
 
 WIP early stage
 
-Server a dektop hard drive file on a private Wi-Fi network.
+Access any files from a Windows Desktop using a device browser on a private Wi-Fi network.
 
-# RUNNING FROM from the repository root.
+# It runs from this repository root folder.
 
 * The `server_loop_84_447.sh` script will run in a Restart loop when it fails in a terminal.
 
