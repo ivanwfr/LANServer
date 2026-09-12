@@ -55,7 +55,7 @@ Access any files from a Windows Desktop using a device browser on a private Wi-F
 # Embedded scripts:
 
 * custom mime types can be configured to be embedded into an HTML formatted response.
-* Some files, containing Vim-styl-markers `{{{` and `}}}` are equiped with
+* Some files, containing Vim-style-markers `{{{` and `}}}` are equiped with
 javascript tooling to turn fold sections into DETAILS-SUMMARY HTML equivalent.
 
 * At load time, `js_linkify.js` embeded into the page header will adjust the page layout.
