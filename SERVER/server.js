@@ -1,8 +1,8 @@
 //┌──▼▼▼▼▼▼────────────────────────────────────────────────────────────────────┐
-//│ [SERVER]                                   ● $APROJECTS/iwintoo/USR/SERVER │
+//│ [SERVER]                                     ● $APROJECTS/LANServer/SERVER │
 //├──▲▲▲▲▲▲────────────────────────────────────────────────────────────────────┤
 //  $AHK/P.txt                                  🟤 HIDCONTROL/DOC/kb.html
-//✔ $APROJECTS/iwintoo/USR/SERVER/server.js     🔴 https://192.168.1.14:447
+//✔ $APROJECTS/LANServer/SERVER/server.js     🔴 https://192.168.1.14:447
 //  $INPUTDIR/TWIDDLER/CFG/CONVERT/P.txt        🟠 Twiddler
 //  $INPUTDIR/TWIDDLER/GitHub/P.txt             🟡 layout_browser
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 const SERVER_JS_ID  = "server";
-const SERVER_JS_TAG = SERVER_JS_ID  +" (260912:01h:21)";
+const SERVER_JS_TAG = SERVER_JS_ID  +" (260912:17h:04)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -2091,11 +2091,14 @@ let post_callback = function(request,response)
 
     request.on("end", () => {
 
-try {
-        body = decodeURIComponent(body);
-} catch(err) {
-    console.warn(err);
-}
+//{{{
+//try {
+//        body = decodeURIComponent(body);
+//} catch(err) {
+//    console.warn(err);
+//console.log(R+"* post_callback ● body:\n"+ body);
+//}
+//}}}
 //console.log(M+"2 decodeURIComponent ● body:\n"+body);
 
 /*{{{
