@@ -1,5 +1,9 @@
-BAK
-*.zip
-*.vim
-*.lnk
+LAN
+STORAGE
+Download
+node_modules
 ARCHIVES*
+*BAK*
+*.lnk
+*.vim
+*.zip
