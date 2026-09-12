@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 const SERVER_JS_ID  = "server";
-const SERVER_JS_TAG = SERVER_JS_ID  +" (260910:16h:58)";
+const SERVER_JS_TAG = SERVER_JS_ID  +" (260912:01h:21)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -920,7 +920,7 @@ log_B("  ┌──────────────────────�
     //│ SERVER: [CONTROL]                                                      │
     //└────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
-    if( lib_postgres )
+//  if( lib_postgres )
     {
         if( !consumed_by) consumed_by = server_request_data_io   .request_data_io    ( args );
         if( !consumed_by) consumed_by = server_request_js_script .request_js_script  ( args );
