@@ -1,7 +1,7 @@
 { "PORT_HTTP"          :  84
 , "PORT_HTTPS"         : 447
-,  "KEY_PEM"           : "../../KEYSTORE/server/privkey.pem"
-, "CERT_PEM"           : "../../KEYSTORE/server/fullchain.pem"
+,  "KEY_PEM"           : "../KEYSTORE/server/privkey.pem"
+, "CERT_PEM"           : "../KEYSTORE/server/fullchain.pem"
 
 , "HOST"               : "localhost"
 , "PORT"               : 5432
