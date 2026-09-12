@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/iwintoo/USR/SERVER     ● _TAG (260910:18h:57) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260910:18h:57) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
