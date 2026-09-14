@@ -1,10 +1,12 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260913:18h:57) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260914:03h:57) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true */ /*{{{*/
+
+/* global js_fold */
 
 /*}}}*/
 let js_linkify  = (function() {
@@ -279,6 +281,11 @@ let fold_open_012 = function(e,state)
     while(container && (container.tagName !=  "DETAILS")) container = container.parentElement;
     if(  !container || (container.tagName !=  "DETAILS")) return false; // may bubble up
 
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ PREVENT CLOSING DETAILS                                                │
+    //└────────────────────────────────────────────────────────────────────────┘
+    js_fold.set_shiftLatched(  true );
+
     container.open = true;
     let el_array = container.querySelectorAll("DETAILS");
     let    count = 0;
@@ -297,6 +304,7 @@ let fold_open_012 = function(e,state)
         if( e.preventDefault           ) event.preventDefault          ();
     }
 console.log("%c "+ (count ? count:"NO") +" fold"+ (count>1 ? "s":"") +" "+ ((state==0) ? "closed" : ((state==1) ? "opened":"toggled") +" "), "background-color: "+BG[count]);
+
     return count;
 };
 /*}}}*/
