@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260914:00h:46) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260914:17h:57) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //│                                                                            │
@@ -1317,32 +1317,53 @@ let note_scrollIntoView = function(index=-1)
     if( tr )
         tr.classList.add("standout");
 
-    let urdl = get_tr_vis_URDL(tr);
-if(log_this) console.log(((urdl.dy==0) ? "✓" : (urdl.dy>0) ? "▲":"▼") +" urdl.visible: "+urdl.visible+"\t dy=["+urdl.dy+"]");//FIXME
-
-    if(!urdl.visible )
-        tr.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" }); // 'start center center nearest'
+    scroll_TR_intoView(tr);
 };
 /*}}}*/
-/*_ get_tr_vis_URDL {{{*/
-let get_tr_vis_URDL = function(tr)
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ Scrolls a TR into the visible area of its scrolled ancestor                │
+//└────────────────────────────────────────────────────────────────────────────┘
+/*_ scroll_TR_intoView {{{*/
+let scroll_TR_intoView = function(tr)
 {
-    let   p_rect =  saved_notes_DIV.getBoundingClientRect();
-    let     rect =  tr.getBoundingClientRect();
+if(tag_this) console.log("%c 🟣scroll_TR_intoView: %c"+ellipsis(tr.innerText.trim(),50), "color: magenta", "background-color:black");
 
-    let        U = (rect.top    <=  p_rect.top                    ); // partially off top
-    let        R = (rect.right  <   p_rect.left                   );
-    let        D = (rect.bottom >= (p_rect.top    + p_rect.height)); // partially off bot
-    let        L = (rect.left   >  (p_rect.left   + p_rect.width ));
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ Get the nearest scrollable ancestor (vertical only, predictable DOM)   │
+    //└────────────────────────────────────────────────────────────────────────┘
+    let        box = getClosestScrollableAncestor( tr );
+    if(       !box ) return;
 
-    let visible = !(U || R || D || L);
-    let dy = U       ? (rect.bottom                  )
-        :    D       ? (rect.top - window.innerHeight)
-        :               0;
+    let   row_rect =  tr.getBoundingClientRect();
+    let   box_rect = box.getBoundingClientRect();
 
-    return { visible, dy };
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ Scroll [parent top] near [row top]                                     │
+    //└────────────────────────────────────────────────────────────────────────┘
+    let offset_old = row_rect.top - box_rect.top;
+    let offset_new =   offset_old - box_rect.height/2;
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ requestAnimationFrame to make sure the DOM has updated                 │
+    //│ when this is triggered by a dynamic event                              │
+    //└────────────────────────────────────────────────────────────────────────┘
+    requestAnimationFrame(() => {
+        box.scrollTo({ top: offset_new, behavior: "smooth" });
+    });
 };
 /*}}}*/
+/*_ getClosestScrollableAncestor {{{*/
+let getClosestScrollableAncestor = function(el)
+{
+    return (el == document.documentElement)
+            ? null
+            : ( el.scrollHeight > el.clientHeight)
+              ? el
+              : getClosestScrollableAncestor(el.parentElement);
+};
+/*}}}*/
+
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ update_summary ● FILE NAME ● NUMBER OF NOTE ● FROM SERVER OR CLIENT        │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -1760,11 +1781,12 @@ if(log_this) console.log( buffer );
     navigator.clipboard.writeText( buffer );
 };
 /*}}}*/
+/*{{{
 /* ● ellipsis {{{*/
-/*let ellipsis = function(str, n)
-/*{
-/*    return str.length > n ? str.slice(0, n - 1) + "…" : str;
-/*};
+let ellipsis = function(str, n)
+{
+    return str.length > n ? str.slice(0, n - 1) + "…" : str;
+};
 /*}}}*/
 /* ● escapeHtml {{{*/
 let escapeHtml = function(text)
