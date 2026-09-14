@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260910:18h:57) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260913:18h:57) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -90,10 +90,11 @@ let colorize_details = function()
 
         // PARENT ATTRIBUTE FOR NEXT CHILD [color_num]
         el.parentElement.setAttribute("color_num", color_num);      // update parent next attr
+        el.classList.add(                     "bg"+color_num);
 
         // STYLE
         el.firstElementChild.style.          color = FG[color_num]; //FG[depth+1];
-        el.firstElementChild.style.backgroundColor = BG[color_num]; //BG[depth+1];
+      //el.firstElementChild.style.backgroundColor = BG[color_num]; //BG[depth+1];
         el.firstElementChild.style.fontWeight      = 900;
         el.firstElementChild.style.fontSize        = "120%";
     }
@@ -116,7 +117,7 @@ let format_summary_comments = function()
 
         //}}}
         // COPY TO CLIPBOARD AND FOLDING BUTTONS {{{
-        if( el.innerHTML.trim() )
+//      if( el.innerHTML.trim() ) // FOLD_OPEN comments with no text may have DETAILS children
             el.innerHTML
                 = el.innerHTML
                 + "<em "
@@ -144,23 +145,40 @@ let format_summary_comments = function()
 };
 /*}}}*/
 /*➔ copy_summary_text {{{*/
+/*{{{*/
+let note_input_TEXTAREA;
+/*}}}*/
 let copy_summary_text = function(e)
 {
+    e.cancelBubble = true;
     // SUMMARY
+/*{{{
     let text
         = e.target.parentElement
         .   childNodes[0].textContent
         .   substr(1).trim();  // skip button name
+}}}*/
+    let summary = e.target.closest("SUMMARY");
+    let details = summary.parentElement;
+    if(!note_input_TEXTAREA)  note_input_TEXTAREA = document.getElementById("note_input_TEXTAREA");
 
-    // CLIPBOARD
+    // TEXT SOURCE
+    let text
+        =  (details.id == "note_DETAILS")
+        &&  note_input_TEXTAREA
+        ?   note_input_TEXTAREA.value   // [NOTE    TEXT TO CLIPBOARD]
+        :   summary.textContent;        // [SUMMARY TEXT TO CLIPBOARD]
+
+    // COPY TO RELEVANT TEXT AREA
+    let ta = note_input_TEXTAREA || details.querySelector("TEXTAREA");
+
+    // APPEND TEXT TO TEXTAREA
+    if( ta && (details.id != "note_DETAILS"))
+        ta.value += (ta.value ? "\n":"") + text;
+
+    // COPY TO CLIPBOARD
     navigator.clipboard.writeText( text );
 
-    // TEXTAREA
-    let ta = document.getElementById("note_input_TEXTAREA");
-    if( ta ) ta.value += (ta.value ? "\n":"") + text;
-
-    // CONSOLE
-    else     console.log( text );
 };
 /*}}}*/
 /*_ linkify_file_pathes {{{*/

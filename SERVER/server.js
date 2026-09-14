@@ -1,18 +1,18 @@
 //┌──▼▼▼▼▼▼────────────────────────────────────────────────────────────────────┐
 //│ [SERVER]                                     ● $APROJECTS/LANServer/SERVER │
 //├──▲▲▲▲▲▲────────────────────────────────────────────────────────────────────┤
-//  $AHK/P.txt                                  🟤 HIDCONTROL/DOC/kb.html
-//✔ $APROJECTS/LANServer/SERVER/server.js     🔴 https://192.168.1.14:447
-//  $INPUTDIR/TWIDDLER/CFG/CONVERT/P.txt        🟠 Twiddler
-//  $INPUTDIR/TWIDDLER/GitHub/P.txt             🟡 layout_browser
+//│  $AHK/P.txt                                  🟤 HIDCONTROL/DOC/kb.html     │
+//│✔ $APROJECTS/LANServer/SERVER/server.js       🔴 https://192.168.1.14:447   │
+//│  $INPUTDIR/TWIDDLER/CFG/CONVERT/P.txt        🟠 Twiddler                   │
+//│  $INPUTDIR/TWIDDLER/GitHub/P.txt             🟡 layout_browser             │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true */ /*{{{*/
 
 /* eslint-disable no-warning-comments */
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-const SERVER_JS_ID  = "server";
-const SERVER_JS_TAG = SERVER_JS_ID  +" (260912:17h:04)";
+    const SERVER_JS_ID  = "server";
+    const SERVER_JS_TAG = SERVER_JS_ID  +" (260914:00h:57)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -128,8 +128,11 @@ A:visited {            color: #F0F; }
 /*    SCRIPT_QTEXT {{{*/
 const SCRIPT_QTEXT = ""
     + "<meta name='color-scheme' content='light only'>"
+    + "<script src='/scripts/js_folds.js'  ></script>"
+    + "<script src='/scripts/js_store.js'  ></script>"
+    + "<script src='/scripts/js_xpath.js'  ></script>"
     + "<script src='/scripts/js_linkify.js'></script>"
-    + "<script src='/scripts/js_notes.js'></script>"
+    + "<script src='/scripts/js_notes.js'  ></script>"
     ;
 /*}}}*/
 /*    STYLE_QTEXT {{{*/
@@ -601,6 +604,7 @@ log_B(                    file_name.replace(/.*[\\\/]/,"")    );
         if (file_name.endsWith("ahk"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("awk"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("vim"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("txt"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
     }
     /*}}}*/
     return (file_name.endsWith("html"   )) ? HTML_RESPONSE_HEADER
@@ -734,16 +738,40 @@ if(log_this) console.log("response_200_header=["+response_200_header["Content-Ty
               && !file_name.match(/\.htm/)
               ) {
                 data = String(data)
+                // html entities
                     .  replace(                /</gm, "&lt;"                                )
                     .  replace(                />/gm, "&gt;"                                )
+                // foldings
                     .  replace(/(.*{{ *{.*)\r*\n*/gm, "<details><summary>$1</summary><pre>" )
                     .  replace(/(.*}} *}.*)\r*\n*/gm,                   "$1</pre></details>")
+                // remove vim fold markers
                     .  replace(      / *;* *{{ *{/gm, " "                                   )
                     .  replace(      / *;* *}} *}/gm, " "                                   )
-                    .  replace(  /(\n|\r) *\/\/ */gm, "\n"                                  )
-                    .  replace(  /^ *\/\/ */        , "\n"                                  ) // the very first
-                    .  replace(            /\/\/┌/gm, "┌"                                   )
-                  //.  replace(            /\/\/┌/gm, "┌"                                   )
+                // box
+/*{{{
+                    .  replace(           /\/\/┌/gm , "TOP┌")
+                    .  replace(           /\/\/│/gm , "MID│")
+                    .  replace(           /\/\/└/gm , "BOT└")
+}}}*/
+/*{{{
+                    .  replace(           /\/\/┌/gm , "🟤🔴🟠┌")
+                    .  replace(           /\/\/│/gm , "🟤🔴🟠│")
+                    .  replace(           /\/\/└/gm , "🟤🔴🟠└")
+}}}*/
+
+                    .  replace(           /\/\/ *(┌.*$)/gm , "<BOX>$1</BOX>")
+                    .  replace(           /\/\/ *(│.*$)/gm , "<BOX>$1</BOX>")
+                    .  replace(           /\/\/ *(└.*$)/gm , "<BOX>$1</BOX>")
+
+                    .  replace(           /\/\/ *(├.*$)/gm , "<BOX>$1</BOX>")
+                    .  replace(           /\/\/ *(┼.*$)/gm , "<BOX>$1</BOX>")
+                    .  replace(           /\/\/ *(┤.*$)/gm , "<BOX>$1</BOX>")
+
+                    .  replace(          /[└┘┌┐│─├┼┤]/gm , " "           )
+
+                // comments
+                    .  replace( /[\n\r]( *)\/\/ */gm, "\n$1")
+                    .  replace(        /^ *\/\/ */  , "\n"  )
                 ;
             }
             else if( log_this) {
@@ -2134,7 +2162,7 @@ return { request_data_io };
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ REQUEST COMMAND         🟡 server_request_commands  🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡 │
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
+/* request... {{{*/
 let server_request_commands = (function() {
 /*_ request_I18N_ACTIVE {{{*/
 let request_I18N_ACTIVE = function(args)

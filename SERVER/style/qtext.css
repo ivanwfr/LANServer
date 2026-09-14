@@ -1,36 +1,91 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (260912:18h:12) │*/
+/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (260913:19h:38) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
+/* BODY {{{*/
 BODY      { background-color: #111; }
 BODY      {    margin-bottom:  10%; }
 BODY      {    margin-bottom:  50%; }
-
 BODY *    {      font-family: monospace; }
-
+/*}}}*/
+/* A {{{*/
 A:link    {            color: #8FF; }
 A:visited {            color: #F0F; }
+/*}}}*/
 
-                     DETAILS { background-color :    #000; }
-                     SUMMARY { background-color :    #008; }
- DETAILS:not([open])>SUMMARY { background-color :    #22B; }
-                         PRE { background-color :    #002; }
+/* ECC background outline {{{*/
+.bg0>SUMMARY            { background-color: #10101080 !important; }
+.bg1>SUMMARY            { background-color: #964B0080 !important; }
+.bg2>SUMMARY            { background-color: #FF000080 !important; }
+.bg3>SUMMARY            { background-color: #FFA50080 !important; }
+.bg4>SUMMARY            { background-color: #FFFF0080 !important; }
+.bg5>SUMMARY            { background-color: #9ACD3280 !important; }
+.bg6>SUMMARY            { background-color: #6495ED80 !important; }
+.bg7>SUMMARY            { background-color: #EE82EE80 !important; }
+.bg8>SUMMARY            { background-color: #A0A0A080 !important; }
+.bg9>SUMMARY            { background-color: #FFFFFF80 !important; }
 
-                     SUMMARY { color            :    #FFA; }
-                         PRE { color            :    #FFA; }
+.bg0>SUMMARY, .bg0>PRE  {          outline: 1px solid #80808080; }
+.bg1>SUMMARY, .bg1>PRE  {          outline: 1px solid #964B0080; }
+.bg2>SUMMARY, .bg2>PRE  {          outline: 1px solid #FF000080; }
+.bg3>SUMMARY, .bg3>PRE  {          outline: 1px solid #FFA50080; }
+.bg4>SUMMARY, .bg4>PRE  {          outline: 1px solid #FFFF0080; }
+.bg5>SUMMARY, .bg5>PRE  {          outline: 1px solid #9ACD3280; }
+.bg6>SUMMARY, .bg6>PRE  {          outline: 1px solid #6495ED80; }
+.bg7>SUMMARY, .bg7>PRE  {          outline: 1px solid #EE82EE80; }
+.bg8>SUMMARY, .bg8>PRE  {          outline: 1px solid #A0A0A080; }
+.bg9>SUMMARY, .bg9>PRE  {          outline: 1px solid #FFFFFF80; }
 
- DETAILS { cursor      : pointer; }
- DETAILS { cursor      : pointer; }
- SUMMARY { user-select :    none; }
+/*}}}*/
+/* BOX {{{*/
+BOX { display             : inline-block;                            }
+BOX { margin              : 0 0 0 0em;                               }
+BOX { border-collapse     : collapse;                                }
+BOX { border-left         : 8px solid #ffffff88;                     }
+BOX { background          : linear-gradient(to right, #6665, #0001); }
+BOX { padding             : 0;                                       }
+BOX { color               : #AAA;                                    }
+/*}}}*/
 
- DETAILS {
-  margin        :          0.2em;
-  border        : 2px solid #AAA;
-  border-radius :          1.0em;
-  width         :    fit-content;
-  padding       :          0.5em;
- }
+/* cursor user-select transition {{{*/
+SUMMARY                     { user-select   : none;                           }
+DETAILS                     { cursor        : pointer;                        }
+DETAILS                     { transition    : margin           300ms ease-in; }
+SUMMARY                     { transition    : background-color 300ms ease-in; }
+/*}}}*/
+/* margin {{{*/
+DETAILS:open                { margin            : 1em; }
+PRE                         { margin            : 0px; }
+/*}}}*/
+/* width {{{*/
+DETAILS                     { width             : fit-content;     }
+/*}}}*/
+/* border {{{*/
+DETAILS                     { border-radius     : 0em 1em 1em 0em; }
+DETAILS:not(open)  >SUMMARY { border-radius     : 0em 1em 1em 0em; }
+DETAILS:open                { border-radius     : 0.5em;             }
+DETAILS:open       >SUMMARY { border-radius     : 0.5em 0.5em 0em 0em; }
+DETAILS:open        PRE     { border-radius     : 0em 0em 0.5em 0.5em; }
 
- /* summary fills its closed details */
-  DETAILS:not(open)         { padding: 0.0em; }
-  DETAILS:not(open)>SUMMARY { padding: 0.5em 1.0em; border-radius: 1em;         outline: 2px solid #AAA; }
-  DETAILS:open     >SUMMARY {                       border-radius: 1em 1em 0 0;                          }
+DETAILS>SUMMARY             { border-left       : 8px solid #0004; }
+DETAILS:open       >SUMMARY { border-left       : 0;               }
+/*}}}*/
+/* padding {{{*/
+DETAILS                     { padding           :       0.5em; }
+DETAILS             PRE     { padding           :       0.2em; }
+DETAILS:not(open)           { padding           :       0.0em; }
+DETAILS:not(open)  >SUMMARY { padding           : 0.5em 1.0em; }
+/*}}}*/
+/* font {{{*/
+DETAILS:open>SUMMARY        { font-weight     : 100   !important; }
+DETAILS:open>SUMMARY        { color           : white !important; }
+/*}}}*/
+/* color {{{*/
+DETAILS:open       >SUMMARY { background-color  : #333  !important; }
+DETAILS:open        PRE     { background-color  : #222 ;            }
+DETAILS:not([open])>SUMMARY { background-color  : #22B ; }
+SUMMARY                     { background-color  : #008 ; }  /* overridden by js_linkify */
+
+SUMMARY                     {            color  : #FFA ; }
+PRE                         {            color  : #FFA ; }
+/*}}}*/
+

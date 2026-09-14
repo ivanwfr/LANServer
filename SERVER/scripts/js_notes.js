@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/iwintoo/USR/SERVER     ● _TAG (260911:20h:22) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260914:00h:46) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //│                                                                            │
@@ -17,10 +17,10 @@ let tag_this = true;//false || log_this;
 const EDITING_NOTE_NUM       = "editing_note_num";
 const NOTES_DETAILS_CSS_DATA = "data:text/css,"+ encodeURIComponent (`
 /* scrollbar {{{*/
-#note_input_TEXTAREA                                { scrollbar-width :      thin; }
-#note_input_TEXTAREA                                { scrollbar-color : #DDD #666; }
-#saved_notes_DIV                                    { scrollbar-width :      thin; }
-#saved_notes_DIV                                    { scrollbar-color : #DDD #666; }
+#note_input_TEXTAREA                                { scrollbar-width :       thin; }
+#note_input_TEXTAREA                                { scrollbar-color : #DDD #6666; }
+#saved_notes_DIV                                    { scrollbar-width :       thin; }
+#saved_notes_DIV                                    { scrollbar-color : #DDD #6666; }
 /*}}}*/
 /* [saved_notes_TABLE] TD WIDTH {{{*/
 /*{{{
@@ -29,6 +29,7 @@ const NOTES_DETAILS_CSS_DATA = "data:text/css,"+ encodeURIComponent (`
 /* saved_notes_DIV {{{*/
 #saved_notes_DIV {
     margin-top      : 1rem;
+    padding-right   :  5px; /* offsets the scrollbar from the outline */
     width           : 100%;
 min-width           : 100%; /* ...to grow with textarea */
 
@@ -47,7 +48,7 @@ min-height          : 8em;
 /* saved_notes_TABLE ● FIRST AND LAST NOTES ROW LAYOUT {{{*/
 #saved_notes_TABLE>tbody {
     border-radius   : 1em;
-    outline         : 2px solid #FF08;
+    outline         : 2px solid #7778;
     outline-offset  :-2px;
 }
 
@@ -58,7 +59,7 @@ min-height          : 8em;
 #saved_notes_TABLE>tbody tr:last-child     { border-radius: 0em 0em 1em 1em; }
 
 #saved_notes_TABLE>tbody tr:first-child    { background: linear-gradient(to bottom, #8884 30%, #4444 30%, #222); }
-#saved_notes_TABLE>tbody tr:last-child     { background: linear-gradient(to top   , #8884 30%, #4444 30%, #222); }
+#saved_notes_TABLE>tbody tr:last-child     { background: linear-gradient(to bottom, #8884 30%, #4444 30%, #222); }
 /*}}}*/
 /* saved_notes_TABLE ● COLUMNS LAYOUT {{{*/
 #saved_notes_TABLE TD:nth-of-type( 1) {     width:  2em; } /* check     */
@@ -68,8 +69,8 @@ min-height          : 8em;
 #saved_notes_TABLE TD:nth-of-type( 5) {     width:  2em; } /* delete    */
 
 /*}}}*/
-/* saved_notes_TABLE EM {{{*/
-#saved_notes_TABLE .no_notes_yet { color: #888; }
+/* saved_notes_TABLE no_notes_yet {{{*/
+#saved_notes_TABLE .no_notes_yet_TD { text-align: center; color: #888; font-style: italic; }
 /*}}}*/
 /*}}}*/
 /* [narr_button ● wide_button] {{{*/
@@ -80,11 +81,15 @@ min-height          : 8em;
 #wide_button::after  { content: "> > > >"; }
 
 /*}}}*/
-#note_DETAILS   { /*{{{*/
+#note_DETAILS { /*{{{*/
     margin-top      : 2rem;
     border          : 1px solid #ccc;
     border-radius   : 6px;
     padding         : 1rem;
+}
+#note_DETAILS.empty>SUMMARY>EM {
+    opacity         : 0.2 !important;
+    rotate          : -45deg;
 }
 /*}}}*/
 #note_DETAILS>SUMMARY { /*{{{*/
@@ -376,19 +381,6 @@ const BG = [ /* eslint-disable-line no-unused-vars */
 let onload = function()
 {
     // Save unfinished Notes when the user is leaving the tab {{{
-    /*┌────────────────────────────────────────────────────────────────────────┐*/
-    /*│                                                                        │*/
-    /*└────────────────────────────────────────────────────────────────────────┘*/
-    /*┌────────────────────────────────────────────────────────────────────────┐*/
-    /*│                                                                        │*/
-    /*├────────────────────────────────────────────────────────────────────────┤*/
-    /*│                                                                        │*/
-    /*└────────────────────────────────────────────────────────────────────────┘*/
-    /*┌───────────────────────────┬────────────────────────────────────────────┐*/
-    /*│ 🟤🔴🟠🟡🟢🔵🟣⚫⚪️ ←▲▶▼◀→ │                                            │*/
-    /*├───────────────────────────┼────────────────────────────────────────────┤*/
-    /*│ 1 2 3 4 5 6 7 8 9         │                                            │*/
-    /*└───────────────────────────┴────────────────────────────────────────────┘*/
     document.addEventListener("visibilitychange", function(e) {
         if( document.hidden )
         {
@@ -487,6 +479,7 @@ let add_notes_DETAILS = function()
 
     note_DETAILS                    = document.createElement("DETAILS");
     note_DETAILS.id                 = "note_DETAILS";
+    note_DETAILS.className          = "empty";
     note_DETAILS.innerHTML          = NOTE_DETAILS_HTML;
 
     document.body.appendChild( note_DETAILS );
@@ -498,8 +491,9 @@ let add_notes_DETAILS = function()
     saved_notes_TABLE= document.getElementById("saved_notes_TABLE");
 
     input            = document.getElementById("note_input_TEXTAREA");
-    input.addEventListener("input" , input_listener);
-//  input.addEventListener("change" , change_listener);
+  //input.addEventListener("input" , input_listener);
+    TextAreaAPI.on        ( input  , input_listener);
+  //input.addEventListener("change" , change_listener);
     resize_observe( input );
 
     save_note_BUTTON = document.getElementById("save_note_BUTTON");
@@ -509,7 +503,7 @@ let add_notes_DETAILS = function()
     //}}}
 };
 /*}}}*/
-//_ layout_notes {{{
+//_ layout_notes — 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯ {{{
 /*{{{*/
 let layout_count = 0;
 
@@ -543,12 +537,12 @@ if(log_this) console.log("🔴%c layout_notes ← "+ _caller, "color: #F00");
 + "</TR>"
 ).join("")
 
-        : "<TR><TD><em class='no_notes_yet'>No notes yet.</em></TD></TR";
+        : "<TR><TD class='no_notes_yet_TD' colspan='5'>No notes yet</TD></TR";
 
     saved_notes_TABLE.innerHTML = "<TABLE id='saved_notes_TABLE'>"+ innerHTML +"</TABLE>";
     /*}}}*/
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ IF "No Notes yet" → layout_notes will be called with next load results │
+    //│ IF "No notes yet" → layout_notes will be called with next load results │
     //└────────────────────────────────────────────────────────────────────────┘
     layout_count += 1;
     tail_status(tics_status(layout_count), notes.get_notes_loaded_from());//FIXME recyle/count symbol
@@ -1078,8 +1072,7 @@ let note_5_onclick_edit = function(e,index)
        ; node_row =   node_row.parentElement
        );
 
-    input.value
-        = node_row.getAttribute("title");
+    input.value = node_row.getAttribute("title");
 
     // EDITING A [checked] NOTE (OR NOT)
     if( get_checked(index)) input.classList.add   ("checked");
@@ -1420,14 +1413,18 @@ let input_listener = function(e)
 {
 if(log_this) console.log("input_listener: "+ e.type);
 
+console.log(`Value changed: "${e.detail.oldValue}" → "${e.detail.newValue}"`);
+
     if( input.value.trim() )
     {
         notes.reset_input_placeholder();
         notes.save_note_auto( e );
+        note_DETAILS.classList.remove("empty");
     }
     else {
         notes.note_1_onclick_save( { type: "auto_save" } ); // text cleared ...worth a synchronized update
         reset_input();
+        note_DETAILS.classList.add   ("empty");
     }
 };
 /*}}}*/
@@ -1515,12 +1512,16 @@ if(log_this) console.log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x 
     note_DETAILS.open = true;
 };
 /*}}}*/
-///*  change_listener {{{*/
+/*  change_listener {{{*/
 //let change_listener = function(e)
 //{
-//if(log_this) console.log("change_listener: "+ e.type);
+//console.log("change_listener: "+ e.type);
+//    if(e.target.value)
+//        note_DETAILS.classList.remove("empty");
+//    else
+//        note_DETAILS.classList.add   ("empty");
 //};
-///*}}}*/
+/*}}}*/
 /*  load_input {{{*/
 let load_input = function()
 {
@@ -1600,6 +1601,153 @@ let reset_input = function()
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
+//│ TextAreaAPI                                                             🔴 │
+//└────────────────────────────────────────────────────────────────────────────┘
+//{{{
+let TextAreaAPI = (function()
+{
+//┌──────────────────────────────────────────────────────────────────────────┐
+//│ CUSTOM EVENT
+//└──────────────────────────────────────────────────────────────────────────┘
+  //┌────────────────────────────────────────────────────────────────────────┐
+  //│ INITILIZE
+  //└────────────────────────────────────────────────────────────────────────┘
+//  //{{{
+//  let textarea = document.getElementById("myTextarea");
+//  if(!textarea)
+//      throw new Error("TextAreaAPI: Element #myTextarea not found");
+
+//  let listeners = new Set();
+
+//  //}}}
+    let textarea;
+
+  //┌────────────────────────────────────────────────────────────────────────┐
+  //│ UNIFIED DISPATCH FUNCTION
+  //└────────────────────────────────────────────────────────────────────────┘
+  //{{{
+
+  let notifyChange = function(oldValue, newValue)
+  {
+    let event = new CustomEvent("ta_ev", {
+      bubbles: true,
+      detail: { oldValue, newValue }
+    });
+    textarea.dispatchEvent( event );
+  };
+  //}}}
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ 1. HANDLE USER INPUT (NATIVE)
+    //└────────────────────────────────────────────────────────────────────────┘
+    /*_ ta_evListener {{{*/
+    let ta_evListener = function(e) /* eslint-disable-line no-unused-vars */
+    {
+        //┌────────────────────────────────────────────────────────────────────────┐
+        //│ We don't have "oldValue" in native input events, so we store it
+        //│ Actually, we can just use e.target.value and rely on the listener to know the new value.
+        //│ But for full parity, let's use a property descriptor to get the old value cleanly.
+        //└────────────────────────────────────────────────────────────────────────┘
+
+        //┌────────────────────────────────────────────────────────────────────────┐
+        //│ Simpler approach: Just pass the new value and let the listener compare if needed
+        //│ OR: Use the descriptor trick for perfect parity.
+        //└────────────────────────────────────────────────────────────────────────┘
+
+        //┌────────────────────────────────────────────────────────────────────────┐
+        //│ Let's use the descriptor trick for perfect parity (Old/New)
+        //└────────────────────────────────────────────────────────────────────────┘
+        let currentVal = textarea.value;
+
+        //┌────────────────────────────────────────────────────────────────────────┐
+        //│ We need to know what it was before this input event.
+        //│ Since 'input' fires *after* the DOM update, we can't get the 'old' value easily
+        //│ without a stored reference or a descriptor.
+        //└────────────────────────────────────────────────────────────────────────┘
+
+        //┌────────────────────────────────────────────────────────────────────────┐
+        //│ EASIEST PURE JS WAY: Just trigger the event with the new value.
+        //│ The listener can compare against a stored state if needed.
+        //└────────────────────────────────────────────────────────────────────────┘
+        notifyChange(textarea.dataset.prevValue || "", currentVal);
+        textarea.dataset.prevValue = currentVal;
+
+    };
+    /*}}}*/
+
+  //┌────────────────────────────────────────────────────────────────────────┐
+  //│ 2. HANDLE CODE CHANGES (CENTRALIZED SETTER)
+  //└────────────────────────────────────────────────────────────────────────┘
+  //{{{
+  let setValue = function(val)
+  {
+      let oldVal = textarea.value;
+      if( oldVal === val) return;
+
+      textarea.value = val;
+
+      //┌────────────────────────────────────────────────────────────────────┐
+      //│ Update stored prev value for next 'input' event
+      //└────────────────────────────────────────────────────────────────────┘
+      textarea.dataset.prevValue = val;
+
+      notifyChange(oldVal, val);
+  };
+  //}}}
+
+  //┌────────────────────────────────────────────────────────────────────────┐
+  //│ 3. Public API
+  //└────────────────────────────────────────────────────────────────────────┘
+  //{{{
+  return {
+
+    //┌──────────────────────────────────────────────────────────────────────┐
+    //│ GET SET
+    //└──────────────────────────────────────────────────────────────────────┘
+    get value()      { return textarea.value; },
+    set value(val)   { setValue( val ); },
+
+    //┌──────────────────────────────────────────────────────────────────────┐
+    //│ SUBSCRIBE—UNSUBSCRIBE ● returns the un-subscribe function
+    //└──────────────────────────────────────────────────────────────────────┘
+    on: (ta, fn) => { textarea = ta;
+                      textarea.addEventListener   ("ta_ev", fn);
+                      textarea.addEventListener   ("input", ta_evListener);
+      return () =>    textarea.removeEventListener("ta_ev", fn);
+    }
+  };
+  //}}}
+
+})();
+
+//}}}
+//" Usage example {{{
+
+//    //┌────────────────────────────────────────────────────────────────────────┐
+//    //│ Initialize listener
+//    //└────────────────────────────────────────────────────────────────────────┘
+//    let unsubscribe = TextAreaAPI.on(input, (e) => {
+//      console.log(`Value changed: "${e.detail.oldValue}" → "${e.detail.newValue}"`);
+//    });
+
+//    //┌────────────────────────────────────────────────────────────────────────┐
+//    //│ Change via code (Triggers listener)
+//    //└────────────────────────────────────────────────────────────────────────┘
+//    TextAreaAPI.value = "Hello World";
+
+//    //┌────────────────────────────────────────────────────────────────────────┐
+//    //│ User types in the box (Triggers listener)
+//    //│ User types "Test" -> Listener fires: "Hello World" -> "Hello WorldTest"
+//    //└────────────────────────────────────────────────────────────────────────┘
+
+//    //┌────────────────────────────────────────────────────────────────────────┐
+//    //│ Stop listening
+//    //└────────────────────────────────────────────────────────────────────────┘
+//    unsubscribe();
+
+//    "}}}
+
+//┌────────────────────────────────────────────────────────────────────────────┐
 //│ UTIL                                                                       │
 //└────────────────────────────────────────────────────────────────────────────┘
 //{{{
@@ -1656,6 +1804,7 @@ let escapeHtml = function(text)
         , print_note  : (index) =>             notes.get_nArray()[index].text
         , escape_note : (index) => escapeHtml( notes.get_nArray()[index].text )
         , tail_status
+        , tapi        : TextAreaAPI
 };
 //}}}
 })();
