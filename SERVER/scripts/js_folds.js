@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260914:01h:58) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260914:17h:50) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -11,8 +11,8 @@
 /*}}}*/
 let js_fold = (function() {
 //"use strict";
-let log_this = true;//false;
-let tag_this = true;//false || log_this;
+let log_this = false;
+let tag_this = false || log_this;
 
 // ┌───────────────────────────────────────────────────────────────────────────┐
 // │ LOAD ● UNLOAD                                                             │
@@ -54,6 +54,11 @@ if(tag_this) console.log("⚫ %c js_fold.onload:", lbB);
 let load_details_open_state = function()
 {
 if(tag_this) console.log("\t%c...load_details_open_state()", lb0);
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ PREVENT CLOSING DETAILS ● so we can open more than one                 │
+    //└────────────────────────────────────────────────────────────────────────┘
+    js_fold.set_shiftLatched(  true );
 
     let details_array   = document.querySelectorAll("DETAILS");
     for(let details_idx = 0; details_idx < details_array.length; ++details_idx)
@@ -172,7 +177,12 @@ if(log_this) console.log("⚫ %c js_fold.load_containers_scrollTop:", lbB);
 
     xpath_scrollTop_array.forEach((             xpath_scrollTop          ) => {
         let el = js_xpath.get_nodeXPath_target( xpath_scrollTop.xpath    );
+        if( el )
             el.scrollTo({ top:                  xpath_scrollTop.scrollTop , behavior: "smooth" }); // show the adjustment
+        else {
+console.log("js_fold: localStorage_delItem("+key+")");
+            js_store.localStorage_delItem( key );
+        }
     });
 };
 /*}}}*/
@@ -205,6 +215,11 @@ if(log_this) console.log("⚫ %c js_fold.details_update_click_listeners:", lbB);
                 toggle_details_open_state (event);
                 save_details_open_state();
             });
+
+            // SUMMARY CLICK SHIFT TRACKER
+            el = el.firstElementChild;
+            el.addEventListener("click"     , track_pendingShift, true             ); // capture, so it"s recorded even if something stops propagation later
+            el.addEventListener("touchstart", track_pendingShift, { passive: true });
         }
     });
     if( some_listener_added.length )
@@ -215,7 +230,6 @@ if(tag_this) console.log("⚫ %c js_fold: "+ some_listener_added.split("\n").len
 /*}}}*/
 
         load_details_open_state();
-        document.addEventListener("click", track_pendingShift, true); // capture, so it"s recorded even if something stops propagation later
     }
 };
 /*}}}*/
@@ -267,7 +281,11 @@ if(log_this) console.log("⚫ %c js_fold._get_nextContainer:", lbB);
 //│ TOGGLE EVENT                                                              │
 //└───────────────────────────────────────────────────────────────────────────┘
 /*_ track_pendingShift {{{*/
+/*{{{*/
 let       pendingShift;
+let       shiftLatched;
+let       lastTouchCount = 0;
+/*}}}*/
 let track_pendingShift = function(e)
 {
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -280,7 +298,33 @@ let track_pendingShift = function(e)
     if(!details || details.tagName !== "DETAILS")
         return;
 
-    pendingShift = e.shiftKey;
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ Capture the number of fingers                                          │
+    //└────────────────────────────────────────────────────────────────────────┘
+    if(e.type == "touchstart")
+    {
+        lastTouchCount = e.touches.length;
+        e.preventDefault();  // stop scrolling while multitouching
+    }
+    else if (e.type == "click")
+    {
+        if((e.pointerType == "touch") || (lastTouchCount > 0))
+        {
+            pendingShift = lastTouchCount >= 2;
+            lastTouchCount = 0;
+        }
+        else {
+            pendingShift = e.shiftKey;
+        }
+    }
+};
+/*}}}*/
+/*_ latch_pendingShift {{{*/
+let set_shiftLatched = function(state, delay=500)
+{
+    shiftLatched  = state;
+    if( shiftLatched )
+        setTimeout(() => shiftLatched = false, delay);
 };
 /*}}}*/
 /*_ toggle_details_open_state {{{*/
@@ -297,7 +341,7 @@ let toggle_details_open_state = function(e)
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ SHIFT TO KEEP OTHER DETAILS OPEN    ● (toggle event has no e.shiftKey) │
     //└────────────────────────────────────────────────────────────────────────┘
-    let shiftKey = pendingShift;
+    let shiftKey = pendingShift || shiftLatched;
     pendingShift = false; // consume it
 
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -384,6 +428,7 @@ const lbB  = lb0 +"font-size: 150%; border-radius: 1em; padding: 0 1em; border: 
 /* EXPORT {{{*/
 return { name : "js_fold"
         , onload
+        , set_shiftLatched
     // DEBUG
     , load_details_open_state
     , save_details_open_state
