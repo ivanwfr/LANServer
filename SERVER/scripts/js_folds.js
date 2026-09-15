@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260914:17h:50) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260915:02h:17) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -12,15 +12,15 @@
 let js_fold = (function() {
 //"use strict";
 let log_this = false;
-let tag_this = false || log_this;
+let tag_this = true;//false || log_this;
 
-// ┌───────────────────────────────────────────────────────────────────────────┐
-// │ LOAD ● UNLOAD                                                             │
-// └───────────────────────────────────────────────────────────────────────────┘
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟤 LOAD ● UNLOAD                                                           │
+//└────────────────────────────────────────────────────────────────────────────┘
 /*● onload {{{*/
 let onload = function(e) /* eslint-disable-line no-unused-vars */
 {
-if(tag_this) console.log("⚫ %c js_fold.onload:", lbB);
+if(tag_this) console.log("⚫ %c js_fold.onload:", lbB+lb1);
 
 //{{{
 /* eslint-disable no-undef */
@@ -37,134 +37,147 @@ if(tag_this) console.log("⚫ %c js_fold.onload:", lbB);
     setTimeout(load_details_open_state       , 1500);
     setTimeout(load_containers_scrollTop     , 2000);
 
-    window  .addEventListener("beforeunload" , save_containers_scrollTop);
+    window  .addEventListener("beforeunload" , save_containers_scrollTop_handler);
 };
 /*}}}*/
 
-// ┌───────────────────────────────────────────────────────────────────────────┐
-// │ DETAILS OPEN STATE             ● SAVED WHEN TOGGLED ● LOADED BACK ON LOAD │
-// ├───────────────────────────────────────────────────────────────────────────┤
-// │ NOTE: each time any single DETAILS open state is toggled,                 │
-// │ all the PAGE DETAILS state will be saved here into localStorage.          │
-// │                                                                           │
-// │ This means that, even when the DOM structure is reconfigured              │
-// │ by STORAGE_formatter, a single DETAILS toggle will keep all in sync.      │
-// └───────────────────────────────────────────────────────────────────────────┘
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ NOTE ABOUT USING XPATH AS A UNIQ ELEMENT IDENTIFIER                        │
+//└────────────────────────────────────────────────────────────────────────────┘
+/*{{{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ The DETAILS toggle listener will call this storage updater function        │
+//│ that will save all open state into localStorage.                           │
+//│ This means that, even when the DOM structure changes between two sessions  │
+//│ the next details toggle will synchronize open states.                      │
+//└────────────────────────────────────────────────────────────────────────────┘
+}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🔴 DETAILS OPEN STATE          ● SAVED WHEN TOGGLED ● LOADED BACK ON LOAD  │
+//└────────────────────────────────────────────────────────────────────────────┘
+/*○ save_details_open_state {{{*/
+
+/* debounce timeout {{{*/
+let SAVE_DETAILS_OPEN_STATE_DELAY = 500;
+let save_details_open_state_timeout;
+let save_details_open_state = function()
+{
+    if(save_details_open_state_timeout) clearTimeout( save_details_open_state_timeout );
+       save_details_open_state_timeout =  setTimeout( save_details_open_state_handler , SAVE_DETAILS_OPEN_STATE_DELAY);
+};
+/*}}}*/
+
+let save_details_open_state_handler = function()
+{
+/*{{{*/
+if(tag_this) console.log("⚫ %c js_fold.save_details_open_state_handler:", lbB+lb3);
+
+    save_details_open_state_timeout = null;
+/*}}}*/
+    /* Build an array of details XPath {{{*/
+    let val_array = [];
+    document.querySelectorAll("DETAILS,DIV").forEach((el) => {
+        if( el.open )
+        {
+            let xpath = js_xpath.get_nodeXPath( el );
+            val_array.push({ xpath , open: el.open });
+
+if(tag_this) console.log(" 🟠 %c"+xpath, "background-color:black");
+        }
+    });
+    /*}}}*/
+    /* set localStorage {{{*/
+    let key = "xpath_details_open_array";
+    if(     val_array.length )
+    {
+        let val = JSON.stringify( val_array );
+        js_store.localStorage_setItem( key, val);
+    }
+    else {
+        js_store.localStorage_delItem( key );
+    }
+    /*}}}*/
+};
+/*}}}*/
 /*○ load_details_open_state {{{*/
 let load_details_open_state = function()
 {
-if(tag_this) console.log("\t%c...load_details_open_state()", lb0);
+if(tag_this) console.log("⚫ %c js_fold.load_details_open_state:", lbB+lb3);
+
+    //┌───────────────────────────────────────────────────────────────┐
+    //│ RESTORE        ● store details open state from [localStorage] │
+    //└───────────────────────────────────────────────────────────────┘
+    let key = "xpath_details_open_array";
+    let val = js_store.localStorage_getItem( key );
+    if(!val) return;
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PREVENT CLOSING DETAILS ● so we can open more than one                 │
     //└────────────────────────────────────────────────────────────────────────┘
     js_fold.set_shiftLatched(  true );
 
-    let details_array   = document.querySelectorAll("DETAILS");
-    for(let details_idx = 0; details_idx < details_array.length; ++details_idx)
-    {
-//if(log_this) console.log("load_details_open_state: "+ details_idx);
+    JSON.parse( val ).forEach((item) => {
+        let el = js_xpath.get_nodeXPath_target( item.xpath );
+        if( el ) {                    el.open = item.open;
 
-        let storage_key = "details_"+ details_idx +"_is_open";
-
-        if(js_store.localStorage_getItem( storage_key ))
-        {
-if(log_this) console.log("✓ "+storage_key);
-
-            details_array[details_idx].open = true;
-//{{{
-//            let    el  = details_array[details_idx].parentElement;
-//            while( el ) {
-//                if(el.tagName == "DETAILS") el.open = true;
-//                el = el.parentElement;
-//            }
-//}}}
+if(tag_this) console.log(" 🟠 %c"+item.xpath, "background-color:black");
         }
-    }
-    // SOME DETAILS OPENED ● CODE.textContent now populated
-    // ┌───────────────────────────────────────────────────────────────────────┐
-    // │ CustomEvent to STORAGE_formatter     ● CODE.textContent now populated │
-    // └───────────────────────────────────────────────────────────────────────┘
-//  setTimeout(() => {
-if(tag_this) console.log("\t%c...sending custom event to STORAGE_formatter", lb0);
-    document.dispatchEvent(new CustomEvent("details:restored"));
-//  }, 2000);
-
-};
-/*}}}*/
-/*○ save_details_open_state {{{*/
-//{{{
-const SAVE_DETAILS_OPEN_STATE_DELAY = 1000;
-
-let   save_details_open_state_timeout;
-//}}}
-let save_details_open_state = function()
-{
-if(log_this) console.log("⚫ %c js_fold.save_details_open_state:", lbB);
-
-    if( save_details_open_state_timeout ) clearTimeout( save_details_open_state_timeout );
-    /**/save_details_open_state_timeout =   setTimeout(() => {
-        save_details_open_state_timeout = null;
-
-        let     details_array = document.querySelectorAll("DETAILS");
-        for(let details_idx   = 0; details_idx < details_array.length; ++details_idx)
-        {
-            let     details   = details_array[details_idx];
-            let storage_key   = "details_"+ details_idx +"_is_open";
-            if( details.open  ) js_store.localStorage_setItem( storage_key, true );
-            else                js_store.localStorage_delItem( storage_key       );
-        }
-    }, SAVE_DETAILS_OPEN_STATE_DELAY);
-};
-/*}}}*/
-/*_ clear_details_open_state {{{*/
-let clear_details_open_state = function()
-{
-if(log_this) console.log("⚫ %c js_fold.clear_details_open_state:", lbB);
-
-    let     details_array = document.querySelectorAll("DETAILS");
-    for(let details_idx   = 0; details_idx < details_array.length; ++details_idx)
-    {
-        let storage_key = "details_"+ details_idx +"_is_open";
-        js_store.localStorage_delItem( storage_key );
-    }
+    });
 };
 /*}}}*/
 
-// ┌───────────────────────────────────────────────────────────────────────────┐
-// │ CONTAINERS SCROLL TOP                                                     │
-// └───────────────────────────────────────────────────────────────────────────┘
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟠 CONTAINERS SCROLL TOP                                                   │
+//└────────────────────────────────────────────────────────────────────────────┘
 /*○ save_containers_scrollTop {{{*/
+
+/* debounce timeout {{{*/
+let SAVE_CONTAINERS_SCROLLTOP_DELAY = 500;
+let save_containers_scrollTop_timeout;
 let save_containers_scrollTop = function()
 {
-if(log_this) console.log("⚫ %c js_fold.save_containers_scrollTop:", lbB);
+    if(save_containers_scrollTop_timeout) clearTimeout( save_containers_scrollTop_timeout );
+       save_containers_scrollTop_timeout =  setTimeout( save_containers_scrollTop_handler , SAVE_CONTAINERS_SCROLLTOP_DELAY);
+};
+/*}}}*/
+
+let save_containers_scrollTop_handler = function()
+{
+if(tag_this) console.log("⚫ %c js_fold.save_containers_scrollTop_handler:", lbB+lb4);
 
     //┌───────────────────────────────────────────────────────────────┐
     //│ SAVE    ● scrollable-containers-scrollTop into [localStorage] │
     //└───────────────────────────────────────────────────────────────┘
     /* Build an array of { XPath , scrollTop } {{{*/
     let xpath_scrollTop_array = [];
-    document.querySelectorAll("DETAILS,DIV").forEach((el) => {
+    document.querySelectorAll("BODY,DETAILS,DIV").forEach((el) => {
         if( el.scrollTop )
         {
-            xpath_scrollTop_array
-                .push({     xpath: js_xpath.get_nodeXPath( el )
-                      , scrollTop:                         el.scrollTop
-                });
+            let xpath = js_xpath.get_nodeXPath( el );
+            xpath_scrollTop_array.push({ xpath , scrollTop: el.scrollTop });
+
+if(tag_this) console.log(" 🟡 %c"+xpath, "background-color:black");
         }
     });
     /*}}}*/
     /* set localStorage {{{*/
-    let key =                "xpath_scrollTop_array";
-    let val = JSON.stringify( xpath_scrollTop_array );
-    js_store.localStorage_setItem(key, val);
+    let key = "xpath_scrollTop_array";
+    if(        xpath_scrollTop_array.length )
+    {
+        let val = JSON.stringify( xpath_scrollTop_array );
+        js_store.localStorage_setItem( key, val);
+    }
+    else {
+        js_store.localStorage_delItem( key );
+    }
     /*}}}*/
 };
 /*}}}*/
 /*○ load_containers_scrollTop {{{*/
 let load_containers_scrollTop = function()
 {
-if(log_this) console.log("⚫ %c js_fold.load_containers_scrollTop:", lbB);
+if(tag_this) console.log("⚫ %c js_fold.load_containers_scrollTop:", lbB+lb4);
 
     //┌───────────────────────────────────────────────────────────────┐
     //│ RESTORE ● scrollable-containers-scrollTop from [localStorage] │
@@ -173,23 +186,19 @@ if(log_this) console.log("⚫ %c js_fold.load_containers_scrollTop:", lbB);
     let val = js_store.localStorage_getItem( key );
     if(!val) return;
 
-    let xpath_scrollTop_array = JSON.parse( val );
+    JSON.parse( val ).forEach((item) => {
+        let el = js_xpath.get_nodeXPath_target( item.xpath    );
+        if( el ) {           el.scrollTo({ top: item.scrollTop, behavior: "smooth" }); // show the adjustment
 
-    xpath_scrollTop_array.forEach((             xpath_scrollTop          ) => {
-        let el = js_xpath.get_nodeXPath_target( xpath_scrollTop.xpath    );
-        if( el )
-            el.scrollTo({ top:                  xpath_scrollTop.scrollTop , behavior: "smooth" }); // show the adjustment
-        else {
-console.log("js_fold: localStorage_delItem("+key+")");
-            js_store.localStorage_delItem( key );
+if(tag_this) console.log(" 🟡 %c"+item.xpath, "background-color:black");
         }
     });
 };
 /*}}}*/
 
-// ┌───────────────────────────────────────────────────────────────────────────┐
-// │ CLICK EVENT                                                               │
-// └───────────────────────────────────────────────────────────────────────────┘
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟡 CLICK EVENT                                                             │
+//└────────────────────────────────────────────────────────────────────────────┘
 /*○ details_update_click_listeners {{{*/
 let details_update_click_listeners = function()
 {
@@ -225,18 +234,18 @@ if(log_this) console.log("⚫ %c js_fold.details_update_click_listeners:", lbB);
     if( some_listener_added.length )
     {
 /*{{{*/
-if(tag_this) console.log("⚫ %c js_fold: "+ some_listener_added.split("\n").length +" CLICK LISTENERS ADDED", lbB);
+if(tag_this) console.log("⚫ %c js_fold: "+ some_listener_added.split("\n").length +" CLICK LISTENERS ADDED", lbB+lb2);
 //if(log_this) console.log(some_listener_added);
 /*}}}*/
 
-        load_details_open_state();
+      //load_details_open_state(); // NOT REQUIRED: as no details has been added
     }
 };
 /*}}}*/
 /*_ details_click_listener {{{*/
 let details_click_listener = function(e)
 {
-if(log_this) console.log("⚫ %c js_fold.details_update_click_listeners:", lbB);
+if(log_this) console.log("⚫ %c js_fold.details_click_listener:", lbB);
 
     if(e.target.onclick) return; // skip tooling elements
 
@@ -277,9 +286,9 @@ if(log_this) console.log("⚫ %c js_fold._get_nextContainer:", lbB);
 };
 /*}}}*/
 
-//┌───────────────────────────────────────────────────────────────────────────┐
-//│ TOGGLE EVENT                                                              │
-//└───────────────────────────────────────────────────────────────────────────┘
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟢 TOGGLE EVENT                                                            │
+//└────────────────────────────────────────────────────────────────────────────┘
 /*_ track_pendingShift {{{*/
 /*{{{*/
 let       pendingShift;
@@ -403,10 +412,12 @@ if(log_this) console.log("...arr.length: "+ arr.length);
 };
 /*}}}*/
 
-// ┌─────┐
-// │ LOG │
-// └─────┘
+//┌─────┐
+//│ LOG │
+//└─────┘
 //{{{
+//let ellipsis = function(str, n) { return str.length > n ? str.slice(0, n - 1) + "…" : str; };
+
 /* eslint-disable no-unused-vars */
 
 const lb1  = "background:#964B00; color:black; padding:0 0.5em;";
@@ -432,8 +443,9 @@ return { name : "js_fold"
     // DEBUG
     , load_details_open_state
     , save_details_open_state
-    , clear_details_open_state
     , get_ancestors_with_tag
+    , save_containers_scrollTop
+    , load_containers_scrollTop
 
 };
 
