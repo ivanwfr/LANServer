@@ -3,7 +3,6 @@
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 /* BODY {{{*/
 BODY      { background-color: #111; }
-BODY      {    margin-bottom:  10%; }
 BODY      {    margin-bottom:  50%; }
 BODY *    {      font-family: monospace; }
 /*}}}*/
