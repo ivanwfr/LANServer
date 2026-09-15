@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260914:17h:57) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260915:00h:33) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //│                                                                            │
@@ -1322,35 +1322,66 @@ let note_scrollIntoView = function(index=-1)
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ Scrolls a TR into the visible area of its scrolled ancestor                │
+//│ Scrolls a TR into the visible area of its scrolled ancestor  ● (debounced) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*_ scroll_TR_intoView {{{*/
+/* debounce timeout {{{*/
+let SCROLL_TR_INTOVIEW_DELAY = 500;
+let scroll_TR_intoView_timeout;
 let scroll_TR_intoView = function(tr)
 {
-if(tag_this) console.log("%c 🟣scroll_TR_intoView: %c"+ellipsis(tr.innerText.trim(),50), "color: magenta", "background-color:black");
+    if(scroll_TR_intoView_timeout) clearTimeout( scroll_TR_intoView_timeout );
+       scroll_TR_intoView_timeout =  setTimeout( scroll_TR_intoView_handler , SCROLL_TR_INTOVIEW_DELAY, tr);
+};
+/*}}}*/
+let scroll_TR_intoView_handler = function(tr)
+{
+/*{{{*/
+if(tag_this) console.log("%c 🟣scroll_TR_intoView_handler: %c"+ellipsis(tr.innerText.trim(),50), "color: magenta", "background-color:black");
 
+    scroll_TR_intoView_timeout = null;
+/*}}}*/
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ Get the nearest scrollable ancestor (vertical only, predictable DOM)   │
     //└────────────────────────────────────────────────────────────────────────┘
+    /*{{{*/
     let        box = getClosestScrollableAncestor( tr );
     if(       !box ) return;
 
     let   row_rect =  tr.getBoundingClientRect();
     let   box_rect = box.getBoundingClientRect();
+    /*}}}*/
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ Scroll [parent top] near [row top]                                     │
     //└────────────────────────────────────────────────────────────────────────┘
-    let offset_old = row_rect.top - box_rect.top;
-    let offset_new =   offset_old - box_rect.height/2;
+    /*{{{*/
+    let offset_old  = parseInt(row_rect.top - box_rect.top     );
+    let offset_new  = parseInt(  offset_old - box_rect.height/2);
+
+    // [tr] is already fully visible, no scroll required
+    if(   (row_rect.top    > box_rect.top)
+       && (row_rect.bottom < box_rect.bottom)
+    )
+        return;
+    let box_scrollY = box.scrollTop + offset_new;
+
+/*{{{
+console.log(".offset_old=["+ offset_old  +"]");
+console.log(".offset_new=["+ offset_new  +"]");
+console.log("box_scrollY=["+ box_scrollY +"]");
+}}}*/
+    /*}}}*/
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ requestAnimationFrame to make sure the DOM has updated                 │
     //│ when this is triggered by a dynamic event                              │
     //└────────────────────────────────────────────────────────────────────────┘
+    /*{{{*/
     requestAnimationFrame(() => {
-        box.scrollTo({ top: offset_new, behavior: "smooth" });
+        box.scrollTo({ top: box_scrollY, behavior: "smooth" });
     });
+    /*}}}*/
 };
 /*}}}*/
 /*_ getClosestScrollableAncestor {{{*/
@@ -1419,6 +1450,8 @@ return { name: "notes" //{{{
     ,    note_3_onclick_export //.......................onclick
     ,    center_input_placeholder
     ,    reset_input_placeholder
+    // DEBUG
+    , scroll_TR_intoView
 
 };
 //}}}
@@ -1627,39 +1660,27 @@ let reset_input = function()
 //{{{
 let TextAreaAPI = (function()
 {
-//┌──────────────────────────────────────────────────────────────────────────┐
-//│ CUSTOM EVENT
-//└──────────────────────────────────────────────────────────────────────────┘
-  //┌────────────────────────────────────────────────────────────────────────┐
-  //│ INITILIZE
-  //└────────────────────────────────────────────────────────────────────────┘
-//  //{{{
-//  let textarea = document.getElementById("myTextarea");
-//  if(!textarea)
-//      throw new Error("TextAreaAPI: Element #myTextarea not found");
-
-//  let listeners = new Set();
-
-//  //}}}
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ [textarea] gets initialized inside [on] subscription
+    //└────────────────────────────────────────────────────────────────────────┘
     let textarea;
 
-  //┌────────────────────────────────────────────────────────────────────────┐
-  //│ UNIFIED DISPATCH FUNCTION
-  //└────────────────────────────────────────────────────────────────────────┘
-  //{{{
-
-  let notifyChange = function(oldValue, newValue)
-  {
-    let event = new CustomEvent("ta_ev", {
-      bubbles: true,
-      detail: { oldValue, newValue }
-    });
-    textarea.dispatchEvent( event );
-  };
-  //}}}
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ UNIFIED DISPATCH FUNCTION ● Both `USER INPUT` and `CODE CHANGE`
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
+    let notifyChange = function(oldValue, newValue)
+    {
+        let event = new CustomEvent("ta_ev", {
+            bubbles: true,
+            detail: { oldValue, newValue }
+        });
+        textarea.dispatchEvent( event );
+    };
+    //}}}
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ 1. HANDLE USER INPUT (NATIVE)
+    //│ 1. HANDLE USER INPUT (NATIVE HANDLING)
     //└────────────────────────────────────────────────────────────────────────┘
     /*_ ta_evListener {{{*/
     let ta_evListener = function(e) /* eslint-disable-line no-unused-vars */
@@ -1691,53 +1712,53 @@ let TextAreaAPI = (function()
         //│ The listener can compare against a stored state if needed.
         //└────────────────────────────────────────────────────────────────────────┘
         notifyChange(textarea.dataset.prevValue || "", currentVal);
-        textarea.dataset.prevValue = currentVal;
 
+        textarea.dataset.prevValue = currentVal;
     };
     /*}}}*/
 
-  //┌────────────────────────────────────────────────────────────────────────┐
-  //│ 2. HANDLE CODE CHANGES (CENTRALIZED SETTER)
-  //└────────────────────────────────────────────────────────────────────────┘
-  //{{{
-  let setValue = function(val)
-  {
-      let oldVal = textarea.value;
-      if( oldVal === val) return;
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ 2. HANDLE CODE CHANGES (CENTRALIZED SETTER)
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
+    let setValue = function(val)
+    {
+        let oldVal = textarea.value;
+        if( oldVal === val) return;
 
-      textarea.value = val;
+        textarea.value = val;
 
-      //┌────────────────────────────────────────────────────────────────────┐
-      //│ Update stored prev value for next 'input' event
-      //└────────────────────────────────────────────────────────────────────┘
-      textarea.dataset.prevValue = val;
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ Update stored prev value for next 'input' event
+        //└────────────────────────────────────────────────────────────────────┘
+        textarea.dataset.prevValue = val;
 
-      notifyChange(oldVal, val);
-  };
-  //}}}
+        notifyChange(oldVal, val);
+    };
+    //}}}
 
-  //┌────────────────────────────────────────────────────────────────────────┐
-  //│ 3. Public API
-  //└────────────────────────────────────────────────────────────────────────┘
-  //{{{
-  return {
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ 3. PUBLIC API
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
+    return {
 
-    //┌──────────────────────────────────────────────────────────────────────┐
-    //│ GET SET
-    //└──────────────────────────────────────────────────────────────────────┘
-    get value()      { return textarea.value; },
-    set value(val)   { setValue( val ); },
+        //┌──────────────────────────────────────────────────────────────────────┐
+        //│ GET SET
+        //└──────────────────────────────────────────────────────────────────────┘
+        get value()      { return textarea.value; },
+        set value(val)   { setValue( val ); },
 
-    //┌──────────────────────────────────────────────────────────────────────┐
-    //│ SUBSCRIBE—UNSUBSCRIBE ● returns the un-subscribe function
-    //└──────────────────────────────────────────────────────────────────────┘
-    on: (ta, fn) => { textarea = ta;
-                      textarea.addEventListener   ("ta_ev", fn);
-                      textarea.addEventListener   ("input", ta_evListener);
-      return () =>    textarea.removeEventListener("ta_ev", fn);
-    }
-  };
-  //}}}
+        //┌──────────────────────────────────────────────────────────────────────┐
+        //│ SUBSCRIBE—UNSUBSCRIBE ● returns the un-subscribe function
+        //└──────────────────────────────────────────────────────────────────────┘
+        on: (ta, fn) => { textarea = ta;
+            textarea.addEventListener   ("ta_ev", fn);
+            textarea.addEventListener   ("input", ta_evListener);
+            return () =>    textarea.removeEventListener("ta_ev", fn);
+        }
+    };
+    //}}}
 
 })();
 
@@ -1768,10 +1789,7 @@ let TextAreaAPI = (function()
 
 //    "}}}
 
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ UTIL                                                                       │
-//└────────────────────────────────────────────────────────────────────────────┘
-//{{{
+// UTIL {{{
 /* ● copy_to_clipboard {{{*/
 let copy_to_clipboard = function(buffer)
 {
@@ -1801,8 +1819,9 @@ let escapeHtml = function(text)
 };
 /*}}}*/
 //}}}
+//}}}
 
-//{{{
+// EXPORT {{{
     return { name: "js_notes"
         ,    onload
         ,    notes
