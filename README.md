@@ -2,11 +2,11 @@
 
 **LANServer** — Local Area Network
 
-WIP early stage
+*WIP early stage*
 
 Access any files from a Windows Desktop using a device browser on a private Wi-Fi network.
 
-# It runs from this repository root folder.
+## It runs from this repository root folder.
 
 * The `server_loop_84_447.sh` script will run in a Restart loop when it fails in a terminal.
 
@@ -28,7 +28,7 @@ Access any files from a Windows Desktop using a device browser on a private Wi-F
   ! Uncheck it to avoid getting stuck as soon as you click with your mouse!
 * Now you can edit SERVER/server.js, hit Ctrl-C to test your changes.
 
-# RUNNING configuration
+## RUNNING configuration:
 * PARAMS are in config_dev.json.
 * Your LAN Home folder can be a real folder or a symbolic-link.
 * Your LAN Home folder must have a link or a copy of those two folders:
@@ -37,7 +37,7 @@ Access any files from a Windows Desktop using a device browser on a private Wi-F
   . ...You can use symbolic-links or a copy of those folders.
 
 
-# THIS VERSION DEVELOPMENT STATE:
+## THIS VERSION DEVELOPMENT STATE:
 
 * This version is still cluttred
   with irrelevant code from an unrelated original project.
@@ -46,17 +46,17 @@ Access any files from a Windows Desktop using a device browser on a private Wi-F
 
 * config_dev.json is where tuning takes place
 
-# Features:
+## Features:
 
 * Gives access to any file accessible from a configurable Root directory.
   Any file, hardlink or symbolic link accessible with the server privileges
   will be served on the local network IP address of the server.
 
-# Embedded scripts:
+## Embedded scripts:
 
 * custom mime types can be configured to be embedded into an HTML formatted response.
 * Some files, containing Vim-style-markers `{{{` and `}}}` are equiped with
-javascript tooling to turn fold sections into DETAILS-SUMMARY HTML equivalent.
+  javascript tooling to turn fold sections into DETAILS-SUMMARY HTML equivalent.
 
 * At load time, `js_linkify.js` embeded into the page header will adjust the page layout.
 

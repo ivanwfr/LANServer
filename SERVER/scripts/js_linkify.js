@@ -1,12 +1,12 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260914:03h:57) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260916:01h:08) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true */ /*{{{*/
 
-/* global js_fold */
+/* global js_folds */
 
 /*}}}*/
 let js_linkify  = (function() {
@@ -127,10 +127,30 @@ let format_summary_comments = function()
                 + " onclick = 'js_linkify.fold_open_012(event, 2);'"
                 + ">▶◀</em>"
                 + "&nbsp;"
+
                 + "<em "
                 + "   style = 'float:right; opacity:0.5; margin-left: 2em;'"
                 + " onclick = 'js_linkify.copy_summary_text(event); return false;'" // i.e. cancelBubble
                 + ">📝</em>"
+                + "&nbsp;"
+
+                + "<em "
+                + "   style = 'border       : 0px solid yellow;"
+                + "            color        : white;"
+                + "            text-shadow  : 1px 1px 1px black;"
+                + "            padding      : 0.5em;"
+                + "            display      : inline-block;"
+                + "            font-weight  : 900;"
+                + "            font-size    : 24px;"
+                + "            border-radius: 1em;"
+                + "            border       : 1px solid #F0FA;"
+                + "         background-color:           #202F;"
+                + "            line-height  : 0.8em;"
+                + "            transition   : all 200ms ease-out;"
+                + "            '"
+                + " onclick = 'js_linkify.toggle_wrap(event); return false;'"
+                + ">↷</em>"
+                + "&nbsp;"
             ;
         //}}}
     }
@@ -144,6 +164,22 @@ let format_summary_comments = function()
         if( child ) child.style.visibility = "hidden"; // fold EM
     });
     //}}}
+};
+/*}}}*/
+/*_ toggle_wrap {{{*/
+let toggle_wrap = function(e)
+{
+    let container         = e.target.closest("SUMMARY").nextElementSibling;
+
+    let wrapping          = container.classList.toggle("wrap");
+
+    e.target.style.rotate = wrapping ? "90deg" : "";
+    e.target.style.boxShadow = wrapping ? "2px 0px 0px 1px #F00" : "";
+
+    e.cancelBubble        = true;
+    e.stopPropagation         ();
+    e.stopImmediatePropagation();
+    e.preventDefault          ();
 };
 /*}}}*/
 /*➔ copy_summary_text {{{*/
@@ -284,7 +320,7 @@ let fold_open_012 = function(e,state)
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PREVENT CLOSING DETAILS                                                │
     //└────────────────────────────────────────────────────────────────────────┘
-    js_fold.set_shiftLatched(  true );
+    js_folds.set_shiftLatched(  true );
 
     container.open = true;
     let el_array = container.querySelectorAll("DETAILS");
@@ -292,9 +328,12 @@ let fold_open_012 = function(e,state)
     for(let el of el_array)
     {
 //console.log("%c"+ el.firstElementChild.textContent, "color: "+BG[level%10]); // i.e. SUMMARY
-        el.open = (state==0) ? false
-            :     (state==1) ? true
-            :                 !el.open;
+
+        //┌────────────────────────────────────────────────────────────────────────┐
+        //│ [state==2] => toggle first state ..and set siblings state likewise.    │
+        //└────────────────────────────────────────────────────────────────────────┘
+        if(state==2) state = !el.open;
+        el.open            =  state;
         count += 1;
     }
     if( count ) {
@@ -423,6 +462,7 @@ return { get_nodeXPath
     return { onload
         ,    copy_summary_text
         ,    fold_open_012
+        ,    toggle_wrap    // onclick
         // DEBUG
         , js_xpath
     };

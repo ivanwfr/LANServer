@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
     const SERVER_JS_ID  = "server";
-    const SERVER_JS_TAG = SERVER_JS_ID  +" (260915:00h:56)";
+    const SERVER_JS_TAG = SERVER_JS_ID  +" (260915:19h:48)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -759,19 +759,19 @@ if(log_this) console.log("response_200_header=["+response_200_header["Content-Ty
                     .  replace(           /\/\/└/gm , "🟤🔴🟠└")
 }}}*/
 
-                    .  replace(           /\/\/ *(┌.*$)/gm , "<BOX>$1</BOX>")
-                    .  replace(           /\/\/ *(│.*$)/gm , "<BOX>$1</BOX>")
-                    .  replace(           /\/\/ *(└.*$)/gm , "<BOX>$1</BOX>")
+                    .  replace(           /\/\/ *(┌.*$)/gm , "<BOXU>$1</BOXU>")
+                    .  replace(           /\/\/ *(│.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace(           /\/\/ *(└.*$)/gm , "<BOXD>$1</BOXD>")
 
-                    .  replace(           /\/\/ *(├.*$)/gm , "<BOX>$1</BOX>")
-                    .  replace(           /\/\/ *(┼.*$)/gm , "<BOX>$1</BOX>")
-                    .  replace(           /\/\/ *(┤.*$)/gm , "<BOX>$1</BOX>")
+                    .  replace(           /\/\/ *(├.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace(           /\/\/ *(┼.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace(           /\/\/ *(┤.*$)/gm , "<BOXM>$1</BOXM>")
 
                     .  replace(          /[└┘┌┐│─├┼┤]/gm , " "           )
 
                 // comments
-                    .  replace( /[\n\r]( *)\/\/ */gm, "\n$1")
-                    .  replace(        /^ *\/\/ */  , "\n"  )
+                  //.  replace( /[\n\r]( *)\/\/ */gm, "\n✔✓$1")
+                  //.  replace(        /^ *\/\/ */  , "ℹ\n"  )
                 ;
             }
             else if( log_this) {
@@ -1075,9 +1075,8 @@ let caller = "request_directory_listing";
     fs.readdir(file_path, (read_err, files) => {
         files.unshift("..");
         let dir_items
-            = files.map((name) => get_dirEntry_link(reqPath, name))
+            = files.map((name) => ""+get_dirEntry_link(reqPath, name)+"\n")
             . join("");
-
         writeHead(response, caller, 200, { "Content-Type": "text/html" });
 
         response.end( STYLE_DIR.replace("{file_path}", file_path)

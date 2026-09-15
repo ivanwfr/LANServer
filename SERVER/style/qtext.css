@@ -1,5 +1,5 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (260913:19h:38) │*/
+/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (260916:00h:02) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 /* BODY {{{*/
 BODY      { background-color: #111; }
@@ -35,14 +35,20 @@ A:visited {            color: #F0F; }
 .bg9>SUMMARY, .bg9>PRE  {          outline: 1px solid #FFFFFF80; }
 
 /*}}}*/
-/* BOX {{{*/
-BOX { display             : inline-block;                            }
-BOX { margin              : 0 0 0 0em;                               }
-BOX { border-collapse     : collapse;                                }
-BOX { border-left         : 8px solid #ffffff88;                     }
-BOX { background          : linear-gradient(to right, #6665, #0001); }
-BOX { padding             : 0;                                       }
-BOX { color               : #AAA;                                    }
+/* BOX ● [U]p [M]iddle [D]own {{{*/
+BOXU,
+BOXM,
+BOXD {
+ display             : inline-block;
+ margin              : 0 0 0 0em;
+ border-collapse     : collapse;
+ border-left         : 8px solid #ffffff88;
+ background          : linear-gradient(to right, #6665, #0001);
+ padding             : 0;
+ color               : #AAA;
+}
+BOXU { border-radius    : 0.5em 0.5em 0     0    ; }
+BOXD { border-radius    : 0     0     0.5em 0.5em; }
 /*}}}*/
 
 /* cursor user-select transition {{{*/
@@ -59,6 +65,41 @@ PRE                         { margin            : 0px; }
 DETAILS                     { width             : fit-content;     }
 /*}}}*/
 /* border {{{*/
+DETAILS.bg0:open            { box-shadow        : -3px 0px 0px 1px #10101080; }
+DETAILS.bg1:open            { box-shadow        : -3px 0px 0px 1px #964B0080; }
+DETAILS.bg2:open            { box-shadow        : -3px 0px 0px 1px #FF000080; }
+DETAILS.bg3:open            { box-shadow        : -3px 0px 0px 1px #FFA50080; }
+DETAILS.bg4:open            { box-shadow        : -3px 0px 0px 1px #FFFF0080; }
+DETAILS.bg5:open            { box-shadow        : -3px 0px 0px 1px #9ACD3280; }
+DETAILS.bg6:open            { box-shadow        : -3px 0px 0px 1px #6495ED80; }
+DETAILS.bg7:open            { box-shadow        : -3px 0px 0px 1px #EE82EE80; }
+DETAILS.bg8:open            { box-shadow        : -3px 0px 0px 1px #A0A0A080; }
+DETAILS.bg9:open            { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
+DETAILS:open                { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
+    /*┌────────────────────────────────────────────────────────────────────────┐*/
+    /*│                                                                        │*/
+    /*└────────────────────────────────────────────────────────────────────────┘*/
+    /*┌────────────────────────────────────────────────────────────────────────┐*/
+    /*│                                                                        │*/
+    /*├────────────────────────────────────────────────────────────────────────┤*/
+    /*│                                                                        │*/
+    /*└────────────────────────────────────────────────────────────────────────┘*/
+    /*┌────────────────────────────┬───────────────────────────────────────────┐*/
+    /*│ 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯ ←▲▶▼◀→ │                                           │*/
+    /*├────────────────────────────┼───────────────────────────────────────────┤*/
+    /*│ 1 2 3 4 5 6 7 8 9 0        │                                           │*/
+    /*└────────────────────────────┴───────────────────────────────────────────┘*/
+ 0 ◯ 
+ 1 🟤
+ 2 🔴
+ 3 🟠
+ 4 🟡
+ 5 🟢
+ 6 🔵
+ 7 🟣
+ 8 ⚫
+ 9 ⚪️
+
 DETAILS                     { border-radius     : 0em 1em 1em 0em; }
 DETAILS:not(open)  >SUMMARY { border-radius     : 0em 1em 1em 0em; }
 DETAILS:open                { border-radius     : 0.5em;             }
@@ -87,4 +128,14 @@ SUMMARY                     { background-color  : #008 ; }  /* overridden by js_
 SUMMARY                     {            color  : #FFA ; }
 PRE                         {            color  : #FFA ; }
 /*}}}*/
+/* SUMMARY EM ● wrap {{{*/
+DETAILS:not([open]) SUMMARY EM {
+    display: none !important;
+}
+.wrap {
+    white-space: pre-line;
+    width      : 50%;
+}
+/*}}}*/
 
+PRE:has(DETAILS[open]) { background-color: #000; }

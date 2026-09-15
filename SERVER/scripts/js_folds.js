@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260915:02h:17) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260916:00h:55) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -9,10 +9,10 @@
 /* globals js_store */
 /* globals js_xpath */
 /*}}}*/
-let js_fold = (function() {
+let js_folds = (function() {
 //"use strict";
 let log_this = false;
-let tag_this = true;//false || log_this;
+let tag_this = false || log_this;
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 LOAD ● UNLOAD                                                           │
@@ -20,7 +20,7 @@ let tag_this = true;//false || log_this;
 /*● onload {{{*/
 let onload = function(e) /* eslint-disable-line no-unused-vars */
 {
-if(tag_this) console.log("⚫ %c js_fold.onload:", lbB+lb1);
+if(tag_this) console.log("⚫ %c js_folds.onload:", lbB+lb1);
 
 //{{{
 /* eslint-disable no-undef */
@@ -71,7 +71,7 @@ let save_details_open_state = function()
 let save_details_open_state_handler = function()
 {
 /*{{{*/
-if(tag_this) console.log("⚫ %c js_fold.save_details_open_state_handler:", lbB+lb3);
+if(tag_this) console.log("⚫ %c js_folds.save_details_open_state_handler:", lbB+lb3);
 
     save_details_open_state_timeout = null;
 /*}}}*/
@@ -103,7 +103,7 @@ if(tag_this) console.log(" 🟠 %c"+xpath, "background-color:black");
 /*○ load_details_open_state {{{*/
 let load_details_open_state = function()
 {
-if(tag_this) console.log("⚫ %c js_fold.load_details_open_state:", lbB+lb3);
+if(tag_this) console.log("⚫ %c js_folds.load_details_open_state:", lbB+lb3);
 
     //┌───────────────────────────────────────────────────────────────┐
     //│ RESTORE        ● store details open state from [localStorage] │
@@ -115,7 +115,7 @@ if(tag_this) console.log("⚫ %c js_fold.load_details_open_state:", lbB+lb3);
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PREVENT CLOSING DETAILS ● so we can open more than one                 │
     //└────────────────────────────────────────────────────────────────────────┘
-    js_fold.set_shiftLatched(  true );
+    set_shiftLatched(  true );
 
     JSON.parse( val ).forEach((item) => {
         let el = js_xpath.get_nodeXPath_target( item.xpath );
@@ -144,7 +144,7 @@ let save_containers_scrollTop = function()
 
 let save_containers_scrollTop_handler = function()
 {
-if(tag_this) console.log("⚫ %c js_fold.save_containers_scrollTop_handler:", lbB+lb4);
+if(tag_this) console.log("⚫ %c js_folds.save_containers_scrollTop_handler:", lbB+lb4);
 
     //┌───────────────────────────────────────────────────────────────┐
     //│ SAVE    ● scrollable-containers-scrollTop into [localStorage] │
@@ -177,7 +177,7 @@ if(tag_this) console.log(" 🟡 %c"+xpath, "background-color:black");
 /*○ load_containers_scrollTop {{{*/
 let load_containers_scrollTop = function()
 {
-if(tag_this) console.log("⚫ %c js_fold.load_containers_scrollTop:", lbB+lb4);
+if(tag_this) console.log("⚫ %c js_folds.load_containers_scrollTop:", lbB+lb4);
 
     //┌───────────────────────────────────────────────────────────────┐
     //│ RESTORE ● scrollable-containers-scrollTop from [localStorage] │
@@ -202,7 +202,7 @@ if(tag_this) console.log(" 🟡 %c"+item.xpath, "background-color:black");
 /*○ details_update_click_listeners {{{*/
 let details_update_click_listeners = function()
 {
-if(log_this) console.log("⚫ %c js_fold.details_update_click_listeners:", lbB);
+if(log_this) console.log("⚫ %c js_folds.details_update_click_listeners:", lbB);
 
     // CLOSE DETAILS ● click container left margin
 
@@ -210,7 +210,7 @@ if(log_this) console.log("⚫ %c js_fold.details_update_click_listeners:", lbB);
 
     let some_listener_added = "";
 
-  //document.querySelectorAll("DETAILS:not(:has(DETAILS))").forEach((el) => {
+  //document.querySelectorAll("DETAILS:not(:has(DETAILS))").forEach((el) =>
     document.querySelectorAll("DETAILS"                   ).forEach((el) => {
         if(!el.click_listener_added)
         {
@@ -234,7 +234,7 @@ if(log_this) console.log("⚫ %c js_fold.details_update_click_listeners:", lbB);
     if( some_listener_added.length )
     {
 /*{{{*/
-if(tag_this) console.log("⚫ %c js_fold: "+ some_listener_added.split("\n").length +" CLICK LISTENERS ADDED", lbB+lb2);
+if(tag_this) console.log("⚫ %c js_folds: "+ some_listener_added.split("\n").length +" CLICK LISTENERS ADDED", lbB+lb2);
 //if(log_this) console.log(some_listener_added);
 /*}}}*/
 
@@ -245,7 +245,7 @@ if(tag_this) console.log("⚫ %c js_fold: "+ some_listener_added.split("\n").len
 /*_ details_click_listener {{{*/
 let details_click_listener = function(e)
 {
-if(log_this) console.log("⚫ %c js_fold.details_click_listener:", lbB);
+if(log_this) console.log("⚫ %c js_folds.details_click_listener:", lbB);
 
     if(e.target.onclick) return; // skip tooling elements
 
@@ -271,7 +271,7 @@ if(log_this) console.log("⚫ %c js_fold.details_click_listener:", lbB);
 /*○ _get_nextContainer {{{*/
 let _get_nextContainer = function(el)
 {
-if(log_this) console.log("⚫ %c js_fold._get_nextContainer:", lbB);
+if(log_this) console.log("⚫ %c js_folds._get_nextContainer:", lbB);
 
     // RETURN NEXT CONTAINER SIBLING ELEMENT
     while(   (el.tagName != "DIV"  )
@@ -329,7 +329,7 @@ let track_pendingShift = function(e)
 };
 /*}}}*/
 /*_ latch_pendingShift {{{*/
-let set_shiftLatched = function(state, delay=500)
+let set_shiftLatched = function(state, delay=1000)
 {
     shiftLatched  = state;
     if( shiftLatched )
@@ -339,7 +339,7 @@ let set_shiftLatched = function(state, delay=500)
 /*_ toggle_details_open_state {{{*/
 let toggle_details_open_state = function(e)
 {
-//if(log_this) console.log("⚫ %c js_fold.toggle_details_open_state:", lbB);
+if(log_this) console.log("⚫ %c js_folds.toggle_details_open_state:", lbB);
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ the `details` whose state changed
@@ -348,7 +348,7 @@ let toggle_details_open_state = function(e)
     if(!(target instanceof HTMLDetailsElement)) return;
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ SHIFT TO KEEP OTHER DETAILS OPEN    ● (toggle event has no e.shiftKey) │
+    //│ SHIFTKEY KEEPS OTHER DETAILS OPEN   ● (toggle event has no e.shiftKey) │
     //└────────────────────────────────────────────────────────────────────────┘
     let shiftKey = pendingShift || shiftLatched;
     pendingShift = false; // consume it
@@ -366,7 +366,7 @@ let toggle_details_open_state = function(e)
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ details hierarchy to open
     //└────────────────────────────────────────────────────────────────────────┘
-if(log_this) console.log("🔴 %c js_fold.toggle_details_open_state: OPENING: "+target.firstElementChild.childNodes[0].textContent, lbB+lb2);
+if(log_this) console.log("🔴 %c js_folds.toggle_details_open_state: OPENING: "+target.firstElementChild.childNodes[0].textContent, lbB+lb2);
 
     let    open_set = new Set([target, ...get_ancestors_with_tag(target, "DETAILS")]);
 
@@ -398,7 +398,7 @@ if(log_this) console.log("🔴 %c js_fold.toggle_details_open_state: OPENING: "+
 /*_ get_ancestors_with_tag {{{*/
 let get_ancestors_with_tag = function(el, tag)
 {
-if(log_this) console.log("⚫ %c js_fold.get_ancestors_with_tag:", lbB);
+if(log_this) console.log("⚫ %c js_folds.get_ancestors_with_tag:", lbB);
 
     let arr = [];
     let     p = el.parentElement;
@@ -437,7 +437,7 @@ const lbB  = lb0 +"font-size: 150%; border-radius: 1em; padding: 0 1em; border: 
 //}}}
 
 /* EXPORT {{{*/
-return { name : "js_fold"
+return { name : "js_folds"
         , onload
         , set_shiftLatched
     // DEBUG
@@ -446,9 +446,11 @@ return { name : "js_fold"
     , get_ancestors_with_tag
     , save_containers_scrollTop
     , load_containers_scrollTop
+    , log : () => { log_this = !log_this; console.log("log_this=["+log_this+"]"); }
+    , tag : () => { tag_this = !tag_this; console.tag("tag_this=["+tag_this+"]"); }
 
 };
 
 /*}}}*/
 }());
-document.addEventListener("DOMContentLoaded", js_fold.onload);
+document.addEventListener("DOMContentLoaded", js_folds.onload);
