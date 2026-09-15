@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
     const SERVER_JS_ID  = "server";
-    const SERVER_JS_TAG = SERVER_JS_ID  +" (260914:00h:57)";
+    const SERVER_JS_TAG = SERVER_JS_ID  +" (260915:00h:56)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -1405,8 +1405,8 @@ if(log_this) console.log("...notes_file=["+notes_file+"]");
         consumed_by = err.message;
 
         writeHead(response, caller, 200, { "Content-Type": "application/json; charset=UTF-8" });
-
-        response.end( err.message );    // NO FILE ...so that Array.isArray(data) ● should fail in load_notes
+      //response.end( "["+err.message+"]" );    // NO FILE ...so that Array.isArray(data) ● should fail in load_notes
+        response.end( "[]" );
     }
 
 if(log_this) console.log(G+"..."+caller+": consumed_by=["+ consumed_by +"]");
