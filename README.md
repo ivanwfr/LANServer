@@ -4,7 +4,7 @@
 
 *WIP early stage*
 
-Access any files from a Windows Desktop using a device browser on a private Wi-Fi network.
+Access your Windows desktop files with a web browser on private Wi-Fi network.
 
 ## It runs from this repository root folder.
 
