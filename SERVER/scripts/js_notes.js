@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260915:23h:59) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260916:19h:31) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -15,7 +15,7 @@ let js_notes    = (function()
 //├────────────────────────────────────────────────────────────────────────────┤
 /*{{{*/
 let log_this = false;
-let tag_this = false || log_this;
+let tag_this = true;//false || log_this;
 
 /* ●  NOTES_DETAILS_STYLE {{{*/
 const EDITING_NOTE_NUM       = "editing_note_num";
@@ -148,6 +148,8 @@ min-height          : 8em;
 #save_note_BUTTON[disabled] {
     background      : #222;
     color           : #888;
+text-decoration: line-through;
+font-style: italic;
 }
 #save_note_BUTTON.notes_uploaded {
     outline         : 4px solid #040;
@@ -163,7 +165,6 @@ min-height          : 8em;
 #save_note_BUTTON[${EDITING_NOTE_NUM}$="8"]::before { content: "⚫"; }
 #save_note_BUTTON[${EDITING_NOTE_NUM}$="9"]::before { content: "⚪️"; }
 #save_note_BUTTON[${EDITING_NOTE_NUM}$="0"]::before { content: "◯ "; }
-
 /*}}}*/
 #status_line { /*{{{*/
     user-select     : none;
@@ -523,7 +524,7 @@ let add_notes_DETAILS = function()
     note_DETAILS                    = document.createElement("DETAILS");
     note_DETAILS.id                 = "note_DETAILS";
     note_DETAILS.className          = "empty";
-    note_DETAILS.innerHTML          = NOTE_DETAILS_HTML;
+    note_DETAILS.innerHTML          =             NOTE_DETAILS_HTML  ;
 
     document.body.appendChild( note_DETAILS );
     //}}}
@@ -532,26 +533,26 @@ let add_notes_DETAILS = function()
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ NOTES ● scrollable div and table                                       │
     //└────────────────────────────────────────────────────────────────────────┘
-    saved_notes_DIV  = document.getElementById("saved_notes_DIV"  );
-    saved_notes_TABLE= document.getElementById("saved_notes_TABLE");
+    saved_notes_DIV  = document.querySelector("#saved_notes_DIV"  );
+    saved_notes_TABLE= document.querySelector("#saved_notes_TABLE");
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ INPUT TEXTAREA                                                         │
     //└────────────────────────────────────────────────────────────────────────┘
-    input            = document.getElementById("note_input_TEXTAREA");
+    input            = document.querySelector("#note_input_TEXTAREA");
     TextArea_IO.on( input , input_listener);
     resize_observe( input );
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ SAVE BUTTON                                                            │
     //└────────────────────────────────────────────────────────────────────────┘
-    save_note_BUTTON = document.getElementById("save_note_BUTTON");
+    save_note_BUTTON = document.querySelector("#save_note_BUTTON");
     save_note_BUTTON.setAttribute("disabled","");
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ STATUS-LINE                                                            │
     //└────────────────────────────────────────────────────────────────────────┘
-    status_line      = document.getElementById("status_line");
+    status_line      = document.querySelector("#status_line");
 
     //}}}
 };
@@ -564,35 +565,32 @@ let layout_count = 0;
 let layout_notes = function(_caller="?",index=-1)
 {
 if(log_this) console.log("🔴%c layout_notes ← "+ _caller, "color: #F00");
-    /* 1. LOAD NOTES from localStorage {{{*/
+    /* 1. LOAD NOTES from server or localStorage {{{*/
     let nArray = notes.get_nArray();
     if(!nArray.length && !notes.get_notes_loaded_from())
     {
         notes.load_notes();
         nArray = [];
     }
-
     /*}}}*/
     /* 2. POPULATE OR CLEAR [node_row] {{{*/
     let innerHTML = nArray.length
         ? nArray.map((n, i) => ""
 + "<!--🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯-->"
-+ "<TR class='node_row "+ notes.get_checked(i)+  (n.text.includes(AUTO_SAVE_TAG) ? " auto_save":"")+"'"
-+  " title='"+    escapeHtml(n.text).replace(AUTO_SAVE_TAG, "") +"'"
-+  "                                  onclick=' js_notes.note_5_onclick_edit(event, "+i+")'>"
-
-+  "<TD><button class='check_button'  onclick=' js_notes.note_4_onclick_check(event, "+i+")' title='Check note'        ></button></TD>"
-+  "<TD><button class='edit_button'                                                          title='Edit note'         ></button></TD>"
-+  "<TD><div    class='truncated'>"+  escapeHtml(n.text)                                                              +"   </div></TD>"
-+  "<TD><small  class='timestamp'     onclick=' event.cancelBubble = true;'>"+ new Date(n.timestamp).toLocaleString() +" </small></TD>"
-+  "<TD><button class='delete_button' onclick=' js_notes.note_6_onclick_delete(event, "+i+")' title='Delete note'      ></button></TD>"
-
++ "<TR          class='node_row "+   notes.get_checked(i)+(n.text.includes(AUTO_SAVE_TAG) ? " auto_save":"")+"'"
++                                   " title='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
++  "                                                      onclick='js_notes.note_5_onclick_edit  (event, "+i+")'>"
++  "<TD><button class='check_button'  title='Check note'  onclick='js_notes.note_4_onclick_check (event, "+i+")'></button></TD>"
++  "<TD><button class='edit_button'   title='Edit note'                                                         ></button></TD>"
++  "<TD><div    class='truncated'>"+            escapeHTML(n.text)                                          +"</div>   </TD>"
++  "<TD><small  class='timestamp'                         onclick='event.cancelBubble = true;'>"+ new Date(n.timestamp).toLocaleString() +"</small></TD>"
++  "<TD><button class='delete_button' title='Delete note' onclick='js_notes.note_6_onclick_delete(event, "+i+")'></button></TD>"
 + "</TR>"
 ).join("")
 
         : "<TR><TD class='no_notes_yet_TD' colspan='5'>No notes yet</TD></TR";
 
-    saved_notes_TABLE.innerHTML = "<TABLE id='saved_notes_TABLE'>"+ innerHTML +"</TABLE>";
+    saved_notes_TABLE.innerHTML =            "<TABLE id='saved_notes_TABLE'>"+ innerHTML +"</TABLE>";
     /*}}}*/
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ IF "No notes yet" → layout_notes will be called with next load results │
@@ -689,15 +687,14 @@ if(log_this) console.log( buffer );
     navigator.clipboard.writeText( buffer );
 };
 /*}}}*/
-/*{{{
 /* ● ellipsis {{{*/
 let ellipsis = function(str, n)
 {
     return str.length > n ? str.slice(0, n - 1) + "…" : str;
 };
 /*}}}*/
-/* ● escapeHtml {{{*/
-let escapeHtml = function(text)
+/*● escapeHTML {{{*/
+let escapeHTML = function(text)
 {
     if (!text) return "";
     return text
@@ -708,7 +705,6 @@ let escapeHtml = function(text)
         .replace(/'/g, "&#039;");
 };
 /*}}}*/
-//}}}
 //}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 
@@ -812,9 +808,9 @@ if(log_this) console.log("🟤 load_id_wh:");
 
     for(let id_wh of id_wh_array)
     {
-        let target = document.getElementById( id_wh.id        );
-        target.style.width                  = id_wh.width +"px";
-        target.style.height                 = id_wh.height+"px";
+        let target = document.querySelector("#"+id_wh.id        );
+        target.style.width                 =    id_wh.width +"px";
+        target.style.height                =    id_wh.height+"px";
 
 if(log_this) console.log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x ${id_wh.height}`);
     }
@@ -1170,41 +1166,48 @@ let load_notes = function() /* eslint-disable-line no-unused-vars */
 if(tag_this) console.log("🟡%c load_notes\t\t  ["+ notes_storage_key +"]", "color: #FF0");
 
     fetch("/fetch_notes?notes_storage_key="+notes_storage_key)
-        .then(( res  ) => res.json())
-        .then(( data ) => {
-//console.log("data=["+data+"]");
-
-            // SERVER-SIDE NOTES
-            if(Array.isArray(data) && data.length)
-            {
-                notes_loaded_from = "🟢 from server";
-                nArray = data;
-
-                // BACKUP SERVER-SIDE NOTES INTO localStorage
-                if(nArray.length)
-                    localStorage.setItem(notes_storage_key, JSON.stringify(nArray));
-                else
-                    localStorage.removeItem(get_notes_storage_key());
-
-                layout_notes("load_notes: "+ notes_loaded_from);
-            }
-            // LOAD CLIENT-SIDE NOTES AS A FALLBACK
-            else {
-                notes_loaded_from = "🔴 from device";
-                load_client_notes();
-                layout_notes("load_notes: "+ notes_loaded_from);
-            }
-            // input may contain one of the saved note .. resume editing
-            load_input();
-        })
-        .catch((err) => {
+        .then (( res  ) => res.json())
+        .then (( data ) => load_server_notes(data))
+        .catch(( err  ) => {
             console.warn("Could not retrieve notes from server", err);
+
             notes_loaded_from     = "◯ missing on server!";
             load_client_notes();
+
             layout_notes    ("load_notes: "+ notes_loaded_from);
-            // input may contain one of the saved note .. resume editing
             load_input();
         });
+};
+/*}}}*/
+/*_ load_server_notes {{{*/
+let load_server_notes = function(data)
+{
+if(tag_this) console.log("🟡%c load_server_notes(data: "+ (typeof data) +")", "color: #FF0");
+//console.log("data=["+data+"]");
+
+    // SERVER-SIDE NOTES ARRAY
+data = null;//FIXME
+    if(Array.isArray(data) && data.length)
+    {
+        notes_loaded_from = "🟢 from server";
+        nArray = data;
+
+        // BACKUP SERVER-SIDE NOTES INTO localStorage
+        if(nArray.length)
+            localStorage.setItem(   get_notes_storage_key(), JSON.stringify(nArray));
+        else
+            localStorage.removeItem(get_notes_storage_key());
+    }
+    // LOAD CLIENT-SIDE NOTES AS A FALLBACK
+    else {
+        throw new Error("load_server_notes: server response was not an Note array");
+//      notes_loaded_from = "🔴 from device";
+//      load_client_notes();
+    }
+    layout_notes("load_notes: "+ notes_loaded_from);
+
+    // input may contain one of the saved note .. resume editing
+    load_input();
 };
 /*}}}*/
 /*_ load_client_notes {{{*/
@@ -1605,7 +1608,7 @@ if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
     if( index >= 0) {
         text      = AUTO_SAVE_TAG + text;
         if(index >= nArray.length) nArray.push({ text , timestamp: Date.now() });
-        else                      nArray[index].text = text;
+        else                       nArray[index].text = text;
         layout_notes("save_note_auto", index);
     }
     //}}}
@@ -1928,9 +1931,9 @@ let update_summary = function()
         // DEBUG ONLY
         , layout_notes
         , save_input
-        , escapeHtml
+        , escapeHTML
         , print_note  : (index) =>             notes.get_nArray()[index].text
-        , escape_note : (index) => escapeHtml( notes.get_nArray()[index].text )
+        , escape_note : (index) => escapeHTML( notes.get_nArray()[index].text )
         , tail_status
         , tapi        : TextArea_IO
         , log         : () => { log_this = !log_this; console.log("log_this=["+log_this+"]"); }

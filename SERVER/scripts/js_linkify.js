@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260916:01h:08) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260916:19h:32) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -96,9 +96,6 @@ let colorize_details = function()
 
         // STYLE
         el.firstElementChild.style.          color = FG[color_num]; //FG[depth+1];
-      //el.firstElementChild.style.backgroundColor = BG[color_num]; //BG[depth+1];
-        el.firstElementChild.style.fontWeight      = 900;
-        el.firstElementChild.style.fontSize        = "120%";
     }
 };
 /*}}}*/
@@ -131,7 +128,7 @@ let format_summary_comments = function()
                 + "<em class='cb_copy'"
                 + "   style = 'float:right; opacity:0.5; margin-left: 2em;'"
                 + " onclick = 'js_linkify.copy_summary_text(event); return false;'" // i.e. cancelBubble
-                + ">⬜</em>"  
+                + ">⬜</em>"
                 + "&nbsp;"
 
                 + "<em "
@@ -200,7 +197,7 @@ let copy_summary_text = function(e)
 }}}*/
     let summary = e.target.closest("SUMMARY");
     let details = summary.parentElement;
-    if(!note_input_TEXTAREA)  note_input_TEXTAREA = document.getElementById("note_input_TEXTAREA");
+    if(!note_input_TEXTAREA)  note_input_TEXTAREA = document.querySelector("#note_input_TEXTAREA");
 
     // TEXT SOURCE
     let text

@@ -1,5 +1,5 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (260916:00h:02) │*/
+/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (260916:17h:39) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 /* BODY {{{*/
 BODY      { background-color: #111; }
@@ -45,7 +45,7 @@ BOXD {
  border-left         : 8px solid #ffffff88;
  background          : linear-gradient(to right, #6665, #0001);
  padding             : 0;
- color               : #AAA;
+ color               : #EEE;
 }
 BOXU { border-radius    : 0.5em 0.5em 0     0    ; }
 BOXD { border-radius    : 0     0     0.5em 0.5em; }
@@ -100,6 +100,14 @@ DETAILS:open>SUMMARY        { color           : white !important; }
 DETAILS:open       >SUMMARY { background-color  : #333  !important; }
 DETAILS:open        PRE     { background-color  : #222 ;            }
 DETAILS:not([open])>SUMMARY { background-color  : #22B ; }
+DETAILS:not([open])>SUMMARY {
+    font-weight     :  900;
+    font-size       : 120%;
+/*{{{
+    text-shadow     : 1px 1px 2px #FFF8;
+}}}*/
+}
+DETAILS:not([open])>SUMMARY { background-color  : #22B;  }  /* overridden by js_linkify */
 SUMMARY                     { background-color  : #008 ; }  /* overridden by js_linkify */
 
 SUMMARY                     {            color  : #FFA ; }
