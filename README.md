@@ -1,64 +1,58 @@
 # **LANServer** — A Local Desktop files personal server
 
-**LANServer** — Local Area Network
+## Read your Windows hard-drive files from a tablet using a web browser on a personal Wi-Fi network.
 
-*WIP early stage*
+```md
+- *WIP early stage readme_tag (260916:15h:21)*
+- comments, ideas are welcome ➔ ivanwfr@gmail.com
+```
 
-Access your Windows desktop files with a web browser on private Wi-Fi network.
-
-## It runs from this repository root folder.
-
-* The `server_loop_84_447.sh` script will run in a Restart loop when it fails in a terminal.
-
-* Press Ctrl-C to restart the server
-
+### RUN FROM REPOSITORY FOLDER:
+* The `server_loop.sh` script will run in a Restart loop when it fails in a terminal.
+* Press `Ctrl-C` to restart the server
 * Click the close icon [x] to stop the server
-
   ! But watch out for that damn “QuickEdit” option in the terminal!
-  ! When you click inside the terminal, the copy-paste feature interrupts the script wainting for a keyboard input.
+  ! When you click inside the terminal, the copy-paste feature interrupts the script waiting for a keyboard input.
   ! Uncheck this option to avoid getting stuck by a mouse-click!
+* You can now edit `SERVER/server.js`, and press `Ctrl-C` in the terminal to test your changes.
 
-* You can now edit SERVER/server.js, then press Ctrl-C to test your changes.
-
-* server_loop_84_447.sh will loop on failure in a terminal.
-* Hit Ctrl-C to restart the server
+### CUSTOMIZING `SERVER/server.js:`
+* Run `server_loop.sh` in a terminal.
+* If you hit `Ctrl-C` in the terminal, the server will restart.
+* it will enter a restart loop with a one second interval on failure.
+* Then, you can modify `server.js` and hit `Ctrl-C` to see the result.
 * Click the [x] exit icon to terminate the server
-  ! But beware of the f u c k i n g QuickEdit terminal option!
-  ! When you click on the terminal, the cut-paste feature will interrupt the script, wating for input
-  ! Uncheck it to avoid getting stuck as soon as you click with your mouse!
-* Now you can edit SERVER/server.js, hit Ctrl-C to test your changes.
 
-## RUNNING configuration:
-* PARAMS are in config_dev.json.
-* Your LAN Home folder can be a real folder or a symbolic-link.
-* Your LAN Home folder must have a link or a copy of those two folders:
+### A BIT OF ADVICE:
+  Beware of the damn `QuickEdit terminal option`!
+  …When you click on the terminal, the cut-paste feature
+  will interrupt the script, waiting for a keyboard input.
+  ➔ Uncheck it to avoid getting stuck by a mouse-click!
+
+### YOUR LAN CONFIGURATION:
+* PARAMETERS are in `config_dev.json` *WIP*.
+* Your `LAN Home folder` can be a real folder or a symbolic-link.
+* It must contain a link, or a copy of those two repository folders:
   . **SERVER/scripts** and
   . **SERVER/style**
-  . ...You can use symbolic-links or a copy of those folders.
+  . ...either symbolic-links or copies.
 
-
-## THIS VERSION DEVELOPMENT STATE:
-
-* This version is still cluttred
+### THIS VERSION DEVELOPMENT STATE:
+* This version is still cluttered
   with irrelevant code from an unrelated original project.
-  I still have to remove a good part.
-* YOU CAN IGNORE postgres related errors (lib_postgres is not used here)
+  …I still have to remove a good part.
+* You can ignore Postgres related errors (`lib_postgres` is not used here).
+* `config_dev.json` is where tuning takes place.
 
-* config_dev.json is where tuning takes place
+### FEATURES:
+The idea is to give access to any file accessible from a configurable root directory.
+Any file, hard-link or symbolic-link accessible with the server privileges
+will be served on the Local Area Network IP:PORT address logged in the terminal.
 
-## Features:
-
-* Gives access to any file accessible from a configurable Root directory.
-  Any file, hardlink or symbolic link accessible with the server privileges
-  will be served on the local network IP address of the server.
-
-## Embedded scripts:
-
-* custom mime types can be configured to be embedded into an HTML formatted response.
-* Some files, containing Vim-style-markers `{{{` and `}}}` are equiped with
-  javascript tooling to turn fold sections into DETAILS-SUMMARY HTML equivalent.
-
-* At load time, `js_linkify.js` embeded into the page header will adjust the page layout.
-
-* The embeded personal note taking app `js_notes.js` will add a `page notes section` at the bottom of those pages.
+### EMBEDDED SCRIPTS:
+* `server.js` will send custom mime types embedded into an HTML formatted response.
+* Some files, containing `Vim-style-markers` (i.e. `{{{` and `}}}`) are equipped with
+  JavaScript tooling to turn `fold sections` into `DETAILS-SUMMARY` HTML equivalent.
+* At load time, `js_linkify.js` embedded into the page header by the server will adjust the page layout.
+* Also, the embedded personal note taking script `js_notes.js` will add a `page notes section` at the bottom of those pages.
 

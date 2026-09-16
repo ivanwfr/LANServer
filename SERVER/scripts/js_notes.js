@@ -100,7 +100,9 @@ min-height          : 8em;
 }
 #note_DETAILS.empty>SUMMARY>EM {
     opacity         : 0.2 !important;
+/*{{{
     rotate          : -45deg;
+}}}*/
 }
 /*}}}*/
 #note_DETAILS>SUMMARY { /*{{{*/
