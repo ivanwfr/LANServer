@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
     const SERVER_JS_ID  = "server";
-    const SERVER_JS_TAG = SERVER_JS_ID  +" (260915:19h:48)";
+    const SERVER_JS_TAG = SERVER_JS_ID  +" (260917:01h:55)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -132,11 +132,13 @@ const SCRIPT_QTEXT = ""
     + "<script src='/scripts/js_store.js'  ></script>"
     + "<script src='/scripts/js_xpath.js'  ></script>"
     + "<script src='/scripts/js_linkify.js'></script>"
-    + "<script src='/scripts/js_notes.js'  ></script>"
+    + "<script src='/scripts/notes.js'     ></script>"  // before js_notes.js
+    + "<script src='/scripts/js_notes.js'  ></script>"  // after     notes.js
     ;
 /*}}}*/
 /*    STYLE_QTEXT {{{*/
 const STYLE_QTEXT = ""
+    + "<link type='text/css' href='/style/notes.css' rel='stylesheet'>"
     + "<link type='text/css' href='/style/qtext.css' rel='stylesheet'>"
     ;
 /*}}}*/
@@ -1422,7 +1424,7 @@ let caller = "handle_upload_notes";
 if(log_this) console.log(Y+"handle_upload_notes ● body:\n"+body);
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ ● from upload_notes_to_server                                          │
-    //│ ● in   scripts/js_notes.js                                             │
+    //│ ● in   SERVER/scripts/js_build.js                                      │
     //│ ● TODO: ADD URL_KEY FIELD FOR PER-PAGE NOTES_FILE NAMES                │
     //└────────────────────────────────────────────────────────────────────────┘
     try {
