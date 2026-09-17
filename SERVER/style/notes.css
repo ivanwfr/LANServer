@@ -1,0 +1,286 @@
+/*┌──────────────────────────────────────────────────────────────────────────┐*/
+/*│ style/notes.css    ● $APROJECTS/LANServer         ● _TAG (260917:00h:09) │*/
+/*└──────────────────────────────────────────────────────────────────────────┘*/
+/* scrollbar {{{*/
+#note_input_TEXTAREA                                { scrollbar-width :       thin; }
+#note_input_TEXTAREA                                { scrollbar-color : #DDD #6666; }
+#saved_notes_DIV                                    { scrollbar-width :       thin; }
+#saved_notes_DIV                                    { scrollbar-color : #DDD #6666; }
+/*}}}*/
+/* [saved_notes_TABLE] TD WIDTH {{{*/
+/* saved_notes_DIV {{{*/
+#saved_notes_DIV {
+    margin-top      : 1rem;
+    padding-right   :  5px; /* offsets the scrollbar from the outline */
+    width           : 100%;
+min-width           : 100%; /* ...to grow with textarea */
+
+    resize:both;
+    overflow        : auto;
+min-height          : 8em;
+    height          : 30%;
+}
+/*}}}*/
+/* saved_notes_TABLE {{{*/
+#saved_notes_TABLE {
+    width           : 100%;
+    border-collapse : collapse;
+}
+/*}}}*/
+/* saved_notes_TABLE ● FIRST AND LAST NOTES ROW LAYOUT {{{*/
+#saved_notes_TABLE>tbody {
+    border-radius   : 1em;
+    outline         : 2px solid #7778;
+    outline-offset  :-2px;
+}
+
+#saved_notes_TABLE>tbody tr:first-child td { padding-top     : 3em;          }
+#saved_notes_TABLE>tbody tr:last-child  td { padding-bottom  : 3em;          }
+
+#saved_notes_TABLE>tbody tr:first-child    { border-radius: 1em 1em 0em 0em; }
+#saved_notes_TABLE>tbody tr:last-child     { border-radius: 0em 0em 1em 1em; }
+
+#saved_notes_TABLE>tbody tr:first-child    { background: linear-gradient(to bottom, #8884 30%, #4444 30%, #222); }
+#saved_notes_TABLE>tbody tr:last-child     { background: linear-gradient(to bottom, #8884 30%, #4444 30%, #222); }
+/*}}}*/
+/* saved_notes_TABLE ● COLUMNS LAYOUT {{{*/
+#saved_notes_TABLE TD:nth-of-type( 1) {     width:  2em; } /* check     */
+#saved_notes_TABLE TD:nth-of-type( 2) {     width:  2em; } /* edit      */
+#saved_notes_TABLE TD:nth-of-type( 3) { max-width: 25em; } /* truncated */
+#saved_notes_TABLE TD:nth-of-type( 4) {     width: 11em; } /* timestamp */
+#saved_notes_TABLE TD:nth-of-type( 5) {     width:  2em; } /* delete    */
+
+/*}}}*/
+/* saved_notes_TABLE no_notes_yet {{{*/
+#saved_notes_TABLE .no_notes_yet_TD { text-align: center; color: #888; font-style: italic; }
+/*}}}*/
+/*}}}*/
+/* [narr_button ● tune_button ● wide_button] {{{*/
+
+#narr_button         { float:  left; background: #222; color: 444; text-shadow: 1px 1px 1px #FFF; width: 33%; margin-left : 0em; }
+#tune_button         { float:  left; background: #222; color: 444; text-shadow: 1px 1px 1px #FFF; width: 33%; margin-left : 0em; }
+#wide_button         { float: right; background: #222; color: 444; text-shadow: 1px 1px 1px #FFF; width: 33%; margin-right: 0em; }
+#narr_button::before { content: "< < < <"; }
+#tune_button::before { content: "● ● ● ●"; }
+#wide_button::after  { content: "> > > >"; }
+
+#tune_button.layout1::before { content: "✓ ● ● ●"; }
+#tune_button.layout2::before { content: "● ✓ ● ●"; }
+#tune_button.layout3::before { content: "● ● ✓ ●"; }
+#tune_button.layout4::before { content: "● ● ● ✓"; }
+
+/*}}}*/
+#note_DETAILS { /*{{{*/
+    margin-top      : 2rem;
+    border          : 1px solid #ccc;
+    border-radius   : 6px;
+    padding         : 1rem;
+}
+#note_DETAILS.empty>SUMMARY>EM {
+    opacity         : 0.2 !important;
+/*{{{
+    rotate          : -45deg;
+}}}*/
+}
+/*}}}*/
+#note_DETAILS>SUMMARY { /*{{{*/
+    cursor          : pointer;
+    font-weight     : bold;
+}
+/*}}}*/
+#note_input_TEXTAREA { /*{{{*/
+/*{{{
+    resize          : both;
+}}}*/
+    display         : block;
+    margin-bottom   : 10px;
+    border          : 1px solid #ddd;
+    border-radius   : 4px;
+        height      : 8em;
+    min-height      : 5em;
+    min-width       : 100%;
+    padding         : 8px;
+    background-color: #222;
+    color           : #FF8;
+}
+#note_input_TEXTAREA.center_input_placeholder {
+    text-align      : center;
+}
+/*}}}*/
+#save_note_BUTTON { /*{{{*/
+    cursor          : pointer;
+    padding         : 6px 12px;
+/*{{{
+    background      : #4CAF50;
+}}}*/
+    background      : transparent;
+    color           : white;
+
+    border-radius   : 4px;
+/*{{{
+    border          : 5px  solid #888;
+}}}*/
+    outline         : 4px groove #800;
+    outline-offset  : 4px;
+}
+#save_note_BUTTON[disabled] {
+    background      : #222;
+    color           : #888;
+text-decoration: line-through;
+font-style: italic;
+}
+#save_note_BUTTON.notes_uploaded {
+    outline         : 4px solid #040;
+}
+
+/*┌────────────────────────────────────────────────────────────┐*/
+/*│ @see note.et_editing_note_index                            │*/
+/*└────────────────────────────────────────────────────────────┘*/
+#save_note_BUTTON[editing_note_num="1"]::before { content: "🟤"; }
+#save_note_BUTTON[editing_note_num="2"]::before { content: "🔴"; }
+#save_note_BUTTON[editing_note_num="3"]::before { content: "🟠"; }
+#save_note_BUTTON[editing_note_num="4"]::before { content: "🟡"; }
+#save_note_BUTTON[editing_note_num="5"]::before { content: "🟢"; }
+#save_note_BUTTON[editing_note_num="6"]::before { content: "🔵"; }
+#save_note_BUTTON[editing_note_num="7"]::before { content: "🟣"; }
+#save_note_BUTTON[editing_note_num="8"]::before { content: "⚫"; }
+#save_note_BUTTON[editing_note_num="9"]::before { content: "⚪️"; }
+#save_note_BUTTON[editing_note_num="0"]::before { content: "◯ "; }
+
+/*}}}*/
+#status_line { /*{{{*/
+    user-select     : none;
+    transform       : translate(0, 0.5rem);
+    border          : 0;
+    border-radius   : 4px;
+    padding         : 0;
+    background      : #8882;
+    color           : #888F;
+    opacity         : 0.5;
+}
+
+.tail_msg {
+    float: right;
+    border-radius: 1em;
+    border       : 1px inset #888;
+    margin-left  : 1em;
+    padding      : 0 0.5em;
+    text-shadow  : 2px 1px 2px #AAA;
+}
+
+#status_line.brighter { opacity   :  1.0; color: #DDF; }
+#status_line.bigger   { font-size : 150%; }
+
+/*}}}*/
+.cb_BUTTON { /*{{{*/
+    margin          : 0.2em;
+    float           : right;
+    cursor          : pointer;
+    border          : none;
+    border-radius   : 4px;
+    padding         : 6px 12px;
+    background      : #222250;
+    color           : white;
+    text-align      : right;
+}
+.cb_BUTTON[disabled] {
+    background      : #444;
+    color           : #888;
+}
+/*}}}*/
+/* node_row ellipsis timestamp {{{*/
+.node_row {
+    user-select     : none; /* better for long-press on touchscreen */
+    outline-offset: -2px;
+    border-radius : 0.3em;
+    background-color: #222;
+    color           : #DD4;
+}
+.node_row.auto_save {
+    color           : #888;
+}
+
+.node_row .timestamp {
+    color           : #888;
+    margin-right    : 1em;
+}
+
+/*}}}*/
+/* node_row BUTTONS {{{*/
+
+.node_row BUTTON {
+    cursor          : pointer;
+    border          : none;
+    border-radius   : 0.5em;
+    background      : none;
+    padding         : 0;
+    color           : red;
+    margin-right    : 0.2em;
+ }
+.node_row BUTTON::before {
+    display         : inline-block;
+    padding         : 0;
+}
+
+.truncated {
+  white-space       :   nowrap;
+  overflow          :   hidden;
+  text-overflow     : ellipsis;
+}
+.timestamp {
+  white-space       :   nowrap;
+  margin            : 0 0.5em;
+}
+
+/* color */
+.check_button           {   color:  red; }
+
+/* content */
+.editing   .edit_button::before  { content:   "✎"; color: yellow; }
+           .edit_button::before  { content:   "✐"; color:    red; }
+         .delete_button::before  { content:   "✕"; background-color: #F004; padding: 0.4em; }
+/*{{{
+          .check_button::before  { content:  "🚧"; }
+ .checked .check_button::before  { content:   "✔"; }
+}}}*/
+          .check_button::before  { content:  "🔵"; }
+ .checked .check_button::before  { content:  "✅"; }
+  .check_button.onShift::before  { font-size: 150%; border: 1px solid white; }
+/*}}}*/
+/* checked  ● TEXTAREA  ● node_row {{{*/
+#note_input_TEXTAREA.checked                       {   color: lightgreen; }
+           .node_row.checked                       {   color: lightgreen; }
+                    .checked .check_button         {   color: lightgreen; }
+
+.auto_save .check_button { visibility: hidden; }
+.auto_save .edit_button  { visibility: hidden; }
+/*}}}*/
+/* node_row ● hover     ● standout {{{*/
+
+/* ROW */
+.node_row.standout              { outline: 2px dotted #FF08; }
+.node_row.editing               { outline: 2px dashed #FF0F; }
+
+/* BUTTONS */
+.node_row                BUTTON { padding: 0 0  ; transition: all 1000ms  500ms ease-out; border: 1px solid #0000; }
+#saved_notes_TABLE:hover BUTTON { padding: 0 1em; transition: all  200ms    0ms ease    ; border: 1px solid #8888; }
+
+/* TD */
+.node_row                TD     {                 transition: all 1000ms 2000ms ease-out; }
+.node_row:hover          TD     { padding: 1em 0; transition: all  200ms    0ms ease    ; }
+.node_row.standout       TD     { padding: 1em 0; transition: all  200ms    0ms ease    ; }
+
+/*{{{
+.node_row          BUTTON::before { padding: 0   0  ; transition: padding 1000ms      500ms ease-out; }
+.node_row:hover    BUTTON         { padding: 0 2.0em 0 0 ; transition: padding 200ms ease    0ms    ; }
+.node_row.standout BUTTON         { padding: 0 2.0em 0 0 ; transition: padding 200ms ease    0ms    ; }
+.node_row:hover    BUTTON::before { padding: 0 1.0em;                                                 }
+.node_row.standout BUTTON::before { padding: 0 1.0em;                                                 }
+}}}*/
+
+/*{{{
+#saved_notes_TABLE::hover         BUTTON::before { padding: 0 1.0em; }
+#saved_notes_TABLE:has(.standout) BUTTON::before { padding: 0 1.0em; }
+}}}*/
+
+/*}}}*/
