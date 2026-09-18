@@ -1,19 +1,19 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260917:00h:10) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260918:02h:12) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
-/* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true {{{*/
+/* jshint{{{*/
 
 /* globals js_notes */
 /*}}}*/
 let notes = (function()
 {
 let log_this = false;
-let tag_this = true;//false || log_this;
+let tag_this = false || log_this;
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes ● DATA ● LOAD ● LOCAL STORAGE ● NOTE TABLE ● STATUS LINE         🟤
+//│ DATA                                                                      🔴
 //├────────────────────────────────────────────────────────────────────────────┤
 /* ●  INPUT PLACEHOLDER {{{*/
 
@@ -30,7 +30,7 @@ const AUTO_SAVE_TAG         = "(auto_save)\n";
 //└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟤 GUI (js_notes)                                                          │
+//│ 🟤 GUI (js_notes)                                                       🖥 │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*_ add_notes_GUI {{{*/
 /*{{{*/
@@ -52,8 +52,9 @@ let add_notes_GUI = function(args)
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟤 STORAGE                                                                 │
+//│ 🟤 STORAGE                                                             🡮🡮  │
 //└────────────────────────────────────────────────────────────────────────────┘
+/*{{{*/
 //{{{
 let nArray = [];
 
@@ -175,7 +176,7 @@ if(tag_this) console.log("🟡%c load_notes\t\t  ["+ notes_storage_key +"]", "co
         .catch(( err  ) => {
             console.warn("Could not retrieve notes from server", err);
 
-            notes_loaded_from     = "◯ missing on server!";
+            notes_loaded_from     = "❌ missing on server!";
             load_client_notes();
 
             js_notes.layout_notes    ("load_notes: "+ notes_loaded_from);
@@ -192,7 +193,7 @@ if(tag_this) console.log("🟡%c load_server_notes(data: "+ (typeof data) +")", 
     // SERVER-SIDE NOTES ARRAY
     if(Array.isArray(data) && data.length)
     {
-        notes_loaded_from = "🟢 from server";
+        notes_loaded_from = "✅ from server";
         nArray = data;
 
         // BACKUP SERVER-SIDE NOTES INTO localStorage
@@ -204,7 +205,7 @@ if(tag_this) console.log("🟡%c load_server_notes(data: "+ (typeof data) +")", 
     // LOAD CLIENT-SIDE NOTES AS A FALLBACK
     else {
         throw new Error("load_server_notes: server response was not an Note array");
-//      notes_loaded_from = "🔴 from device";
+//      notes_loaded_from = "❌ from device";
 //      load_client_notes();
     }
     js_notes.layout_notes("load_notes: "+ notes_loaded_from);
@@ -227,12 +228,16 @@ if(tag_this) console.log("%c load_client_notes", "color: #F00");
     }
 };
 /*}}}*/
-//┌────────────────────────────────────┐
-//│ 🟤 SAVE                            │
-//└────────────────────────────────────┘
-//● note_1_onclick_save ● onclick ● save_note_BUTTON {{{
+/*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟤 SAVE                                                                 🡮  │
+//└────────────────────────────────────────────────────────────────────────────┘
+//● note_1_onclick_save {{{
 let note_1_onclick_save = function(e)
 {
+if(tag_this) console.log("🟤 note_1_onclick_save");
+
     /* input text {{{*/
     let  text = input.value.trim();
 
@@ -277,19 +282,20 @@ let note_1_onclick_save = function(e)
 
     //}}}
     // ... 🔵 CLEAR USER INPUT ONCE SAVED {{{
-    js_notes.reset_input();
+    js_notes.reset_input("note_1_onclick_save");
 
     //}}}
     js_notes.layout_notes("note_1_onclick_save", index);
 };
 //}}}
-//┌────────────────────────────────────┐
-//│ 🔴 IMPORT 🟠 EXPORT                │
-//└────────────────────────────────────┘
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🔴 IMPORT                                                             🢀    │
+//└────────────────────────────────────────────────────────────────────────────┘
 /*● note_2_onclick_import ● onclick ● cb_BUTTON {{{*/
 let note_2_onclick_import = function(e)
 {
-if(tag_this) console.log(e.target.innerText +"note_2_onclick_import");
+if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
 /*{{{
 // requires clipboard access permission
     navigator
@@ -305,7 +311,7 @@ if(tag_this) console.log(e.target.innerText +"note_2_onclick_import");
     }
 
     // clear input
-    js_notes.reset_input();
+    js_notes.reset_input("note_2_onclick_import");
 
     //}}}
     //{{{
@@ -367,13 +373,17 @@ if(tag_this) console.log(e.target.innerText +"note_2_onclick_import");
     //}}}
 };
 /*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟠 EXPORT                                                               🢂  │
+//└────────────────────────────────────────────────────────────────────────────┘
 /*● note_3_onclick_export ● onclick ● cb_BUTTON {{{*/
 const FOLD_OPEN = "{{{"; /* eslint-disable-line no-unused-vars */
 const FOLD_CLOSE= "}}}"; /* eslint-disable-line no-unused-vars */
 const NOTE_H_SEP = " ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●"+FOLD_OPEN+"1";
 let note_3_onclick_export = function(e)
 {
-if(tag_this) console.log(e.target.innerText +"note_3_onclick_export");
+if(tag_this) console.log("🟠 "+e.target.innerText +"note_3_onclick_export");
     if(!nArray.length) return;
 
     let buffer = "";
@@ -390,6 +400,7 @@ if(tag_this) console.log(e.target.innerText +"note_3_onclick_export");
     center_input_placeholder(PLACEHOLDER_EXPORT_REPORT.replace("{count}", nArray.length+" "), 10000);
 };
 /*}}}*/
+/*{{{*/
 /*_ formatDate {{{*/
 let formatDate = function(timestamp)
 {
@@ -414,18 +425,22 @@ let center_input_placeholder = function(placeholder,delay)
 };
 let reset_input_placeholder = function()
 {
+if(tag_this) console.log("⚫ reset_input_placeholder");
+
     input.setAttribute(    "placeholder", PLACEHOLDER_CREATE_PROMPT);
 
     input.classList.remove("center_input_placeholder");
 };
 /*}}}*/
-//┌────────────────────────────────────┐
-//│ 🟡 CHECK                           │
-//└────────────────────────────────────┘
-//● note_4_onclick_check ● onclick ● check_button ● [✓] i.e. **Done** {{{
+/*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟡 CHECK                                                            [ ] ✅ │
+//└────────────────────────────────────────────────────────────────────────────┘
+//● note_4_onclick_check {{{
 let note_4_onclick_check = function(e,index)
 {
-if(tag_this) console.log("note_4_onclick_check: "+ e.type);
+if(tag_this) console.log("🟡 note_4_onclick_check: "+ e.type);
 
     // cancelBubble ● cancel container's click delegation {{{
     e.cancelBubble = true;
@@ -485,20 +500,23 @@ let get_checked = function(index)
     return nArray[index].checked ? "checked" : "";
 };
 /*}}}*/
-//┌────────────────────────────────────┐
-//│ 🟢 EDIT                            │
-//└────────────────────────────────────┘
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟢 EDIT                                                                 ✎  │
+//└────────────────────────────────────────────────────────────────────────────┘
 //● note_5_onclick_edit ● onclick ● node_row {{{
 let note_5_onclick_edit = function(e,index)
 {
+if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
+
     // STORE CURRENT INPUT CONTENT (WILL BE RESTORED BY NEXT RELOAD)
-    js_notes.save_input();
+    js_notes.save_input("note_5_onclick_edit");
 
     // TOGGLE OFF ANY CURRENT EDIT
     let editing_note_index  = get_editing_note_index();
     if( editing_note_index >= 0)
     {
-        js_notes.reset_input();
+        js_notes.reset_input("note_5_onclick_edit");
 
         if(index == editing_note_index)
             return;
@@ -529,6 +547,7 @@ let note_5_onclick_edit = function(e,index)
     note_1_onclick_save( { type: "auto_save" } );
 };
 //}}}
+/*{{{*/
 /*_ set_editing_note_index {{{*/
 /*{{{*/
 const EDITING_NOTE_NUM       = "editing_note_num";
@@ -571,7 +590,8 @@ let get_editing_note_index = function()
 /*_ save_note_auto {{{*/
 let save_note_auto = function(e)
 {
-if(log_this) console.log("%c save_note_auto", "color: #F00");
+if(tag_this) console.log("🔴 save_note_auto");
+
     let text    = input.value.trim();
     // SAME AS ORIGINAL ● save_note_BUTTON disabled {{{
     if(!text || is_input_same_as_original())
@@ -672,13 +692,15 @@ if(log_this) console.log("🟣 AUTO_SAVE: LAST SAVED");
    return true;
 };
 /*}}}*/
-//┌────────────────────────────────────┐
-//│ 🔵 DELETE                          │
-//└────────────────────────────────────┘
-//● note_6_onclick_delete ● onclick ● delete_button {{{
+/*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🔵 DELETE                                                               ✕  │
+//└────────────────────────────────────────────────────────────────────────────┘
+//● note_6_onclick_delete {{{
 let note_6_onclick_delete = function(e,index)
 {
-if(tag_this) console.log("%c note_6_onclick_delete: "+ e.type, "color: #F00");
+if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
 
     // cancelBubble ● cancel container's click delegation {{{
     e.cancelBubble = true;
@@ -688,7 +710,7 @@ if(tag_this) console.log("%c note_6_onclick_delete: "+ e.type, "color: #F00");
     let deleting_editing_note   = (index == get_editing_note_index());
     let deleting_auto_save_note = (index == nArray.length) && is_last_note_auto_save();
     if( deleting_editing_note || deleting_auto_save_note)
-        js_notes.reset_input();
+        js_notes.reset_input("note_6_onclick_delete");
 
     // REMOVE NOTE
     nArray.splice(index, 1);
@@ -720,7 +742,7 @@ if(tag_this) console.log("%c note_6_onclick_delete: "+ e.type, "color: #F00");
 //}}}
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ standout_note_at_index ● make the working note standout, i.e. BIGGER       │
+//│ 🟣 STANDOUT                                                             💡 │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*_ standout_note_at_index {{{*/
 /*{{{*/
@@ -753,7 +775,7 @@ let standout_note_at_index = function(index)
     }
 };
 /*}}}*/
-/*_ note_scrollIntoView ● (-1 for last) {{{*/
+/*_ note_scrollIntoView {{{*/
 let note_scrollIntoView = function(index=-1)
 {
     if( !nArray.length ) return;
@@ -772,7 +794,7 @@ let note_scrollIntoView = function(index=-1)
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ Scrolls a TR into the visible area of its scrolled ancestor  ● (debounced) │
+//│ ⚫ TR SCROLL INTO VIEW                                                  ▲▼ │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*_ scroll_TR_intoView {{{*/
 /* debounce timeout {{{*/
@@ -787,7 +809,7 @@ let scroll_TR_intoView = function(tr)
 let scroll_TR_intoView_handler = function(tr)
 {
 /*{{{*/
-if(tag_this) console.log("%c 🟣scroll_TR_intoView_handler: %c"+js_notes.ellipsis(tr.innerText.trim(),50), "color: magenta", "background-color:black");
+if(tag_this) console.log("🟣%c scroll_TR_intoView_handler: %c"+js_notes.ellipsis(tr.innerText.trim(),50), "color: magenta", "background-color:black");
 
     scroll_TR_intoView_timeout = null;
 /*}}}*/
@@ -846,7 +868,7 @@ let getClosestScrollableAncestor = function(el)
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ update_summary ● FILE NAME ● NUMBER OF NOTE ● FROM SERVER OR CLIENT        │
+//│ ⚪️ SUMMARY                                                                 │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*_ update_summary {{{*/
 let update_summary = function()
@@ -855,14 +877,14 @@ let update_summary = function()
 
     summary.childNodes[0].textContent = ""
         +     js_notes.get_page_fileName()
-        +" ("+ notes.get_nArray().length +" notes)"
-        +" " + notes_loaded_from
+        +" ("+   notes.get_nArray().length +" notes)"
+        +" " +   notes_loaded_from
         ;
 };
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ PUBLIC
+//│ PUBLIC                                                                     │
 //└────────────────────────────────────────────────────────────────────────────┘
 //{{{
     return { name: "notes"
@@ -882,10 +904,10 @@ let update_summary = function()
         ,    get_notes_loaded_from  : () => notes_loaded_from
 
         // SAVE
-        ,    note_1_onclick_save //..........................onclick
+        ,    note_1_onclick_save            //...onclick
 
         // EDIT
-        ,    note_5_onclick_edit //..........................onclick
+        ,    note_5_onclick_edit            //...onclick
         ,    set_editing_note_index
         ,    get_editing_note_index
         ,    save_note_auto
@@ -894,15 +916,15 @@ let update_summary = function()
         ,    is_last_note_auto_save
 
         // DELETE
-        ,    note_6_onclick_delete //........................onclick
+        ,    note_6_onclick_delete          //...onclick
 
         // CHECK
-        ,    note_4_onclick_check  //........................onclick
+        ,    note_4_onclick_check           //...onclick
         ,    get_checked
 
         // IMPORT-EXPORT
-        ,    note_2_onclick_import //.......................onclick
-        ,    note_3_onclick_export //.......................onclick
+        ,    note_2_onclick_import          //...onclick
+        ,    note_3_onclick_export          //...onclick
         ,    center_input_placeholder
         ,    reset_input_placeholder
         // DEBUG

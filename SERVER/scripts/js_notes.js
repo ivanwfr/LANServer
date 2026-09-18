@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260917:00h:23) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260918:02h:19) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -39,9 +39,9 @@ const NOTE_DETAILS_HTML   = `
     <button   id="wide_button"         onclick='js_notes.wider                (event);'></button>
     <br>
     <textarea id="note_input_TEXTAREA" placeholder="${notes.PLACEHOLDER_CREATE_PROMPT}"></textarea>
-    <button   id="save_note_BUTTON"        onclick='notes.note_1_onclick_save  (event)'>Save Note</button>
-    <button       class="cb_BUTTON"        onclick='notes.note_3_onclick_export(event)' title='${BUTTON_EXPORT_TITLE}'>${BUTTON_EXPORT_NAME}</button>
-    <button       class="cb_BUTTON"        onclick='notes.note_2_onclick_import(event)' title='${BUTTON_IMPORT_TITLE}'>${BUTTON_IMPORT_NAME}</button>
+    <button   id="save_note_BUTTON"        onclick='js_notes.note_1_onclick_save  (event)'>Save Note</button>
+    <button       class="cb_BUTTON"        onclick='js_notes.note_3_onclick_export(event)' title='${BUTTON_EXPORT_TITLE}'>${BUTTON_EXPORT_NAME}</button>
+    <button       class="cb_BUTTON"        onclick='js_notes.note_2_onclick_import(event)' title='${BUTTON_IMPORT_TITLE}'>${BUTTON_IMPORT_NAME}</button>
     <DIV      id="saved_notes_DIV">
      <TABLE   id="saved_notes_TABLE"></TABLE>
     </DIV>
@@ -53,6 +53,8 @@ const NOTE_DETAILS_HTML   = `
 /*_ wider {{{*/
 let wider = function(e) /* eslint-disable-line no-unused-vars */
 {
+if(tag_this) console.log("wider");
+
     let rect = input.getBoundingClientRect();
     input.style.width = parseInt(rect.width * 1.2)+"px";
 };
@@ -60,6 +62,8 @@ let wider = function(e) /* eslint-disable-line no-unused-vars */
 /*_ tunesize {{{*/
 let tunesize = function(e) /* eslint-disable-line no-unused-vars */
 {
+if(tag_this) console.log("tunesize");
+
     let w;
     switch(e.target.className)
     {
@@ -74,6 +78,8 @@ let tunesize = function(e) /* eslint-disable-line no-unused-vars */
 /*_ narrower {{{*/
 let narrower = function(e) /* eslint-disable-line no-unused-vars */
 {
+if(tag_this) console.log("narrower");
+
     let rect = input.getBoundingClientRect();
     input.style.width = parseInt(rect.width * 0.8)+"px";
 };
@@ -120,17 +126,20 @@ const BG = [ /* eslint-disable-line no-unused-vars */
 /* onload {{{*/
 let onload = function()
 {
+if(tag_this) console.log("onload");
+sm_tracer_viewPort.onLoad();
+
     // Save unfinished Notes when the user is leaving the tab {{{
     document.addEventListener("visibilitychange", function(e) {
         if( document.hidden )
         {
-            save_input();
-            notes.note_1_onclick_save ( e );
+            save_input("visibilitychange listner");
+            js_notes.note_1_onclick_save ( e );
         }
     });
     //}}}
     // Auto-save user input content until submted with a save-buton click {{{
-    setInterval(notes.note_1_onclick_save, AUTO_SAVE_INTERVAL_MS, { type: "auto_save" });
+    setInterval(js_notes.note_1_onclick_save, AUTO_SAVE_INTERVAL_MS, { type: "auto_save" });
 
     //}}}
     /* Notes taking GUI injection {{{*/
@@ -186,7 +195,7 @@ if(log_this) console.log("◯ get_page_storage_key");
     let page_storage_key = (pathName+"__"+fileName);
 
 /*{{{*/
-if(tag_this) {
+if(log_this) {
     console.log("◯ baseName         \t\t["+ baseName          +"]\n"
                +"◯ pathName         \t\t["+ pathName          +"]\n"
                +"◯ fileName         \t\t["+ fileName          +"]\n"
@@ -217,6 +226,8 @@ let status_line;
 /*}}}*/
 let add_notes_DETAILS = function()
 {
+if(tag_this) console.log("🔴 add_notes_DETAILS");
+
     // Create a Notes section near the bottom of the page {{{
 /*{{{
     let note_DETAILS_STYLE          = document.createElement("LINK");
@@ -276,7 +287,8 @@ let layout_count = 0;
 /*}}}*/
 let layout_notes = function(_caller="?",index=-1)
 {
-if(log_this) console.log("🔴%c layout_notes ← "+ _caller, "color: #F00");
+if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
+//console.trace();//FIXME
     /* 1. LOAD NOTES from server or localStorage {{{*/
     let nArray = notes.get_nArray();
     if(!nArray.length && !notes.get_notes_loaded_from())
@@ -291,12 +303,12 @@ if(log_this) console.log("🔴%c layout_notes ← "+ _caller, "color: #F00");
 + "<!--🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯-->"
 + "<TR          class='node_row "+   notes.get_checked(i)+(n.text.includes(AUTO_SAVE_TAG) ? " auto_save":"")+"'"
 +                                   " title='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
-+  "                                                      onclick='   notes.note_5_onclick_edit  (event, "+i+")'>"
-+  "<TD><button class='check_button'  title='Check note'  onclick='   notes.note_4_onclick_check (event, "+i+")'></button></TD>"
++  "                                                      onclick='js_notes.note_5_onclick_edit  (event, "+i+")'>"
++  "<TD><button class='check_button'  title='Check note'  onclick='js_notes.note_4_onclick_check (event, "+i+")'></button></TD>"
 +  "<TD><button class='edit_button'   title='Edit note'                                                         ></button></TD>"
 +  "<TD><div    class='truncated'>"+            escapeHTML(n.text)                                          +"</div>   </TD>"
 +  "<TD><small  class='timestamp'                         onclick='event.cancelBubble = true;'>"+ new Date(n.timestamp).toLocaleString() +"</small></TD>"
-+  "<TD><button class='delete_button' title='Delete note' onclick='   notes.note_6_onclick_delete(event, "+i+")'></button></TD>"
++  "<TD><button class='delete_button' title='Delete note' onclick='js_notes.note_6_onclick_delete(event, "+i+")'></button></TD>"
 + "</TR>"
 ).join("")
 
@@ -311,6 +323,7 @@ if(log_this) console.log("🔴%c layout_notes ← "+ _caller, "color: #F00");
     tail_status(tics_status(layout_count), notes.get_notes_loaded_from());//FIXME recyle/count symbol
 
     // STANDOUT LAST HANDLED NOTE
+sm_tracer_viewPort.highlightRow(  index );
     notes.standout_note_at_index( index );
 
     // DISPLAY FILE NAME ● NUMBER OF NOTE ● FROM SERVER OR CLIENT
@@ -326,6 +339,8 @@ if(log_this) console.log("🔴%c layout_notes ← "+ _caller, "color: #F00");
 /*_ show_status {{{*/
 let show_status = function(msg)
 {
+if(log_this) console.log("⚫ show_status( "+msg+" )");
+
     status_line.msg        = msg;
     status_line.innerHTML  = msg +" "+ (status_line.tail_msg || "");
 
@@ -393,7 +408,7 @@ let tics_status = function( count )
 /* ● copy_to_clipboard {{{*/
 let copy_to_clipboard = function(buffer)
 {
-if(log_this) console.log("copy_to_clipboard:");
+if(tag_this) console.log("copy_to_clipboard:");
 if(log_this) console.log( buffer );
 
     navigator.clipboard.writeText( buffer );
@@ -430,19 +445,40 @@ let escapeHTML = function(text)
 /*  input_listener {{{*/
 let input_listener = function(e)
 {
-if(log_this) console.log("input_listener: "+ e.type);
-if(log_this) console.log(`Value changed: "${e.detail.oldValue}" → "${e.detail.newValue}"`);
+if(tag_this) console.log("🟣 input_listener: "+ e.type);
 
-    if( input.value.trim() )
+    let input_value = input.value.trim();
+    if( input_value )
     {
-        notes.reset_input_placeholder();
-        notes.save_note_auto( e );
-        note_DETAILS.classList.remove("empty");
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ IGNORE blank header and trailer changes
+        //└────────────────────────────────────────────────────────────────────┘
+        let oldValue = e.detail.oldValue.trim();
+        let newValue = e.detail.newValue.trim();
+        if( newValue == oldValue)
+            return;
+
+if(tag_this) console.log(`input_value changed:
+● FROM \t"${ oldValue }"
+● TO   \t"${ newValue }"`);
+
+sm_tracer_viewPort.onDraftInput("input_value length="+ input_value.length);
+
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ on first user-input ● transitioning from empty
+        //└────────────────────────────────────────────────────────────────────┘
+        if( !e.detail.oldValue )
+        {
+            notes.reset_input_placeholder();
+            notes.save_note_auto( e );
+            note_DETAILS.classList.remove("empty");
+        }
     }
     else {
-        notes.note_1_onclick_save( { type: "auto_save" } ); // text cleared ...worth a synchronized update
-        reset_input();
+        js_notes.note_1_onclick_save( { type: "auto_save" } ); // text cleared ...worth a synchronized update
         note_DETAILS.classList.add   ("empty");
+
+        reset_input("input_listener: ❌input empty");
     }
 };
 /*}}}*/
@@ -543,7 +579,7 @@ if(log_this) console.log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x 
 /*  load_input {{{*/
 let load_input = function()
 {
-if(log_this) console.log("load_input");
+if(tag_this) console.log("🟣 load_input");
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ NO SAVED INPUT CONTENT FROM PREVIOUS SESSION DID                       │
@@ -556,8 +592,16 @@ if(log_this) console.log("load_input");
     // DEFAULT TO SCROLL LAST NOTE INTO VIEW
     if(!text) {
         notes.note_scrollIntoView();
+
+        reset_input("load_input: !text");
         return;
     }
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ some text was saved into localStorage on previous session exit         │
+    //│ resuming edit                                                          │
+    //└────────────────────────────────────────────────────────────────────────┘
+sm_tracer_viewPort.onDraftInput("input length: "+ text.length +"ch");
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ RESUME EDITING SOME EXISTING NOTE                                      │
@@ -568,8 +612,10 @@ if(log_this) console.log("load_input");
         let        note = nArray[index];
         if(text == note.text)
         {
+sm_tracer_viewPort.onRowSelect(index + 1);
+
             let node_row = saved_notes_TABLE.firstElementChild.children[index];
-            notes.note_5_onclick_edit({ target: node_row }, index);
+            js_notes.note_5_onclick_edit({ target: node_row }, index);
 // TODO: TRYING INPUT.FOCUS() TO RESUME NOTE EDIT {{{
 //          input.addEventListener("mouseenter", (event) => event.target.focus());
 //          input.addEventListener("mouseenter", ()      =>        input.focus());
@@ -589,8 +635,10 @@ if(log_this) console.log( text );
 };
 /*}}}*/
 /*  save_input {{{*/
-let save_input = function()
+let save_input = function(_caller)
 {
+if(tag_this) console.log("🟣 save_input"+ (_caller ? (" ← "+_caller) : ""));
+
     // STORE CURRENT INPUT CONTENT (WILL BE RESTORED BY NEXT RELOAD)
     let input_storage_key = get_input_storage_key();
 
@@ -607,8 +655,11 @@ let save_input = function()
 };
 /*}}}*/
 /*  reset_input {{{*/
-let reset_input = function()
+let reset_input = function(_caller)
 {
+if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""));
+sm_tracer_viewPort.onReady();
+
     // CLEAR TEXTAREA CONTENT
     input.value = "";
 
@@ -636,7 +687,7 @@ let TextArea_IO = (function()
     //{{{
     let notifyChange = function(oldValue, newValue)
     {
-        let event = new CustomEvent("ta_ev", {
+        let event = new CustomEvent("text_input:event", {
             bubbles: true,
             detail: { oldValue, newValue }
         });
@@ -647,8 +698,8 @@ let TextArea_IO = (function()
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ 1. HANDLE USER INPUT (NATIVE HANDLING)
     //└────────────────────────────────────────────────────────────────────────┘
-    /*_ ta_evListener {{{*/
-    let ta_evListener = function(e) /* eslint-disable-line no-unused-vars */
+    /*_ text_inputListener {{{*/
+    let text_inputListener = function(e) /* eslint-disable-line no-unused-vars */
     {
         //┌────────────────────────────────────────────────────────────────────────┐
         //│ We don't have "oldValue" in native input events, so we store it
@@ -718,9 +769,9 @@ return {
     //│ SUBSCRIBE—UNSUBSCRIBE ● returns the un-subscribe function
     //└──────────────────────────────────────────────────────────────────────┘
     on: (ta, fn) => { textarea = ta;
-        textarea.addEventListener   ("ta_ev", fn);
-        textarea.addEventListener   ("input", ta_evListener);
-        return () =>    textarea.removeEventListener("ta_ev", fn);
+        textarea              .addEventListener   ("input", text_inputListener); // centralize
+        textarea              .addEventListener   ("text_input:event"     , fn); // redispatch
+        return () =>  textarea.removeEventListener("text_input:event"     , fn); // redispatch
     }
 };
 //}}}
@@ -754,19 +805,116 @@ return {
 //└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
+//│ STATE MACHINE INTEGRATION                                                 🔵
+//├────────────────────────────────────────────────────────────────────────────┤
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ functions to migrate here from notes
+//├────────────────────────────────────────────────────────────────────────────┤
+let note_1_onclick_save   = function(e      ) { if(tag_this) console.log("note_1_onclick_save  ()"         ); notes.note_1_onclick_save  (e      ); };
+let note_2_onclick_import = function(e      ) { if(tag_this) console.log("note_2_onclick_import()"         ); notes.note_2_onclick_import(e      ); };
+let note_3_onclick_export = function(e      ) { if(tag_this) console.log("note_3_onclick_export()"         ); notes.note_3_onclick_export(e      ); };
+let note_4_onclick_check  = function(e,index) { if(tag_this) console.log("note_4_onclick_check ("+index+")"); notes.note_4_onclick_check (e,index); };
+let note_5_onclick_edit   = function(e,index) { if(tag_this) console.log("note_5_onclick_edit  ("+index+")"); notes.note_5_onclick_edit  (e,index); };
+let note_6_onclick_delete = function(e,index) { if(tag_this) console.log("note_6_onclick_delete("+index+")"); notes.note_6_onclick_delete(e,index); };
+//└────────────────────────────────────────────────────────────────────────────┘
+
+//{ {{
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟤 1. Load the tracer first ● SERVER/server.js
+//│ <script src="js_sm_tracer.js"></script>
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ ...How to Integrate (The "Passive" Step)
+//│ You do not need to rewrite your logic.
+//│ You simply wrap your existing functions with the tracer adapters.
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ Step A: In js_notes.js (View Layer)
+//│ Assume you have a global object ui with your current methods...
+//└────────────────────────────────────────────────────────────────────────────┘
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🔴 2. Create the adapter
+//└────────────────────────────────────────────────────────────────────────────┘
+//{ {{
+const tracer = window.smTracer();
+const js_notesView = {
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ Your existing methods — add all required ViewPort methods here
+//└────────────────────────────────────────────────────────────────────────────┘
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+/*0⚪️*/ onLoad      : ()    => { console.log("⚪️⚪️⚪️ onLoad"               ); },
+//└────────────────────────────────────────────────────────────────────────────┘
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+/*1🟤*/ onReady     : ()    => { console.log("🟤🟤🟤 onReady"              ); },
+//1🟤   clearAutoSave
+//1🟤   showPlaceholder
+//└────────────────────────────────────────────────────────────────────────────┘
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+/*2🔴*/ onDraftInput: (val) => { console.log("🔴🔴🔴 onDraftInput("+val+")"); },
+/*2🔴*/ onRowSelect : (id ) => { console.log("🔴🔴🔴 onRowSelect ("+id +")"); },
+/*2🔴*/ highlightRow: (id ) => { console.log("🔴🔴🔴 highlightRow("+id +")"); }
+//2🔴   setSaveButton
+//└────────────────────────────────────────────────────────────────────────────┘
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//3🟠   showAutoSave
+//3🟠   onSaveClick
+//3🟠   onCancel
+//└────────────────────────────────────────────────────────────────────────────┘
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//4🟡   readDraft
+//4🟡   writeDraft
+//└────────────────────────────────────────────────────────────────────────────┘
+
+};
+
+//}} }
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟠 3. Wrap them (Passive Injection)
+//└────────────────────────────────────────────────────────────────────────────┘
+//{{{
+const sm_tracer_viewPort = tracer.createViewAdapter( js_notesView );
+
+//}}}
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟡 4. Use `viewPort` in your existing code instead of `ui`
+//│ Example:
+//│ viewPort.onReady();
+//│ viewPort.onDraftInput(input.value);
+//└────────────────────────────────────────────────────────────────────────────┘
+//}} }
+//└────────────────────────────────────────────────────────────────────────────┘
+
+//┌────────────────────────────────────────────────────────────────────────────┐
 //│ PUBLIC
 //└────────────────────────────────────────────────────────────────────────────┘
 //{{{
     return { name: "js_notes"
         ,    onload
-      //,    notes
-        ,    get_input : () => input
+
+        ,    get_input  : () => input
 
         //   onclick
         ,    wider
         ,    tunesize
         ,    narrower
         ,    tune_status
+
+        // functions to migrate here from notes
+        ,    note_1_onclick_save
+        ,    note_5_onclick_edit
+        ,    note_6_onclick_delete
+        ,    note_4_onclick_check
+        ,    note_2_onclick_import
+        ,    note_3_onclick_export
 
         // used by notes
         , copy_to_clipboard

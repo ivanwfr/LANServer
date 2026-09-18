@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
     const SERVER_JS_ID  = "server";
-    const SERVER_JS_TAG = SERVER_JS_ID  +" (260917:01h:55)";
+    const SERVER_JS_TAG = SERVER_JS_ID  +" (260917:20h:06)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -128,12 +128,13 @@ A:visited {            color: #F0F; }
 /*    SCRIPT_QTEXT {{{*/
 const SCRIPT_QTEXT = ""
     + "<meta name='color-scheme' content='light only'>"
-    + "<script src='/scripts/js_folds.js'  ></script>"
-    + "<script src='/scripts/js_store.js'  ></script>"
-    + "<script src='/scripts/js_xpath.js'  ></script>"
-    + "<script src='/scripts/js_linkify.js'></script>"
-    + "<script src='/scripts/notes.js'     ></script>"  // before js_notes.js
-    + "<script src='/scripts/js_notes.js'  ></script>"  // after     notes.js
+    + "<script src='/scripts/js_folds.js    '></script>"
+    + "<script src='/scripts/js_store.js    '></script>"
+    + "<script src='/scripts/js_xpath.js    '></script>"
+    + "<script src='/scripts/js_linkify.js  '></script>"
+    + "<script src='/scripts/js_sm_tracer.js'></script>"
+    + "<script src='/scripts/notes.js'       ></script>"
+    + "<script src='/scripts/js_notes.js    '></script>"
     ;
 /*}}}*/
 /*    STYLE_QTEXT {{{*/
