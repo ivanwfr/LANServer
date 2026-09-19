@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260918:02h:19) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260919:03h:51) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -127,7 +127,7 @@ const BG = [ /* eslint-disable-line no-unused-vars */
 let onload = function()
 {
 if(tag_this) console.log("onload");
-sm_tracer_viewPort.onLoad();
+sm_tracer_viewPort.onLoad("sm_tracer_viewPort");
 
     // Save unfinished Notes when the user is leaving the tab {{{
     document.addEventListener("visibilitychange", function(e) {
@@ -142,10 +142,10 @@ sm_tracer_viewPort.onLoad();
     setInterval(js_notes.note_1_onclick_save, AUTO_SAVE_INTERVAL_MS, { type: "auto_save" });
 
     //}}}
-    /* Notes taking GUI injection {{{*/
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ GUI LEAK ● DATA ➔ VIEW                                                 │
+    //└────────────────────────────────────────────────────────────────────────┘
     add_notes_DETAILS();
-
-    /*}}}*/
     // Load saved Notes from localStorage {{{
     layout_notes("onload");
 
@@ -258,6 +258,12 @@ if(tag_this) console.log("🔴 add_notes_DETAILS");
     //│ INPUT TEXTAREA                                                         │
     //└────────────────────────────────────────────────────────────────────────┘
     input            = document.querySelector("#note_input_TEXTAREA");
+    input.setAttribute("placeholder", notes.PLACEHOLDER_CREATE_PROMPT);
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ CONTOLER
+sm_tracer_viewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "add_notes_DETAILS");
+//└────────────────────────────────────────────────────────────────────────────┘
+
     TextArea_IO.on( input , input_listener);
     resize_observe( input );
 
@@ -265,7 +271,12 @@ if(tag_this) console.log("🔴 add_notes_DETAILS");
     //│ SAVE BUTTON                                                            │
     //└────────────────────────────────────────────────────────────────────────┘
     save_note_BUTTON = document.querySelector("#save_note_BUTTON");
-    save_note_BUTTON.setAttribute("disabled","");
+
+    save_note_BUTTON.setAttribute("disabled",""); // 2 arguments required
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ CONTOLER
+sm_tracer_viewPort.setSaveButton(/*enabled*/ true, /*label*/save_note_BUTTON.textContent, "add_notes_DETAILS");
+//└────────────────────────────────────────────────────────────────────────────┘
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ STATUS-LINE                                                            │
@@ -273,6 +284,9 @@ if(tag_this) console.log("🔴 add_notes_DETAILS");
     status_line      = document.querySelector("#status_line");
 
     //}}}
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ GUI LEAK ● DATA ➔ VIEW                                                 │
+    //└────────────────────────────────────────────────────────────────────────┘
     notes.add_notes_GUI( { note_DETAILS
                          , input
                          , save_note_BUTTON
@@ -323,7 +337,7 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
     tail_status(tics_status(layout_count), notes.get_notes_loaded_from());//FIXME recyle/count symbol
 
     // STANDOUT LAST HANDLED NOTE
-sm_tracer_viewPort.highlightRow(  index );
+sm_tracer_viewPort.highlightRow(  index , "layout_notes");
     notes.standout_note_at_index( index );
 
     // DISPLAY FILE NAME ● NUMBER OF NOTE ● FROM SERVER OR CLIENT
@@ -346,6 +360,10 @@ if(log_this) console.log("⚫ show_status( "+msg+" )");
 
     // ...with a copy to [save_note_BUTTON] title
     save_note_BUTTON.title = msg;
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ CONTOLER IS NOT INTERESTED BY TITLE
+//│ sm_tracer_viewPort...
+//└────────────────────────────────────────────────────────────────────────────┘
 };
 /*}}}*/
 /*_ tail_status {{{*/
@@ -439,7 +457,7 @@ let escapeHTML = function(text)
 //└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ INPUT                                                                     🔴
+//│ USER INPUT                                                                🔴
 //├────────────────────────────────────────────────────────────────────────────┤
 /* input {{{*/
 /*  input_listener {{{*/
@@ -462,7 +480,7 @@ if(tag_this) console.log(`input_value changed:
 ● FROM \t"${ oldValue }"
 ● TO   \t"${ newValue }"`);
 
-sm_tracer_viewPort.onDraftInput("input_value length="+ input_value.length);
+sm_tracer_viewPort.onDraftInput("input_value length="+ input_value.length, "input_listener");
 
         //┌────────────────────────────────────────────────────────────────────┐
         //│ on first user-input ● transitioning from empty
@@ -601,7 +619,6 @@ if(tag_this) console.log("🟣 load_input");
     //│ some text was saved into localStorage on previous session exit         │
     //│ resuming edit                                                          │
     //└────────────────────────────────────────────────────────────────────────┘
-sm_tracer_viewPort.onDraftInput("input length: "+ text.length +"ch");
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ RESUME EDITING SOME EXISTING NOTE                                      │
@@ -612,7 +629,7 @@ sm_tracer_viewPort.onDraftInput("input length: "+ text.length +"ch");
         let        note = nArray[index];
         if(text == note.text)
         {
-sm_tracer_viewPort.onRowSelect(index + 1);
+sm_tracer_viewPort.onRowSelect(index + 1, "load_input");
 
             let node_row = saved_notes_TABLE.firstElementChild.children[index];
             js_notes.note_5_onclick_edit({ target: node_row }, index);
@@ -627,6 +644,8 @@ sm_tracer_viewPort.onRowSelect(index + 1);
     //│ DISPLAY UNCOMMITED INPUT CONTENT WHEN PREVIOUS SESSION ENDED           │
     //└────────────────────────────────────────────────────────────────────────┘
     input.value = text;
+//sm_tracer_viewPort.onDraftInput("input length: "+ text.length +"ch", "load_input");
+  sm_tracer_viewPort.loadDraft   ("input length: "+ text.length +"ch", "load_input");
 
     // SCROLL LAST NOTE INTO VIEW
     notes.note_scrollIntoView();
@@ -647,6 +666,7 @@ if(tag_this) console.log("🟣 save_input"+ (_caller ? (" ← "+_caller) : ""));
         let stored  = localStorage.getItem( input_storage_key ) || "";
         if( stored != text)
             localStorage.setItem   ( input_storage_key , text);
+sm_tracer_viewPort.saveDraft   ("input length: "+ text.length +"ch", "save_input");
     }
     // — TAKE THIS OPPORTUNITY TO CLEAR STORAGE FROM A STALE STORED NOTE
     else {
@@ -658,10 +678,12 @@ if(tag_this) console.log("🟣 save_input"+ (_caller ? (" ← "+_caller) : ""));
 let reset_input = function(_caller)
 {
 if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""));
-sm_tracer_viewPort.onReady();
+sm_tracer_viewPort.onReady("reset_input");
 
     // CLEAR TEXTAREA CONTENT
     input.value = "";
+
+sm_tracer_viewPort.loadDraft  ("input cleared", "reset_input");
 
     // UPDATE STANDOUT IN [saved_notes_DIV]
     notes.set_editing_note_index(-1);
@@ -868,8 +890,8 @@ const js_notesView = {
 //└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//4🟡   readDraft
-//4🟡   writeDraft
+//4🟡   saveDraft
+//4🟡   loadDraft
 //└────────────────────────────────────────────────────────────────────────────┘
 
 };
@@ -916,6 +938,10 @@ const sm_tracer_viewPort = tracer.createViewAdapter( js_notesView );
         ,    note_2_onclick_import
         ,    note_3_onclick_export
 
+        // functions accessed from notes (the DataPort)
+        ,    sm_tracer_viewPort
+        ,    sm_toggle : sm_tracer_viewPort.toggle
+
         // used by notes
         , copy_to_clipboard
         , ellipsis
@@ -926,12 +952,13 @@ const sm_tracer_viewPort = tracer.createViewAdapter( js_notesView );
         , show_status
 
         // DEBUG ONLY
-        , layout_notes
-        , save_input
         , escapeHTML
-        , print_note  : (index) =>             notes.get_nArray()[index].text
         , escape_note : (index) => escapeHTML( notes.get_nArray()[index].text )
+        , layout_notes
+        , print_note  : (index) =>             notes.get_nArray()[index].text
+        , save_input
         , tail_status
+        , tics_status
         , tapi        : TextArea_IO
         , log         : () => { log_this = !log_this; console.log("log_this=["+log_this+"]"); }
         , tag         : () => { tag_this = !tag_this; console.tag("tag_this=["+tag_this+"]"); }
