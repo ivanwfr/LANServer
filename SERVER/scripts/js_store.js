@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260913:23h:22) │
+//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260919:16h:26) │
 //└────────────────────────────────────────────────────────────────────────────┘
 let js_store = (function() { /* eslint-disable-line no-unused-vars */
 /* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true {{{*/
@@ -14,9 +14,9 @@ let getItem = function(key     ) { let val; try {    val = localStorage.getItem 
 let delItem = function(key     ) {          try { /*...*/  localStorage.removeItem(key    );                                    } catch(ex) {}             }; /* eslint-disable-line no-empty */
 /*}}}*/
 
-// ┌───────────────────────────────────────────────────────────────────────────┐
-// │ Page title or URL signature                                               │
-// └───────────────────────────────────────────────────────────────────────────┘
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ Page title or URL signature                                                │
+//└────────────────────────────────────────────────────────────────────────────┘
 /*  get_page_prefix {{{*/
 let     page_prefix = "";
 let get_page_prefix = function()

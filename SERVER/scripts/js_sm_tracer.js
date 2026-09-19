@@ -1,6 +1,8 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ sm_tracer.js ● $APROJECTS/LANServer/SERVER          ● _TAG (260919:03h:52) │
-//├────────────────────────────────────────────────────────────────────────────┤
+//│ sm_tracer.js ● $APROJECTS/LANServer/SERVER          ● _TAG (260919:17h:09) │
+//└────────────────────────────────────────────────────────────────────────────┘
+//{{{
+//┌────────────────────────────────────────────────────────────────────────────┐
 //│ Passive State Machine Tracer (PoC)                                         │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ Usage:                                                                     │
@@ -19,15 +21,16 @@
 /* eslint-disable no-return-await */
 
 /*}}}*/
+//}}}
 
 let createSMTracer = function()
 {
-let log_this = false; //TODO ● CHOOSE DEFAULT LOGGING STATE
 
-//┌────────────────────────────────────────────────────────────────────────┐
-//│ log ● Helper to log with visual distinction
-//└────────────────────────────────────────────────────────────────────────┘
-/* log {{{*/
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ Builder logging
+//└────────────────────────────────────────────────────────────────────────────┘
+let log_this = true; //TODO ● CHOOSE DEFAULT LOGGING STATE
+    // log DATA {{{
 /*{{{*/
 //nst LOG_PREFIX   =  "[%cSM-TRACE%c]";
 
@@ -39,39 +42,65 @@ const BG_FG_ERROR  = [ "background: #ff4444; color: #fff; font-weight: bold;", "
 /*}}}*/
 /*{{{*/
 
-const RGEXP_1 = new RegExp( "onLoad"
+//┌────────────────────────────────────────────────────────────────────────────┐
+//| 1    LOADING
+//│     "^onLoad"
+const RGEXP_1 = new RegExp( "^onLoad"
                            +"");
 
-const RGEXP_2 = new RegExp( "onReady"
+//├────────────────────────────────────────────────────────────────────────────┤
+//| 2    READY — WAITING FOR USER INPUT
+//│     "^onReady"
+//│     "|highlightRow"
+//│     "|showPlaceholder"
+const RGEXP_2 = new RegExp( "^onReady"
                            +    "|highlightRow"
                            +    "|showPlaceholder"
                            +"");
 
-const RGEXP_3 = new RegExp( "onRowSelect"
+//├────────────────────────────────────────────────────────────────────────────┤
+//| 3    TRACKING USER INPUT
+//│     "^onRowSelect"
+//│     "|loadDraft"
+//│     "|setSaveButton"
+//│     "|showAutoSave"
+//│     "|onDraftInput"
+const RGEXP_3 = new RegExp( "^onRowSelect"
                            +    "|loadDraft"
                            +    "|setSaveButton"
                            +    "|showAutoSave"
                            +    "|onDraftInput"
                            +"");
 
-const RGEXP_4 = new RegExp( "onCancel"
+//├────────────────────────────────────────────────────────────────────────────┤
+//| 4    USER SAVE OR CANCEL
+//│     "^onCancel"
+//│     "|onSaveClick"
+//│     "|clearAutoSave"
+const RGEXP_4 = new RegExp( "^onCancel"
                            +"|onSaveClick"
                            +    "|clearAutoSave"
                            +"");
 
-const RGEXP_5 = new RegExp( "saveDraft"
+//├────────────────────────────────────────────────────────────────────────────┤
+//| 5    AUTO_SAVE INTO localStorage
+//│     "^saveDraft"
+const RGEXP_5 = new RegExp( "^saveDraft"
                            +"");
 
+//└────────────────────────────────────────────────────────────────────────────┘
 
+/*}}}*/
+// PHASE_0_COLOR.. PHASE_5_COLOR {{{
 const PHASE_0_COLOR =   "padding: 0 1em; border-radius: 1em; border: 4px dashsed  red;";
 const PHASE_1_COLOR =   "padding: 0 1em; border-radius: 1em; border: 1px solid  brown;";
 const PHASE_2_COLOR =   "padding: 0 1em; border-radius: 1em; border: 1px solid    red;";
 const PHASE_3_COLOR =   "padding: 0 1em; border-radius: 1em; border: 1px solid orange;";
 const PHASE_4_COLOR =   "padding: 0 1em; border-radius: 1em; border: 1px solid yellor;";
 const PHASE_5_COLOR =   "padding: 0 1em; border-radius: 1em; border: 1px solid  green;";
-
-/*}}}*/
-
+//}}}
+//}}}
+/*  log   function {{{*/
 let log = function(msg, type, caller)
 {
 if(!log_this) return;
@@ -91,66 +120,61 @@ if(!log_this) return;
 };
 /*}}}*/
 
-//┌────────────────────────────────────────────────────────────────────────┐
-//│ IDL CONTRACT: ViewPort Adapter Builder
-//├────────────────────────────────────────────────────────────────────────┤
-//│ ● Wraps existing [js_notes.js] methods
-//└────────────────────────────────────────────────────────────────────────┘
-/*  createViewAdapter {{ {*/
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ IDL CONTRACT: ViewPort Adapter Builder                      ● js_notes.js
+//└────────────────────────────────────────────────────────────────────────────┘
+/*  createViewAdapter {{{*/
 let createViewAdapter = function( existingView )
 {
-/*┌────────────────────────────────────────────────────────────────────────┐*/
-/*│ *…* MARGIN numbers 0=load 1=ready 2=input 3=save/cancel 4=auto_save    │*/
-/*└────────────────────────────────────────────────────────────────────────┘*/
-
 //┌─────────────────────────────────────┐
 //| #  │ MARGIN PROCESSING PHASE        |
 //|----│--------------------------------|
-//| 0  | LOADING                        |
-//| 1  | READY — WAITING FOR USER INPUT |
-//| 2  | TRACKING USER INPUT            |
-//| 3  | USER SAVE OR CANCEL            |
-//| 4  | AUTO_SAVE INTO localStorage    |
+//| 1  | LOADING                        |
+//| 2  | READY — WAITING FOR USER INPUT |
+//| 3  | TRACKING USER INPUT            |
+//| 4  | USER SAVE OR CANCEL            |
+//| 5  | AUTO_SAVE INTO localStorage    |
 //└─────────────────────────────────────┘
 
-
-    return {
-/*0*/   onLoad          : (                caller) =>   log("VIEW: onLoad          LOADED (Injecting Note App GUI)"              , "init"  , caller ),
-/*1*/   onReady         : (                caller) =>   log("VIEW: onReady         DOM Ready (Entering idle_state)"              , "start" , caller ),
-        //┌────────────────────────────────────────────────────────────────────────┐
+    let new_instance;
+try {
+    new_instance = {
+/*1*/   onLoad          : (                caller) =>   log("VIEW: onLoad          LOADED (Injecting Note App GUI)"              , "init"  , caller ),
+/*2*/   onReady         : (                caller) =>   log("VIEW: onReady         DOM Ready (Entering idle_state)"              , "start" , caller ),
+        //┌────────────────────────────────────────────────────────────────────┐
         //│ *DraftInput* ➔ RENAME TO *UserInput*
-        //└────────────────────────────────────────────────────────────────────────┘
-/*2*/   onDraftInput    : (value         , caller) => { log(`VIEW: onDraftInput    Draft Input: "${value}"`                      , "info"  , caller);
+        //└────────────────────────────────────────────────────────────────────┘
+/*3*/   onDraftInput    : (value         , caller) => { log(`VIEW: onDraftInput    Draft Input: "${value}"`                      , "info"  , caller);
             /******/                                    return  existingView.onDraftInput
                 /**/                                            ?   existingView.onDraftInput( value )
                 /**/                                            :   undefined;
         },
-/*2*/   onRowSelect     : (id            , caller) =>   log(`VIEW: onRowSelect     Row Selected (ID: ${id})`                     , "info"  , caller ),
-/*3*/   onSaveClick     : (                caller) =>   log("VIEW: onSaveClick     Save Button Clicked"                          , "action", caller ),
-/*3*/   onCancel        : (                caller) =>   log("VIEW: onCancel        Cancel Triggered"                             , "info"  , caller ),
+/*3*/   onRowSelect     : (id            , caller) =>   log(`VIEW: onRowSelect     Row Selected (ID: ${id})`                     , "info"  , caller ),
+/*4*/   onSaveClick     : (                caller) =>   log("VIEW: onSaveClick     Save Button Clicked"                          , "action", caller ),
+/*4*/   onCancel        : (                caller) =>   log("VIEW: onCancel        Cancel Triggered"                             , "info"  , caller ),
 
-        //┌────────────────────────────────────────────────────────────────────────┐
+        //┌────────────────────────────────────────────────────────────────────┐
         //│ Render methods (passive only)
-        //└────────────────────────────────────────────────────────────────────────┘
-/*1*/   showPlaceholder : (text          , caller) =>   log(`VIEW: showPlaceholder Set Placeholder: "${text}"`                   , "info"  , caller ),
+        //└────────────────────────────────────────────────────────────────────┘
+/*2*/   showPlaceholder : (text          , caller) =>   log(`VIEW: showPlaceholder Set Placeholder: "${text}"`                   , "info"  , caller ),
 /*?*/   setSaveButton   : (enabled, label, caller) =>   log(`VIEW: setSaveButton   ENABLED [${enabled}] LABEL [${label}]`        , "info"  , caller ),
-/*2*/   highlightRow    : (id            , caller) =>   log(`VIEW: highlightRow    Highlight Row ID: ${id}`                      , "info"  , caller ),
-/*3*/   showAutoSave    : (draft, id     , caller) =>   log(`VIEW: showAutoSave    Auto-Save Preview: ID=${id} Draft="${draft}"` , "info"  , caller ),
-/*1*/   clearAutoSave   : (                caller) =>   log("VIEW: clearAutoSave   Clear Auto-Save Row"                          , "info"  , caller ),
+/*3*/   highlightRow    : (id            , caller) =>   log(`VIEW: highlightRow    Highlight Row ID: ${id}`                      , "info"  , caller ),
+/*4*/   showAutoSave    : (draft, id     , caller) =>   log(`VIEW: showAutoSave    Auto-Save Preview: ID=${id} Draft="${draft}"` , "info"  , caller ),
+/*2*/   clearAutoSave   : (                caller) =>   log("VIEW: clearAutoSave   Clear Auto-Save Row"                          , "info"  , caller ),
 
-        //┌────────────────────────────────────────────────────────────────────────┐
+        //┌────────────────────────────────────────────────────────────────────┐
         //│ RENAME [*readDraft*]  TO [*saveDraft*]   ● js_notes.save_input
-        //└────────────────────────────────────────────────────────────────────────┘
-/*4*/   saveDraft       : (text          , caller) => {
+        //└────────────────────────────────────────────────────────────────────┘
+/*5*/   saveDraft       : (text          , caller) => {
             /******/                                    let v = existingView.saveDraft
                 /**/                                            ?   existingView.saveDraft()
                 /**/                                            :   "";
             /******/                                    log(`VIEW: saveDraft  [LOAD] Read Draft: "${v}"`                         , "info"  , caller);
             /******/                                    return v;
         },
-        //┌────────────────────────────────────────────────────────────────────────┐
+        //┌────────────────────────────────────────────────────────────────────┐
         //│ RENAME [*writeDraft*] TO [*loadDraft*] ● js_notes.load_input
-        //└────────────────────────────────────────────────────────────────────────┘
+        //└────────────────────────────────────────────────────────────────────┘
 /*4*/   loadDraft       : (text          , caller) => { log(`VIEW: loadDraft [SAVE] Write Draft: "${text}"`                      , "info"  , caller);
             /******/                                    return  existingView.loadDraft
                 /**/                                            ?   existingView.loadDraft( text )
@@ -158,14 +182,30 @@ let createViewAdapter = function( existingView )
         },
         toggle : () => { log_this = !log_this; console.log("log_this: "+ log_this); }
     };
-};
-/*}} }*/
+    return new_instance;
+}
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ TRACK builder instanciations                                               │
+//└────────────────────────────────────────────────────────────────────────────┘
+finally {
+    if(typeof globalThis.smTracer.instances == "undefined")
+    {
+        globalThis      .smTracer.instances = [];
+        globalThis      .smTracer.instances.logging = () => log_this = !log_this;
+    }
 
-//┌────────────────────────────────────────────────────────────────────────┐
-//│ IDL CONTRACT: DataPort Adapter Builder
-//├────────────────────────────────────────────────────────────────────────┤
-//│ ● Wraps existing [note.js] methods
-//└────────────────────────────────────────────────────────────────────────┘
+    if( new_instance )
+        globalThis      .smTracer.instances.push( new_instance );
+
+if( log_this )
+ console.dir( globalThis.smTracer.instances );
+}
+};
+/*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ IDL CONTRACT: DataPort Adapter Builder                      ● note.js
+//└────────────────────────────────────────────────────────────────────────────┘
 /*_   createDataAdapter {{{*/
 let createDataAdapter = function(existingData)
 {
@@ -191,14 +231,17 @@ let createDataAdapter = function(existingData)
 };
   /*}}}*/
 
-  return { log
-    ,      createViewAdapter
-    ,      createDataAdapter
-  };
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ Builder API
+//└────────────────────────────────────────────────────────────────────────────┘
+/*{{{*/
+    return { log
+        ,    createViewAdapter
+        ,    createDataAdapter
+    };
+/*}}}*/
 };
 
 // Export for IIFE pattern
-if(typeof window !== "undefined")
-{
-    window.smTracer = createSMTracer;
-}
+globalThis.smTracer = createSMTracer;
+

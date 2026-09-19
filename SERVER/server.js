@@ -128,6 +128,7 @@ A:visited {            color: #F0F; }
 /*    SCRIPT_QTEXT {{{*/
 const SCRIPT_QTEXT = ""
     + "<meta name='color-scheme' content='light only'>"
+    + "<script src='/scripts/dom_log.js     '></script>"
     + "<script src='/scripts/js_folds.js    '></script>"
     + "<script src='/scripts/js_store.js    '></script>"
     + "<script src='/scripts/js_xpath.js    '></script>"

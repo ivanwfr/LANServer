@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260919:03h:51) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260919:11h:19) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -19,7 +19,7 @@ let js_notes    = (function()
 //├────────────────────────────────────────────────────────────────────────────┤
 /*{{{*/
 let log_this = false;
-let tag_this = true;//false || log_this;
+let tag_this = false || log_this;
 
 /* ●  BUTTONS {{{*/
 const BUTTON_EXPORT_NAME  = "Export → 📝";
