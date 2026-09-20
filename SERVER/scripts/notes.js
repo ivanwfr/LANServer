@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260920:01h:53) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260920:15h:42) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -49,7 +49,7 @@ let add_notes_GUI = function(args)
     save_note_BUTTON.setAttribute("disabled",""); // 2 arguments required
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CONTOLER
-js_notes.sm_tracer_viewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "add_notes_GUI");
+js_notes.smTracerViewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "add_notes_GUI");
 //└────────────────────────────────────────────────────────────────────────────┘
 };
 /*}}}*/
@@ -260,7 +260,7 @@ if(tag_this) console.log("🟤 note_1_onclick_save");
 
     /* input text {{{*/
     let  text = input.value.trim();
-js_notes.sm_tracer_viewPort.saveDraft   ("input length: "+ text.length +"ch", "note_1_onclick_save");
+js_notes.smTracerViewPort.viewSaveDraft   ("input length: "+ text.length +"ch", "note_1_onclick_save");
 
     //}}}
     // save_note_auto ...return {{{
@@ -326,7 +326,7 @@ if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
 }}}*/
     // IF INPUT IS EMPTY {{{
     let buffer = input.value.trim();
-js_notes.sm_tracer_viewPort.saveDraft   ("input length: "+ buffer.length +"ch ← note_2_onclick_import", "note_2_onclick_import");
+js_notes.smTracerViewPort.viewSaveDraft   ("input length: "+ buffer.length +"ch ← note_2_onclick_import", "note_2_onclick_import");
     if(!buffer) {
         center_input_placeholder(PLACEHOLDER_IMPORT_PROMPT, 5000);
         return;
@@ -340,7 +340,7 @@ js_notes.sm_tracer_viewPort.saveDraft   ("input length: "+ buffer.length +"ch �
     //┌──────────────────────────────────────────────────┐
     //│ 🔴 Note #1                                       │
     //│ 2/4 AUTO-SAVE LOOP DONE DELETE TEMPORARY NOTE    │
-    //│ if(nArray.length && not...                        │
+    //│ if(nArray.length && not...)                      │
     //│ replace with is_last_note_auto_save              │
     //└──────────────────────────────────────────────────┘
     //}}}
@@ -443,7 +443,7 @@ let center_input_placeholder = function(placeholder,delay)
     input.setAttribute( "placeholder", placeholder);
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CONTOLER
-js_notes.sm_tracer_viewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "center_input_placeholder");
+js_notes.smTracerViewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "center_input_placeholder");
 //└────────────────────────────────────────────────────────────────────────────┘
 
     input.classList.add("center_input_placeholder");
@@ -457,7 +457,7 @@ if(tag_this) console.log("⚫ reset_input_placeholder");
     input.setAttribute(    "placeholder", PLACEHOLDER_CREATE_PROMPT);
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CONTOLER
-js_notes.sm_tracer_viewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "reset_input_placeholder");
+js_notes.smTracerViewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "reset_input_placeholder");
 //└────────────────────────────────────────────────────────────────────────────┘
 
     input.classList.remove("center_input_placeholder");
@@ -609,7 +609,7 @@ let set_editing_note_index = function(index)
     }
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CONTOLER
-js_notes.sm_tracer_viewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "set_editing_note_index");
+js_notes.smTracerViewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "set_editing_note_index");
 //└────────────────────────────────────────────────────────────────────────────┘
     // standout edited note
     standout_note_at_index( index );
@@ -638,7 +638,7 @@ if(tag_this) console.log("🔴 save_note_auto");
         save_note_BUTTON.setAttribute("disabled","");
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CONTOLER
-js_notes.sm_tracer_viewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "save_note_auto");
+js_notes.smTracerViewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "save_note_auto");
 //└────────────────────────────────────────────────────────────────────────────┘
         if(   (e.type == "auto_save")
            && is_last_note_auto_save()
@@ -659,7 +659,7 @@ if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
         save_note_BUTTON.removeAttribute("disabled");
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CONTOLER
-js_notes.sm_tracer_viewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "save_note_auto");
+js_notes.smTracerViewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "save_note_auto");
 //└────────────────────────────────────────────────────────────────────────────┘
     }
     //}}}

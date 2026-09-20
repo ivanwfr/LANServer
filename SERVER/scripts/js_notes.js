@@ -1,11 +1,13 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260919:11h:19) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260921:00h:07) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true {{{*/
 
 /* globals notes */
+/* globals smTracer */
+
 /*}}}*/
 let js_notes    = (function()
 {
@@ -127,7 +129,7 @@ const BG = [ /* eslint-disable-line no-unused-vars */
 let onload = function()
 {
 if(tag_this) console.log("onload");
-sm_tracer_viewPort.onLoad("sm_tracer_viewPort");
+smTracerViewPort.onLoad("smTracerViewPort");
 
     // Save unfinished Notes when the user is leaving the tab {{{
     document.addEventListener("visibilitychange", function(e) {
@@ -246,6 +248,29 @@ if(tag_this) console.log("🔴 add_notes_DETAILS");
 
     document.body.appendChild( note_DETAILS );
     //}}}
+    /* ● sm_badge {{{*/
+    if( smTracer.log() )
+    {
+        let div
+            = document.createElement("DIV");
+
+        div.id
+            = "smTracer";
+
+        div.innerHTML
+            = "<span title='LOADING' class='LOADING'>🅻</span>"
+            + "<span title='READY'   class='READY'  >🆁</span>"
+            + "<span title='INPUT'   class='INPUT'  >🅸</span>"
+            + "<span title='UPDATE'  class='UPDATE' >🆄</span>";
+
+        note_DETAILS
+            .parentElement
+            .insertBefore(div, note_DETAILS);
+
+        div.classList.add("logging");
+        div.addEventListener("click", (e) => e.target.classList.toggle("logging", smTracer.logging()));
+    }
+    /*}}}*/
     // DOM ● note_DETAILS ● saved_notes_TABLE ● input ● save_note_BUTTON{{{
 
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -261,7 +286,7 @@ if(tag_this) console.log("🔴 add_notes_DETAILS");
     input.setAttribute("placeholder", notes.PLACEHOLDER_CREATE_PROMPT);
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CONTOLER
-sm_tracer_viewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "add_notes_DETAILS");
+smTracerViewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "add_notes_DETAILS");
 //└────────────────────────────────────────────────────────────────────────────┘
 
     TextArea_IO.on( input , input_listener);
@@ -275,7 +300,7 @@ sm_tracer_viewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "
     save_note_BUTTON.setAttribute("disabled",""); // 2 arguments required
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CONTOLER
-sm_tracer_viewPort.setSaveButton(/*enabled*/ true, /*label*/save_note_BUTTON.textContent, "add_notes_DETAILS");
+smTracerViewPort.setSaveButton(/*enabled*/ true, /*label*/save_note_BUTTON.textContent, "add_notes_DETAILS");
 //└────────────────────────────────────────────────────────────────────────────┘
 
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -337,7 +362,7 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
     tail_status(tics_status(layout_count), notes.get_notes_loaded_from());//FIXME recyle/count symbol
 
     // STANDOUT LAST HANDLED NOTE
-sm_tracer_viewPort.highlightRow(  index , "layout_notes");
+smTracerViewPort.highlightRow(  index , "layout_notes");
     notes.standout_note_at_index( index );
 
     // DISPLAY FILE NAME ● NUMBER OF NOTE ● FROM SERVER OR CLIENT
@@ -362,7 +387,7 @@ if(log_this) console.log("⚫ show_status( "+msg+" )");
     save_note_BUTTON.title = msg;
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CONTOLER IS NOT INTERESTED BY TITLE
-//│ sm_tracer_viewPort...
+//│ smTracerViewPort...
 //└────────────────────────────────────────────────────────────────────────────┘
 };
 /*}}}*/
@@ -480,7 +505,7 @@ if(tag_this) console.log(`input_value changed:
 ● FROM \t"${ oldValue }"
 ● TO   \t"${ newValue }"`);
 
-sm_tracer_viewPort.onDraftInput("input_value length="+ input_value.length, "input_listener");
+smTracerViewPort.dataLoadDraft("input_value length="+ input_value.length, "input_listener");
 
         //┌────────────────────────────────────────────────────────────────────┐
         //│ on first user-input ● transitioning from empty
@@ -629,7 +654,7 @@ if(tag_this) console.log("🟣 load_input");
         let        note = nArray[index];
         if(text == note.text)
         {
-sm_tracer_viewPort.onRowSelect(index + 1, "load_input");
+smTracerViewPort.onRowSelect(index + 1, "load_input");
 
             let node_row = saved_notes_TABLE.firstElementChild.children[index];
             js_notes.note_5_onclick_edit({ target: node_row }, index);
@@ -641,11 +666,11 @@ sm_tracer_viewPort.onRowSelect(index + 1, "load_input");
         }
     }
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ DISPLAY UNCOMMITED INPUT CONTENT WHEN PREVIOUS SESSION ENDED           │
+    //│ RELOAD UNCOMMITED INPUT CONTENT FROM PREVIOUS SESSION                  │
     //└────────────────────────────────────────────────────────────────────────┘
     input.value = text;
-//sm_tracer_viewPort.onDraftInput("input length: "+ text.length +"ch", "load_input");
-  sm_tracer_viewPort.loadDraft   ("input length: "+ text.length +"ch", "load_input");
+//smTracerViewPort.dataLoadDraft("input length: "+ text.length +"ch", "load_input");
+  smTracerViewPort.loadDraft   ("input length: "+ text.length +"ch", "load_input");
 
     // SCROLL LAST NOTE INTO VIEW
     notes.note_scrollIntoView();
@@ -665,8 +690,8 @@ if(tag_this) console.log("🟣 save_input"+ (_caller ? (" ← "+_caller) : ""));
     if( text ) {
         let stored  = localStorage.getItem( input_storage_key ) || "";
         if( stored != text)
-            localStorage.setItem   ( input_storage_key , text);
-sm_tracer_viewPort.saveDraft   ("input length: "+ text.length +"ch", "save_input");
+            localStorage.setItem( input_storage_key , text);
+smTracerViewPort.viewSaveDraft  ("input length: "+ text.length +"ch", "save_input");
     }
     // — TAKE THIS OPPORTUNITY TO CLEAR STORAGE FROM A STALE STORED NOTE
     else {
@@ -678,12 +703,10 @@ sm_tracer_viewPort.saveDraft   ("input length: "+ text.length +"ch", "save_input
 let reset_input = function(_caller)
 {
 if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""));
-sm_tracer_viewPort.onReady("reset_input");
+smTracerViewPort.onReady("reset_input");
 
     // CLEAR TEXTAREA CONTENT
     input.value = "";
-
-sm_tracer_viewPort.loadDraft  ("input cleared", "reset_input");
 
     // UPDATE STANDOUT IN [saved_notes_DIV]
     notes.set_editing_note_index(-1);
@@ -829,9 +852,32 @@ return {
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ STATE MACHINE INTEGRATION                                                 🔵
 //├────────────────────────────────────────────────────────────────────────────┤
+//│ 🟤 1. Load the SM adapters builder first ● @see SERVER/server.js           │
+//│ <script src="js_smTracer.js"></script>                                     │
+//│ 🔴 2. Create the ViewPort adapter                                          │
+//│ 🟠 3. Wrap them (Passive Injection)                                        │
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ ...How to Integrate (The "Passive" Step)                                   │
+//│ You do not need to rewrite your logic.                                     │
+//│ You simply wrap your existing functions with the tracer adapters.          │
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ Step A: In js_notes.js (View Layer)                                        │
+//│ Assume you have a global object ui with your current methods...            │
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ 🟡 4. Use `viewPort` in your existing code instead of `ui`                 │
+//│ Example:                                                                   │
+//│ viewPort.onReady();                                                        │
+//│ viewPort.dataLoadDraft(input.value);                                       │
+//│ MVC 🄼 🅅 🄲   🅼🆅🅲
+//└────────────────────────────────────────────────────────────────────────────┘
+const js_notesView = {
+    dataLoadDraft: (val) => { console.log("%c M 🆅 C %c— dataLoadDraft("+val+")", "color: #FF0; font-size: 200%;", ""); },
+    viewSaveDraft: (val) => { console.log("%c M 🆅 C %c— viewSaveDraft("+val+")", "color: #FF0; font-size: 200%;", ""); }
+};
+const smTracerViewPort = smTracer.createViewAdapter( js_notesView );
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ functions to migrate here from notes
+//│ FUNCTIONS TO MIGRATE HERE FROM notes DataPort                             🟣
 //├────────────────────────────────────────────────────────────────────────────┤
 let note_1_onclick_save   = function(e      ) { if(tag_this) console.log("note_1_onclick_save  ()"         ); notes.note_1_onclick_save  (e      ); };
 let note_2_onclick_import = function(e      ) { if(tag_this) console.log("note_2_onclick_import()"         ); notes.note_2_onclick_import(e      ); };
@@ -841,83 +887,6 @@ let note_5_onclick_edit   = function(e,index) { if(tag_this) console.log("note_5
 let note_6_onclick_delete = function(e,index) { if(tag_this) console.log("note_6_onclick_delete("+index+")"); notes.note_6_onclick_delete(e,index); };
 //└────────────────────────────────────────────────────────────────────────────┘
 
-//{ {{
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟤 1. Load the tracer first ● SERVER/server.js
-//│ <script src="js_sm_tracer.js"></script>
-//├────────────────────────────────────────────────────────────────────────────┤
-//│ ...How to Integrate (The "Passive" Step)
-//│ You do not need to rewrite your logic.
-//│ You simply wrap your existing functions with the tracer adapters.
-//├────────────────────────────────────────────────────────────────────────────┤
-//│ Step A: In js_notes.js (View Layer)
-//│ Assume you have a global object ui with your current methods...
-//└────────────────────────────────────────────────────────────────────────────┘
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🔴 2. Create the adapter
-//└────────────────────────────────────────────────────────────────────────────┘
-//{ {{
-const tracer = window.smTracer();
-const js_notesView = {
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ Your existing methods — add all required ViewPort methods here
-//└────────────────────────────────────────────────────────────────────────────┘
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-/*0⚪️*/ onLoad      : ()    => { console.log("⚪️⚪️⚪️ onLoad"               ); },
-//└────────────────────────────────────────────────────────────────────────────┘
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-/*1🟤*/ onReady     : ()    => { console.log("🟤🟤🟤 onReady"              ); },
-//1🟤   clearAutoSave
-//1🟤   showPlaceholder
-//└────────────────────────────────────────────────────────────────────────────┘
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-/*2🔴*/ onDraftInput: (val) => { console.log("🔴🔴🔴 onDraftInput("+val+")"); },
-/*2🔴*/ onRowSelect : (id ) => { console.log("🔴🔴🔴 onRowSelect ("+id +")"); },
-/*2🔴*/ highlightRow: (id ) => { console.log("🔴🔴🔴 highlightRow("+id +")"); }
-//2🔴   setSaveButton
-//└────────────────────────────────────────────────────────────────────────────┘
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//3🟠   showAutoSave
-//3🟠   onSaveClick
-//3🟠   onCancel
-//└────────────────────────────────────────────────────────────────────────────┘
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//4🟡   saveDraft
-//4🟡   loadDraft
-//└────────────────────────────────────────────────────────────────────────────┘
-
-};
-
-//}} }
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟠 3. Wrap them (Passive Injection)
-//└────────────────────────────────────────────────────────────────────────────┘
-//{{{
-const sm_tracer_viewPort = tracer.createViewAdapter( js_notesView );
-
-//}}}
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟡 4. Use `viewPort` in your existing code instead of `ui`
-//│ Example:
-//│ viewPort.onReady();
-//│ viewPort.onDraftInput(input.value);
-//└────────────────────────────────────────────────────────────────────────────┘
-//}} }
-//└────────────────────────────────────────────────────────────────────────────┘
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ PUBLIC
-//└────────────────────────────────────────────────────────────────────────────┘
 //{{{
     return { name: "js_notes"
         ,    onload
@@ -939,8 +908,7 @@ const sm_tracer_viewPort = tracer.createViewAdapter( js_notesView );
         ,    note_3_onclick_export
 
         // functions accessed from notes (the DataPort)
-        ,    sm_tracer_viewPort
-        ,    sm_toggle : sm_tracer_viewPort.toggle
+        ,    smTracerViewPort
 
         // used by notes
         , copy_to_clipboard

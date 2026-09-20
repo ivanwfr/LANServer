@@ -1,6 +1,67 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/notes.css    ● $APROJECTS/LANServer         ● _TAG (260917:00h:09) │*/
+/*│ style/notes.css    ● $APROJECTS/LANServer         ● _TAG (260920:18h:46) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
+#smTracer {
+    position        : sticky;
+    display         : inline-block;
+    cursor          : pointer;
+    font-size       :     3em;
+/*{{{
+    transform-origin: 45% 15%;
+}}}*/
+}
+#smTracer.logging {
+    border-radius   : 0.25em;
+    border          : 3px outset red;
+    background-color: #000;
+    box-shadow      : 2px 2px 2px #000 inset;
+/*{{{
+    animation: logging_anim 6s ease-in infinite;
+}}}*/
+}
+/*{{{
+#smTracer.nudge {
+    transform: rotate( 10deg );
+}
+}}}*/
+
+#smTracer         SPAN                 { margin: 0.5em; }
+#smTracer         SPAN                 {  color: #404040F0; }
+#smTracer.LOADING SPAN.LOADING         {  color: #964B00F0; }
+#smTracer.READY     SPAN.READY         {  color: #FF0000F0; }
+#smTracer.INPUT     SPAN.INPUT         {  color: #FFA500F0; }
+#smTracer.UPDATE   SPAN.UPDATE         {  color: #FFFF00F0; }
+
+/*{{{
+#smTracer                 SPAN         { color  : #FF05;                            }
+#smTracer                 SPAN::before { display: inline-block; translate : 100% 0; }
+
+#smTracer.LOADING SPAN.LOADING::before { visibility:      visible; color  :  #FF0F; }
+#smTracer.READY     SPAN.READY::before { visibility:      visible; color  :  #FF0F; }
+#smTracer.INPUT     SPAN.INPUT::before { visibility:      visible; color  :  #FF0F; }
+#smTracer.UPDATE   SPAN.UPDATE::before { visibility:      visible; color  :  #FF0F; }
+
+                  SPAN.LOADING::before { visibility:       hidden; content:    'L'; }
+                    SPAN.READY::before { visibility:       hidden; content:    'R'; }
+                    SPAN.INPUT::before { visibility:       hidden; content:    'I'; }
+                   SPAN.UPDATE::before { visibility:       hidden; content:    'U'; }
+}}}*/
+
+/* ✈ ⚙ 🧍 */
+
+/*{{{
+@keyframes logging_anim {
+    0% { translate: 0         0    ; }
+   50% { translate: 30em      1em  ; }
+  100% { translate: 0         0    ; }
+    0% { transform: rotate(   0   ); }
+   40% { transform: rotate(  10deg); }
+   60% { transform: rotate(-180deg); }
+   95% { transform: rotate(-180deg); }
+  100% { transform: rotate(-360deg); }
+}
+}}}*/
+
 /* scrollbar {{{*/
 #note_input_TEXTAREA                                { scrollbar-width :       thin; }
 #note_input_TEXTAREA                                { scrollbar-color : #DDD #6666; }
