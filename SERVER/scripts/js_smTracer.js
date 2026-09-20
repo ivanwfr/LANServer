@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ smTracer.js ● $APROJECTS/LANServer/SERVER          ● _TAG (260921:00h:43) │
+//│ smTracer.js ● $APROJECTS/LANServer/SERVER          ● _TAG (260921:01h:32) │
 //└────────────────────────────────────────────────────────────────────────────┘
 //{{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -23,7 +23,7 @@
 /*}}}*/
 //}}}
 
-globalThis.smTracer = (function()
+let createSMTracer = function()
 {
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ UTIL                                                                       │
@@ -64,9 +64,9 @@ if(!msg     ) return !!log_this; // log_this getter
     let phase_style = get_ctrl_style( phase  );
 
     // MODEL-VIEW-CONTROLER INVOLVEMENT
-    let MVC         = get_data_fn   ( caller ) ? "🟢 M":""
-        +             get_view_fn   ( caller ) ? "🟡 V":""
-        +             get_ctrl_fn   ( caller ) ? "⚫ C":""
+    let MVC         = (get_data_fn   ( caller ) ? "🟢 M":"")
+        +             (get_view_fn   ( caller ) ? "🟡 V":"")
+        +             (get_ctrl_fn   ( caller ) ? "⚫ C":"")
     ;
 
     log_animate_sm_badge( phase );
@@ -94,18 +94,21 @@ let sm_badge_nudge_stack = [];
 //}}}
 let log_animate_sm_badge = function(phase)
 {
-    // stack {{{
-    sm_badge_nudge_stack.push( phase );
-
-    //}}}
     // on cooldown {{{
     if( sm_badge_cooldown ) return;
 
     //}}}
     // badge HTML {{{
-    if( sm_badge == undefined)
-        sm_badge  = document.querySelector( "#smTracer" );
+    if( sm_badge == undefined) {
+        sm_badge = typeof document !== "undefined"
+            ? document.querySelector( "#smTracer" )
+            : null;
+    }
     if( sm_badge == null) return;
+    //}}}
+    // stack phase {{{
+    sm_badge_nudge_stack.push( phase );
+
     //}}}
     // animate  step {{{
     log_animate_sm_badge_tick();
@@ -115,7 +118,7 @@ let log_animate_sm_badge = function(phase)
 let log_animate_sm_badge_tick = function()
 {
     // animate stack {{{
-    if( sm_badge_nudge_stack )
+    if( sm_badge_nudge_stack.length )
     {
         sm_badge_update();
         sm_badge_cooldown   = setTimeout(log_animate_sm_badge_tick, SM_BADGE_COOLDOWN_MS);
@@ -128,7 +131,7 @@ let log_animate_sm_badge_tick = function()
     }
     //}}}
     // pop top of stack {{{
-    if( sm_badge_nudge_stack.length)
+    if( sm_badge_nudge_stack.length )
         sm_badge_nudge_stack = sm_badge_nudge_stack.slice(0,-1);
     //}}}
 };
@@ -287,7 +290,7 @@ let get_ctrl_style = function(phase)
 //│ IDL CONTRACT: ViewPort Adapter Builder                      ● js_notes     │
 //├────────────────────────────────────────────────────────────────────────────┤
 /*  createViewAdapter {{{*/
-let createViewAdapter = function( view )
+let createViewAdapter = function(view = {})
 {
 
     let new_instance;
@@ -343,26 +346,16 @@ let createViewAdapter = function( view )
 //│ IDL CONTRACT: DataPort Adapter Builder                      ● notes        │
 //├────────────────────────────────────────────────────────────────────────────┤
 /*_   createDataAdapter {{{*/
-let createDataAdapter = function(existingData)
+let createDataAdapter = function(model={})
 {
     return {
-        list              : async (        caller) => { log("DATA: Requested List"                                               , "action", caller );
-            return await existingData.list ? await existingData.list() : [];
-        },
-        get               : async (id,     caller) => { log(`DATA: Request Note ID: ${id}`                                       , "action", caller );
-            return await existingData.get ? await existingData.get(id) : null;
-        },
-        create            : async (rec,    caller) => { log(`DATA: Create Note: "${rec.text.substring(0, 20)}..."`               , "action", caller );
-            return await existingData.create ? await existingData.create(rec) : null;
-        },
-        update            : async (rec,    caller) => { log(`DATA: Update Note ID: ${rec.id}`                                    , "action", caller );
-            return await existingData.update ? await existingData.update(rec) : null;
-        },
-        remove            : async (id,     caller) => { log(`DATA: Delete Note ID: ${id}`                                        , "action", caller );
-            return await existingData.remove ? await existingData.remove(id) : null;
-        },
-        syncToServer      :       (rec,    caller) =>   log(`DATA: Sync to Server: ID=${rec.id}`                                 , "info"  , caller ),
-        fetchFromServer   :       (        caller) =>   log("DATA: Fetch from Server"                                            , "action", caller )
+        list            : async (     caller) => { log("DATA: Requested List"                                 , "action", caller ); return typeof model.list   == "function" ? await model.list  (     ) :   []; },
+        get             : async (id,  caller) => { log(`DATA: Request Note ID: ${id}`                         , "action", caller ); return typeof model.get    == "function" ? await model.get   ( id  ) : null; },
+        create          : async (rec, caller) => { log(`DATA: Create Note: "${rec.text.substring(0, 20)}..."` , "action", caller ); return typeof model.create == "function" ? await model.create( rec ) : null; },
+        update          : async (rec, caller) => { log(`DATA: Update Note ID: ${rec.id}`                      , "action", caller ); return typeof model.update == "function" ? await model.update( rec ) : null; },
+        remove          : async (id,  caller) => { log(`DATA: Delete Note ID: ${id}`                          , "action", caller ); return typeof model.remove == "function" ? await model.remove( id  ) : null; },
+        syncToServer    :       (rec, caller) =>   log(`DATA: Sync to Server: ID=${rec.id}`                   , "info"  , caller ),
+        fetchFromServer :       (     caller) =>   log("DATA: Fetch from Server"                              , "action", caller )
     };
 };
   /*}}}*/
@@ -385,7 +378,8 @@ let createDataAdapter = function(existingData)
 /*}}}*/
 //└────────────────────────────────────────────────────────────────────────────┘
 
-})();
+};
+globalThis.smTracer = createSMTracer();
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ Devtools console snippets:                                                 │
