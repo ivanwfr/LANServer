@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ sm_tracer.js ● $APROJECTS/LANServer/SERVER          ● _TAG (260919:17h:09) │
+//│ sm_tracer.js ● $APROJECTS/LANServer/SERVER          ● _TAG (260920:02h:03) │
 //└────────────────────────────────────────────────────────────────────────────┘
 //{{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -25,116 +25,192 @@
 
 let createSMTracer = function()
 {
+let log_this = false; // ● default logging state
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ Builder logging
+//│ LOGGING TRACE STYLE ● f(error, phase, caller)               ● js_sm_tracer │
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ CTRL PHASE  ● f(msg)                                                       │
+//│ DATA EVENT  ● f(caller)                                                    │
+//│ VIEW EVENT  ● f(caller)                                                    │
 //└────────────────────────────────────────────────────────────────────────────┘
-let log_this = true; //TODO ● CHOOSE DEFAULT LOGGING STATE
-    // log DATA {{{
+/*  log {{{*/
 /*{{{*/
-//nst LOG_PREFIX   =  "[%cSM-TRACE%c]";
-
-const LOG_PREFIX   =  "%c SM-TRACE %c ";
-
-const BG_FG_TRACE  = [ "background: #61dafb; color: #000; font-weight: bold;", "color: #888;" ];
-const BG_FG_ERROR  = [ "background: #ff4444; color: #fff; font-weight: bold;", ""             ];
-
+const TRACE_STYLE   = "background: #61dafb; color: #000; font-weight: bold;";
+const ERROR_STYLE   = "background: #ff4444; color: #fff; font-weight: bold;";
+const   MSG_STYLE   = "background: #000000; color: #4FA; font-weight: bold;";
 /*}}}*/
-/*{{{*/
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//| 1    LOADING
-//│     "^onLoad"
-const RGEXP_1 = new RegExp( "^onLoad"
-                           +"");
-
-//├────────────────────────────────────────────────────────────────────────────┤
-//| 2    READY — WAITING FOR USER INPUT
-//│     "^onReady"
-//│     "|highlightRow"
-//│     "|showPlaceholder"
-const RGEXP_2 = new RegExp( "^onReady"
-                           +    "|highlightRow"
-                           +    "|showPlaceholder"
-                           +"");
-
-//├────────────────────────────────────────────────────────────────────────────┤
-//| 3    TRACKING USER INPUT
-//│     "^onRowSelect"
-//│     "|loadDraft"
-//│     "|setSaveButton"
-//│     "|showAutoSave"
-//│     "|onDraftInput"
-const RGEXP_3 = new RegExp( "^onRowSelect"
-                           +    "|loadDraft"
-                           +    "|setSaveButton"
-                           +    "|showAutoSave"
-                           +    "|onDraftInput"
-                           +"");
-
-//├────────────────────────────────────────────────────────────────────────────┤
-//| 4    USER SAVE OR CANCEL
-//│     "^onCancel"
-//│     "|onSaveClick"
-//│     "|clearAutoSave"
-const RGEXP_4 = new RegExp( "^onCancel"
-                           +"|onSaveClick"
-                           +    "|clearAutoSave"
-                           +"");
-
-//├────────────────────────────────────────────────────────────────────────────┤
-//| 5    AUTO_SAVE INTO localStorage
-//│     "^saveDraft"
-const RGEXP_5 = new RegExp( "^saveDraft"
-                           +"");
-
-//└────────────────────────────────────────────────────────────────────────────┘
-
-/*}}}*/
-// PHASE_0_COLOR.. PHASE_5_COLOR {{{
-const PHASE_0_COLOR =   "padding: 0 1em; border-radius: 1em; border: 4px dashsed  red;";
-const PHASE_1_COLOR =   "padding: 0 1em; border-radius: 1em; border: 1px solid  brown;";
-const PHASE_2_COLOR =   "padding: 0 1em; border-radius: 1em; border: 1px solid    red;";
-const PHASE_3_COLOR =   "padding: 0 1em; border-radius: 1em; border: 1px solid orange;";
-const PHASE_4_COLOR =   "padding: 0 1em; border-radius: 1em; border: 1px solid yellor;";
-const PHASE_5_COLOR =   "padding: 0 1em; border-radius: 1em; border: 1px solid  green;";
-//}}}
-//}}}
-/*  log   function {{{*/
 let log = function(msg, type, caller)
 {
 if(!log_this) return;
-    let caller_color
-        = msg.match(RGEXP_1) ? PHASE_1_COLOR
-        : msg.match(RGEXP_2) ? PHASE_2_COLOR
-        : msg.match(RGEXP_3) ? PHASE_3_COLOR
-        : msg.match(RGEXP_4) ? PHASE_4_COLOR
-        : msg.match(RGEXP_5) ? PHASE_5_COLOR
-        :                      PHASE_0_COLOR
+
+    // CONTROL HEAD .. f(type error)
+    let head_style
+        = (type === "error")
+        ?  ERROR_STYLE
+        :  TRACE_STYLE;
+
+    // CONTROL STEP
+    let fn          = get_ctrl_fn   ( msg    );
+    let phase       = get_ctrl_phase( fn     );
+    let phase_style = get_ctrl_style( phase  );
+
+    // MODEL-VIEW-CONTROLER INVOLVEMENT
+    let MVC         = get_data_fn   ( caller ) ? "🟢 M":""
+        +             get_view_fn   ( caller ) ? "🟡 V":""
+        +             get_ctrl_fn   ( caller ) ? "⚫ C":""
     ;
 
-    let colors = (type === "error") ?  BG_FG_ERROR:BG_FG_TRACE;
-    msg = msg.padEnd(80) +"🢀 %c"+caller;
-  //console.log(...colors, LOG_PREFIX, msg, ...colors.slice(1));
-    console.log(           LOG_PREFIX+ msg, ...colors         , caller_color);
+
+    msg    = msg   .padEnd(80);
+    phase  = phase .padEnd(10);
+    caller = caller.padEnd(25);
+
+    console.log("%c SM-TRACE %c "+ msg +"%c"+ phase +" 🢀 "+ caller + MVC
+                ,head_style ,MSG_STYLE  ,phase_style                    );
+};
+/*}}}*/
+// CONTROLER {{{
+//┌─────────────────────────────────────┐
+//│ #  │ MARGIN PROCESS PHASE           │
+//│----│--------------------------------│
+//│ 1  │ LOADING                        │
+//│ 2  │ READY — WAITING FOR USER INPUT │
+//│ 3  │ TRACKING USER INPUT            │
+//│ 4  │ USER SAVE OR CANCEL            │
+//└─────────────────────────────────────┘
+
+const CONTROLER_1_LOADING
+    = [   "onLoad" ];
+
+const CONTROLER_2_READY
+    = [   "onReady"
+        , "showPlaceholder" ];
+
+const CONTROLER_3_INPUT
+    = [   "onRowSelect"
+        , "loadDraft"
+        , "highlightRow"
+        , "setSaveButton"
+        , "showAutoSave"
+        , "onDraftInput"
+    ];
+
+const CONTROLER_4_UPDATE
+    = [   "onCancel"
+        , "onSaveClick"
+        , "saveDraft"
+        , "clearAutoSave"
+    ];
+
+const CONTROL_PHASE_FN_ARRAY
+    = [   { phase: "LOADING", fn_array: CONTROLER_1_LOADING }
+        , { phase: "READY"  , fn_array: CONTROLER_2_READY   }
+        , { phase: "INPUT"  , fn_array: CONTROLER_3_INPUT   }
+        , { phase: "UPDATE" , fn_array: CONTROLER_4_UPDATE  }
+    ];
+//}}}
+/*_ get_ctrl_fn  {{{*/
+let get_ctrl_fn = function( msg )
+{
+    if(!msg) return null;
+
+        for(    let             {         fn_array } of CONTROL_PHASE_FN_ARRAY)
+            for(let               fn   of fn_array )
+                if( msg.includes( fn ) )
+                    return        fn;
+    return null;
+};
+/*}}}*/
+/*_ get_ctrl_phase  {{{*/
+let get_ctrl_phase = function(fn_arg)
+{
+    if(!fn_arg) return null;
+
+    for(    let     { phase , fn_array } of CONTROL_PHASE_FN_ARRAY)
+        for(let               fn   of fn_array )
+            if(     fn_arg == fn )
+                return     phase;
+
+    return null;
+};
+/*}}}*/
+/*_ get_view_fn {{{*/
+const VIEW_FUNCTION_NAMES = [ /*{{{*/
+      "add_notes_DETAILS"
+    , "input_listener"
+    , "layout_notes"
+    , "load_input"
+    , "reset_input"
+    , "save_input"
+    , "sm_tracer_viewPort"
+];
+/*}}}*/
+let get_view_fn = function( caller )
+{
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ VIEW PHASE [caller]
+    //└────────────────────────────────────────────────────────────────────────┘
+    for(let i=0; i < VIEW_FUNCTION_NAMES.length; ++i)
+    {
+        if(          VIEW_FUNCTION_NAMES[i].includes( caller ))
+            return   VIEW_FUNCTION_NAMES[i];
+    }
+    return "";
+};
+/*}}}*/
+/*_ get_data_fn {{{*/
+const DATA_FUNCTION_NAMES = [ /*{{{*/
+      "add_notes_GUI"
+    , "ch ← note_2_onclick_import"
+    , "note_1_onclick_save"
+    , "placeholder"
+    , "reset_input_placeholder"
+    , "save_note_auto"
+    , "set_editing_note_index"
+];
+/*}}}*/
+let get_data_fn = function( caller )
+{
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ DATA PHASE [caller]
+    //└────────────────────────────────────────────────────────────────────────┘
+    for(let i=0; i < DATA_FUNCTION_NAMES.length; ++i)
+    {
+        if(          DATA_FUNCTION_NAMES[i].includes( caller ))
+            return   DATA_FUNCTION_NAMES[i];
+    }
+    return "";
+};
+/*}}}*/
+/*_ get_ctrl_style {{{*/
+/*{{{*/
+const PHASE_0_STYLE =   "padding: 0 1em; border-radius: 1em; border: 4px dashed   red;";
+const PHASE_1_STYLE =   "padding: 0 1em; border-radius: 1em; border: 1px solid  brown;";
+const PHASE_2_STYLE =   "padding: 0 1em; border-radius: 1em; border: 1px solid    red;";
+const PHASE_3_STYLE =   "padding: 0 1em; border-radius: 1em; border: 1px solid orange;";
+const PHASE_4_STYLE =   "padding: 0 1em; border-radius: 1em; border: 1px solid yellow;";
+/*}}}*/
+let get_ctrl_style = function(phase)
+{
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ [msg]   ● CTRL STATE
+    //└────────────────────────────────────────────────────────────────────────┘
+    return (phase == CONTROL_PHASE_FN_ARRAY[0].phase) ? PHASE_1_STYLE
+        :  (phase == CONTROL_PHASE_FN_ARRAY[1].phase) ? PHASE_2_STYLE
+        :  (phase == CONTROL_PHASE_FN_ARRAY[2].phase) ? PHASE_3_STYLE
+        :  (phase == CONTROL_PHASE_FN_ARRAY[3].phase) ? PHASE_4_STYLE
+        :                                               PHASE_0_STYLE
+    ;
 };
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ IDL CONTRACT: ViewPort Adapter Builder                      ● js_notes.js
-//└────────────────────────────────────────────────────────────────────────────┘
+//│ IDL CONTRACT: ViewPort Adapter Builder                      ● js_notes     │
+//├────────────────────────────────────────────────────────────────────────────┤
 /*  createViewAdapter {{{*/
 let createViewAdapter = function( existingView )
 {
-//┌─────────────────────────────────────┐
-//| #  │ MARGIN PROCESSING PHASE        |
-//|----│--------------------------------|
-//| 1  | LOADING                        |
-//| 2  | READY — WAITING FOR USER INPUT |
-//| 3  | TRACKING USER INPUT            |
-//| 4  | USER SAVE OR CANCEL            |
-//| 5  | AUTO_SAVE INTO localStorage    |
-//└─────────────────────────────────────┘
 
     let new_instance;
 try {
@@ -157,9 +233,9 @@ try {
         //│ Render methods (passive only)
         //└────────────────────────────────────────────────────────────────────┘
 /*2*/   showPlaceholder : (text          , caller) =>   log(`VIEW: showPlaceholder Set Placeholder: "${text}"`                   , "info"  , caller ),
-/*?*/   setSaveButton   : (enabled, label, caller) =>   log(`VIEW: setSaveButton   ENABLED [${enabled}] LABEL [${label}]`        , "info"  , caller ),
+/*3*/   setSaveButton   : (enabled, label, caller) =>   log(`VIEW: setSaveButton   ENABLED [${enabled}] LABEL [${label}]`        , "info"  , caller ),
 /*3*/   highlightRow    : (id            , caller) =>   log(`VIEW: highlightRow    Highlight Row ID: ${id}`                      , "info"  , caller ),
-/*4*/   showAutoSave    : (draft, id     , caller) =>   log(`VIEW: showAutoSave    Auto-Save Preview: ID=${id} Draft="${draft}"` , "info"  , caller ),
+/*3*/   showAutoSave    : (draft  , id   , caller) =>   log(`VIEW: showAutoSave    Auto-Save Preview: ID=${id} Draft="${draft}"` , "info"  , caller ),
 /*2*/   clearAutoSave   : (                caller) =>   log("VIEW: clearAutoSave   Clear Auto-Save Row"                          , "info"  , caller ),
 
         //┌────────────────────────────────────────────────────────────────────┐
@@ -202,10 +278,11 @@ if( log_this )
 }
 };
 /*}}}*/
+//└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ IDL CONTRACT: DataPort Adapter Builder                      ● note.js
-//└────────────────────────────────────────────────────────────────────────────┘
+//│ IDL CONTRACT: DataPort Adapter Builder                      ● notes        │
+//├────────────────────────────────────────────────────────────────────────────┤
 /*_   createDataAdapter {{{*/
 let createDataAdapter = function(existingData)
 {
@@ -213,7 +290,7 @@ let createDataAdapter = function(existingData)
         list              : async (        caller) => { log("DATA: Requested List"                                                     , "action", caller);
             return await existingData.list ? await existingData.list() : [];
         },
-        get               : async (id,     caller) => { log(`DATA: Request Note ID: ${id}`                                                       , caller);
+        get               : async (id,     caller) => { log(`DATA: Request Note ID: ${id}`                                             , "action", caller);
             return await existingData.get ? await existingData.get(id) : null;
         },
         create            : async (rec,    caller) => { log(`DATA: Create Note: "${rec.text.substring(0, 20)}..."`                     , "action", caller);
@@ -230,18 +307,53 @@ let createDataAdapter = function(existingData)
     };
 };
   /*}}}*/
+//└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ Builder API
-//└────────────────────────────────────────────────────────────────────────────┘
+//│ Builder API                                                                │
+//├────────────────────────────────────────────────────────────────────────────┤
 /*{{{*/
     return { log
         ,    createViewAdapter
         ,    createDataAdapter
+        // DEBUG
+        , get_ctrl_fn
+        , get_ctrl_phase
+        , get_ctrl_style
+        , get_data_fn
+        , get_view_fn
     };
 /*}}}*/
+//└────────────────────────────────────────────────────────────────────────────┘
+
 };
 
 // Export for IIFE pattern
 globalThis.smTracer = createSMTracer;
 
+//┌────────────────────────────────────────────────────────────────────────┐
+//│ Devtools console snippets:                                             │
+//├────────────────────────────────────────────────────────────────────────────┤
+//{{{
+/*
+● TOGGLE LOGGING:
+j0"*y$
+smTracer.instances.logging()
+
+j0"*yi]
+[
+    console.log( smTracer().get_ctrl_fn   ( "VIEW: onSaveClick" ))
+
+    console.log( smTracer().get_ctrl_phase( "onLoad"            ))
+    console.log( smTracer().get_ctrl_phase( "onSaveClick"       ))
+
+    console.log( smTracer().get_ctrl_style( "LOADING"           ))
+    console.log( smTracer().get_ctrl_style( "READY"             ))
+    console.log( smTracer().get_ctrl_style( "INPUT"             ))
+    console.log( smTracer().get_ctrl_style( "UPDATE"            ))
+
+    console.log( smTracer().get_view_fn   ( "save_input"        ))
+]
+*/
+//}}}
+//└────────────────────────────────────────────────────────────────────────┘
