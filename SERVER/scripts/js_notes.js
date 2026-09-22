@@ -1,12 +1,11 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260921:00h:07) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260922:01h:08) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
-/* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true {{{*/
+/*{{{*/
 
 /* globals notes */
-/* globals smTracer */
 
 /*}}}*/
 let js_notes    = (function()
@@ -17,18 +16,22 @@ let js_notes    = (function()
 //{{{
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes ● DATA ● SERVER/style/notes.css                                  ●
+//│ js_notes ● DATA ● SERVER/style/notes.css ● SERVER/style/qtext.css         ●
 //├────────────────────────────────────────────────────────────────────────────┤
 /*{{{*/
 let log_this = false;
 let tag_this = false || log_this;
 
 /* ●  BUTTONS {{{*/
+const BUTTON_WASTED_NAME  = "No Deleted Notes";
+const BUTTON_WASTED_TITLE = "▲ Import Deleted Notes";
+
 const BUTTON_EXPORT_NAME  = "Export → 📝";
 const BUTTON_EXPORT_TITLE = "Export Notes\nto Clipboard";
 
 const BUTTON_IMPORT_NAME  = "<sub>↓</sub> Import <sup>↑</sup>";
-const BUTTON_IMPORT_TITLE = "Import Notes\npasted in Input\nabove";
+const BUTTON_IMPORT_TITLE = "Import Notes\npasted in Input\n▲ above";
+
 const STATUS_LINE_TITLE   = "Click: brighter — bigger — dimmer";
 
 /*}}}*/
@@ -41,9 +44,10 @@ const NOTE_DETAILS_HTML   = `
     <button   id="wide_button"         onclick='js_notes.wider                (event);'></button>
     <br>
     <textarea id="note_input_TEXTAREA" placeholder="${notes.PLACEHOLDER_CREATE_PROMPT}"></textarea>
-    <button   id="save_note_BUTTON"        onclick='js_notes.note_1_onclick_save  (event)'>Save Note</button>
-    <button       class="cb_BUTTON"        onclick='js_notes.note_3_onclick_export(event)' title='${BUTTON_EXPORT_TITLE}'>${BUTTON_EXPORT_NAME}</button>
-    <button       class="cb_BUTTON"        onclick='js_notes.note_2_onclick_import(event)' title='${BUTTON_IMPORT_TITLE}'>${BUTTON_IMPORT_NAME}</button>
+    <button   id="save_note_BUTTON"        onclick='   notes.note_1_onclick_save  (event)'                               >Save Note</button>
+    <button   id="wasted_note_BUTTON"      onclick='   notes.note_7_onclick_wasted(event)' title='${BUTTON_WASTED_TITLE}'>${BUTTON_WASTED_NAME}</button>
+    <button       class="cb_BUTTON"        onclick='   notes.note_3_onclick_export(event)' title='${BUTTON_EXPORT_TITLE}'>${BUTTON_EXPORT_NAME}</button>
+    <button       class="cb_BUTTON"        onclick='   notes.note_2_onclick_import(event)' title='${BUTTON_IMPORT_TITLE}'>${BUTTON_IMPORT_NAME}</button>
     <DIV      id="saved_notes_DIV">
      <TABLE   id="saved_notes_TABLE"></TABLE>
     </DIV>
@@ -53,7 +57,7 @@ const NOTE_DETAILS_HTML   = `
 /*}}}*/
 
 /*_ wider {{{*/
-let wider = function(e) /* eslint-disable-line no-unused-vars */
+let wider = function()
 {
 if(tag_this) console.log("wider");
 
@@ -62,7 +66,7 @@ if(tag_this) console.log("wider");
 };
 /*}}}*/
 /*_ tunesize {{{*/
-let tunesize = function(e) /* eslint-disable-line no-unused-vars */
+let tunesize = function(e)
 {
 if(tag_this) console.log("tunesize");
 
@@ -129,19 +133,17 @@ const BG = [ /* eslint-disable-line no-unused-vars */
 let onload = function()
 {
 if(tag_this) console.log("onload");
-smTracerViewPort.onLoad("smTracerViewPort");
-
     // Save unfinished Notes when the user is leaving the tab {{{
     document.addEventListener("visibilitychange", function(e) {
         if( document.hidden )
         {
             save_input("visibilitychange listner");
-            js_notes.note_1_onclick_save ( e );
+               notes.note_1_onclick_save ( e );
         }
     });
     //}}}
     // Auto-save user input content until submted with a save-buton click {{{
-    setInterval(js_notes.note_1_onclick_save, AUTO_SAVE_INTERVAL_MS, { type: "auto_save" });
+    setInterval(   notes.note_1_onclick_save, AUTO_SAVE_INTERVAL_MS, { type: "auto_save" });
 
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -223,6 +225,7 @@ let saved_notes_DIV;
 let saved_notes_TABLE;
 let input;
 let save_note_BUTTON;
+let wasted_note_BUTTON;
 let status_line;
 
 /*}}}*/
@@ -248,46 +251,45 @@ if(tag_this) console.log("🔴 add_notes_DETAILS");
 
     document.body.appendChild( note_DETAILS );
     //}}}
-    /* ● sm_badge {{{*/
-    if( smTracer.log() )
-    {
-        let div
-            = document.createElement("DIV");
+//    /* ● sm_badge {{{*/
+//    if( smTracer.log() )
+//    {
+//        let div
+//            = document.createElement("DIV");
 
-        div.id
-            = "smTracer";
+//        div.id
+//            = "smTracer";
 
-        div.innerHTML
-            = "<span title='LOADING' class='LOADING'>🅻</span>"
-            + "<span title='READY'   class='READY'  >🆁</span>"
-            + "<span title='INPUT'   class='INPUT'  >🅸</span>"
-            + "<span title='UPDATE'  class='UPDATE' >🆄</span>";
+//        div.innerHTML
+//            = "<span title='LOADING' class='LOADING'>🅻</span>"
+//            + "<span title='READY'   class='READY'  >🆁</span>"
+//            + "<span title='INPUT'   class='INPUT'  >🅸</span>"
+//            + "<span title='UPDATE'  class='UPDATE' >🆄</span>";
 
-        note_DETAILS
-            .parentElement
-            .insertBefore(div, note_DETAILS);
+//        note_DETAILS
+//            .parentElement
+//            .insertBefore(div, note_DETAILS);
 
-        div.classList.add("logging");
-        div.addEventListener("click", (e) => e.target.classList.toggle("logging", smTracer.logging()));
-    }
-    /*}}}*/
-    // DOM ● note_DETAILS ● saved_notes_TABLE ● input ● save_note_BUTTON{{{
+//        div.classList.add("logging");
+//        div.addEventListener("click", (e) => e.target.classList.toggle("logging", smTracer.logging()));
+//    }
+//    /*}}}*/
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ DOM ● note_DETAILS ● saved_notes_TABLE ● input ● save_note_BUTTON      │
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ NOTES ● scrollable div and table                                       │
     //└────────────────────────────────────────────────────────────────────────┘
-    saved_notes_DIV  = document.querySelector("#saved_notes_DIV"  );
-    saved_notes_TABLE= document.querySelector("#saved_notes_TABLE");
+    saved_notes_DIV     = document.querySelector("#saved_notes_DIV"  );
+    saved_notes_TABLE   = document.querySelector("#saved_notes_TABLE");
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ INPUT TEXTAREA                                                         │
     //└────────────────────────────────────────────────────────────────────────┘
-    input            = document.querySelector("#note_input_TEXTAREA");
+    input               = document.querySelector("#note_input_TEXTAREA");
     input.setAttribute("placeholder", notes.PLACEHOLDER_CREATE_PROMPT);
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ CONTOLER
-smTracerViewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "add_notes_DETAILS");
-//└────────────────────────────────────────────────────────────────────────────┘
 
     TextArea_IO.on( input , input_listener);
     resize_observe( input );
@@ -295,18 +297,19 @@ smTracerViewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "ad
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ SAVE BUTTON                                                            │
     //└────────────────────────────────────────────────────────────────────────┘
-    save_note_BUTTON = document.querySelector("#save_note_BUTTON");
+    save_note_BUTTON    = document.querySelector("#save_note_BUTTON");
+    save_note_BUTTON    .setAttribute("disabled",""); // 2 arguments required
 
-    save_note_BUTTON.setAttribute("disabled",""); // 2 arguments required
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ CONTOLER
-smTracerViewPort.setSaveButton(/*enabled*/ true, /*label*/save_note_BUTTON.textContent, "add_notes_DETAILS");
-//└────────────────────────────────────────────────────────────────────────────┘
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ WASTED BUTTON                                                          │
+    //└────────────────────────────────────────────────────────────────────────┘
+    wasted_note_BUTTON  = document.querySelector("#wasted_note_BUTTON");
+    wasted_note_BUTTON  .setAttribute("disabled",""); // 2 arguments required
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ STATUS-LINE                                                            │
     //└────────────────────────────────────────────────────────────────────────┘
-    status_line      = document.querySelector("#status_line");
+    status_line         = document.querySelector("#status_line");
 
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -315,6 +318,7 @@ smTracerViewPort.setSaveButton(/*enabled*/ true, /*label*/save_note_BUTTON.textC
     notes.add_notes_GUI( { note_DETAILS
                          , input
                          , save_note_BUTTON
+                         , wasted_note_BUTTON
                          , saved_notes_TABLE
    });
 };
@@ -342,12 +346,12 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
 + "<!--🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯-->"
 + "<TR          class='node_row "+   notes.get_checked(i)+(n.text.includes(AUTO_SAVE_TAG) ? " auto_save":"")+"'"
 +                                   " title='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
-+  "                                                      onclick='js_notes.note_5_onclick_edit  (event, "+i+")'>"
-+  "<TD><button class='check_button'  title='Check note'  onclick='js_notes.note_4_onclick_check (event, "+i+")'></button></TD>"
++  "                                                      onclick='   notes.note_5_onclick_edit  (event, "+i+")'>"
++  "<TD><button class='check_button'  title='Check note'  onclick='   notes.note_4_onclick_check (event, "+i+")'></button></TD>"
 +  "<TD><button class='edit_button'   title='Edit note'                                                         ></button></TD>"
 +  "<TD><div    class='truncated'>"+            escapeHTML(n.text)                                          +"</div>   </TD>"
 +  "<TD><small  class='timestamp'                         onclick='event.cancelBubble = true;'>"+ new Date(n.timestamp).toLocaleString() +"</small></TD>"
-+  "<TD><button class='delete_button' title='Delete note' onclick='js_notes.note_6_onclick_delete(event, "+i+")'></button></TD>"
++  "<TD><button class='delete_button' title='Delete note' onclick='   notes.note_6_onclick_delete(event, "+i+")'></button></TD>"
 + "</TR>"
 ).join("")
 
@@ -359,10 +363,9 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
     //│ IF "No notes yet" → layout_notes will be called with next load results │
     //└────────────────────────────────────────────────────────────────────────┘
     layout_count += 1;
-    tail_status(tics_status(layout_count), notes.get_notes_loaded_from());//FIXME recyle/count symbol
+    tail_status(tics_status(layout_count), notes.get_notes_loaded_from());
 
     // STANDOUT LAST HANDLED NOTE
-smTracerViewPort.highlightRow(  index , "layout_notes");
     notes.standout_note_at_index( index );
 
     // DISPLAY FILE NAME ● NUMBER OF NOTE ● FROM SERVER OR CLIENT
@@ -385,10 +388,6 @@ if(log_this) console.log("⚫ show_status( "+msg+" )");
 
     // ...with a copy to [save_note_BUTTON] title
     save_note_BUTTON.title = msg;
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ CONTOLER IS NOT INTERESTED BY TITLE
-//│ smTracerViewPort...
-//└────────────────────────────────────────────────────────────────────────────┘
 };
 /*}}}*/
 /*_ tail_status {{{*/
@@ -505,8 +504,6 @@ if(tag_this) console.log(`input_value changed:
 ● FROM \t"${ oldValue }"
 ● TO   \t"${ newValue }"`);
 
-smTracerViewPort.dataLoadDraft("input_value length="+ input_value.length, "input_listener");
-
         //┌────────────────────────────────────────────────────────────────────┐
         //│ on first user-input ● transitioning from empty
         //└────────────────────────────────────────────────────────────────────┘
@@ -518,7 +515,7 @@ smTracerViewPort.dataLoadDraft("input_value length="+ input_value.length, "input
         }
     }
     else {
-        js_notes.note_1_onclick_save( { type: "auto_save" } ); // text cleared ...worth a synchronized update
+           notes.note_1_onclick_save( { type: "auto_save" } ); // text cleared ...worth a synchronized update
         note_DETAILS.classList.add   ("empty");
 
         reset_input("input_listener: ❌input empty");
@@ -654,11 +651,9 @@ if(tag_this) console.log("🟣 load_input");
         let        note = nArray[index];
         if(text == note.text)
         {
-smTracerViewPort.onRowSelect(index + 1, "load_input");
-
             let node_row = saved_notes_TABLE.firstElementChild.children[index];
-            js_notes.note_5_onclick_edit({ target: node_row }, index);
-// TODO: TRYING INPUT.FOCUS() TO RESUME NOTE EDIT {{{
+               notes.note_5_onclick_edit({ target: node_row }, index);
+// TRYING INPUT.FOCUS() TO RESUME NOTE EDIT {{{
 //          input.addEventListener("mouseenter", (event) => event.target.focus());
 //          input.addEventListener("mouseenter", ()      =>        input.focus());
 //}}}
@@ -669,8 +664,6 @@ smTracerViewPort.onRowSelect(index + 1, "load_input");
     //│ RELOAD UNCOMMITED INPUT CONTENT FROM PREVIOUS SESSION                  │
     //└────────────────────────────────────────────────────────────────────────┘
     input.value = text;
-//smTracerViewPort.dataLoadDraft("input length: "+ text.length +"ch", "load_input");
-  smTracerViewPort.loadDraft   ("input length: "+ text.length +"ch", "load_input");
 
     // SCROLL LAST NOTE INTO VIEW
     notes.note_scrollIntoView();
@@ -691,7 +684,6 @@ if(tag_this) console.log("🟣 save_input"+ (_caller ? (" ← "+_caller) : ""));
         let stored  = localStorage.getItem( input_storage_key ) || "";
         if( stored != text)
             localStorage.setItem( input_storage_key , text);
-smTracerViewPort.viewSaveDraft  ("input length: "+ text.length +"ch", "save_input");
     }
     // — TAKE THIS OPPORTUNITY TO CLEAR STORAGE FROM A STALE STORED NOTE
     else {
@@ -703,7 +695,6 @@ smTracerViewPort.viewSaveDraft  ("input length: "+ text.length +"ch", "save_inpu
 let reset_input = function(_caller)
 {
 if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""));
-smTracerViewPort.onReady("reset_input");
 
     // CLEAR TEXTAREA CONTENT
     input.value = "";
@@ -849,44 +840,6 @@ return {
 //}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ STATE MACHINE INTEGRATION                                                 🔵
-//├────────────────────────────────────────────────────────────────────────────┤
-//│ 🟤 1. Load the SM adapters builder first ● @see SERVER/server.js           │
-//│ <script src="js_smTracer.js"></script>                                     │
-//│ 🔴 2. Create the ViewPort adapter                                          │
-//│ 🟠 3. Wrap them (Passive Injection)                                        │
-//├────────────────────────────────────────────────────────────────────────────┤
-//│ ...How to Integrate (The "Passive" Step)                                   │
-//│ You do not need to rewrite your logic.                                     │
-//│ You simply wrap your existing functions with the tracer adapters.          │
-//├────────────────────────────────────────────────────────────────────────────┤
-//│ Step A: In js_notes.js (View Layer)                                        │
-//│ Assume you have a global object ui with your current methods...            │
-//├────────────────────────────────────────────────────────────────────────────┤
-//│ 🟡 4. Use `viewPort` in your existing code instead of `ui`                 │
-//│ Example:                                                                   │
-//│ viewPort.onReady();                                                        │
-//│ viewPort.dataLoadDraft(input.value);                                       │
-//│ MVC 🄼 🅅 🄲   🅼🆅🅲
-//└────────────────────────────────────────────────────────────────────────────┘
-const js_notesView = {
-    dataLoadDraft: (val) => { console.log("%c M 🆅 C %c— dataLoadDraft("+val+")", "color: #FF0; font-size: 200%;", ""); },
-    viewSaveDraft: (val) => { console.log("%c M 🆅 C %c— viewSaveDraft("+val+")", "color: #FF0; font-size: 200%;", ""); }
-};
-const smTracerViewPort = smTracer.createViewAdapter( js_notesView );
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ FUNCTIONS TO MIGRATE HERE FROM notes DataPort                             🟣
-//├────────────────────────────────────────────────────────────────────────────┤
-let note_1_onclick_save   = function(e      ) { if(tag_this) console.log("note_1_onclick_save  ()"         ); notes.note_1_onclick_save  (e      ); };
-let note_2_onclick_import = function(e      ) { if(tag_this) console.log("note_2_onclick_import()"         ); notes.note_2_onclick_import(e      ); };
-let note_3_onclick_export = function(e      ) { if(tag_this) console.log("note_3_onclick_export()"         ); notes.note_3_onclick_export(e      ); };
-let note_4_onclick_check  = function(e,index) { if(tag_this) console.log("note_4_onclick_check ("+index+")"); notes.note_4_onclick_check (e,index); };
-let note_5_onclick_edit   = function(e,index) { if(tag_this) console.log("note_5_onclick_edit  ("+index+")"); notes.note_5_onclick_edit  (e,index); };
-let note_6_onclick_delete = function(e,index) { if(tag_this) console.log("note_6_onclick_delete("+index+")"); notes.note_6_onclick_delete(e,index); };
-//└────────────────────────────────────────────────────────────────────────────┘
-
 //{{{
     return { name: "js_notes"
         ,    onload
@@ -898,17 +851,6 @@ let note_6_onclick_delete = function(e,index) { if(tag_this) console.log("note_6
         ,    tunesize
         ,    narrower
         ,    tune_status
-
-        // functions to migrate here from notes
-        ,    note_1_onclick_save
-        ,    note_5_onclick_edit
-        ,    note_6_onclick_delete
-        ,    note_4_onclick_check
-        ,    note_2_onclick_import
-        ,    note_3_onclick_export
-
-        // functions accessed from notes (the DataPort)
-        ,    smTracerViewPort
 
         // used by notes
         , copy_to_clipboard
@@ -934,4 +876,3 @@ let note_6_onclick_delete = function(e,index) { if(tag_this) console.log("note_6
 //}}}
 })();
 document.addEventListener("DOMContentLoaded", js_notes.onload);
-

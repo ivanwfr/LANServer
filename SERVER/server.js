@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
     const SERVER_JS_ID  = "server";
-    const SERVER_JS_TAG = SERVER_JS_ID  +" (260920:16h:15)";
+    const SERVER_JS_TAG = SERVER_JS_ID  +" (260922:00h:16)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -133,7 +133,7 @@ const SCRIPT_QTEXT = ""
     + "<script src='/scripts/js_store.js    '></script>"
     + "<script src='/scripts/js_xpath.js    '></script>"
     + "<script src='/scripts/js_linkify.js  '></script>"
-    + "<script src='/scripts/js_smTracer.js' ></script>"
+//  + "<script src='/scripts/js_smTracer.js' ></script>"
     + "<script src='/scripts/notes.js'       ></script>"
     + "<script src='/scripts/js_notes.js    '></script>"
     ;

@@ -1,11 +1,12 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260920:15h:42) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260922:02h:34) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
-/* jshint{{{*/
+/*{{{*/
 
 /* globals js_notes */
+
 /*}}}*/
 let notes = (function()
 {
@@ -34,23 +35,21 @@ const AUTO_SAVE_TAG         = "(auto_save)\n";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*_ add_notes_GUI {{{*/
 /*{{{*/
-let note_DETAILS;
-let saved_notes_TABLE;
 let input;
+let note_DETAILS;
 let save_note_BUTTON;
+let saved_notes_TABLE;
+let wasted_note_BUTTON;
 /*}}}*/
 let add_notes_GUI = function(args)
 {
-    note_DETAILS      = args.note_DETAILS;
-    input             = args.input;
-    save_note_BUTTON  = args.save_note_BUTTON;
-    saved_notes_TABLE = args.saved_notes_TABLE;
+    input              = args.input;
+    note_DETAILS       = args.note_DETAILS;
+    save_note_BUTTON   = args.save_note_BUTTON;
+    saved_notes_TABLE  = args.saved_notes_TABLE;
+    wasted_note_BUTTON = args.wasted_note_BUTTON;
 
     save_note_BUTTON.setAttribute("disabled",""); // 2 arguments required
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ CONTOLER
-js_notes.smTracerViewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "add_notes_GUI");
-//└────────────────────────────────────────────────────────────────────────────┘
 };
 /*}}}*/
 
@@ -59,7 +58,8 @@ js_notes.smTracerViewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, 
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 //{{{
-let nArray = [];
+let nArray          = [];
+let nArray_wasted   = [];
 
 //}}}
 /*_ upload_notes_to_server {{{*/
@@ -132,7 +132,7 @@ let request_server_upload = function(upload_reason=undefined)
     //└────────────────────────────────────────────────────────────────────┘
     if( upload_reason )
     {
-        save_note_BUTTON.classList.remove("notes_uploaded");    // green ➔ red
+        save_note_BUTTON.classList.remove("notes_uploaded");    // green ➔ red  border
         //┌─────────────────────────────┐
         //│ CONTOLER NOT INVOLVED (YET) │
         //└─────────────────────────────┘
@@ -140,7 +140,7 @@ let request_server_upload = function(upload_reason=undefined)
         js_notes.show_status("🚧 UPLOAD to server still pending");
     }
     else {
-        save_note_BUTTON.classList.add   ("notes_uploaded");    // red ➔ green
+        save_note_BUTTON.classList.add   ("notes_uploaded");    // red ➔ green  border
         //┌─────────────────────────────┐
         //│ CONTOLER NOT INVOLVED (YET) │
         //└─────────────────────────────┘
@@ -174,7 +174,7 @@ let request_server_upload_pending = function()
 let notes_loaded_from;
 
 /*}}}*/
-let load_notes = function() /* eslint-disable-line no-unused-vars */
+let load_notes = function()
 {
     let notes_storage_key = js_notes.get_notes_storage_key();
 if(tag_this) console.log("🟡%c load_notes\t\t  ["+ notes_storage_key +"]", "color: #FF0");
@@ -251,7 +251,7 @@ if(tag_this) console.log("%c load_client_notes", "color: #F00");
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟤 SAVE                                                                 🡮  │
+//│ 🟤 SAVE   ● note_1_onclick_save                                         🡮  │
 //└────────────────────────────────────────────────────────────────────────────┘
 //● note_1_onclick_save {{{
 let note_1_onclick_save = function(e)
@@ -260,10 +260,9 @@ if(tag_this) console.log("🟤 note_1_onclick_save");
 
     /* input text {{{*/
     let  text = input.value.trim();
-js_notes.smTracerViewPort.viewSaveDraft   ("input length: "+ text.length +"ch", "note_1_onclick_save");
 
     //}}}
-    // save_note_auto ...return {{{
+    // if save_note_auto ...return {{{
     if(e.type == "auto_save")
     {
         save_note_auto( e );
@@ -271,28 +270,36 @@ js_notes.smTracerViewPort.viewSaveDraft   ("input length: "+ text.length +"ch", 
         return;
     }
     //}}}
-    // delete auto_save ... {{{
+    // or delete auto_save ... {{{
     else if( is_last_note_auto_save()  )
     {
         nArray.splice(nArray.length-1, 1);
     }
     //}}}
-    // input empty ...return {{{
+    // if input empty ...return {{{
     if( !text )
         return;
 
     //}}}
-    // ADD OR REPLACE NOTE {{{
+    // REPLACE NOTE {{{
     let index  = get_editing_note_index();
-    if( index >= 0) {
-        nArray.splice(index, 1, { text, timestamp: Date.now() });
+    if( index >= 0)
+    {
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ PRESERVE old checked stated and timestamp                          │
+        //└────────────────────────────────────────────────────────────────────┘
+      //nArray.splice(index, 1, {                                 text, timestamp: Date.now()              });
+        nArray.splice(index, 1, { checked: nArray[index].checked, text, timestamp: nArray[index].timestamp });
+
         request_server_upload("Note #"+(index            )+" EDITED");
     }
+    //}}}
+    // ADD NEW NOTE {{{
     else {
         nArray.push(            { text, timestamp: Date.now() });
+
         request_server_upload("Note #"+(nArray.length + 1)+" ADDED");
     }
-
     //}}}
     // ... 🟢 STORE NOTES IN localStorage {{{
     localStorage.setItem(js_notes.get_notes_storage_key(), JSON.stringify( nArray ));
@@ -311,7 +318,7 @@ js_notes.smTracerViewPort.viewSaveDraft   ("input length: "+ text.length +"ch", 
 //}}}
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🔴 IMPORT                                                             🢀    │
+//│ 🔴 IMPORT ● note_2_onclick_import                                     🢀    │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*● note_2_onclick_import ● onclick ● cb_BUTTON {{{*/
 let note_2_onclick_import = function(e)
@@ -326,7 +333,6 @@ if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
 }}}*/
     // IF INPUT IS EMPTY {{{
     let buffer = input.value.trim();
-js_notes.smTracerViewPort.viewSaveDraft   ("input length: "+ buffer.length +"ch ← note_2_onclick_import", "note_2_onclick_import");
     if(!buffer) {
         center_input_placeholder(PLACEHOLDER_IMPORT_PROMPT, 5000);
         return;
@@ -364,10 +370,9 @@ js_notes.smTracerViewPort.viewSaveDraft   ("input length: "+ buffer.length +"ch 
         {
             // 🔴 FLUSH PREVIOUS
             if( text ) {
-                nArray.push({ text , timestamp: Date.now() });
+                note_2_onclick_import_push_note( { text , timestamp: Date.now() } );
                 count += 1;
             }
-
             // 🟠 SKIP "Node #..." LINE
             text = "";
         }
@@ -379,7 +384,7 @@ js_notes.smTracerViewPort.viewSaveDraft   ("input length: "+ buffer.length +"ch 
     }
     // 🟡 FLUSH LAST
     if( text ) {
-        nArray.push({ text , timestamp: Date.now() });
+        note_2_onclick_import_push_note( { text , timestamp: Date.now() } );
         count += 1;
     }
 
@@ -395,12 +400,22 @@ js_notes.smTracerViewPort.viewSaveDraft   ("input length: "+ buffer.length +"ch 
     //}}}
 };
 /*}}}*/
+/*_ note_2_onclick_import_push_note {{{*/
+let note_2_onclick_import_push_note = function(note_args)
+{
+    // ADD A NEW NOTE
+    nArray.push( note_args );
+
+    // WHEN RESTORING A DELETED NOTE, REMOVE IT FROM THE DELETED NOTES ARRAY
+    nArray_wasted_del_imported_note( note_args );
+};
+/*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟠 EXPORT                                                               🢂  │
+//│ 🟠 EXPORT ● note_3_onclick_export                                       🢂  │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*● note_3_onclick_export ● onclick ● cb_BUTTON {{{*/
-const FOLD_OPEN = "{{{"; /* eslint-disable-line no-unused-vars */
+const FOLD_OPEN = "{{{";
 const FOLD_CLOSE= "}}}"; /* eslint-disable-line no-unused-vars */
 const NOTE_H_SEP = " ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●"+FOLD_OPEN+"1";
 let note_3_onclick_export = function(e)
@@ -441,10 +456,6 @@ let formatDate = function(timestamp)
 let center_input_placeholder = function(placeholder,delay)
 {
     input.setAttribute( "placeholder", placeholder);
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ CONTOLER
-js_notes.smTracerViewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "center_input_placeholder");
-//└────────────────────────────────────────────────────────────────────────────┘
 
     input.classList.add("center_input_placeholder");
 
@@ -455,10 +466,6 @@ let reset_input_placeholder = function()
 if(tag_this) console.log("⚫ reset_input_placeholder");
 
     input.setAttribute(    "placeholder", PLACEHOLDER_CREATE_PROMPT);
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ CONTOLER
-js_notes.smTracerViewPort.showPlaceholder(/*text*/ input.getAttribute("placeholder"), "reset_input_placeholder");
-//└────────────────────────────────────────────────────────────────────────────┘
 
     input.classList.remove("center_input_placeholder");
 };
@@ -466,7 +473,7 @@ js_notes.smTracerViewPort.showPlaceholder(/*text*/ input.getAttribute("placehold
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟡 CHECK                                                            [ ] ✅ │
+//│ 🟡 CHECK  ● note_4_onclick_check                                    [ ] ✅ │
 //└────────────────────────────────────────────────────────────────────────────┘
 //● note_4_onclick_check {{{
 let note_4_onclick_check = function(e,index)
@@ -533,7 +540,7 @@ let get_checked = function(index)
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟢 EDIT                                                                 ✎  │
+//│ 🟢 EDIT   ● note_5_onclick_edit                                         ✎  │
 //└────────────────────────────────────────────────────────────────────────────┘
 //● note_5_onclick_edit ● onclick ● node_row {{{
 let note_5_onclick_edit = function(e,index)
@@ -607,10 +614,7 @@ let set_editing_note_index = function(index)
 //      save_note_BUTTON.style.backgroundColor = "";
         save_note_BUTTON.setAttribute("disabled","");
     }
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ CONTOLER
-js_notes.smTracerViewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "set_editing_note_index");
-//└────────────────────────────────────────────────────────────────────────────┘
+
     // standout edited note
     standout_note_at_index( index );
 };
@@ -636,10 +640,7 @@ if(tag_this) console.log("🔴 save_note_auto");
     if(!text || is_input_same_as_original())
     {
         save_note_BUTTON.setAttribute("disabled","");
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ CONTOLER
-js_notes.smTracerViewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "save_note_auto");
-//└────────────────────────────────────────────────────────────────────────────┘
+
         if(   (e.type == "auto_save")
            && is_last_note_auto_save()
           ) {
@@ -657,10 +658,6 @@ if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
     // SOME INPUT MODS              ● save_note_BUTTON  enabled {{{
     else {
         save_note_BUTTON.removeAttribute("disabled");
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ CONTOLER
-js_notes.smTracerViewPort.setSaveButton(/*enabled*/ !save_note_BUTTON.disabled, /*label*/save_note_BUTTON.textContent, "save_note_auto");
-//└────────────────────────────────────────────────────────────────────────────┘
     }
     //}}}
     // SAME AS LAST SAVED {{{
@@ -742,7 +739,7 @@ if(log_this) console.log("🟣 AUTO_SAVE: LAST SAVED");
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🔵 DELETE                                                               ✕  │
+//│ 🔵 DELETE ● note_6_onclick_delete                                       ✕  │
 //└────────────────────────────────────────────────────────────────────────────┘
 //● note_6_onclick_delete {{{
 let note_6_onclick_delete = function(e,index)
@@ -759,8 +756,13 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
     if( deleting_editing_note || deleting_auto_save_note)
         js_notes.reset_input("note_6_onclick_delete");
 
-    // REMOVE NOTE
-    nArray.splice(index, 1);
+    //┌───────────────────────────────────────────────────────────────────────┐
+    //│ REMOVE NOTE ● add to the nArray_wasted array
+    //└───────────────────────────────────────────────────────────────────────┘
+    let  deleted_note = nArray.splice(index, 1)[0];
+
+    if( !deleted_note.text.startsWith(AUTO_SAVE_TAG) )
+        nArray_wasted_add_deleted_note( deleted_note );
 
     // UPDATE STORAGE
     if(nArray.length)
@@ -787,6 +789,119 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
     }
 };
 //}}}
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟠 WASTED ● note_7_onclick_wasted                                     🢀 🗑 │
+//└────────────────────────────────────────────────────────────────────────────┘
+/*● note_7_onclick_wasted ● onclick ● cb_BUTTON {{{*/
+//{{{
+const CLEAR_DELETED_NOTES = "Clear deleted notes";
+
+//}}}
+let note_7_onclick_wasted = function(e)
+{
+if(tag_this) console.log("🟠 "+e.target.innerText +"note_7_onclick_wasted");
+
+    if(!nArray_wasted.length) return;
+
+    reset_input_placeholder();
+
+    // DISPLAY DELETED NOTE AS A BUFFER TO IMPORT
+    if( wasted_note_BUTTON.innerText != CLEAR_DELETED_NOTES)
+    {
+        input.value = note_7_onclick_wasted_get_buffer() +"\n";
+
+        // SHOW HOW TO CLEAR DELETED NOTES
+        wasted_note_BUTTON    .classList.add("clear_deleted_notes");    // SERVER/style/notes.css
+        wasted_note_BUTTON    .innerText
+            =       CLEAR_DELETED_NOTES;
+
+        setTimeout(() => {
+            wasted_note_BUTTON.classList.remove("clear_deleted_notes");
+            wasted_note_BUTTON.innerText
+                = nArray_wasted.length +" deleted note"+ ((nArray_wasted.length > 1) ? "s":"");
+        }, 2000);
+
+    }
+    // NEXT CLICK WILL PURGE DELETED NOTE ARRAY
+    else {
+        input.value = "";
+        nArray_wasted_del_note_index(-1);
+    }
+};
+/*}}}*/
+/*_ nArray_wasted_add_deleted_note {{{*/
+let nArray_wasted_add_deleted_note = function( deleted_note )
+{
+    nArray_wasted.push( deleted_note );
+
+    wasted_note_BUTTON
+        .removeAttribute("disabled");
+
+    wasted_note_BUTTON.innerText
+        = nArray_wasted.length +" deleted note"+ ((nArray_wasted.length > 1) ? "s":"");
+
+    wasted_note_BUTTON.title
+        = note_7_onclick_wasted_get_buffer()
+        . replace(/\n\n+/g,"\n");
+};
+/*}}}*/
+/*_ nArray_wasted_del_imported_note {{{*/
+let nArray_wasted_del_imported_note = function(imported_note_args)
+{
+    let imported_text
+        = imported_note_args.text.trim();
+
+    for(let index = 0; index < nArray_wasted.length; ++index)
+    {
+        if( nArray_wasted[index].text.includes( imported_text ))
+        {
+            nArray_wasted_del_note_index( index );
+            return;
+        }
+    }
+};
+/*}}}*/
+/*_ nArray_wasted_del_note_index {{{*/
+let nArray_wasted_del_note_index = function(index)
+{
+    // REMOVE a note or CLEAR nArray_wasted
+    if(index < 0) nArray_wasted = [];
+    else          nArray_wasted.splice(index, 1);
+
+    // [disabled]
+    if(nArray_wasted.length < 1) wasted_note_BUTTON.   setAttribute("disabled","");
+    else                         wasted_note_BUTTON.removeAttribute("disabled"   );
+
+    // NUMBER OF DELTED NOTES
+    wasted_note_BUTTON.innerText
+        =  nArray_wasted.length
+        ? (nArray_wasted.length +" deleted note"+ ((nArray_wasted.length > 1) ? "s":""))
+        :                     ("No deleted Notes");
+
+    // ALL DELETED NOTES TEXT IN BUTTON TITLE TOOLTIP
+    wasted_note_BUTTON.title
+        = note_7_onclick_wasted_get_buffer()
+        . replace(/\n\n+/g,"\n");
+};
+/*}}}*/
+/*_ note_7_onclick_wasted_get_buffer {{{*/
+let note_7_onclick_wasted_get_buffer = function()
+{
+    let buffer = "";
+    let index  =  1;
+    nArray_wasted
+        .forEach(  (note) => buffer += ""
+                 + (note.checked ? "✓":"□")             +" "
+                 + "Note "+ String(index++).padStart(3) +" "
+                 + formatDate( note.timestamp )         +" "
+                 + NOTE_H_SEP                           +"\n"
+                 + note.text                            +"\n\n"
+                );
+
+    return buffer.trim();
+};
+/*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟣 STANDOUT                                                             💡 │
@@ -965,6 +1080,9 @@ let update_summary = function()
         // DELETE
         ,    note_6_onclick_delete          //...onclick
 
+        // WASTED
+        ,    note_7_onclick_wasted          //...onclick
+
         // CHECK
         ,    note_4_onclick_check           //...onclick
         ,    get_checked
@@ -976,8 +1094,8 @@ let update_summary = function()
         ,    reset_input_placeholder
         // DEBUG
         , scroll_TR_intoView
+        , note_7_onclick_wasted_get_buffer
 
     };
 //}}}
 })();
-

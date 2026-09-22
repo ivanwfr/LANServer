@@ -1,5 +1,6 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/notes.css    ● $APROJECTS/LANServer         ● _TAG (260920:18h:46) │*/
+/*│ ● SERVER/style/notes.css  ● $APROJECTS/LANServer  ● _TAG (260922:02h:15) │*/
+/*│ ● SERVER/style/qtext.css                                                 │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 #smTracer {
     position        : sticky;
@@ -168,7 +169,9 @@ min-height          : 8em;
     text-align      : center;
 }
 /*}}}*/
-#save_note_BUTTON { /*{{{*/
+#wasted_note_BUTTON,
+#save_note_BUTTON  { /*{{{*/
+    margin          : 0.5em;
     cursor          : pointer;
     padding         : 6px 12px;
 /*{{{
@@ -181,14 +184,20 @@ min-height          : 8em;
 /*{{{
     border          : 5px  solid #888;
 }}}*/
-    outline         : 4px groove #800;
     outline-offset  : 4px;
 }
-#save_note_BUTTON[disabled] {
+#save_note_BUTTON  { outline         : 4px groove #800; } /* RED    */ 
+#wasted_note_BUTTON{ outline         : 4px groove #840; } /* ORANGE */
+#wasted_note_BUTTON.clear_deleted_notes{ outline: 4px groove #F80; } /* BRIGHTER */
+
+#wasted_note_BUTTON[disabled],
+#save_note_BUTTON[disabled]  {
     background      : #222;
     color           : #888;
-text-decoration: line-through;
-font-style: italic;
+    font-style      : italic;
+/*{{{
+    text-decoration : line-through;
+}}}*/
 }
 #save_note_BUTTON.notes_uploaded {
     outline         : 4px solid #040;
