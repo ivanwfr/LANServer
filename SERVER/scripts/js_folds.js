@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260916:00h:55) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260921:17h:27) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -287,7 +287,7 @@ if(log_this) console.log("⚫ %c js_folds._get_nextContainer:", lbB);
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟢 TOGGLE EVENT                                                            │
+//│ 🟢 FOLD TOGGLE                                                             │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*_ track_pendingShift {{{*/
 /*{{{*/
@@ -337,7 +337,7 @@ let set_shiftLatched = function(state, delay=1000)
 };
 /*}}}*/
 /*_ toggle_details_open_state {{{*/
-let toggle_details_open_state = function(e)
+let   toggle_details_open_state = function(e)
 {
 if(log_this) console.log("⚫ %c js_folds.toggle_details_open_state:", lbB);
 
@@ -373,9 +373,9 @@ if(log_this) console.log("🔴 %c js_folds.toggle_details_open_state: OPENING: "
     let doc_details = Array.from(document.querySelectorAll("details"));
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ DO NOT CLOSE OTHERS
+    //│ DO NOT CLOSE OTHERS f(unfold_cooldown) or f(shiftKey)
     //└────────────────────────────────────────────────────────────────────────┘
-    if( shiftKey )
+    if(unfold_cooldown || shiftKey)
     {
         for(let d of open_set)
             if(!d.open)
@@ -393,7 +393,34 @@ if(log_this) console.log("🔴 %c js_folds.toggle_details_open_state: OPENING: "
         }
 
     }
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ START A NEW COOLDOWN TO UNFOLD MORE THAN ONE DETAILS
+    //└────────────────────────────────────────────────────────────────────────┘
+    toggle_unfold_cooldown();
+
 };
+/*_ toggle_unfold_cooldown {{{*/
+//{{{
+const UNFOLD_COOLDOWN_MS = 1000;
+let   unfold_cooldown;
+//}}}
+let toggle_unfold_cooldown = function()
+{
+  //let next_ms = UNFOLD_COOLDOWN_MS * (unfold_cooldown ? 2:1);
+    let next_ms = UNFOLD_COOLDOWN_MS;
+
+    if( unfold_cooldown ) clearTimeout(     unfold_cooldown );
+
+    document        .body.classList.add   ("unfold_cooldown"); // see %:h/../style/qtext.css
+
+    /**/unfold_cooldown
+        =  setTimeout( () => {
+            unfold_cooldown = null;
+            document.body.classList.remove("unfold_cooldown");
+        }, next_ms);
+
+};
+/*}}}*/
 /*}}}*/
 /*_ get_ancestors_with_tag {{{*/
 let get_ancestors_with_tag = function(el, tag)
