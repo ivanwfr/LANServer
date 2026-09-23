@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
     const SERVER_JS_ID  = "server";
-    const SERVER_JS_TAG = SERVER_JS_ID  +" (260922:22h:55)";
+    const SERVER_JS_TAG = SERVER_JS_ID  +" (260923:23h:07)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -803,7 +803,11 @@ if(log_this) console.dir(request);
         /* WRITE FILE CONTENT .. replace (127.0.0.1|\blocalhost\b) with [net_address] {{{*/
         if( html_format_requested(file_name,query) )
         {
-            response.write( SCRIPT_QTEXT           );
+            let header
+                = "<title>"+file_name.replace(/.*[\\\/]/,"")+"</title>\n"
+                +  SCRIPT_QTEXT;
+
+            response.write( header                 );
             response.write( STYLE_QTEXT            );
             response.write( "<pre>"+ data +"</pre>");
         }
