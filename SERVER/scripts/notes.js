@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260922:02h:34) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260922:23h:13) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -183,7 +183,8 @@ if(tag_this) console.log("🟡%c load_notes\t\t  ["+ notes_storage_key +"]", "co
         .then (( res  ) => res.json())
         .then (( data ) => load_server_notes(data))
         .catch(( err  ) => {
-            console.warn("Could not retrieve notes from server", err);
+            // No notes yet
+               console.log ("Could not retrieve notes from server", err);
 
             load_client_notes();
 
@@ -254,7 +255,7 @@ if(tag_this) console.log("%c load_client_notes", "color: #F00");
 //│ 🟤 SAVE   ● note_1_onclick_save                                         🡮  │
 //└────────────────────────────────────────────────────────────────────────────┘
 //● note_1_onclick_save {{{
-let note_1_onclick_save = function(e)
+let note_1_onclick_save = function(e={})
 {
 if(tag_this) console.log("🟤 note_1_onclick_save");
 
@@ -572,7 +573,8 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
        ; node_row =   node_row.parentElement
        );
 
-    input.value = node_row.getAttribute("title") +"\n";
+//  input.value = node_row.getAttribute("title") +"\n";
+    input.value = node_row.dataset.content;//FIXME
 
     // EDITING A [checked] NOTE (OR NOT)
     if( get_checked(index)) input.classList.add   ("checked");

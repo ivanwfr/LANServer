@@ -1,11 +1,12 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260921:17h:27) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260922:18h:31) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true {{{*/
 
+/* globals js_log   */
 /* globals js_store */
 /* globals js_xpath */
 /*}}}*/
@@ -13,6 +14,17 @@ let js_folds = (function() {
 //"use strict";
 let log_this = false;
 let tag_this = false || log_this;
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ ◯  INLINING ● SERVER/scripts/js_log.js
+//└────────────────────────────────────────────────────────────────────────────┘
+//{{{
+/* eslint-disable no-unused-vars */
+let                               lbB  = js_log.lbB;
+let                               lbX  = js_log.lbX;
+let [lb1,lb2,lb3,lb4,lb5,lb6,lb7,lb8,lb9,lb0] = lbX;
+/* eslint-enable  no-unused-vars */
+//}}}
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 LOAD ● UNLOAD                                                           │
@@ -438,30 +450,6 @@ if(log_this) console.log("...arr.length: "+ arr.length);
     return arr;
 };
 /*}}}*/
-
-//┌─────┐
-//│ LOG │
-//└─────┘
-//{{{
-//let ellipsis = function(str, n) { return str.length > n ? str.slice(0, n - 1) + "…" : str; };
-
-/* eslint-disable no-unused-vars */
-
-const lb1  = "background:#964B00; color:black; padding:0 0.5em;";
-const lb2  = "background:#FF0000; color:black; padding:0 0.5em;";
-const lb3  = "background:#FFA500; color:black; padding:0 0.5em;";
-const lb4  = "background:#FFFF00; color:black; padding:0 0.5em;";
-const lb5  = "background:#9ACD32; color:black; padding:0 0.5em;";
-const lb6  = "background:#6495ED; color:black; padding:0 0.5em;";
-const lb7  = "background:#EE82EE; color:black; padding:0 0.5em;";
-const lb8  = "background:#A0A0A0; color:black; padding:0 0.5em;";
-const lb9  = "background:#FFFFFF; color:black; padding:0 0.5em;";
-const lb0  = "background:#000000; color:gray ; padding:0 0.5em;";
-const lbX  = [ lb0 ,lb1 ,lb2 ,lb3 ,lb4 ,lb5 ,lb6 ,lb7 ,lb8 ,lb9 ];
-const lbB  = lb0 +"font-size: 150%; border-radius: 1em; padding: 0 1em; border: 1px solid red;";
-
-/* eslint-enable  no-unused-vars */
-//}}}
 
 /* EXPORT {{{*/
 return { name : "js_folds"

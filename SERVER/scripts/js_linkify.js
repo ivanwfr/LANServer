@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260916:19h:32) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260922:17h:04) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -226,8 +226,8 @@ let linkify_file_pathes = function()
     let href          = document.location.href;
 //  let href          = "https://192.168.1.14:447/LAN/AHK/HIDCONTROL/AHK/HID/DEV_VID_PID_AXIS.ahk";
 
-    let root          = href  .replace(/^(.*\/\/[^\/]*)\/.*/, "$1"); // up to first /
-    let file          = href  .replace(/^.*\/(.*)$/           , "$1"); // after last  /
+    let root          = href  .replace(/^(.*\/\/[^\/]*)\/.*/, "$1");    // up to first /
+    let file          = href  .replace(/^.*\/(.*)$/           , "$1");  // after last  /
     let folder        = href  .substr(root.length);                     // after first /
         folder        = folder.substr(0, folder.length -file.length);   // before file
     let folders       = folder.split("/").filter(Boolean);              // remove falsy items
@@ -244,9 +244,11 @@ let linkify_file_pathes = function()
     let pre   = document.querySelector("PRE");
     let lines = pre.innerHTML.split("\n");
     lines.forEach((line) => {
-        if(line.includes(".ahk"))
-        {
-            let path     = line.replace(/^.*\s(\S+\.ahk).*$/g, "$1");
+        if(   line.match(/\/\w+\.ahk/)
+           || line.match(/\/\w+\.css/)
+           || line.match(/\/\w+\.js/ )
+          ) {
+            let path     = line.replace(/^.*\s(\S+\.(ahk|css|js)).*$/g, "$1");
             let parents  = path.split("/").filter(Boolean);  // remove falsy items
             let fileName = parents.pop();
 

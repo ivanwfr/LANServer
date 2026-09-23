@@ -1,11 +1,12 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260922:01h:08) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260923:02h:19) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 
-/* globals notes */
+// globals js_VIEW */ // STUB FOR MVC VIEW
+/* globals notes  */
 
 /*}}}*/
 let js_notes    = (function()
@@ -44,7 +45,7 @@ const NOTE_DETAILS_HTML   = `
     <button   id="wide_button"         onclick='js_notes.wider                (event);'></button>
     <br>
     <textarea id="note_input_TEXTAREA" placeholder="${notes.PLACEHOLDER_CREATE_PROMPT}"></textarea>
-    <button   id="save_note_BUTTON"        onclick='   notes.note_1_onclick_save  (event)'                               >Save Note</button>
+    <button   id="save_note_BUTTON"        XXclick='   notes.note_1_onclick_save  (event)'                               >Save Note</button>
     <button   id="wasted_note_BUTTON"      onclick='   notes.note_7_onclick_wasted(event)' title='${BUTTON_WASTED_TITLE}'>${BUTTON_WASTED_NAME}</button>
     <button       class="cb_BUTTON"        onclick='   notes.note_3_onclick_export(event)' title='${BUTTON_EXPORT_TITLE}'>${BUTTON_EXPORT_NAME}</button>
     <button       class="cb_BUTTON"        onclick='   notes.note_2_onclick_import(event)' title='${BUTTON_IMPORT_TITLE}'>${BUTTON_IMPORT_NAME}</button>
@@ -158,6 +159,7 @@ if(tag_this) console.log("onload");
     load_id_wh();
 
     //}}}
+//  js_VIEW.init();
 };
 /*}}}*/
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -345,13 +347,15 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
         ? nArray.map((n, i) => ""
 + "<!--🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯-->"
 + "<TR          class='node_row "+   notes.get_checked(i)+(n.text.includes(AUTO_SAVE_TAG) ? " auto_save":"")+"'"
-+                                   " title='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
+//                                  " title='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
++                            " data-content='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
++                            " data-id='"     + i                                                           +"'"
 +  "                                                      onclick='   notes.note_5_onclick_edit  (event, "+i+")'>"
 +  "<TD><button class='check_button'  title='Check note'  onclick='   notes.note_4_onclick_check (event, "+i+")'></button></TD>"
 +  "<TD><button class='edit_button'   title='Edit note'                                                         ></button></TD>"
 +  "<TD><div    class='truncated'>"+            escapeHTML(n.text)                                          +"</div>   </TD>"
 +  "<TD><small  class='timestamp'                         onclick='event.cancelBubble = true;'>"+ new Date(n.timestamp).toLocaleString() +"</small></TD>"
-+  "<TD><button class='delete_button' title='Delete note' onclick='   notes.note_6_onclick_delete(event, "+i+")'></button></TD>"
++  "<TD><button class='delete_button' title='Delete note' XXclick='   notes.note_6_onclick_delete(event, "+i+")'></button></TD>"
 + "</TR>"
 ).join("")
 
@@ -454,12 +458,6 @@ if(tag_this) console.log("copy_to_clipboard:");
 if(log_this) console.log( buffer );
 
     navigator.clipboard.writeText( buffer );
-};
-/*}}}*/
-/* ● ellipsis {{{*/
-let ellipsis = function(str, n)
-{
-    return str.length > n ? str.slice(0, n - 1) + "…" : str;
 };
 /*}}}*/
 /*● escapeHTML {{{*/
@@ -697,6 +695,7 @@ let reset_input = function(_caller)
 if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""));
 
     // CLEAR TEXTAREA CONTENT
+    input.dataset.content = input.value;
     input.value = "";
 
     // UPDATE STANDOUT IN [saved_notes_DIV]
@@ -854,7 +853,6 @@ return {
 
         // used by notes
         , copy_to_clipboard
-        , ellipsis
         , get_notes_storage_key
         , get_page_fileName
         , load_input

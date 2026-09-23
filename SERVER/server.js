@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
     const SERVER_JS_ID  = "server";
-    const SERVER_JS_TAG = SERVER_JS_ID  +" (260922:00h:16)";
+    const SERVER_JS_TAG = SERVER_JS_ID  +" (260922:22h:55)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -128,14 +128,19 @@ A:visited {            color: #F0F; }
 /*    SCRIPT_QTEXT {{{*/
 const SCRIPT_QTEXT = ""
     + "<meta name='color-scheme' content='light only'>"
-    + "<script src='/scripts/dom_log.js     '></script>"
-    + "<script src='/scripts/js_folds.js    '></script>"
-    + "<script src='/scripts/js_store.js    '></script>"
-    + "<script src='/scripts/js_xpath.js    '></script>"
-    + "<script src='/scripts/js_linkify.js  '></script>"
-//  + "<script src='/scripts/js_smTracer.js' ></script>"
-    + "<script src='/scripts/notes.js'       ></script>"
-    + "<script src='/scripts/js_notes.js    '></script>"
+    + "<script src='/scripts/js_log.js     '></script>\n"
+
+    + "<script src='/scripts/js_folds.js   '></script>\n"
+    + "<script src='/scripts/js_store.js   '></script>\n"
+    + "<script src='/scripts/js_xpath.js   '></script>\n"
+    + "<script src='/scripts/js_linkify.js '></script>\n"
+
+    + "<script src='/scripts/js_MODEL.js   '></script>\n"
+    + "<script src='/scripts/js_VIEW.js    '></script>\n"
+    + "<script src='/scripts/js_CNTRL.js   '></script>\n"
+
+    + "<script src='/scripts/notes.js      '></script>\n"
+    + "<script src='/scripts/js_notes.js   '></script>\n"
     ;
 /*}}}*/
 /*    STYLE_QTEXT {{{*/
