@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260922:23h:13) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260923:22h:12) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -263,16 +263,16 @@ if(tag_this) console.log("🟤 note_1_onclick_save");
     let  text = input.value.trim();
 
     //}}}
-    // if save_note_auto ...return {{{
+    // if js_notes.save_note_auto ...return {{{
     if(e.type == "auto_save")
     {
-        save_note_auto( e );
+        js_notes.save_note_auto( e );
 
         return;
     }
     //}}}
     // or delete auto_save ... {{{
-    else if( is_last_note_auto_save()  )
+    else if( js_notes.is_last_note_auto_save()  )
     {
         nArray.splice(nArray.length-1, 1);
     }
@@ -283,7 +283,7 @@ if(tag_this) console.log("🟤 note_1_onclick_save");
 
     //}}}
     // REPLACE NOTE {{{
-    let index  = get_editing_note_index();
+    let index  = js_notes.get_editing_note_index();
     if( index >= 0)
     {
         //┌────────────────────────────────────────────────────────────────────┐
@@ -348,11 +348,11 @@ if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
     //│ 🔴 Note #1                                       │
     //│ 2/4 AUTO-SAVE LOOP DONE DELETE TEMPORARY NOTE    │
     //│ if(nArray.length && not...)                      │
-    //│ replace with is_last_note_auto_save              │
+    //│ replace with js_notes.is_last_note_auto_save              │
     //└──────────────────────────────────────────────────┘
     //}}}
     // cancel pending auto_save message {{{
-    if( is_last_note_auto_save())
+    if( js_notes.is_last_note_auto_save())
         note_6_onclick_delete(e, nArray.length-1);
 
     //}}}
@@ -366,7 +366,7 @@ if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
         if(!line) continue;
 
         // 🟤 NEXT NOTE # ● SAVE CURRENT
-        let matches = line.match(/Note #(\d)/i);
+        let matches = line.match(/Note +#?(\d)/i);
         if( matches )
         {
             // 🔴 FLUSH PREVIOUS
@@ -519,7 +519,7 @@ if(tag_this) console.log("🟡 note_4_onclick_check: "+ e.type);
 //  layout_notes("note_4_onclick_check", index);
 
     // SYNC INPUT ● while editing checked note
-    if(get_editing_note_index() == index)
+    if(js_notes.get_editing_note_index() == index)
     {
         if( get_checked(index)) input  .classList.add   ("checked");
         else                    input  .classList.remove("checked");
@@ -543,202 +543,8 @@ let get_checked = function(index)
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟢 EDIT   ● note_5_onclick_edit                                         ✎  │
 //└────────────────────────────────────────────────────────────────────────────┘
-//● note_5_onclick_edit ● onclick ● node_row {{{
-let note_5_onclick_edit = function(e,index)
-{
-if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
 
-    // STORE CURRENT INPUT CONTENT (WILL BE RESTORED BY NEXT RELOAD)
-    js_notes.save_input("note_5_onclick_edit");
 
-    // TOGGLE OFF ANY CURRENT EDIT
-    let editing_note_index  = get_editing_note_index();
-    if( editing_note_index >= 0)
-    {
-        js_notes.reset_input("note_5_onclick_edit");
-
-        if(index == editing_note_index)
-            return;
-    }
-
-    // COMMIT INPUT CONTENT AS A [NEW] OR [EDITED] NOTE
-    notes.note_1_onclick_save ( e );
-
-    // CLEAR TEXTAREA EDIT PROMPT
-    reset_input_placeholder();
-
-    let  node_row;
-    for( node_row =   e.target
-       ; node_row && !node_row.classList.contains("node_row")
-       ; node_row =   node_row.parentElement
-       );
-
-//  input.value = node_row.getAttribute("title") +"\n";
-    input.value = node_row.dataset.content;//FIXME
-
-    // EDITING A [checked] NOTE (OR NOT)
-    if( get_checked(index)) input.classList.add   ("checked");
-    else                    input.classList.remove("checked");
-
-    // ADD [index] INNTO [save_note_BUTTON] ATTRIBUTES
-    set_editing_note_index( index );
-
-    // MAKE FIRST SYNCHRONOUS CALL TO START TRACKING CHANGES
-    note_1_onclick_save( { type: "auto_save" } );
-};
-//}}}
-/*{{{*/
-/*_ set_editing_note_index {{{*/
-/*{{{*/
-const EDITING_NOTE_NUM       = "editing_note_num";
-/*}}}*/
-let set_editing_note_index = function(index)
-{
-    // SET   SAVE BUTTON ATTRIBUTE [EDITING_NOTE_NUM]
-    if(index >= 0) {
-        save_note_BUTTON.innerText= "Save Note #"+     (index+1);
-        save_note_BUTTON.setAttribute(EDITING_NOTE_NUM, index+1);
-
-//      save_note_BUTTON.style.backgroundColor = BG[index % 10];
-//      save_note_BUTTON.style.    borderColor = BG[index % 10];
-
-        // EDITING NOTE LIST ITEM START
-        saved_notes_TABLE.querySelectorAll(".editing").forEach((el) => el.classList.remove("editing"));
-        saved_notes_TABLE.firstElementChild.children[index].classList.add("editing");
-    }
-    // CLEAR SAVE BUTTON ATTRIBUTE EDITING_NOTE_NUM
-    else {
-        // EDITING NOTE LIST ITEM DONE
-        saved_notes_TABLE.querySelectorAll(".editing").forEach((el) => el.classList.remove("editing"));
-
-        save_note_BUTTON.innerText = "Save Note";
-        save_note_BUTTON.removeAttribute( EDITING_NOTE_NUM );
-//      save_note_BUTTON.style.backgroundColor = "";
-        save_note_BUTTON.setAttribute("disabled","");
-    }
-
-    // standout edited note
-    standout_note_at_index( index );
-};
-/*}}}*/
-/*_ get_editing_note_index {{{*/
-let get_editing_note_index = function()
-{
-    //┌──────────────────────────────────┐
-    //│ VIEW BUTTON AS DATA SOURE !!!!!! │
-    //└──────────────────────────────────┘
-    let    attr  = save_note_BUTTON.getAttribute( EDITING_NOTE_NUM );
-    let    index = (attr != null) ? parseInt(attr-1) : -1;
-    return index;
-};
-/*}}}*/
-/*_ save_note_auto {{{*/
-let save_note_auto = function(e)
-{
-if(tag_this) console.log("🔴 save_note_auto");
-
-    let text    = input.value.trim();
-    // SAME AS ORIGINAL ● save_note_BUTTON disabled {{{
-    if(!text || is_input_same_as_original())
-    {
-        save_note_BUTTON.setAttribute("disabled","");
-
-        if(   (e.type == "auto_save")
-           && is_last_note_auto_save()
-          ) {
-if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
-
-            note_6_onclick_delete(e, nArray.length-1);
-        }
-        return;
-    }
-    //}}}
-    /* NO INPUT TEXT ● ...return {{{*/
-    if( !text )
-        return;
-    /*}}}*/
-    // SOME INPUT MODS              ● save_note_BUTTON  enabled {{{
-    else {
-        save_note_BUTTON.removeAttribute("disabled");
-    }
-    //}}}
-    // SAME AS LAST SAVED {{{
-    if( is_input_same_as_last_auto_save() )
-    {
-        return;
-    }
-    //}}}
-    // CHANGED ● ADDING AUTO_SAVE NOTE {{{
-    let index;
-    if( is_last_note_auto_save() )
-    {
-        index = nArray.length-1;
-    }
-    else {
-        index = nArray.length;
-    }
-    if( index >= 0) {
-        text      = AUTO_SAVE_TAG + text;
-        if(index >= nArray.length) nArray.push({ text , timestamp: Date.now() });
-        else                       nArray[index].text = text;
-        js_notes.layout_notes("save_note_auto", index);
-    }
-    //}}}
-};
-/*}}}*/
-/*_ is_input_same_as_original {{{*/
-let is_input_same_as_original = function()
-{
-    let text    = input.value.trim();
-
-    // edited note index
-    let index = get_editing_note_index();
-
-    // no original to compare to
-    if(index < 0)
-        return false;
-
-    // input text == note text
-    let auto_save_text = AUTO_SAVE_TAG + text;
-
-    if(   nArray[index].text.trim()
-       != auto_save_text.substring(AUTO_SAVE_TAG.length).trim()
-      )
-        return false;
-
-if(log_this) console.log("⚫ AUTO_SAVE SAME AS ORIGINAL");
-    return true;
-};
-/*}}}*/
-/*_ is_input_same_as_last_auto_save {{{*/
-let is_input_same_as_last_auto_save = function()
-{
-    let text    = input.value.trim();
-    if(!nArray.length)
-        return false;
-
-    let auto_save_text  = AUTO_SAVE_TAG + text;
-    if(nArray[nArray.length-1].text.trim() != auto_save_text.trim())
-        return false;
-
-if(log_this) console.log("🔵 AUTO_SAVE: INPUT UNCHANGED");
-    return true;
-};
-            /*}}}*/
-/*_ is_last_note_auto_save {{{*/
-let is_last_note_auto_save = function()
-{
-   if(!nArray.length )
-       return false;
-
-   if(!nArray[nArray.length-1].text.startsWith(AUTO_SAVE_TAG) )
-       return false;
-
-if(log_this) console.log("🟣 AUTO_SAVE: LAST SAVED");
-   return true;
-};
-/*}}}*/
-/*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🔵 DELETE ● note_6_onclick_delete                                       ✕  │
@@ -753,8 +559,8 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
 
     //}}}
 
-    let deleting_editing_note   = (index == get_editing_note_index());
-    let deleting_auto_save_note = (index == nArray.length) && is_last_note_auto_save();
+    let deleting_editing_note   = (index == js_notes.get_editing_note_index());
+    let deleting_auto_save_note = (index == nArray.length) && js_notes.is_last_note_auto_save();
     if( deleting_editing_note || deleting_auto_save_note)
         js_notes.reset_input("note_6_onclick_delete");
 
@@ -781,13 +587,13 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
     js_notes.layout_notes("note_6_onclick_delete", index);
 
     // SHIFT EDITING NOTE DIV
-    let editing_note_index  = get_editing_note_index();
+    let editing_note_index  = js_notes.get_editing_note_index();
     if( editing_note_index >= 0)
     {
         if(index < editing_note_index)
-            set_editing_note_index(editing_note_index -1 );
+            js_notes.set_editing_note_index(editing_note_index -1 );
         else
-            set_editing_note_index(editing_note_index    );
+            js_notes.set_editing_note_index(editing_note_index    );
     }
 };
 //}}}
@@ -926,7 +732,7 @@ let standout_note_at_index = function(index)
         =  (index >= 0)
         && (index == (nArray.length -1));
 
-    if( is_last_note && notes.is_last_note_auto_save() )
+    if( is_last_note && js_notes.is_last_note_auto_save() )
         index = standout_note_index;
 
     document.querySelectorAll(".standout").forEach((el) => el.classList.remove("standout"));
@@ -1023,6 +829,8 @@ console.log("box_scrollY=["+ box_scrollY +"]");
 /*_ getClosestScrollableAncestor {{{*/
 let getClosestScrollableAncestor = function(el)
 {
+    if(    !el ) return null;
+
     return (el == document.documentElement)
             ? null
             : ( el.scrollHeight > el.clientHeight)
@@ -1070,14 +878,14 @@ let update_summary = function()
         // SAVE
         ,    note_1_onclick_save            //...onclick
 
-        // EDIT
-        ,    note_5_onclick_edit            //...onclick
-        ,    set_editing_note_index
-        ,    get_editing_note_index
-        ,    save_note_auto
-        ,    is_input_same_as_original
-        ,    is_input_same_as_last_auto_save
-        ,    is_last_note_auto_save
+    // EDIT ● MOVED in SERVER/scripts/js_notes.js
+  //,    note_5_onclick_edit            //...onclick
+  //,    set_editing_note_index
+  //,    get_editing_note_index
+  //,    save_note_auto
+  //,    is_input_same_as_original
+  //,    is_input_same_as_last_auto_save
+  //,    is_last_note_auto_save
 
         // DELETE
         ,    note_6_onclick_delete          //...onclick
