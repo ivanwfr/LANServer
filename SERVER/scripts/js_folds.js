@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260922:18h:31) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260924:19h:53) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -50,6 +50,7 @@ if(tag_this) console.log("⚫ %c js_folds.onload:", lbB+lb1);
     setTimeout(load_containers_scrollTop     , 2000);
 
     window  .addEventListener("beforeunload" , save_containers_scrollTop_handler);
+    window  .addEventListener("beforeunload" , save_details_open_state_handler  );
 };
 /*}}}*/
 
@@ -89,13 +90,14 @@ if(tag_this) console.log("⚫ %c js_folds.save_details_open_state_handler:", lbB
 /*}}}*/
     /* Build an array of details XPath {{{*/
     let val_array = [];
-    document.querySelectorAll("DETAILS,DIV").forEach((el) => {
+    document.querySelectorAll("DETAILS[open]").forEach((el) => {
         if( el.open )
         {
             let xpath = js_xpath.get_nodeXPath( el );
             val_array.push({ xpath , open: el.open });
 
 if(tag_this) console.log(" 🟠 %c"+xpath, "background-color:black");
+if(log_this) console.dir(el);
         }
     });
     /*}}}*/
@@ -217,20 +219,22 @@ let details_update_click_listeners = function()
 if(log_this) console.log("⚫ %c js_folds.details_update_click_listeners:", lbB);
 
     // CLOSE DETAILS ● click container left margin
-
-    // DETAILS having no nested DETAILS
-
     let some_listener_added = "";
 
-  //document.querySelectorAll("DETAILS:not(:has(DETAILS))").forEach((el) =>
-    document.querySelectorAll("DETAILS"                   ).forEach((el) => {
+  //document.querySelectorAll("DETAILS")                    // DETAILS any
+  //document.querySelectorAll("DETAILS:not(:has(DETAILS))") // DETAILS having no nested DETAILS
+    document.querySelectorAll("DETAILS:not([id])")          // DETAILS having no #id
+    .forEach((el) => {
         if(!el.click_listener_added)
         {
+          //el.style.paddingLeft = "0.2em";
+
             some_listener_added += "● "+ el.firstElementChild.textContent.replace(/ *\n */g," \u21B2 ")+"\n";
 
             el.click_listener_added = true;
 
             el.addEventListener("click", details_click_listener);
+            el.classList.add   (        "close_on_margin_click");
 
             el.addEventListener("toggle", (event) => {
                 toggle_details_open_state (event);
@@ -266,11 +270,12 @@ if(log_this) console.log("⚫ %c js_folds.details_click_listener:", lbB);
         : (e.target.parentElement.tagName == "DETAILS") ? e.target.parentElement
         :                                                 null;
 
+    // CLICKED IN CONTAINER'S LEFT MARGIN
     if( details ) {
         let            summary = details.firstElementChild;
         let      nextContainer = _get_nextContainer( summary );             // container under DETAILS SUMMARY
         if(   (e.x < (nextContainer.offsetLeft     ))                       // clicked in container's left margin
-           && (e.x > (nextContainer.offsetLeft - 30))                       // witin parent details .. @see STYLE/details.css
+           && (e.x > (nextContainer.offsetLeft - 30))                       // within parent details .. @see STYLE/details.css
           ) {
             details.open       = !details.open;
             if( e.stopPropagation          ) e.stopPropagation         ();  // capturing and bubbling phases
@@ -380,7 +385,7 @@ if(log_this) console.log("⚫ %c js_folds.toggle_details_open_state:", lbB);
     //└────────────────────────────────────────────────────────────────────────┘
 if(log_this) console.log("🔴 %c js_folds.toggle_details_open_state: OPENING: "+target.firstElementChild.childNodes[0].textContent, lbB+lb2);
 
-    let    open_set = new Set([target, ...get_ancestors_with_tag(target, "DETAILS")]);
+    let ancestors_set = new Set([target, ...get_ancestors_with_tag(target, "DETAILS")]);
 
     let doc_details = Array.from(document.querySelectorAll("details"));
 
@@ -389,19 +394,17 @@ if(log_this) console.log("🔴 %c js_folds.toggle_details_open_state: OPENING: "
     //└────────────────────────────────────────────────────────────────────────┘
     if(unfold_cooldown || shiftKey)
     {
-        for(let d of open_set)
+        for(let d of ancestors_set)
             if(!d.open)
                 d.open = true;
     }
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ DO ... CLOSE OTHERS
+    //│ DO ... CLOSE OTHERS, (that are not part of the target hierarchy)
     //└────────────────────────────────────────────────────────────────────────┘
     else {
-        for(let d of doc_details)
-        {
-            let           open_or_close = open_set.has( d );
-            if( d.open != open_or_close)
-                d.open  = open_or_close;
+        for(let d of doc_details) {
+            if( ancestors_set.has( d    )) d.open =  true;
+            else if(              !d.id  ) d.open = false; // skip details with id
         }
 
     }
