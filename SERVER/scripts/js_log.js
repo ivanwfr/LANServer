@@ -8,7 +8,7 @@
 /*}}}*/
 globalThis.js_log = (function() {
 
-let log_this = true;//false;
+let log_this = false;
 let tag_this = false || log_this;
 
     let log = console.log;
