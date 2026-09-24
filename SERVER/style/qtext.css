@@ -40,7 +40,6 @@ BOXU,
 BOXM,
 BOXD {
  display             : inline-block;
- margin              : 0 0 0 0em;
  border-collapse     : collapse;
  border-left         : 8px solid #ffffff88;
  background          : linear-gradient(to right, #6665, #0001);
@@ -54,13 +53,68 @@ BOXD { border-radius    : 0     0     0.5em 0.5em; }
 /* cursor user-select transition {{{*/
 SUMMARY                     { user-select   : none;                           }
 DETAILS                     { cursor        : pointer;                        }
-DETAILS                     { transition    : margin           300ms ease-in; }
 SUMMARY                     { transition    : background-color 300ms ease-in; }
 /*}}}*/
-/* margin {{{*/
-DETAILS:open                { margin            : 1em; }
-PRE                         { margin            : 0px; }
+/* margin padding {{{*/
+
+           BOXU             { margin-top :  1em; }
+           BOXU, BOXM, BOXD { margin-left: -1em; }
+                    SUMMARY {                    padding     : 0.5em; }
+                        PRE {                    padding     : 0.5em; }
+
+DETAILS:open                { cursor      : context-menu; }
+DETAILS:open                { background-color: #F006;    }
+
+/*
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ ● see SERVER/scripts/js_folds.js details_click_listener
+//│ ● DETAILS:open
+//└────────────────────────────────────────────────────────────────────────────┘
+*/
+DETAILS.close_on_margin_click {
+  background: repeating-linear-gradient( 45deg
+    ,                                   #4448 0px
+    ,                                   #4448 4px
+    ,                                   #1118 4px
+    ,                                   #1118 8px
+  );
+/*{{{
+DETAILS.close_on_margin_click>* { background: red; }
+DETAILS.close_on_margin_click>SUMMARY { background: green; }
+}}}*/
+
+/*{{{
+  background: repeating-linear-gradient( 45deg
+    ,                                   #FC48 0px
+    ,                                   #FC48 8px
+    ,                                   #BBB8 8px
+    ,                                   #BBB8 16px
+  );
+}}}*/
+/*{{{
+  background: repeating-linear-gradient( 45deg
+  ,                                     #856100dd 0px
+  ,                                     #775700dd 8px
+  ,                                     #1d1d1ddd 8px
+  ,                                     #717171dd 16px);
+}}}*/
+}
+
+DETAILS:open       >PRE     { cursor      : pointer; }
+
+DETAILS:open                { margin      :.5em 2em; padding-left:   2em; }
+DETAILS:not(open)           { margin      : 0em 1em; padding-left:   1em; }
+
+DETAILS:open       >PRE     { margin-left :-1em; padding-left: 0.5em; margin-top: 2px; }
+DETAILS:not(open)  >PRE     { margin-left : 0em; padding-left: 0.5em; }
+
+DETAILS:open       >SUMMARY { margin-left :-2em; padding-left: 0.5em; }
+DETAILS:not(open)  >SUMMARY { margin-left : 0em; padding-left: 0.5em; }
+
+
+DETAILS                     { transition  : margin  100ms ease-in; }
 /*}}}*/
+
 /* width {{{*/
 DETAILS                     { width             : fit-content;     }
 /*}}}*/
@@ -110,19 +164,13 @@ DETAILS.bg9:open            { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
 DETAILS:open                { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
 
 DETAILS                     { border-radius     : 0em 1em 1em 0em; }
-DETAILS:not(open)  >SUMMARY { border-radius     : 0em 1em 1em 0em; }
+DETAILS:not(open)  >SUMMARY { border-radius     : 0.2em 1em 1em 0.2em; }
 DETAILS:open                { border-radius     : 0.5em;             }
 DETAILS:open       >SUMMARY { border-radius     : 0.5em 0.5em 0em 0em; }
 DETAILS:open        PRE     { border-radius     : 0em 0em 0.5em 0.5em; }
 
-DETAILS>SUMMARY             { border-left       : 8px solid #0004; }
+DETAILS>SUMMARY             { border-left       : 0.5em solid #0004; }
 DETAILS:open       >SUMMARY { border-left       : 0;               }
-/*}}}*/
-/* padding {{{*/
-DETAILS                     { padding           :       0.5em; }
-DETAILS             PRE     { padding           :       0.2em; }
-DETAILS:not(open)           { padding           :       0.0em; }
-DETAILS:not(open)  >SUMMARY { padding           : 0.5em 1.0em; }
 /*}}}*/
 /* font {{{*/
 DETAILS:open>SUMMARY        { font-weight     : 100   !important; }
