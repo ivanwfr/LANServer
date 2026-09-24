@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260923:22h:12) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260924:23h:32) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -259,6 +259,8 @@ let note_1_onclick_save = function(e={})
 {
 if(tag_this) console.log("🟤 note_1_onclick_save");
 
+    if( js_notes.is_input_auto_insert_prefix() ) return;
+
     /* input text {{{*/
     let  text = input.value.trim();
 
@@ -380,7 +382,16 @@ if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
         // next line of text
         else if( !line.includes( NOTE_H_SEP ) )
         {
-            text += line+"\n";
+            //┌────────────────────────────────────────────────────────────────────────────┐
+            //│ FIRST LINE: Import should **auto-number** added notes
+            //│ [ ] ...but not not those starting with a number marker
+            //│       !match(/^\d+\s/)
+            //└────────────────────────────────────────────────────────────────────────────┘
+            if(!text && !line.match(/^ *\d+\. /))
+            {
+                text = (nArray.length + 1) +". ";
+            }
+            text    += line+"\n";
         }
     }
     // 🟡 FLUSH LAST
@@ -508,7 +519,7 @@ if(tag_this) console.log("🟡 note_4_onclick_check: "+ e.type);
     // SYNC CHECKED TR STYLE ● @see [layout_notes] (populating saved_notes_TABLE TR)
     e.target.closest("TR")
         .className
-        = "node_row "
+        = "note_row "
         +  get_checked(index)
         +  (nArray[index].text.includes(AUTO_SAVE_TAG) ? " auto_save":"");
 

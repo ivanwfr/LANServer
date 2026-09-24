@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260923:23h:33) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260924:23h:56) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -139,12 +139,12 @@ if(tag_this) console.log("onload");
     document.addEventListener("visibilitychange", function(e) {
         if( document.hidden )
         {
-            save_input("visibilitychange listner");
-               notes.note_1_onclick_save ( e );
+            save_input("visibilitychange listener");
+            notes.note_1_onclick_save ( e );
         }
     });
     //}}}
-    // Auto-save user input content until submted with a save-buton click {{{
+    // Auto-save user input content until submitted with a save-buton click {{{
     setInterval(   notes.note_1_onclick_save, AUTO_SAVE_INTERVAL_MS, { type: "auto_save" });
 
     //}}}
@@ -294,6 +294,9 @@ if(tag_this) console.log("🔴 add_notes_DETAILS");
     input               = document.querySelector("#note_input_TEXTAREA");
     input.setAttribute("placeholder", notes.PLACEHOLDER_CREATE_PROMPT);
 
+    input.addEventListener("blur" , input_blur_listener);
+    input.addEventListener("focus", input_focus_listener);
+
     TextArea_IO.on( input , input_listener);
     resize_observe( input );
 
@@ -343,11 +346,11 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
         nArray = [];
     }
     /*}}}*/
-    /* 2. POPULATE OR CLEAR [node_row] {{{*/
+    /* 2. POPULATE OR CLEAR [note_row] {{{*/
     let innerHTML = nArray.length
         ? nArray.map((n, i) => ""
 + "<!--🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯-->"
-+ "<TR          class='node_row "+   notes.get_checked(i)+(n.text.includes(AUTO_SAVE_TAG) ? " auto_save":"")+"'"
++ "<TR          class='note_row "+   notes.get_checked(i)+(n.text.includes(AUTO_SAVE_TAG) ? " auto_save":"")+"'"
 //                                  " title='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
 +                            " data-content='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
 +                            " data-id='"     + i                                                           +"'"
@@ -479,11 +482,10 @@ let escapeHTML = function(text)
 //}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 
-
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟢 EDIT   ● note_5_onclick_edit                                         ✎  │
 //└────────────────────────────────────────────────────────────────────────────┘
-//● note_5_onclick_edit ● onclick ● node_row {{{
+//● note_5_onclick_edit ● onclick ● note_row {{{
 let note_5_onclick_edit = function(e,index)
 {
 if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
@@ -507,16 +509,16 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
     // CLEAR TEXTAREA EDIT PROMPT
     notes.reset_input_placeholder();
 
-    let  node_row;
+    let  note_row;
     if(e.target)
     {
-        for(   node_row =   e.target
-             ; node_row && !node_row.classList.contains("node_row")
-             ; node_row =   node_row.parentElement
+        for(   note_row =   e.target
+             ; note_row && !note_row.classList.contains("note_row")
+             ; note_row =   note_row.parentElement
            );
 
-    //  input.value = node_row.getAttribute("title") +"\n";
-        input.value = node_row.dataset.content;//FIXME
+    //  input.value = note_row.getAttribute("title") +"\n";
+        input.value = note_row.dataset.content;//FIXME
     }
     else {
         let nArray = notes.get_nArray();
@@ -535,77 +537,31 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
 };
 //}}}
 /*{{{*/
-/*_ set_editing_note_index {{{*/
-/*{{{*/
-const EDITING_NOTE_NUM       = "editing_note_num";
-/*}}}*/
-let set_editing_note_index = function(index)
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ CALLERS OF `save_note_auto`
+//│
+//│ ● USER CLICK      ➔ CLICK SAVE BUTTON
+//│ ● USER INPUT      ➔ input_listener [sync on first user input input empty]
+//│ ● js_notes.onload ➔ setInterval-AUTO_SAVE_INTERVAL_MS
+//└────────────────────────────────────────────────────────────────────────────┘
+/*_ save_note_auto ● caller: USER[note_1_onclick_save] ● input_listener[input is empty] {{{*/
+let save_note_auto = function(e={})
 {
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ SET   SAVE BUTTON ATTRIBUTE [EDITING_NOTE_NUM]
-    //└────────────────────────────────────────────────────────────────────────┘
+//{{{
+let caller = "save_note_auto";
+if(tag_this) console.log("🔴 "+ caller);
 
-    if(index >= 0) {
-        save_note_BUTTON.innerText= "Update Note #"+   (index+1);
-        save_note_BUTTON.setAttribute(EDITING_NOTE_NUM, index+1);
-
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ MARK PREVIOUS EDITED NOTE
-        //└────────────────────────────────────────────────────────────────────┘
-        saved_notes_TABLE.querySelectorAll(".editing").forEach((el) => {
-            el.classList.remove(            "editing");
-            el.classList.add   (            "edited" );
-        });
-
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ SELECTED EDITING NOTE
-        //└────────────────────────────────────────────────────────────────────┘
-        saved_notes_TABLE.firstElementChild.children[index].classList.add("editing");
-    }
-    // CLEAR SAVE BUTTON ATTRIBUTE EDITING_NOTE_NUM
-    else {
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ EDITING NOTE LIST ITEM DONE
-        //└────────────────────────────────────────────────────────────────────┘
-        saved_notes_TABLE.querySelectorAll(".editing").forEach((el) => {
-            el.classList.remove(            "editing");
-            el.classList.add   (            "edited");
-        });
-
-        let nArray = notes.get_nArray();
-        save_note_BUTTON.innerText        = "Add Note #"+ (nArray.length+1);
-        save_note_BUTTON.setAttribute(      "disabled","");
-        save_note_BUTTON.removeAttribute( EDITING_NOTE_NUM );
-    }
-
-    // standout edited note
-    notes.standout_note_at_index( index );
-};
-/*}}}*/
-/*_ get_editing_note_index {{{*/
-let get_editing_note_index = function()
-{
-    //┌──────────────────────────────────┐
-    //│ VIEW BUTTON AS DATA SOURE !!!!!! │
-    //└──────────────────────────────────┘
-    let    attr  = save_note_BUTTON.getAttribute( EDITING_NOTE_NUM );
-    let    index = (attr != null) ? parseInt(attr-1) : -1;
-    return index;
-};
-/*}}}*/
-/*_ save_note_auto {{{*/
-let save_note_auto = function(e)
-{
-if(tag_this) console.log("🔴 save_note_auto");
-
-    let text    = input.value.trim();
+//}}}
     // SAME AS ORIGINAL ● save_note_BUTTON disabled {{{
-    if(!text || is_input_same_as_original())
-    {
+    let   text = input.value.trim();
+    if(  !text
+       || is_input_auto_insert_prefix()
+       || is_input_same_as_original()
+      ) {
         save_note_BUTTON.setAttribute("disabled","");
 
-        if(   (e.type == "auto_save")
-           && is_last_note_auto_save()
+        if(   is_last_note_auto_save()
+//         && (e.type == "auto_save")
           ) {
 if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
 
@@ -644,7 +600,7 @@ if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
         text      = AUTO_SAVE_TAG + text;
         if(index >= nArray.length) nArray.push({ text , timestamp: Date.now() });
         else                       nArray[index].text = text;
-        js_notes.layout_notes("save_note_auto", index);
+        js_notes.layout_notes(caller, index);
     }
     //}}}
 };
@@ -704,20 +660,68 @@ if(log_this) console.log("🟣 AUTO_SAVE: LAST SAVED");
    return true;
 };
 /*}}}*/
+/*_ set_editing_note_index {{{*/
+/*{{{*/
+const EDITING_NOTE_NUM       = "editing_note_num";
+const BULLET_ECC_NUM         = "bullet_ecc_num";
 /*}}}*/
+let set_editing_note_index = function(index)
+{
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ SET   SAVE BUTTON ATTRIBUTE [EDITING_NOTE_NUM]
+    //└────────────────────────────────────────────────────────────────────────┘
 
+    if(index >= 0) {
+        save_note_BUTTON.innerText= "Update Note #"+   (index + 1);
+        save_note_BUTTON.setAttribute(EDITING_NOTE_NUM, index + 1);
+        save_note_BUTTON.setAttribute(BULLET_ECC_NUM  ,(index + 1) % 10);
 
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ MARK PREVIOUS EDITED NOTE
+        //└────────────────────────────────────────────────────────────────────┘
+        saved_notes_TABLE.querySelectorAll(".editing").forEach((el) => {
+            el.classList.remove(            "editing");
+            el.classList.add   (            "edited" );
+        });
 
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ SELECTED EDITING NOTE
+        //└────────────────────────────────────────────────────────────────────┘
+        saved_notes_TABLE.firstElementChild.children[index].classList.add("editing");
+    }
+    // CLEAR SAVE BUTTON ATTRIBUTE EDITING_NOTE_NUM
+    else {
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ EDITING NOTE LIST ITEM DONE
+        //└────────────────────────────────────────────────────────────────────┘
+        saved_notes_TABLE.querySelectorAll(".editing").forEach((el) => {
+            el.classList.remove(            "editing");
+            el.classList.add   (            "edited");
+        });
 
+        let nArray = notes.get_nArray();
+        save_note_BUTTON.innerText        = "Add Note #"+ (nArray.length+1);
+        save_note_BUTTON.setAttribute(      "disabled","");
+        save_note_BUTTON.removeAttribute( EDITING_NOTE_NUM );
+        save_note_BUTTON.removeAttribute( BULLET_ECC_NUM   );
+    }
 
-
-
-
-
-
-
-
-
+    // standout edited note
+    notes.standout_note_at_index( index );
+};
+/*}}}*/
+/*_ get_editing_note_index {{{*/
+let get_editing_note_index = function()
+{
+    //┌──────────────────────────────────┐
+    //│ VIEW BUTTON AS DATA SOURE !!!!!! │
+    //└──────────────────────────────────┘
+    let    attr  = save_note_BUTTON.getAttribute( EDITING_NOTE_NUM );
+    let    index = (attr != null) ? parseInt(attr-1) : -1;
+    return index;
+};
+/*}}}*/
+/*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ USER INPUT                                                                🔴
@@ -746,12 +750,44 @@ if(tag_this) console.log(`input_value changed:
         //┌────────────────────────────────────────────────────────────────────┐
         //│ on first user-input ● transitioning from empty
         //└────────────────────────────────────────────────────────────────────┘
-        if( !e.detail.oldValue )
-        {
+        if( !e.detail.oldValue
+          || is_input_auto_insert_prefix()
+          ) {
             notes.reset_input_placeholder();
                   save_note_auto( e );
             note_DETAILS.classList.remove("empty");
         }
+        // SERVER/style/notes.css
+        // SERVER/style/qtext.css
+
+        // USER MAY HAVE UNDONE
+        if( is_input_auto_insert_prefix() )
+        {
+            if(!input.classList.contains("auto_insert_prefix"))
+            {
+                input.classList.add(     "auto_insert_prefix");
+                save_note_auto( e );
+                return;
+            }
+        }
+
+        // USER DID INPUT SOMETHING
+        if(input.classList.contains(     "auto_insert_prefix"))
+        {
+            input.classList.remove(      "auto_insert_prefix");
+            save_note_auto( e );
+                return;
+        }
+
+        // INPUT
+        if(    is_input_auto_insert_prefix()
+           && !input.classList.contains("auto_insert_prefix")
+          ) {
+            input.classList.add(        "auto_insert_prefix");
+            save_note_auto( e );
+            return;
+        }
+
     }
     else {
            notes.note_1_onclick_save( { type: "auto_save" } ); // text cleared ...worth a synchronized update
@@ -842,7 +878,7 @@ if(log_this) console.log("🟤 load_id_wh:");
 if(log_this) console.log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x ${id_wh.height}`);
     }
 
-    note_DETAILS.open = true;
+    //note_DETAILS.open = true; // let load_details_open_state do this
 };
 /*}}}*/
 /*  change_listener {{{*/
@@ -890,8 +926,8 @@ if(tag_this) console.log("🟣 load_input");
         let        note = nArray[index];
         if(text == note.text)
         {
-            let node_row = saved_notes_TABLE.firstElementChild.children[index];
-               note_5_onclick_edit({ target: node_row }, index);
+            let note_row = saved_notes_TABLE.firstElementChild.children[index];
+               note_5_onclick_edit({ target: note_row }, index);
 // TRYING INPUT.FOCUS() TO RESUME NOTE EDIT {{{
 //          input.addEventListener("mouseenter", (event) => event.target.focus());
 //          input.addEventListener("mouseenter", ()      =>        input.focus());
@@ -914,6 +950,8 @@ if(log_this) console.log( text );
 let save_input = function(_caller)
 {
 if(tag_this) console.log("🟣 save_input"+ (_caller ? (" ← "+_caller) : ""));
+
+    if( is_input_auto_insert_prefix() ) return;
 
     // STORE CURRENT INPUT CONTENT (WILL BE RESTORED BY NEXT RELOAD)
     let input_storage_key = get_input_storage_key();
@@ -945,6 +983,66 @@ if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""))
 /*}}}*/
 /*}}}*/
 //└────────────────────────────────────────────────────────────────────────────┘
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ INPUT FOCUS-BLUR
+//└────────────────────────────────────────────────────────────────────────────┘
+/*● input_focus_listener {{{*/
+let input_focus_listener = function()
+{
+//console.log("🟢 input_focus_listener");
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● INSERT AUTO-INSERT NEW NOTE NUM
+    //└────────────────────────────────────────────────────────────────────────┘
+    if(!input.value ) {
+        input.value      = get_input_auto_insert_prefix();
+        input.classList.add("auto_insert_prefix");
+    }
+};
+/*}}}*/
+/*● input_blur_listener {{{*/
+let input_blur_listener = function()
+{
+//console.log("⚫ input_blur_listener");
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● CANCEL AUTO-INSERT NEW NOTE NUM
+    //└────────────────────────────────────────────────────────────────────────┘
+    if( is_input_auto_insert_prefix() )
+    {
+        input.value = "";
+        save_note_auto();
+    }
+};
+/*}}}*/
+/*● is_input_auto_insert_prefix {{{*/
+let is_input_auto_insert_prefix = function()
+{
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● CHECK  AUTO-INSERT NEW NOTE NUM
+    //└────────────────────────────────────────────────────────────────────────┘
+    if(!input.value) return false;
+
+    // contains the auto-number (trimming aside)
+
+    let     new_note_num  = get_input_auto_insert_prefix();
+    return (new_note_num.trim() == input.value.trim());
+
+};
+//}}}
+/*_ get_input_auto_insert_prefix {{{*/
+let get_input_auto_insert_prefix = function()
+{
+    let nArray       = notes.get_nArray();
+    let num =           nArray.length + 1;
+
+    if( is_last_note_auto_save() )
+       num -= 1;
+
+    return             num+".\t";
+};
+/*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ TextArea_IO MODULE                                                        🟢
@@ -1029,9 +1127,9 @@ let TextArea_IO = (function()
     };
     //}}}
 
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ PUBLIC
-//└────────────────────────────────────────────────────────────────────────────┘
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ PUBLIC
+    //└────────────────────────────────────────────────────────────────────────┘
 //{{{
 return {
 
@@ -1110,6 +1208,8 @@ return {
     ,    is_last_note_auto_save
 
         // DEBUG ONLY
+        , get_input_auto_insert_prefix
+        , is_input_auto_insert_prefix
         , escapeHTML
         , escape_note : (index) => escapeHTML( notes.get_nArray()[index].text )
         , layout_notes
