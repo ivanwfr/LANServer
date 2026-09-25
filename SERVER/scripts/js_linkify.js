@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260922:17h:04) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:03h:08) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -63,19 +63,19 @@ const FG = [
 //];
 //}}}
 // BG hex {{{
-const BG = [
-  "#00000080"
-, "#964B00A0"
-, "#FF0000A0"
-, "#FFA500A0"
-, "#FFFF00A0"
-, "#9ACD32A0"
-, "#6495EDA0"
-, "#EE82EEA0"
-, "#A0A0A0A0"
-, "#FFFFFFA0"
-, "#F0F0F0F0"
-];
+//const BG = [
+//  "#00000080"
+//, "#964B00A0"
+//, "#FF0000A0"
+//, "#FFA500A0"
+//, "#FFFF00A0"
+//, "#9ACD32A0"
+//, "#6495EDA0"
+//, "#EE82EEA0"
+//, "#A0A0A0A0"
+//, "#FFFFFFA0"
+//, "#F0F0F0F0"
+//];
 //}}}
 //}}}
 let colorize_details = function()
@@ -343,7 +343,7 @@ let fold_open_012 = function(e,state)
         if( e.stopImmediatePropagation ) event.stopImmediatePropagation();
         if( e.preventDefault           ) event.preventDefault          ();
     }
-console.log("%c "+ (count ? count:"NO") +" fold"+ (count>1 ? "s":"") +" "+ ((state==0) ? "closed" : ((state==1) ? "opened":"toggled") +" "), "background-color: "+BG[count]);
+//console.log("%c "+ (count ? count:"NO") +" fold"+ (count>1 ? "s":"") +" "+ ((state==0) ? "closed" : ((state==1) ? "opened":"toggled") +" "), "background-color: "+BG[count]);
 
     return count;
 };

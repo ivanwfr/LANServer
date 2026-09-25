@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
     const SERVER_JS_ID  = "server";
-    const SERVER_JS_TAG = SERVER_JS_ID  +" (260923:23h:07)";
+    const SERVER_JS_TAG = SERVER_JS_ID  +" (260925:01h:15)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -139,6 +139,7 @@ const SCRIPT_QTEXT = ""
     + "<script src='/scripts/js_VIEW.js    '></script>\n"
     + "<script src='/scripts/js_CNTRL.js   '></script>\n"
 
+    + "<script src='/scripts/js_input.js   '></script>\n"
     + "<script src='/scripts/notes.js      '></script>\n"
     + "<script src='/scripts/js_notes.js   '></script>\n"
     ;

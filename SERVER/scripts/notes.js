@@ -1,11 +1,13 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260924:23h:32) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260925:02h:47) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 
 /* globals js_notes */
+/* globals js_store */
+/* globals js_input */
 
 /*}}}*/
 let notes = (function()
@@ -30,6 +32,8 @@ const AUTO_SAVE_TAG         = "(auto_save)\n";
 //}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 
+let get_notes_storage_key = function() { return "notes__"+ js_store.get_page_storage_key(); };
+
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 GUI (js_notes)  GUI LEAK ● DATA ➔ VIEW                               🖥 │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -45,8 +49,8 @@ let add_notes_GUI = function(args)
 {
     input              = args.input;
     note_DETAILS       = args.note_DETAILS;
-    save_note_BUTTON   = args.save_note_BUTTON;
     saved_notes_TABLE  = args.saved_notes_TABLE;
+    save_note_BUTTON   = args.save_note_BUTTON;
     wasted_note_BUTTON = args.wasted_note_BUTTON;
 
     save_note_BUTTON.setAttribute("disabled",""); // 2 arguments required
@@ -102,7 +106,7 @@ if(tag_this) console.log("%c "+caller                    + ":\n"
                          +" ● time now ["+ change_time   +" ]\n"
                          , "color: #FF0");
 /*}}}*/
-    let          notes_storage_key = js_notes.get_notes_storage_key();
+    let          notes_storage_key = get_notes_storage_key();
     let body = { notes_storage_key , nArray };
     /**/body = JSON.stringify( body);
 
@@ -176,7 +180,7 @@ let notes_loaded_from;
 /*}}}*/
 let load_notes = function()
 {
-    let notes_storage_key = js_notes.get_notes_storage_key();
+    let notes_storage_key = get_notes_storage_key();
 if(tag_this) console.log("🟡%c load_notes\t\t  ["+ notes_storage_key +"]", "color: #FF0");
 
     fetch("/fetch_notes?notes_storage_key="+notes_storage_key)
@@ -189,7 +193,7 @@ if(tag_this) console.log("🟡%c load_notes\t\t  ["+ notes_storage_key +"]", "co
             load_client_notes();
 
             js_notes.layout_notes    ("load_notes: "+ notes_loaded_from);
-            js_notes.load_input();
+            js_input.input_load();
         });
 };
 /*}}}*/
@@ -207,9 +211,9 @@ if(tag_this) console.log("🟡%c load_server_notes(data: "+ (typeof data) +")", 
 
         // BACKUP SERVER-SIDE NOTES INTO localStorage
         if(nArray.length)
-            localStorage.setItem(   js_notes.get_notes_storage_key(), JSON.stringify(nArray));
+            localStorage.setItem(   get_notes_storage_key(), JSON.stringify(nArray));
         else
-            localStorage.removeItem(js_notes.get_notes_storage_key());
+            localStorage.removeItem(get_notes_storage_key());
     }
     // LOAD CLIENT-SIDE NOTES AS A FALLBACK
     else {
@@ -220,7 +224,7 @@ if(tag_this) console.log("🟡%c load_server_notes(data: "+ (typeof data) +")", 
     js_notes.layout_notes("load_notes: "+ notes_loaded_from);
 
     // input may contain one of the saved note .. resume editing
-    js_notes.load_input();
+    js_input.input_load();
 };
 /*}}}*/
 /*_ load_client_notes {{{*/
@@ -228,7 +232,7 @@ let load_client_notes = function()
 {
 if(tag_this) console.log("%c load_client_notes", "color: #F00");
 
-    let notes_storage_key = js_notes.get_notes_storage_key();
+    let notes_storage_key = get_notes_storage_key();
     try {
         nArray = JSON.parse(localStorage.getItem( notes_storage_key ) || "[]");
     }
@@ -305,7 +309,7 @@ if(tag_this) console.log("🟤 note_1_onclick_save");
     }
     //}}}
     // ... 🟢 STORE NOTES IN localStorage {{{
-    localStorage.setItem(js_notes.get_notes_storage_key(), JSON.stringify( nArray ));
+    localStorage.setItem(get_notes_storage_key(), JSON.stringify( nArray ));
 
     //}}}
     // ... 🟢 SYNCHRONOUSLY UPLOAD NOTES TO SERVER {{{
@@ -313,7 +317,7 @@ if(tag_this) console.log("🟤 note_1_onclick_save");
 
     //}}}
     // ... 🔵 CLEAR USER INPUT ONCE SAVED {{{
-    js_notes.reset_input("note_1_onclick_save");
+    js_input.reset_input("note_1_onclick_save");
 
     //}}}
     js_notes.layout_notes("note_1_onclick_save", index);
@@ -342,7 +346,7 @@ if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
     }
 
     // clear input
-    js_notes.reset_input("note_2_onclick_import");
+    js_input.reset_input("note_2_onclick_import");
 
     //}}}
     //{{{
@@ -524,7 +528,7 @@ if(tag_this) console.log("🟡 note_4_onclick_check: "+ e.type);
         +  (nArray[index].text.includes(AUTO_SAVE_TAG) ? " auto_save":"");
 
     // UPDATE CLIENT-SIDE STORAGE
-    localStorage.setItem(js_notes.get_notes_storage_key(), JSON.stringify( nArray ));
+    localStorage.setItem(get_notes_storage_key(), JSON.stringify( nArray ));
 
     // UPDATE GUI LAYOUT
 //  layout_notes("note_4_onclick_check", index);
@@ -573,7 +577,7 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
     let deleting_editing_note   = (index == js_notes.get_editing_note_index());
     let deleting_auto_save_note = (index == nArray.length) && js_notes.is_last_note_auto_save();
     if( deleting_editing_note || deleting_auto_save_note)
-        js_notes.reset_input("note_6_onclick_delete");
+        js_input.reset_input("note_6_onclick_delete");
 
     //┌───────────────────────────────────────────────────────────────────────┐
     //│ REMOVE NOTE ● add to the nArray_wasted array
@@ -585,9 +589,9 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
 
     // UPDATE STORAGE
     if(nArray.length)
-        localStorage.setItem(js_notes.get_notes_storage_key(), JSON.stringify( nArray ));
+        localStorage.setItem(get_notes_storage_key(), JSON.stringify( nArray ));
     else
-        localStorage.removeItem(js_notes.get_notes_storage_key());
+        localStorage.removeItem(get_notes_storage_key());
 
     request_server_upload("Note #"+index+" DELETED");
 
@@ -859,7 +863,7 @@ let update_summary = function()
     let summary = note_DETAILS.firstElementChild;
 
     summary.childNodes[0].textContent = ""
-        +     js_notes.get_page_fileName()
+        +     js_store.get_page_fileName()
         +" ("+   notes.get_nArray().length +" notes)"
         +" " +   notes_loaded_from
         ;

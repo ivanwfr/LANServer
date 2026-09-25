@@ -72,7 +72,7 @@ const js_VIEW    = (function () {
         //└────────────────────────────────────────────────────────────────────┘
         saveBtn.addEventListener("click", () => { //{{{
           //const content = noteInput.value;
-            const content = noteInput.dataset.content;  // as set by js_notes.reset_input()
+            const content = noteInput.dataset.content;  // as set by js_input.reset_input()
             js_CNTRL.transition("SAVE_NOTE", { content });
         }); //}}}
 
@@ -140,9 +140,9 @@ const js_VIEW    = (function () {
         // log {{{
 //      noteInput .value       = ""; // Reset input after operation
 //      noteInput .title =        "VIEW\n🔵 Reset input after operation";
-        log("%c● VIEW CALLING js_notes.reset_input"  , lf6 +lbB);
+        log("%c● VIEW CALLING js_input.reset_input"  , lf6 +lbB);
         //}}}
-                              js_notes.reset_input();
+                              js_input.reset_input();
         break;
 
         //}}}

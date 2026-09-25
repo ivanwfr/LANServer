@@ -1,12 +1,13 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260924:23h:56) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:02h:41) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 
-// globals js_VIEW */ // STUB FOR MVC VIEW
-/* globals notes  */
+// globals js_VIEW  */ // STUB FOR MVC VIEW
+/* globals notes    */
+/* globals js_input */
 
 /*}}}*/
 let js_notes    = (function()
@@ -139,7 +140,7 @@ if(tag_this) console.log("onload");
     document.addEventListener("visibilitychange", function(e) {
         if( document.hidden )
         {
-            save_input("visibilitychange listener");
+            js_input.input_save("visibilitychange listener");
             notes.note_1_onclick_save ( e );
         }
     });
@@ -157,64 +158,11 @@ if(tag_this) console.log("onload");
 
     //}}}
     // Restore last stored layout {{{*/
-    load_id_wh();
+    js_input.layout_load();
 
     //}}}
 //  js_VIEW.init();
 };
-/*}}}*/
-//└────────────────────────────────────────────────────────────────────────────┘
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes ● LOCAL STORAGE                                                  ●
-//├────────────────────────────────────────────────────────────────────────────┤
-/*_ get_page_storage_key ● get_page_fileName {{{*/
-/*{{{*/
-let parsed_location_href;
-/*}}}*/
-let get_page_storage_key = function()
-{
-    if(   !parsed_location_href ) parse_location_href();
-    return parsed_location_href.page_storage_key;
-};
-let get_page_fileName = function()
-{
-    if(   !parsed_location_href ) parse_location_href();
-    return parsed_location_href.fileName;
-};
-
-let parse_location_href = function()
-{
-if(log_this) console.log("◯ get_page_storage_key");
-
-    let matches
-        = location.href
-        .  match(/(^.*\/\/[^\/]*)\/(.*)\/(.*)/ ,  "");
-    //┌───────────▲────────────────▲─────▲─────────────────────────────────────┐
-    //│           |                |     |                                     │
-    //│           |                |     (js_notes.js)                         │
-    //│           |                (APROJECTS_USR_SERVER_scripts/js_notes.js   │
-    //│           (https://192.168.1.14:447)                                   │
-    //└────────────────────────────────────────────────────────────────────────┘
-    let baseName         = matches[1].replace(/\W+/g, "_");
-    let pathName         = matches[2].replace(/\W+/g, "_");
-    let fileName         = matches[3].replace(/\W+/g, "_");
-    let page_storage_key = (pathName+"__"+fileName);
-
-/*{{{*/
-if(log_this) {
-    console.log("◯ baseName         \t\t["+ baseName          +"]\n"
-               +"◯ pathName         \t\t["+ pathName          +"]\n"
-               +"◯ fileName         \t\t["+ fileName          +"]\n"
-               +"◯ page_storage_key \t\t["+ page_storage_key  +"]\n");
-}
-/*}}}*/
-
-    parsed_location_href = { baseName , pathName , fileName , page_storage_key };
-};
-let get_notes_storage_key = function() { return "notes__"+ get_page_storage_key(); };
-let get_input_storage_key = function() { return "input__"+ get_page_storage_key(); };
-let get_id_wh_storage_key = function() { return "id_wh__"+ get_page_storage_key(); };
 /*}}}*/
 //└────────────────────────────────────────────────────────────────────────────┘
 
@@ -297,9 +245,6 @@ if(tag_this) console.log("🔴 add_notes_DETAILS");
     input.addEventListener("blur" , input_blur_listener);
     input.addEventListener("focus", input_focus_listener);
 
-    TextArea_IO.on( input , input_listener);
-    resize_observe( input );
-
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ SAVE BUTTON                                                            │
     //└────────────────────────────────────────────────────────────────────────┘
@@ -319,14 +264,24 @@ if(tag_this) console.log("🔴 add_notes_DETAILS");
 
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ GUI LEAK ● DATA ➔ VIEW                                                 │
+    //│ GUI VIEW LEAK ➔ DATA
     //└────────────────────────────────────────────────────────────────────────┘
-    notes.add_notes_GUI( { note_DETAILS
-                         , input
+    notes.add_notes_GUI( { input
+                         , note_DETAILS
+                         , saved_notes_TABLE
                          , save_note_BUTTON
                          , wasted_note_BUTTON
-                         , saved_notes_TABLE
    });
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ GUI VIEW ➔ INPUT EVENTS HANDLER
+    //└────────────────────────────────────────────────────────────────────────┘
+    js_input.add_notes_GUI( { input
+                         ,    note_DETAILS
+                         ,    saved_notes_DIV
+                         ,    saved_notes_TABLE
+   });
+
 };
 /*}}}*/
 //_ layout_notes — 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯ {{{
@@ -491,13 +446,13 @@ let note_5_onclick_edit = function(e,index)
 if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
 
     // STORE CURRENT INPUT CONTENT (WILL BE RESTORED BY NEXT RELOAD)
-    js_notes.save_input("note_5_onclick_edit");
+    js_input.input_save("note_5_onclick_edit");
 
     // TOGGLE OFF ANY CURRENT EDIT
     let editing_note_index  = get_editing_note_index();
     if( editing_note_index >= 0)
     {
-        js_notes.reset_input("note_5_onclick_edit");
+        js_input.reset_input("note_5_onclick_edit");
 
         if(index == editing_note_index)
             return;
@@ -536,7 +491,7 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
     notes.note_1_onclick_save( { type: "auto_save" } );
 };
 //}}}
-/*{{{*/
+
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CALLERS OF `save_note_auto`
 //│
@@ -544,7 +499,8 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
 //│ ● USER INPUT      ➔ input_listener [sync on first user input input empty]
 //│ ● js_notes.onload ➔ setInterval-AUTO_SAVE_INTERVAL_MS
 //└────────────────────────────────────────────────────────────────────────────┘
-/*_ save_note_auto ● caller: USER[note_1_onclick_save] ● input_listener[input is empty] {{{*/
+/*{{{*/
+/*_ save_note_auto {{{*/
 let save_note_auto = function(e={})
 {
 //{{{
@@ -724,267 +680,6 @@ let get_editing_note_index = function()
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ USER INPUT                                                                🔴
-//├────────────────────────────────────────────────────────────────────────────┤
-/* input {{{*/
-/*  input_listener {{{*/
-let input_listener = function(e)
-{
-if(tag_this) console.log("🟣 input_listener: "+ e.type);
-
-    let input_value = input.value.trim();
-    if( input_value )
-    {
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ IGNORE blank header and trailer changes
-        //└────────────────────────────────────────────────────────────────────┘
-        let oldValue = e.detail.oldValue.trim();
-        let newValue = e.detail.newValue.trim();
-        if( newValue == oldValue)
-            return;
-
-if(tag_this) console.log(`input_value changed:
-● FROM \t"${ oldValue }"
-● TO   \t"${ newValue }"`);
-
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ on first user-input ● transitioning from empty
-        //└────────────────────────────────────────────────────────────────────┘
-        if( !e.detail.oldValue
-          || is_input_auto_insert_prefix()
-          ) {
-            notes.reset_input_placeholder();
-                  save_note_auto( e );
-            note_DETAILS.classList.remove("empty");
-        }
-        // SERVER/style/notes.css
-        // SERVER/style/qtext.css
-
-        // USER MAY HAVE UNDONE
-        if( is_input_auto_insert_prefix() )
-        {
-            if(!input.classList.contains("auto_insert_prefix"))
-            {
-                input.classList.add(     "auto_insert_prefix");
-                save_note_auto( e );
-                return;
-            }
-        }
-
-        // USER DID INPUT SOMETHING
-        if(input.classList.contains(     "auto_insert_prefix"))
-        {
-            input.classList.remove(      "auto_insert_prefix");
-            save_note_auto( e );
-                return;
-        }
-
-        // INPUT
-        if(    is_input_auto_insert_prefix()
-           && !input.classList.contains("auto_insert_prefix")
-          ) {
-            input.classList.add(        "auto_insert_prefix");
-            save_note_auto( e );
-            return;
-        }
-
-    }
-    else {
-           notes.note_1_onclick_save( { type: "auto_save" } ); // text cleared ...worth a synchronized update
-        note_DETAILS.classList.add   ("empty");
-
-        reset_input("input_listener: ❌input empty");
-    }
-};
-/*}}}*/
-/*  resize_observe {{{*/
-/*{{{*/
-const ID_WH_SAVE_COOLDOWN = 2000;
-let   id_wh_save_timeout;
-let   resizeObserver;
-/*}}}*/
-let resize_observe = function(element)
-{
-//{{{
-if(log_this) console.log("🟤 resize_observe:", (element.id || element.tagName));
-//}}}
-    /* create resizeObserver {{{*/
-    if(!resizeObserver)
-    {
-        resizeObserver = new ResizeObserver((entries) => {
-            for(let entry of entries)
-            {
-                let id_wh = {     id: entry.target.id
-                    ,          width: entry.contentRect.width
-                    ,         height: entry.contentRect.height };
-
-if(log_this) console.log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x ${id_wh.height}`);
-
-                if( id_wh_save_timeout ) clearTimeout( id_wh_save_timeout );
-                    id_wh_save_timeout = setTimeout(save_id_wh, ID_WH_SAVE_COOLDOWN);
-            }
-        });
-    }
-    /*}}}*/
-    /* add element to observe {{{*/
-    resizeObserver.observe( element );
-
-    /*}}}*/
-};
-/*}}}*/
-/*  save_id_wh {{{*/
-let save_id_wh = function()
-{
-
-if(log_this) console.log("🟤 save_id_wh()");
-
-    let id_wh_array
-        = [ get_el_id_wh( input           )
-          , get_el_id_wh( saved_notes_DIV ) ];
-
-    localStorage.setItem(get_id_wh_storage_key(), JSON.stringify( id_wh_array ));
-
-    id_wh_save_timeout = null;
-};
-/*}}}*/
-/*_ get_el_id_wh {{{*/
-let get_el_id_wh = function(el)
-{
-    let  rect =           el.getBoundingClientRect();
-    let id_wh = { id    : el.id
-                , width : parseInt( rect.width  )
-                , height: parseInt( rect.height ) };
-if(log_this) console.log(`🟤 get_el_id_wh: ${id_wh.id} size: ${id_wh.width} x ${id_wh.height}`);
-    return id_wh;
-};
-/*}}}*/
-/*  load_id_wh {{{*/
-let load_id_wh = function()
-{
-if(log_this) console.log("🟤 load_id_wh:");
-
-    let id_wh_storage_key = get_id_wh_storage_key();
-
-    let val = localStorage.getItem( id_wh_storage_key);
-    if(!val) return;
-    let  id_wh_array = JSON.parse( val ) || [];
-
-    for(let id_wh of id_wh_array)
-    {
-        let target = document.querySelector("#"+id_wh.id        );
-        target.style.width                 =    id_wh.width +"px";
-        target.style.height                =    id_wh.height+"px";
-
-if(log_this) console.log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x ${id_wh.height}`);
-    }
-
-    //note_DETAILS.open = true; // let load_details_open_state do this
-};
-/*}}}*/
-/*  change_listener {{{*/
-//let change_listener = function(e)
-//{
-//console.log("change_listener: "+ e.type);
-//    if(e.target.value)
-//        note_DETAILS.classList.remove("empty");
-//    else
-//        note_DETAILS.classList.add   ("empty");
-//};
-/*}}}*/
-/*  load_input {{{*/
-let load_input = function()
-{
-if(tag_this) console.log("🟣 load_input");
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ NO SAVED INPUT CONTENT FROM PREVIOUS SESSION DID                       │
-    //└────────────────────────────────────────────────────────────────────────┘
-    let input_storage_key = get_input_storage_key();
-
-    let text = localStorage.getItem( input_storage_key )
-        ||      "";
-
-    // DEFAULT TO SCROLL LAST NOTE INTO VIEW
-    if(!text) {
-        notes.note_scrollIntoView();
-
-        reset_input("load_input: !text");
-        return;
-    }
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ some text was saved into localStorage on previous session exit         │
-    //│ resuming edit                                                          │
-    //└────────────────────────────────────────────────────────────────────────┘
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ RESUME EDITING SOME EXISTING NOTE                                      │
-    //└────────────────────────────────────────────────────────────────────────┘
-    let           nArray = notes.get_nArray();
-    for(let index=nArray.length-1; index >= 0; --index)
-    {
-        let        note = nArray[index];
-        if(text == note.text)
-        {
-            let note_row = saved_notes_TABLE.firstElementChild.children[index];
-               note_5_onclick_edit({ target: note_row }, index);
-// TRYING INPUT.FOCUS() TO RESUME NOTE EDIT {{{
-//          input.addEventListener("mouseenter", (event) => event.target.focus());
-//          input.addEventListener("mouseenter", ()      =>        input.focus());
-//}}}
-            return;
-        }
-    }
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ RELOAD UNCOMMITED INPUT CONTENT FROM PREVIOUS SESSION                  │
-    //└────────────────────────────────────────────────────────────────────────┘
-    input.value = text;
-
-    // SCROLL LAST NOTE INTO VIEW
-    notes.note_scrollIntoView();
-
-if(log_this) console.log( text );
-};
-/*}}}*/
-/*  save_input {{{*/
-let save_input = function(_caller)
-{
-if(tag_this) console.log("🟣 save_input"+ (_caller ? (" ← "+_caller) : ""));
-
-    if( is_input_auto_insert_prefix() ) return;
-
-    // STORE CURRENT INPUT CONTENT (WILL BE RESTORED BY NEXT RELOAD)
-    let input_storage_key = get_input_storage_key();
-
-    let text = input.value.trim();
-    if( text ) {
-        let stored  = localStorage.getItem( input_storage_key ) || "";
-        if( stored != text)
-            localStorage.setItem( input_storage_key , text);
-    }
-    // — TAKE THIS OPPORTUNITY TO CLEAR STORAGE FROM A STALE STORED NOTE
-    else {
-        localStorage.removeItem( input_storage_key );
-    }
-};
-/*}}}*/
-/*  reset_input {{{*/
-let reset_input = function(_caller)
-{
-if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""));
-
-    // CLEAR TEXTAREA CONTENT
-    input.dataset.content = input.value;
-    input.value = "";
-
-    // UPDATE STANDOUT IN [saved_notes_DIV]
-    set_editing_note_index(-1);
-};
-/*}}}*/
-/*}}}*/
-//└────────────────────────────────────────────────────────────────────────────┘
-
-//┌────────────────────────────────────────────────────────────────────────────┐
 //│ INPUT FOCUS-BLUR
 //└────────────────────────────────────────────────────────────────────────────┘
 /*● input_focus_listener {{{*/
@@ -1044,140 +739,6 @@ let get_input_auto_insert_prefix = function()
 };
 /*}}}*/
 
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ TextArea_IO MODULE                                                        🟢
-//├────────────────────────────────────────────────────────────────────────────┤
-//{{{
-let TextArea_IO = (function()
-{
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ [textarea] gets initialized inside [on] subscription
-    //└────────────────────────────────────────────────────────────────────────┘
-    let textarea;
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ UNIFIED DISPATCH FUNCTION ● Both `USER INPUT` and `CODE CHANGE`
-    //└────────────────────────────────────────────────────────────────────────┘
-    //{{{
-    let notifyChange = function(oldValue, newValue)
-    {
-        let event = new CustomEvent("text_input:event", {
-            bubbles: true,
-            detail: { oldValue, newValue }
-        });
-        textarea.dispatchEvent( event );
-    };
-    //}}}
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ 1. HANDLE USER INPUT (NATIVE HANDLING)
-    //└────────────────────────────────────────────────────────────────────────┘
-    /*_ text_inputListener {{{*/
-    let text_inputListener = function(e) /* eslint-disable-line no-unused-vars */
-    {
-        //┌────────────────────────────────────────────────────────────────────────┐
-        //│ We don't have "oldValue" in native input events, so we store it
-        //│ Actually, we can just use e.target.value and rely on the listener to know the new value.
-        //│ But for full parity, let's use a property descriptor to get the old value cleanly.
-        //└────────────────────────────────────────────────────────────────────────┘
-
-        //┌────────────────────────────────────────────────────────────────────────┐
-        //│ Simpler approach: Just pass the new value and let the listener compare if needed
-        //│ OR: Use the descriptor trick for perfect parity.
-        //└────────────────────────────────────────────────────────────────────────┘
-
-        //┌────────────────────────────────────────────────────────────────────────┐
-        //│ Let's use the descriptor trick for perfect parity (Old/New)
-        //└────────────────────────────────────────────────────────────────────────┘
-        let currentVal = textarea.value;
-
-        //┌────────────────────────────────────────────────────────────────────────┐
-        //│ We need to know what it was before this input event.
-        //│ Since 'input' fires *after* the DOM update, we can't get the 'old' value easily
-        //│ without a stored reference or a descriptor.
-        //└────────────────────────────────────────────────────────────────────────┘
-
-        //┌────────────────────────────────────────────────────────────────────────┐
-        //│ EASIEST PURE JS WAY: Just trigger the event with the new value.
-        //│ The listener can compare against a stored state if needed.
-        //└────────────────────────────────────────────────────────────────────────┘
-        notifyChange(textarea.dataset.prevValue || "", currentVal);
-
-        textarea.dataset.prevValue = currentVal;
-    };
-    /*}}}*/
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ 2. HANDLE CODE CHANGES (CENTRALIZED SETTER)
-    //└────────────────────────────────────────────────────────────────────────┘
-    //{{{
-    let setValue = function(val)
-    {
-        let oldVal = textarea.value;
-        if( oldVal === val) return;
-
-        textarea.value = val;
-
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ Update stored prev value for next 'input' event
-        //└────────────────────────────────────────────────────────────────────┘
-        textarea.dataset.prevValue = val;
-
-        notifyChange(oldVal, val);
-    };
-    //}}}
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ PUBLIC
-    //└────────────────────────────────────────────────────────────────────────┘
-//{{{
-return {
-
-    //┌──────────────────────────────────────────────────────────────────────┐
-    //│ GET SET
-    //└──────────────────────────────────────────────────────────────────────┘
-    get value()      { return textarea.value; },
-    set value(val)   { setValue( val ); },
-
-    //┌──────────────────────────────────────────────────────────────────────┐
-    //│ SUBSCRIBE—UNSUBSCRIBE ● returns the un-subscribe function
-    //└──────────────────────────────────────────────────────────────────────┘
-    on: (ta, fn) => { textarea = ta;
-        textarea              .addEventListener   ("input", text_inputListener); // centralize
-        textarea              .addEventListener   ("text_input:event"     , fn); // redispatch
-        return () =>  textarea.removeEventListener("text_input:event"     , fn); // redispatch
-    }
-};
-//}}}
-})();
-//" Usage example {{{
-
-//    //┌────────────────────────────────────────────────────────────────────────┐
-//    //│ Initialize listener
-//    //└────────────────────────────────────────────────────────────────────────┘
-//    let unsubscribe = TextArea_IO.on(input, (e) => {
-//      console.log(`Value changed: "${e.detail.oldValue}" → "${e.detail.newValue}"`);
-//    });
-
-//    //┌────────────────────────────────────────────────────────────────────────┐
-//    //│ Change via code (Triggers listener)
-//    //└────────────────────────────────────────────────────────────────────────┘
-//    TextArea_IO.value = "Hello World";
-
-//    //┌────────────────────────────────────────────────────────────────────────┐
-//    //│ User types in the box (Triggers listener)
-//    //│ User types "Test" -> Listener fires: "Hello World" -> "Hello WorldTest"
-//    //└────────────────────────────────────────────────────────────────────────┘
-
-//    //┌────────────────────────────────────────────────────────────────────────┐
-//    //│ Stop listening
-//    //└────────────────────────────────────────────────────────────────────────┘
-//    unsubscribe();
-
-//    "}}}
-//}}}
-//└────────────────────────────────────────────────────────────────────────────┘
-
 //{{{
     return { name: "js_notes"
         ,    onload
@@ -1192,10 +753,6 @@ return {
 
         // used by notes
         , copy_to_clipboard
-        , get_notes_storage_key
-        , get_page_fileName
-        , load_input
-        , reset_input
         , show_status
 
     // EDIT ● WAS IN SERVER/scripts/notes.js
@@ -1214,10 +771,8 @@ return {
         , escape_note : (index) => escapeHTML( notes.get_nArray()[index].text )
         , layout_notes
         , print_note  : (index) =>             notes.get_nArray()[index].text
-        , save_input
         , tail_status
         , tics_status
-        , tapi        : TextArea_IO
         , log         : () => { log_this = !log_this; console.log("log_this=["+log_this+"]"); }
         , tag         : () => { tag_this = !tag_this; console.tag("tag_this=["+tag_this+"]"); }
 };
