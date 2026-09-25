@@ -1,13 +1,14 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:03h:06) │
+//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:20h:24) │
 //├────────────────────────────────────────────────────────────────────────────┤
 /*{{{*/
 
-/* globals  js_store */
-/* globals  js_notes */
-/* globals     notes */
+/* globals  js_store  */
+/* globals  js_notes  */
+/* globals     notes  */
+/* globals  js_ticker */
 
-/* exported js_input */
+/* exported js_input  */
 
 /*}}}*/
 let js_input = (function() //{{{
@@ -54,13 +55,25 @@ if(tag_this) console.log("🟣 input_listener: "+ e.type);
         if( newValue == oldValue)
             return;
 
-if(tag_this) console.log(`input_value changed:
-● FROM \t"${ oldValue }"
-● TO   \t"${ newValue }"`);
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ [input.value] changed
+        //└────────────────────────────────────────────────────────────────────┘
+        //{{{
+if(tag_this) console.log( "input_value changed:\n"
+                        + "● FROM ["+oldValue+"]\n"
+                        + "● TO   ["+newValue+"]");
+
+        if((newValue != oldValue) && !input.classList.contains("edit"))
+        {
+            js_ticker.changeInterval( js_notes.AUTO_SAVE_EDIT_INTERVAL_MS );
+            input.classList.add("edit");
+        }
+        //}}}
 
         //┌────────────────────────────────────────────────────────────────────┐
         //│ on first user-input ● transitioning from empty
         //└────────────────────────────────────────────────────────────────────┘
+        //{{{
         if( !e.detail.oldValue
           || js_notes.is_input_auto_insert_prefix()
           ) {
@@ -70,9 +83,9 @@ if(tag_this) console.log(`input_value changed:
         }
         // SERVER/style/notes.css
         // SERVER/style/qtext.css
-
-        // USER MAY HAVE UNDONE
-        if( js_notes.is_input_auto_insert_prefix() )
+        //}}}
+        // USER MAY HAVE REMOVED ITS CHANGES ● (...back to auto prefix) {{{
+        if( !input.value || js_notes.is_input_auto_insert_prefix() )
         {
             if(!input.classList.contains("auto_insert_prefix"))
             {
@@ -81,28 +94,29 @@ if(tag_this) console.log(`input_value changed:
                 return;
             }
         }
-
-        // USER DID INPUT SOMETHING
+        //}}}
+        // USER DID INPUT SOMETHING ● remove auto_insert_prefix {{{
         if(input.classList.contains(     "auto_insert_prefix"))
         {
             input.classList.remove(      "auto_insert_prefix");
-            js_notes.save_note_auto( e );
-                return;
+          //js_notes.save_note_auto( e );
+          //    return;
         }
-
-        // INPUT
+        //}}}
+        // check if `auto_insert_prefix` style may apply {{{
         if(    js_notes.is_input_auto_insert_prefix()
            && !input.classList.contains("auto_insert_prefix")
           ) {
             input.classList.add(        "auto_insert_prefix");
             js_notes.save_note_auto( e );
+
             return;
         }
-
+        //}}}
     }
     else {
-           notes.note_1_onclick_save( { type: "auto_save" } ); // text cleared ...worth a synchronized update
-        note_DETAILS.classList.add   ("empty");
+        notes.note_1_onclick_save ( { type: "auto_save" } ); // text cleared ...worth a synchronized update
+        note_DETAILS.classList.add("empty");
 
         reset_input("input_listener: ❌input empty");
     }
@@ -114,11 +128,17 @@ let reset_input = function(_caller)
 if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""));
 
     // CLEAR TEXTAREA CONTENT
-    input.dataset.content = input.value;
-    input.value = "";
+    input.dataset.content = input.value; // backup, not used yet...
+
+    input.value           = "";
+
+    input.classList.remove("edit"              );
+    input.classList.remove("auto_insert_prefix");
 
     // UPDATE STANDOUT IN [saved_notes_DIV]
     js_notes.set_editing_note_index(-1);
+
+    js_ticker.changeInterval( js_notes.AUTO_SAVE_IDLE_INTERVAL_MS );
 };
 /*}}}*/
 /*  input_save {{{*/

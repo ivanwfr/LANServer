@@ -172,9 +172,8 @@ min-height          : 8em;
     background-color: #222;
     color           : #FF8;
 }
-#note_input_TEXTAREA.auto_insert_prefix {
-    color: #FF04;
-}
+#note_input_TEXTAREA.auto_insert_prefix { color: #FF04; }
+#note_input_TEXTAREA.edit               { outline: solid 3px magenta; outline-offset: 1px; }
 #note_input_TEXTAREA.center_input_placeholder {
     text-align      : center;
 }

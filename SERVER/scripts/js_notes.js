@@ -1,13 +1,14 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:02h:41) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:20h:25) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 
-// globals js_VIEW  */ // STUB FOR MVC VIEW
-/* globals notes    */
-/* globals js_input */
+// globals js_VIEW   */ // STUB FOR MVC VIEW
+/* globals notes     */
+/* globals js_input  */
+/* globals js_ticker */
 
 /*}}}*/
 let js_notes    = (function()
@@ -110,7 +111,8 @@ const BULLETS
 
 /*}}}*/
 // ●  auto_save INTERVAL ● auto_save TAG ●  CSS BG {{{
-const AUTO_SAVE_INTERVAL_MS = 5000;
+const AUTO_SAVE_IDLE_INTERVAL_MS = 5000;
+const AUTO_SAVE_EDIT_INTERVAL_MS = 1000;
 const AUTO_SAVE_TAG         = "(auto_save)\n";
 const BG = [ /* eslint-disable-line no-unused-vars */
   "#964B00A0"
@@ -146,7 +148,7 @@ if(tag_this) console.log("onload");
     });
     //}}}
     // Auto-save user input content until submitted with a save-buton click {{{
-    setInterval(   notes.note_1_onclick_save, AUTO_SAVE_INTERVAL_MS, { type: "auto_save" });
+    js_ticker.setInterval(() => notes.note_1_onclick_save({ type: "auto_save" }), AUTO_SAVE_IDLE_INTERVAL_MS);
 
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -292,7 +294,6 @@ let layout_count = 0;
 let layout_notes = function(_caller="?",index=-1)
 {
 if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
-//console.trace();//FIXME
     /* 1. LOAD NOTES from server or localStorage {{{*/
     let nArray = notes.get_nArray();
     if(!nArray.length && !notes.get_notes_loaded_from())
@@ -453,7 +454,6 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
     if( editing_note_index >= 0)
     {
         js_input.reset_input("note_5_onclick_edit");
-
         if(index == editing_note_index)
             return;
     }
@@ -472,17 +472,18 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
              ; note_row =   note_row.parentElement
            );
 
-    //  input.value = note_row.getAttribute("title") +"\n";
-        input.value = note_row.dataset.content;//FIXME
+        input.value = note_row.dataset.content;
     }
     else {
         let nArray = notes.get_nArray();
         input.value = nArray[index].text;
     }
 
+    input.classList.remove("auto_insert_prefix");
+
     // EDITING A [checked] NOTE (OR NOT)
     if( notes.get_checked(index)) input.classList.add   ("checked");
-    else                    input.classList.remove("checked");
+    else                          input.classList.remove("checked");
 
     // ADD [index] INNTO [save_note_BUTTON] ATTRIBUTES
     set_editing_note_index( index );
@@ -497,7 +498,7 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
 //│
 //│ ● USER CLICK      ➔ CLICK SAVE BUTTON
 //│ ● USER INPUT      ➔ input_listener [sync on first user input input empty]
-//│ ● js_notes.onload ➔ setInterval-AUTO_SAVE_INTERVAL_MS
+//│ ● js_notes.onload ➔ setInterval-AUTO_SAVE_IDLE_INTERVAL_MS
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 /*_ save_note_auto {{{*/
@@ -516,13 +517,15 @@ if(tag_this) console.log("🔴 "+ caller);
       ) {
         save_note_BUTTON.setAttribute("disabled","");
 
-        if(   is_last_note_auto_save()
-//         && (e.type == "auto_save")
-          ) {
+        if(is_last_note_auto_save())
+        {
 if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
 
             let nArray = notes.get_nArray();
             notes.note_6_onclick_delete(e, nArray.length-1);
+
+            js_ticker.changeInterval( js_notes.AUTO_SAVE_IDLE_INTERVAL_MS );
+            input.classList.remove("edit");
         }
         return;
     }
@@ -557,6 +560,9 @@ if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
         if(index >= nArray.length) nArray.push({ text , timestamp: Date.now() });
         else                       nArray[index].text = text;
         js_notes.layout_notes(caller, index);
+
+            js_ticker.changeInterval( js_notes.AUTO_SAVE_EDIT_INTERVAL_MS );
+            input.classList.add("edit");
     }
     //}}}
 };
@@ -717,6 +723,7 @@ let is_input_auto_insert_prefix = function()
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ ● CHECK  AUTO-INSERT NEW NOTE NUM
     //└────────────────────────────────────────────────────────────────────────┘
+    if(!input      ) return false;
     if(!input.value) return false;
 
     // contains the auto-number (trimming aside)
@@ -742,6 +749,8 @@ let get_input_auto_insert_prefix = function()
 //{{{
     return { name: "js_notes"
         ,    onload
+        ,    AUTO_SAVE_IDLE_INTERVAL_MS
+        ,    AUTO_SAVE_EDIT_INTERVAL_MS
 
         ,    get_input  : () => input
 

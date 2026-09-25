@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260925:02h:47) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260925:20h:24) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -261,7 +261,9 @@ if(tag_this) console.log("%c load_client_notes", "color: #F00");
 //● note_1_onclick_save {{{
 let note_1_onclick_save = function(e={})
 {
-if(tag_this) console.log("🟤 note_1_onclick_save");
+if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
+
+    if( !input ) return;
 
     if( js_notes.is_input_auto_insert_prefix() ) return;
 
