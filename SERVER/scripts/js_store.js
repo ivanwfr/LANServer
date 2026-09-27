@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260925:01h:31) │
+//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260927:18h:31) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true {{{*/
 
@@ -93,13 +93,36 @@ if(log_this) {
 };
 /*}}}*/
 
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ Safe get array
+//└────────────────────────────────────────────────────────────────────────────┘
+/*_ getArray {{{*/
+let getArray = function(key)
+{
+    let val = localStorage.getItem( key );
+    if(!val) return [];
+
+    try {
+        let parsed = JSON.parse( val );
+        return Array.isArray( parsed ) ? parsed : [];
+    }
+    catch( err )
+    {
+if(log_this) console.log("🔴  getArray("+key+"): invalid localStorage value:", key, err);
+
+        delItem(get_page_prefix() +"."+ key);
+        return [];
+    }
+};
+/*}}}*/
 
 /* EXPORT {{{*/
 return {  name : "js_store"
 
-    ,     localStorage_setItem : (key, val) => setItem(get_page_prefix() +"."+ key, val)
-    ,     localStorage_getItem : (key     ) => getItem(get_page_prefix() +"."+ key     )
-    ,     localStorage_delItem : (key     ) => delItem(get_page_prefix() +"."+ key     )
+    ,     localStorage_setItem  : (key, val) => setItem (get_page_prefix() +"."+ key, val)
+    ,     localStorage_getItem  : (key     ) => getItem (get_page_prefix() +"."+ key     )
+    ,     localStorage_delItem  : (key     ) => delItem (get_page_prefix() +"."+ key     )
+    ,     localStorage_getArray : (key     ) => getArray(get_page_prefix() +"."+ key     )
 
     ,     get_page_fileName
     ,     get_page_prefix
