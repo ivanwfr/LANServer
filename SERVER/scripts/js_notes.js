@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:20h:25) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260927:16h:08) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -15,12 +15,12 @@ let js_notes    = (function()
 {
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ js_notes ● DATA ● LOAD ● LOCAL STORAGE ● NOTE TABLE ● STATUS LINE         🟤
-//├────────────────────────────────────────────────────────────────────────────┤
+//└────────────────────────────────────────────────────────────────────────────┘
 //{{{
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ js_notes ● DATA ● SERVER/style/notes.css ● SERVER/style/qtext.css         ●
-//├────────────────────────────────────────────────────────────────────────────┤
+//└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 let log_this = false;
 let tag_this = false || log_this;
@@ -129,11 +129,10 @@ const BG = [ /* eslint-disable-line no-unused-vars */
 //}}}
 
 /*}}}*/
-//└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ js_notes ● LOAD                                                           ●
-//├────────────────────────────────────────────────────────────────────────────┤
+//└────────────────────────────────────────────────────────────────────────────┘
 /* onload {{{*/
 let onload = function()
 {
@@ -166,11 +165,10 @@ if(tag_this) console.log("onload");
 //  js_VIEW.init();
 };
 /*}}}*/
-//└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ js_notes ● NOTES TABLE                                                    ●
-//├────────────────────────────────────────────────────────────────────────────┤
+//└────────────────────────────────────────────────────────────────────────────┘
 /*_ add_notes_DETAILS {{{*/
 /*{{{*/
 let note_DETAILS;
@@ -336,11 +334,10 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
     notes.update_summary();
 };
 //}}}
-//└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ js_notes ● STATUS LINE                                                    ●
-//├────────────────────────────────────────────────────────────────────────────┤
+//└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 /*_ show_status {{{*/
 let show_status = function(msg)
@@ -405,11 +402,10 @@ let tics_status = function( count )
 };
 /*}}}*/
 /*}}}*/
-//└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ js_notes ● UTIL                                                           ●
-//├────────────────────────────────────────────────────────────────────────────┤
+//└────────────────────────────────────────────────────────────────────────────┘
 //{{{
 /* ● copy_to_clipboard {{{*/
 let copy_to_clipboard = function(buffer)
@@ -433,10 +429,8 @@ let escapeHTML = function(text)
 };
 /*}}}*/
 //}}}
-//└────────────────────────────────────────────────────────────────────────────┘
 
 //}}}
-//└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟢 EDIT   ● note_5_onclick_edit                                         ✎  │
@@ -495,7 +489,6 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ CALLERS OF `save_note_auto`
-//│
 //│ ● USER CLICK      ➔ CLICK SAVE BUTTON
 //│ ● USER INPUT      ➔ input_listener [sync on first user input input empty]
 //│ ● js_notes.onload ➔ setInterval-AUTO_SAVE_IDLE_INTERVAL_MS
@@ -660,12 +653,18 @@ let set_editing_note_index = function(index)
             el.classList.remove(            "editing");
             el.classList.add   (            "edited");
         });
-
-        let nArray = notes.get_nArray();
-        save_note_BUTTON.innerText        = "Add Note #"+ (nArray.length+1);
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│     let nArray = notes.get_nArray();
+//│     save_note_BUTTON.innerText        = "Add Note #"+ (nArray.length+1);
+//│     save_note_BUTTON.setAttribute(      "disabled","");
+//│     save_note_BUTTON.removeAttribute( EDITING_NOTE_NUM );
+//│     save_note_BUTTON.removeAttribute( BULLET_ECC_NUM   );
+//└────────────────────────────────────────────────────────────────────────────┘
+        index = notes.get_nArray().length;
+        save_note_BUTTON.innerText=    "Add Note #"+   (index + 1);
         save_note_BUTTON.setAttribute(      "disabled","");
         save_note_BUTTON.removeAttribute( EDITING_NOTE_NUM );
-        save_note_BUTTON.removeAttribute( BULLET_ECC_NUM   );
+        save_note_BUTTON.setAttribute(BULLET_ECC_NUM  ,(index + 1) % 10);
     }
 
     // standout edited note
