@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260924:19h:53) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260927:17h:38) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -131,13 +131,25 @@ if(tag_this) console.log("⚫ %c js_folds.load_details_open_state:", lbB+lb3);
     //└────────────────────────────────────────────────────────────────────────┘
     set_shiftLatched(  true );
 
+    let el_open_array = [];
     JSON.parse( val ).forEach((item) => {
         let el = js_xpath.get_nodeXPath_target( item.xpath );
         if( el ) {                    el.open = item.open;
+            el_open_array.push( el );
 
 if(tag_this) console.log(" 🟠 %c"+item.xpath, "background-color:black");
         }
     });
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ Close all parent that were not opened ● (...after initial layout done)
+    //└────────────────────────────────────────────────────────────────────────┘
+    setTimeout(() => {
+        document.querySelectorAll("DETAILS:not([id])")    // DETAILS having no #id
+            .forEach((el) => {
+                if( !el_open_array.includes(el) ) el.open = false;
+            });
+    }, 0);
 };
 /*}}}*/
 
@@ -399,14 +411,15 @@ if(log_this) console.log("🔴 %c js_folds.toggle_details_open_state: OPENING: "
                 d.open = true;
     }
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ DO ... CLOSE OTHERS, (that are not part of the target hierarchy)
+    //│ DO ... CLOSE OTHERS, (that are not part of the target ancestors)
     //└────────────────────────────────────────────────────────────────────────┘
     else {
-        for(let d of doc_details) {
-            if( ancestors_set.has( d    )) d.open =  true;
-            else if(              !d.id  ) d.open = false; // skip details with id
+        for(let d of doc_details)
+        {
+            if( ancestors_set.has(       d   )) d.open =  true;
+            else if(                    !d.id                   // SKIP ID
+                    && !target.contains( d   )) d.open = false; // SKIP CHILD
         }
-
     }
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ START A NEW COOLDOWN TO UNFOLD MORE THAN ONE DETAILS
