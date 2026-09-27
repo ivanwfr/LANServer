@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260927:17h:38) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260927:19h:57) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -13,7 +13,7 @@
 let js_folds = (function() {
 //"use strict";
 let log_this = false;
-let tag_this = false || log_this;
+let tag_this = true;//FIXMEfalse || log_this;
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INLINING ● SERVER/scripts/js_log.js
@@ -119,37 +119,35 @@ let load_details_open_state = function()
 {
 if(tag_this) console.log("⚫ %c js_folds.load_details_open_state:", lbB+lb3);
 
-    //┌───────────────────────────────────────────────────────────────┐
-    //│ RESTORE        ● store details open state from [localStorage] │
-    //└───────────────────────────────────────────────────────────────┘
-    let key = "xpath_details_open_array";
-    let val = js_store.localStorage_getItem( key );
-    if(!val) return;
-
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PREVENT CLOSING DETAILS ● so we can open more than one                 │
     //└────────────────────────────────────────────────────────────────────────┘
     set_shiftLatched(  true );
 
+    //┌───────────────────────────────────────────────────────────────────────┐
+    //│ RESTORE                ● store details open state from [localStorage] │
+    //└───────────────────────────────────────────────────────────────────────┘
     let el_open_array = [];
-    JSON.parse( val ).forEach((item) => {
+    let arr = js_store.localStorage_getArray("xpath_details_open_array");
+    /**/arr.forEach((item) => {
         let el = js_xpath.get_nodeXPath_target( item.xpath );
-        if( el ) {                    el.open = item.open;
+        if( el ) {
+            el.open = item.open;    // DO NOT OPEN YET
             el_open_array.push( el );
-
 if(tag_this) console.log(" 🟠 %c"+item.xpath, "background-color:black");
         }
     });
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ Close all parent that were not opened ● (...after initial layout done)
+    //│ Close parents DETAILS that were not opened, once initial layout done
     //└────────────────────────────────────────────────────────────────────────┘
     setTimeout(() => {
-        document.querySelectorAll("DETAILS:not([id])")    // DETAILS having no #id
+        document.querySelectorAll("DETAILS:not([id])") // DETAILS having no #id
             .forEach((el) => {
                 if( !el_open_array.includes(el) ) el.open = false;
             });
     }, 0);
+
 };
 /*}}}*/
 
@@ -208,13 +206,11 @@ if(tag_this) console.log("⚫ %c js_folds.load_containers_scrollTop:", lbB+lb4);
     //┌───────────────────────────────────────────────────────────────┐
     //│ RESTORE ● scrollable-containers-scrollTop from [localStorage] │
     //└───────────────────────────────────────────────────────────────┘
-    let key = "xpath_scrollTop_array";
-    let val = js_store.localStorage_getItem( key );
-    if(!val) return;
-
-    JSON.parse( val ).forEach((item) => {
+    let arr = js_store.localStorage_getArray("xpath_scrollTop_array");
+    /**/arr.forEach((item) => {
         let el = js_xpath.get_nodeXPath_target( item.xpath    );
-        if( el ) {           el.scrollTo({ top: item.scrollTop, behavior: "smooth" }); // show the adjustment
+        if( el ) {
+            el.scrollTo({ top: item.scrollTop, behavior: "smooth" }); // show the adjustment
 
 if(tag_this) console.log(" 🟡 %c"+item.xpath, "background-color:black");
         }
@@ -255,8 +251,13 @@ if(log_this) console.log("⚫ %c js_folds.details_update_click_listeners:", lbB)
 
             // SUMMARY CLICK SHIFT TRACKER
             el = el.firstElementChild;
-            el.addEventListener("click"     , track_pendingShift, true             ); // capture, so it"s recorded even if something stops propagation later
-            el.addEventListener("touchstart", track_pendingShift, { passive: true });
+            el.addEventListener("click"     , track_pendingShift, true              ); // capture, so it"s recorded even if something stops propagation later
+
+            let isTouchDevice
+                =  window.matchMedia("(pointer : coarse)").matches
+                || window.matchMedia("(hover   : none  )").matches
+            ;
+            el.addEventListener("touchstart", track_pendingShift, { passive: !isTouchDevice });
         }
     });
     if( some_listener_added.length )
@@ -283,17 +284,35 @@ if(log_this) console.log("⚫ %c js_folds.details_click_listener:", lbB);
         :                                                 null;
 
     // CLICKED IN CONTAINER'S LEFT MARGIN
-    if( details ) {
+    if( details )
+    {
         let            summary = details.firstElementChild;
-        let      nextContainer = _get_nextContainer( summary );             // container under DETAILS SUMMARY
-        if(   (e.x < (nextContainer.offsetLeft     ))                       // clicked in container's left margin
-           && (e.x > (nextContainer.offsetLeft - 30))                       // within parent details .. @see STYLE/details.css
-          ) {
-            details.open       = !details.open;
-            if( e.stopPropagation          ) e.stopPropagation         ();  // capturing and bubbling phases
-            if( e.stopImmediatePropagation ) e.stopImmediatePropagation();  // other listeners of the same event
-            if( e.preventDefault           ) e.preventDefault          ();  // browser agent default
+        let      nextContainer = _get_nextContainer( summary );                 // container under DETAILS SUMMARY
+
+        //┌───────────────────────────────────────────────────────────────────────┐
+        //│if(   (e.x < (nextContainer.offsetLeft     ))                        // clicked in container's left margin
+        //│   && (e.x > (nextContainer.offsetLeft - 30))                        // within parent details .. @see STYLE/details.css
+        //│  ) {
+        //│    details.open       = !details.open;
+        //│    if( e.stopPropagation          ) e.stopPropagation         ();   // capturing and bubbling phases
+        //│    if( e.stopImmediatePropagation ) e.stopImmediatePropagation();   // other listeners of the same event
+        //│    if( e.preventDefault           ) e.preventDefault          ();   // browser agent default
+        //│}
+        //└───────────────────────────────────────────────────────────────────────┘
+
+        //┌───────────────────────────────────────────────────────────────────────┐
+        //│ Copilot recommendation
+        //│ ● e.x is viewport-relative, while offsetLeft is relative to the offset
+        //└───────────────────────────────────────────────────────────────────────┘
+        let rect        = nextContainer.getBoundingClientRect();
+        let marginStart = rect.left - 30;
+        if((e.clientX  >= marginStart) && (e.clientX < rect.left))
+        {
+            details.open = !details.open;
+            e.preventDefault ();
+            e.stopPropagation();
         }
+
     }
 };
 /*}}}*/
