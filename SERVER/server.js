@@ -12,7 +12,7 @@
 
 //┌────────────────────────────────────────────────────────────────────────────┐
     const SERVER_JS_ID  = "server";
-    const SERVER_JS_TAG = SERVER_JS_ID  +" (260925:15h:46)";
+    const SERVER_JS_TAG = SERVER_JS_ID  +" (260927:16h:15)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*}}}*/
 
@@ -770,13 +770,13 @@ if(log_this) console.log("response_200_header=["+response_200_header["Content-Ty
                     .  replace(           /\/\/└/gm , "🟤🔴🟠└")
 }}}*/
 
-                    .  replace(           /\/\/ *(┌.*$)/gm , "<BOXU>$1</BOXU>")
-                    .  replace(           /\/\/ *(│.*$)/gm , "<BOXM>$1</BOXM>")
-                    .  replace(           /\/\/ *(└.*$)/gm , "<BOXD>$1</BOXD>")
+                    .  replace(         / *\/\/ *(┌.*$)/gm , "<BOXU>$1</BOXU>")
+                    .  replace(         / *\/\/ *(│.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace(         / *\/\/ *(└.*$)/gm , "<BOXD>$1</BOXD>")
 
-                    .  replace(           /\/\/ *(├.*$)/gm , "<BOXM>$1</BOXM>")
-                    .  replace(           /\/\/ *(┼.*$)/gm , "<BOXM>$1</BOXM>")
-                    .  replace(           /\/\/ *(┤.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace(         / *\/\/ *(├.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace(         / *\/\/ *(┼.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace(         / *\/\/ *(┤.*$)/gm , "<BOXM>$1</BOXM>")
 
                     .  replace(          /[└┘┌┐│─├┼┤]/gm , " "           )
 
