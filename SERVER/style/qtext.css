@@ -42,27 +42,31 @@ BOXD {
  display             : inline-block;
  border-collapse     : collapse;
  border-left         : 8px solid #ffffff88;
+ min-width           : 50%;
  background          : linear-gradient(to right, #6665, #0001);
  padding             : 0;
  color               : #EEE;
 }
 BOXU { border-radius    : 0.5em 0.5em 0     0    ; }
 BOXD { border-radius    : 0     0     0.5em 0.5em; }
+/*{{{
+BOXD:has(+DETAILS)      { border-radius    : 0; }
+}}}*/
 /*}}}*/
 
 /* cursor user-select transition {{{*/
 SUMMARY                     { user-select   : none;                           }
 DETAILS                     { cursor        : pointer;                        }
+DETAILS:open                { cursor        : context-menu;                   }
 SUMMARY                     { transition    : background-color 300ms ease-in; }
 /*}}}*/
-/* margin padding {{{*/
+/* BOX margin padding {{{*/
 
            BOXU             { margin-top :  1em; }
-           BOXU, BOXM, BOXD { margin-left: -1em; }
+           BOXU, BOXM, BOXD { margin-left:  0em; }
                     SUMMARY {                    padding     : 0.5em; }
                         PRE {                    padding     : 0.5em; }
 
-DETAILS:open                { cursor      : context-menu; }
 DETAILS:open                { background-color: #F006;    }
 
 /*
@@ -71,6 +75,28 @@ DETAILS:open                { background-color: #F006;    }
 //│ ● DETAILS:open
 //└────────────────────────────────────────────────────────────────────────────┘
 */
+/*}}}*/
+/* DETAILS margin padding {{ {*/
+DETAILS:open                { margin      :   2em 1em; padding-left:   2em; }
+DETAILS:not(open)           { margin      : 0.2em 0.5em; padding-left:   0em; }
+
+DETAILS:open       >PRE     { margin-left :    -1em; padding-left: 0.5em; }
+DETAILS:not(open)  >PRE     { margin-left :     0em; padding-left: 0.5em; }
+DETAILS:open       >PRE     { margin-top  :     2px;                      }
+
+DETAILS:open       >SUMMARY { margin-left :    -2em; padding-left: 0.5em; }
+DETAILS:not(open)  >SUMMARY { margin-left :     0em; padding-left: 0.5em; }
+
+/*{{{
+.blurred * {
+  background-color        : #FFF4;
+  backdrop-filter         : blur(10px) !important;
+  -webkit-backdrop-filter : blur(10px) !important;
+}
+}}}*/
+
+/*}} }*/
+/* DETAILS.close_on_margin_click {{{*/
 DETAILS.close_on_margin_click {
   background: repeating-linear-gradient( 45deg
     ,                                   #4448 0px
@@ -79,10 +105,12 @@ DETAILS.close_on_margin_click {
     ,                                   #1118 8px
   );
 /*{{{
-DETAILS.close_on_margin_click>* { background: red; }
-DETAILS.close_on_margin_click>SUMMARY { background: green; }
+  background: repeating-linear-gradient( 45deg
+  ,                                     #856100dd 0px
+  ,                                     #775700dd 8px
+  ,                                     #1d1d1ddd 8px
+  ,                                     #717171dd 16px);
 }}}*/
-
 /*{{{
   background: repeating-linear-gradient( 45deg
     ,                                   #FC48 0px
@@ -91,30 +119,16 @@ DETAILS.close_on_margin_click>SUMMARY { background: green; }
     ,                                   #BBB8 16px
   );
 }}}*/
-/*{{{
-  background: repeating-linear-gradient( 45deg
-  ,                                     #856100dd 0px
-  ,                                     #775700dd 8px
-  ,                                     #1d1d1ddd 8px
-  ,                                     #717171dd 16px);
-}}}*/
 }
-
+/*}}}*/
+/* pointer {{{*/
 DETAILS:open       >PRE     { cursor      : pointer; }
 
-DETAILS:open                { margin      :.5em 2em; padding-left:   2em; }
-DETAILS:not(open)           { margin      : 0em 1em; padding-left:   1em; }
-
-DETAILS:open       >PRE     { margin-left :-1em; padding-left: 0.5em; margin-top: 2px; }
-DETAILS:not(open)  >PRE     { margin-left : 0em; padding-left: 0.5em; }
-
-DETAILS:open       >SUMMARY { margin-left :-2em; padding-left: 0.5em; }
-DETAILS:not(open)  >SUMMARY { margin-left : 0em; padding-left: 0.5em; }
-
-
-DETAILS                     { transition  : margin  100ms ease-in; }
 /*}}}*/
+/* transition {{{*/
+DETAILS                     { transition  : margin 300ms ease-out; }
 
+/*}}}*/
 /* width {{{*/
 DETAILS                     { width             : fit-content;     }
 /*}}}*/
