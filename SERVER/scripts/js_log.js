@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_log.js        ● $APROJECTS/LANServer/SERVER      ● _TAG (260925:16h:52) │
+//│ js_log.js        ● $APROJECTS/LANServer/SERVER      ● _TAG (260926:00h:54) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* jshint {{{*/
 
@@ -11,23 +11,8 @@ globalThis.js_log = (function() {
 let log_this = false;
 let tag_this = false || log_this;
 
-    let log = console.log;
-
-    let toggle = function(state)
-    {
-        // true or false
-        if(typeof state != "undefined") log_this =     state;
-        // or toggle
-        else                            log_this = !log_this;
-
-        console.log("log_this: "+ log_this);
-        return       log_this;
-    };
-    let is_logging = function() { return log_this; };
-    let is_tagging = function() { return tag_this; };
-
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ CONSOLE %c
+    //│ CSS
     //└────────────────────────────────────────────────────────────────────────┘
     // lb0..lb9 ● lbX ● lbX {{{
     /* eslint-disable no-unused-vars */
@@ -74,6 +59,34 @@ let tag_this = false || log_this;
 
     /* eslint-enable  no-unused-vars */
     //}}}
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ LOG TOGGLE STATE
+    //└────────────────────────────────────────────────────────────────────────┘
+    /*{{{*/
+
+    let log = console.log;
+
+    let toggle = function(state)
+    {
+        // true or false
+        if(typeof state != "undefined") log_this =     state;
+        // or toggle
+        else                            log_this = !log_this;
+
+        console.log("log_this: "+ log_this);
+        return       log_this;
+    };
+
+    let is_logging = function() { return log_this; };
+
+    let is_tagging = function() { return tag_this; };
+
+    /*}}}*/
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ CONSOLE CLEAR
+    //└────────────────────────────────────────────────────────────────────────┘
     /*_ console_clear {{{*/
     //{{{
     const CONSOLE_CLEAR_COOLDOWN_DURATION_MS = 1000;
@@ -97,7 +110,45 @@ let tag_this = false || log_this;
     /*}}}*/
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ UTIL
+    //│ CALLER STACK
+    //└────────────────────────────────────────────────────────────────────────┘
+    /*_ get_src_link {{{*/
+    let get_src_link = function(lvl=3)
+    {
+        //┌───────────────────────────────┐
+        //│  return new Error().stack
+        //│   .split("\n")[lvl]
+        //│   .replace(/.*\((.*)\)/,"$1")
+        //│   .replace(/ *at */    ,""  );
+        //└───────────────────────────────┘
+
+        let stack
+            =  new Error().stack
+            || ""
+        ;
+
+        let lines
+            = stack.split("\n").slice( 1 );
+
+        let line
+            =  lines[Math.max(0,lvl)]
+            || lines[0]
+            || ""
+        ;
+        if(!line )
+            return "";
+
+        return line
+            .  replace(/^\s*at\s+/  ,   "")
+            .  replace(/.*\((.*)\)/ , "$1")
+        //  .  replace(/.*\s+at\s+/ ,   "")
+            .  trim()
+        ;
+    };
+    /*}}}*/
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ELLIPSIS
     //└────────────────────────────────────────────────────────────────────────┘
     /* ● ellipsis {{{*/
     let ellipsis = function(str, n=128)
@@ -108,16 +159,10 @@ let tag_this = false || log_this;
         ;
     };
     /*}}}*/
-    /*_ get_src_link {{{*/
-    let get_src_link = function(lvl=3)
-    {
-        return new Error().stack
-            .split("\n")[lvl]
-            .replace(/.*\((.*)\)/,"$1")
-            .replace(/ *at */    ,""  );
-    };
-    /*}}}*/
 
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ PUBLIC
+    //└────────────────────────────────────────────────────────────────────────┘
     // return {{{
     return { name: "js_log"
 
