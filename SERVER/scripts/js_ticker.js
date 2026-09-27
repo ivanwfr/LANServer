@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_ticker.js    ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:20h:26) │
+//│ js_ticker.js    ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:21h:59) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 
@@ -39,16 +39,16 @@ let js_ticker = (() => {
     //}}}
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ 1.  setInterval ● May set, change or clear loop interval and handler
+    //│ 1.  setInterval     ● May set, change or clear interval and handler
     //└────────────────────────────────────────────────────────────────────────┘
     /* 1. setInterval ...calls start() {{{*/
     let   setInterval = function(handler_arg, interval_ms_arg)
     {
 if(is_logging()) log(b_1 +"js_ticker.setInterval("+(handler_arg ? handler_arg.name : handler_arg)+", "+interval_ms_arg+")");
 
-        changeInterval( interval_ms_arg , "sync_canceled");
+        changeInterval( interval_ms_arg , "do_not_sync");
 
-        changeHandler ( handler_arg     , "sync_canceled");
+        changeHandler ( handler_arg     , "do_not_sync");
 
         sync();
 
@@ -57,10 +57,10 @@ if(is_logging()) log(b_1 +"js_ticker.setInterval("+(handler_arg ? handler_arg.na
     /*}}}*/
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ 1.1 changeInterval ● May set, change or clear the loop interval
+    //│ 1.1 changeInterval  ● May set, change or clear the loop interval
     //└────────────────────────────────────────────────────────────────────────┘
     /*  changeInterval {{{*/
-    let changeInterval = function(interval_ms_arg, sync_canceled)
+    let changeInterval = function(interval_ms_arg, do_not_sync)
     {
 if(is_logging()) log("%c"+b_1+b_1 +"js_ticker.changeInterval("+interval_ms_arg+")", lbB);
         // ●  interval [MAX] {{{
@@ -70,8 +70,8 @@ if(is_logging()) log("%c"+b_1+b_1 +"js_ticker.changeInterval("+interval_ms_arg+"
             interval_ms = INTERVAL_MS_MAX;
         }
         //}}}
-        // ●  interval [min] {{{
-        else if( interval_ms_arg )
+        // ●  interval [min] ● 0 will stop the loop {{{
+        else if(interval_ms_arg >= 0)
         {
             interval_ms = Math.max(0, interval_ms_arg);
         }
@@ -81,16 +81,18 @@ if(is_logging()) log("%c"+b_1+b_1 +"js_ticker.changeInterval("+interval_ms_arg+"
 if(is_logging()) log("interval unchanged ["+ interval_ms +"]");
         }
         //}}}
-        if(!sync_canceled) sync();
+        if(!do_not_sync)
+            sync();
+
         return js_ticker;
     };
     /*}}}*/
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ 1.2 changeHandler ● May set, change or remove the callback handler
+    //│ 1.2 changeHandler   ● May set, change or remove the callback handler
     //└────────────────────────────────────────────────────────────────────────┘
     /*  changeHandler {{{*/
-    let changeHandler = function(handler_arg, sync_canceled)
+    let changeHandler = function(handler_arg, do_not_sync)
     {
 if(is_logging()) log(b_1+b_2 +"js_ticker.changeHandler("+ (handler_arg ? handler_arg.name : handler_arg) +")");
         // ● handler_fnc (required) {{{
@@ -109,13 +111,15 @@ if(is_logging()) log(b_1+b_2 +"js_ticker.changeHandler("+ (handler_arg ? handler
             console.warn("js_ticker: NO HANDLER TO CALL");
         }
         //}}}
-        if(!sync_canceled) sync();
+        if(!do_not_sync)
+            sync();
+
         return js_ticker;
     };
     /*}}}*/
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ 1.3 sync        ● May start or stop by checking handler and interval
+    //│ 1.3 sync            ● May start or stop by checking handler or interval
     //└────────────────────────────────────────────────────────────────────────┘
     /*  sync {{{*/
     let sync = function()
@@ -135,52 +139,73 @@ if(is_logging()) log(b_1+b_3 +"js_ticker.sync");
     };
     /*}}}*/
 
-    /* 3 start {{{*/
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ 2.  start           ● May stop on missing interval or handler
+    //└────────────────────────────────────────────────────────────────────────┘
+    /* start {{{*/
     let   start = function()
     {
 if(is_logging()) log(b_2 +"js_ticker.start");
+
+        // interval or handler_fnc gone
+        if(!interval_ms || typeof handler_fnc !== "function")
+            return stop();
 
         // start sync
         if( timeout ) clearTimeout( timeout );
 
         loop();
+
         return js_ticker;
     };
     /*}}}*/
-    /* 4 stop {{{*/
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ 3.  stop            ● May interrupt a schedule timeout
+    //└────────────────────────────────────────────────────────────────────────┘
+    /* stop {{{*/
     let   stop = function()
     {
 if(is_logging()) log(b_3 +"js_ticker.stop");
 
-        if( timeout ) clearTimeout( timeout );
-        /**/timeout = null;
+        if( timeout ) {
+            clearTimeout( timeout );
+            timeout = null;
+        }
         return js_ticker;
     };
     /*}}}*/
-    /* 5 loop {{{*/
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ 4.  loop            ● May stop on missing handler, schedule next loop
+    //└────────────────────────────────────────────────────────────────────────┘
+    /* loop {{{*/
     let   loop = function()
     {
 if(is_logging()) console.log(b_4 +`loop @ ${new Date().toISOString()} [${interval_ms}]`);
 
-        // done loop marker
         timeout = null;
 
+        // handler_fnc gone
+        if(typeof handler_fnc !== "function")
+            stop();
+
         // handler_fnc call
-        if( handler_fnc )
-        {
-            try {
-                handler_fnc();
-            } catch(ex) {
-               console.warn(b_2 +" handler_fnc "+handler_fnc.name+" Exception:\n"+ ex);
-            }
+        try {
+            handler_fnc();
+        } catch(ex) {
+            console.warn(b_2 +" handler_fnc "+handler_fnc.name+" Exception:\n"+ ex);
         }
-        else
-            return;
 
         // next tick re-arm
-        timeout = setTimeout(loop, interval_ms);
+        if( interval_ms > 0)
+            timeout = setTimeout(loop, interval_ms);
     };
     /*}}}*/
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ Public API
+    //└────────────────────────────────────────────────────────────────────────┘
     return { setInterval
         ,    changeHandler
         ,    changeInterval
