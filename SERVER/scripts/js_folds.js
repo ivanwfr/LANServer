@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260927:19h:57) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260928:02h:09) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -11,14 +11,14 @@
 /* globals js_xpath */
 /*}}}*/
 let js_folds = (function() {
-//"use strict";
+"use strict";
 let log_this = false;
 let tag_this = true;//FIXMEfalse || log_this;
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INLINING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-//{{{
+// log {{{
 /* eslint-disable no-unused-vars */
 let                               lbB  = js_log.lbB;
 let                               lbX  = js_log.lbX;
@@ -30,11 +30,16 @@ let [lb1,lb2,lb3,lb4,lb5,lb6,lb7,lb8,lb9,lb0] = lbX;
 //│ 🟤 LOAD ● UNLOAD                                                           │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*● onload {{{*/
+//{{{
+let initialized = false;
+//}}}
 let onload = function(e) /* eslint-disable-line no-unused-vars */
 {
+// log {{{
 if(tag_this) console.log("⚫ %c js_folds.onload:", lbB+lb1);
 
-//{{{
+    if( initialized ) return; // ...don't run twice
+    /**/initialized = true;
 /* eslint-disable no-undef */
 //if(log_this) console.log("… js_folds:");
 //if(log_this) console.log("… js_store   \t● "+ typeof js_store   );
@@ -49,15 +54,15 @@ if(tag_this) console.log("⚫ %c js_folds.onload:", lbB+lb1);
     setTimeout(load_details_open_state       , 1500);
     setTimeout(load_containers_scrollTop     , 2000);
 
-    window  .addEventListener("beforeunload" , save_containers_scrollTop_handler);
-    window  .addEventListener("beforeunload" , save_details_open_state_handler  );
+    window.addEventListener("pagehide", save_containers_scrollTop_handler);
+    window.addEventListener("pagehide", save_details_open_state_handler  );
 };
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ NOTE ABOUT USING XPATH AS A UNIQ ELEMENT IDENTIFIER                        │
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{
+/* ✔ will be synchronized by first DETAILS toggle listener call {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ The DETAILS toggle listener will call this storage updater function        │
 //│ that will save all open state into localStorage.                           │
@@ -253,11 +258,14 @@ if(log_this) console.log("⚫ %c js_folds.details_update_click_listeners:", lbB)
             el = el.firstElementChild;
             el.addEventListener("click"     , track_pendingShift, true              ); // capture, so it"s recorded even if something stops propagation later
 
-            let isTouchDevice
-                =  window.matchMedia("(pointer : coarse)").matches
-                || window.matchMedia("(hover   : none  )").matches
-            ;
-            el.addEventListener("touchstart", track_pendingShift, { passive: !isTouchDevice });
+//            // Copilot: passive must be false to calle preventDefault in the handler {{{
+//            let isTouchDevice
+//                =  window.matchMedia("(pointer : coarse)").matches
+//                || window.matchMedia("(hover   : none  )").matches
+//            ;
+//            el.addEventListener("touchstart", track_pendingShift, { passive: !isTouchDevice });
+//            //}}}
+            el.addEventListener("touchstart", track_pendingShift, { passive: false          });
         }
     });
     if( some_listener_added.length )
@@ -361,7 +369,7 @@ let track_pendingShift = function(e)
     if(e.type == "touchstart")
     {
         lastTouchCount = e.touches.length;
-        e.preventDefault();  // stop scrolling while multitouching
+      //e.preventDefault();  // cant in passive mode to stop scrolling while multitouching
     }
     else if (e.type == "click")
     {
@@ -486,7 +494,7 @@ if(log_this) console.log("...arr.length: "+ arr.length);
 };
 /*}}}*/
 
-/* EXPORT {{{*/
+/* return {{{*/
 return { name : "js_folds"
         , onload
         , set_shiftLatched
