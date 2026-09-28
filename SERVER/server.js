@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-/*│ server.js                 */ const SERVER_JS_TAG = "server (260928:22h:22)";
+/*│ server.js                 */ const SERVER_JS_TAG = "server (260929:01h:53)";
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 // eslint-disable no-warning-comments */
@@ -451,20 +451,32 @@ if(is_logging()) log_X(Y+"● writeHead "+_caller);
 let request_LISTENER = (function() {
 /*● dispatch {{{*/
 /*{{{*/
-const CLEAR_COOLDOWN = 1000;
-let last_request_time= 0;
-let request_count = 0;
+const CLEAR_COOLDOWN    = 3000;
+let   last_request_time =    0;
+
+const REQUEST_BUNCH     =   30;
+let   request_count     =    0;
+let last_request_count  =    0;
 /*}}}*/
 let dispatch = function(request, response) /* eslint-disable-line complexity */
 {
 /* log {{{*/
 let caller = "dispatch";
-//log_G("..."+ caller);
+if(is_logging()) log_G("..."+ caller);
 
-    let time_now_MS = new Date().getTime();
-    if((time_now_MS - last_request_time) > CLEAR_COOLDOWN)
+    let on_first_request   = !last_request_time;
+    let time_now_MS        = new Date().getTime();
+    let not_on_cooldown    = ((time_now_MS   - last_request_time ) > CLEAR_COOLDOWN);
+    let terminal_filled    = ((request_count - last_request_count) > REQUEST_BUNCH) ;
+    let may_clear_terminal =    not_on_cooldown
+        /*..............*/  && (terminal_filled || on_first_request);
+
+    if( may_clear_terminal )
+    {
         log_G("K0\x1Bc"+ M + "● dispatch: TERMINAL CLEARED BETWEEN REQUEST CHUNKS");
-    last_request_time = time_now_MS; // restart clear cooldown start time
+        last_request_time = time_now_MS  ;
+        last_request_count= request_count;
+    }
 
 /*}}}*/
     // [uri] [request_count] {{{
@@ -473,9 +485,14 @@ let caller = "dispatch";
     if(!uri.path)
         uri.path = DEFAULT_URI_PATH;
     //}}}
-log_X(G+"  ┌───────────────────────────────────────────────┐\n"
-     +  "● │ REQUEST #"+ response.request_count+" "+ request.method +" "+ uri.path +"\n"
-     +  "  └───────────────────────────────────────────────┘");
+
+//{{{
+//log_X(G+"  ┌───────────────────────────────────────────────┐\n"
+//     +  "● │ REQUEST #"+ response.request_count+" "+ request.method +" "+ uri.path +"\n"
+//     +  "  └───────────────────────────────────────────────┘");
+//}}}
+log_X(G+"● REQUEST #"+ response.request_count+" "+ request.method +" "+ uri.path);
+
     // favicon.ico {{{
     if(uri.path == "favicon.ico")
     {
@@ -499,6 +516,24 @@ log_X(G+"  ┌──────────────────────
     /* fs.readFile {{{*/
     if(!consumed_by && uri.path)
     {
+        consumed_by = fs_readFile(request,response,uri);
+    }
+    /*}}}*/
+// log {{{
+if(is_logging()) log_X(N+"dispatch: consumed_by=["+consumed_by+"]");
+if(config.LOG_MORE) log_X(TRACE_CLOSE);//DEBUG
+//}}}
+};
+/*}}}*/
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ TODO IIFE
+//└────────────────────────────────────────────────────────────────────────────┘
+/*_ fs_readFile {{{*/
+let fs_readFile = function(request,response,uri)
+{
+//{{{
+let caller = "fs_readFile";
+//}}}
         let   reqPath  = decodeURIComponent(request.url.split("?")[0]);
         let file_path  = path.join(server_top_folder, reqPath);
 //{{{
@@ -541,19 +576,16 @@ log_X(G+"  ┌──────────────────────
             /*}}}*/
         });
 
-        consumed_by = "fs.readFile"; /* eslint-disable-line no-useless-assignment */
 //      log_B("┌──────────────────────────────────────────────────────────────────────────────┐\n"
 //           +"● SERVE FILES ["+uri.path +"]\n"
 //           +"└──────────────────────────────────────────────────────────────────────────────┘");
 if(is_logging()) log_B("● SERVING FILE ["+uri.path+"]");
-    }
-    /*}}}*/
-// log {{{
-//log_N("consumed_by=["+consumed_by+"]")
-if(config.LOG_MORE) log_X(TRACE_CLOSE);//DEBUG
-//}}}
+        return "fs.readFile";
 };
 /*}}}*/
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ TODO IIFE
+//└────────────────────────────────────────────────────────────────────────────┘
 /*_ request_directory_listing {{{*/
 /*{{{*/
 const CUSTOM_HTML_TAG_FOLDER        = "folder_tag";
@@ -795,9 +827,6 @@ return { dispatch };
 })();
 /*}}}*/
 
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ TODO
-//└────────────────────────────────────────────────────────────────────────────┘
 /*_ handle_FETCH_POST {{{*/
 /*    REQUEST_URL_ARRAY {{{*/
 const REQUEST_URL_ARRAY
@@ -818,9 +847,12 @@ if(is_logging()) log_Y("...handle_FETCH_POST");
     let url = request.url.replace(/\?.*/,"");
     if( REQUEST_URL_ARRAY.includes( url) )
     {
-log_Y("  ┌───────────────────────────────────────────────┐\n"
-     +"● │ "+ request.method.padEnd(10) +" "+ request.url +"\n"
-     +"  └───────────────────────────────────────────────┘");
+//{{{
+//log_Y("  ┌───────────────────────────────────────────────┐\n"
+//     +"● │ "+ request.method.padEnd(10) +" "+ request.url +"\n"
+//     +"  └───────────────────────────────────────────────┘");
+//}}}
+log_X(Y+"● "+ request.method.padEnd(10) +" "+ request.url);
         if(     request.method == "POST") handle_POST(request, response);
         else if(request.method == "GET" ) handle_GET (request, response);
         else if(request.method == "OPTIONS")
@@ -855,28 +887,6 @@ if(is_logging()) log_X(C+"1 request [data] ● body:\n"+ body);
 
     request.on("end", () => {
 
-//{{{
-//try {
-//        body = decodeURIComponent(body);
-//} catch(err) {
-//    console.warn(err);
-//log_X(R+"* handle_POST ● body:\n"+ body);
-//}
-//}}}
-//log_X(M+"2 decodeURIComponent ● body:\n"+body);
-
-/*{{{
-        body = body
-            .replace( /\+/g     , " "   )
-            .replace( /'/g      , "''"  )
-            .replace( /"/g      , '""'  ) // eslint-disable-line quotes
-          //.replace( /"/g      , '\\"' ) // eslint-disable-line quotes
-          //.replace( /\\r\\n/g , "\n"  )
-          //.replace(    /\\n/g , "\n"  )
-        ;
-//log_X(Y+"3 replace [+'\"] ● body:\n"+body);
-}}}*/
-
         server_notes.handle_request(request, response, body);
     });
 };
@@ -891,6 +901,10 @@ if(is_logging()) log_X("handle_GET");
     server_notes.handle_request(request, response, body);
 };
 /*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ TODO IIFE
+//└────────────────────────────────────────────────────────────────────────────┘
 /*_ customize_FILE_CONTENT {{{*/
 /*{{{*/
 const DEFAULT_URI_PATH = "./index.html";
@@ -1099,6 +1113,7 @@ let get_query_arg = function(query, arg)
     return query_match  ? query_match[1] : "";
 };
 /*}}}*/
+
 /*_ reply_server_STATUS {{{*/
 let reply_server_STATUS = function(args)
 {
