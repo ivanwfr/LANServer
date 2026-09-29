@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-/*│ server.js                 */ const SERVER_JS_TAG = "server (260929:01h:53)";
+/*│ server.js                 */ const SERVER_JS_TAG = "server (260929:17h:50)"; /* eslint-disable-line no-unused-vars */
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 // eslint-disable no-warning-comments */
@@ -18,7 +18,7 @@ let   fs                        = require("fs"   );
 let   http                      = require("http" );
 let   https                     = require("https");
 let   path                      = require("path" );
-let { networkInterfaces }       = require("os"   );
+let { networkInterfaces }       = require("os"   ); /* eslint-disable-line no-unused-vars */
 //}}}
 //➔ config ● PORT STATUS {{{
 let   config =
@@ -104,6 +104,19 @@ let { log
 } = server_log;
 /* eslint-enable  no-unused-vars */
 //}}}
+//  server_network {{{
+let server_network = require("../SERVER/server_network.js");
+
+let log_STATUS = server_network.log_STATUS;
+//}}}
+//  server_header {{{
+let server_header = require("../SERVER/server_header.js");
+
+//}}}
+//  server_qtext {{{
+let server_qtext = require("../SERVER/server_qtext.js");
+
+//}}}
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ SERVER
@@ -114,7 +127,7 @@ let { log
 let http__server;
 let https_server;
 
-let    started_folder;
+let    started_folder; /* eslint-disable-line no-unused-vars */
 let server_top_folder;
 /*}}}*/
 let createServer = function()
@@ -123,6 +136,7 @@ let createServer = function()
     /* [HTTP ] {{{*/
     try {
         http__server = http .createServer();
+      //server_network.set_http__server( http__server );
     }
     catch(ex) { log_R(ex); }
 
@@ -135,6 +149,7 @@ let createServer = function()
             };
 
         https_server    = https.createServer( ssl_options );
+      //server_network.set_https_server( https_server );
     }
     catch(ex) { log_R(ex);
         config.LOAD_STATUS
@@ -159,168 +174,16 @@ let createServer = function()
 
     /*}}}*/
     /* STATUS {{{*/
-    log_STATUS();
+    let modules = [ server
+        ,           server_header
+        ,           server_log
+        ,           server_network
+        ,           server_notes
+        ,           server_qtext
+    ];
 
+    log_STATUS(null, https_server, http__server, modules);
     /*}}}*/
-};
-/*}}}*/
-/*_ log_STATUS {{{*/
-let log_STATUS = function(response) // eslint-disable-line complexity
-{
-    /* CLEAR TERMINAL {{{*/
-//  log_CLEAR();
-
-    /*}}}*/
-    /* CONFIG {{{*/
-    /* COLORS {{{*/
-    let s;
-    let log_color  = config.LOAD_STATUS.includes("ERROR") ? R : M;
-/*  response CSS {{{*/
-if( response )
-    response.write(
-`<style>
-.info  { background-color: #222; color: #0F3; }
-.error { background-color: #222; color: #F03; }
-</style>`
-                  );
-
-/*}}}*/
-    /*}}}*/
-    /* [config dir_items] {{{*/
-    s  = "┌───────────────────────────────────────────────────────────────────── CONFIG ─┐";
-
-    s += LF+`
-│ ${SERVER_JS_TAG}
-├
-│ CONFIG            [${config_json        }]
-│ CWD               [${process.cwd()      }]
-├
-│ PORT_HTTP         [${config.PORT_HTTP   }]
-│ PORT_HTTPS        [${config.PORT_HTTPS  }]
-│  KEY_PEM          [${config. KEY_PEM    }]
-│ CERT_PEM          [${config.CERT_PEM    }]
-├
-│ server       ${ ellipsis( JSON.stringify( Object.keys( server       ) ), 60) }
-│ server_notes ${ ellipsis( JSON.stringify( Object.keys( server_notes ) ), 60) }
-│ server_log   ${ ellipsis( JSON.stringify( Object.keys( server_log   ) ), 60) }
-    `.trim();
-
-    if(config.I18N_ACTIVE)
-        s += LF+"│ I18N_ACTIVE ●●● ["+    config.I18N_ACTIVE  +"] ● [bddservice NOT CALLED] ● [i18n translation TABLES]";
-
-    if(config.LOG_MORE)
-        s += LF+"│ LOG_MORE    ●●● ["+    config.LOG_MORE     +"] ● VERBOSE node server.js";
-
-    s += LF+"└──────────────────────────────────────────────────────────────────────────────┘";
-
-    log_N(log_color+s);
-    /*  response {{{*/
-    if( response )
-        response.write(
-`<pre class='${config.LOAD_STATUS.includes("ERROR") ? "error" : "info"}'>${s}</pre>`
-                      );
-
-    /*}}}*/
-    /*}}}*/
-    /*}}}*/
-    /* FOLDER {{{*/
-
-    s = `
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ SERVER STARTED IN ${   started_folder}
-│ SERVER TOP FOLDER ${server_top_folder}
-└──────────────────────────────────────────────────────────────────────────────┘`;
-
-    log_G(s);
-/*  response {{{*/
-if( response )
-    response.write(
-`<pre class='info'>${s}</pre>`
-                  );
-
-/*}}}*/
-    /*}}}*/
-    log_G("┌────────────────────────────────┐");
-    /* HTTPS {{{*/
-
-    let https_address = https_server  ?            https_server.address() : null;
-    let https_port    = https_address ?            https_address.port     : null;
-    let https_status  = https_port    ? (  "LISTENING PORT "+https_port ) : "NOT LISTENING";
-
-    s = "HTTPS    :  "+ https_status;
-
-    log_G("│ "+(https_server ? Y : R)+s+N);
-/*  response {{{*/
-if( response )
-    response.write(
-`<pre class='${https_server ? "info" : "error"}'>${s}</pre>`
-                  );
-/*}}}*/
-    /*}}}*/
-    /* HTTP  {{{*/
-
-//lib_log.log_key_val("http__server", http__server);
-    let http__address = http__server  ?            http__server.address() : null;
-    let http__port    = http__address ?            http__address.port     : null;
-    let http__status  = http__port    ? (  "LISTENING PORT "+http__port ) : "NOT LISTENING";
-
-    s = "HTTP     :  "+ http__status;
-
-    log_G("│ "+(http__server ? Y : R)+s+N);
-/*  response {{{*/
-if( response )
-    response.write(
-`<pre class='${http__server ? "info" : "error"}'>${s}</pre>
-<script>document.body.contentEditable = true;</script>`
-                  );
-
-/*}}}*/
-    /*}}}*/
-    log_G("└────────────────────────────────┘");
-
-    log_net_info( response );
-
-};
-/*}}}*/
-/*_ log_net_info {{{*/
-let     net_address;
-let log_net_info = function(response)
-{
-    /*  response {{{*/
-    if( response )
-        response.write(
-`<div class='info'>
- <b>Network:</b>
- <ul>`
-                      );
-    /*}}}*/
-    let net_if  = networkInterfaces();
-    let results = Object.create({});
-    for(let name of Object.keys(net_if))
-    {
-        for(let net of net_if[name])
-        {
-            if (net.family === "IPv4" && !net.internal) // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
-            {
-                if(!results[name])
-                    results[name] = [];
-
-                results[name].push(net.address);
-
-                if(!net_address)
-                    net_address = net.address;
-                /*  response {{{*/
-                if( response)
-                    response.write("<li>"+name+" : "+net.address+"</li>\n");
-                /*}}}*/
-            }
-        }
-    }
-    /*  response {{{*/
-    if( response)
-        response.write("</ul>\n</div>");
-    /*}}}*/
-console.table( results );
 };
 /*}}}*/
 /*}}}*/
@@ -571,7 +434,15 @@ let caller = "fs_readFile";
             /*}}}*/
             /* file {{{*/
             else {
-                fs.readFile(file_path, function(read_err,data) { customize_FILE_CONTENT(request, file_path, uri.query, response, read_err, data); });
+                fs.readFile(  file_path
+                            , function(read_err, data) {
+                                customize_FILE_CONTENT( request
+                                                      , file_path
+                                                      , uri.query
+                                                      , response
+                                                      , read_err
+                                                      , data);
+                            });
             }
             /*}}}*/
         });
@@ -712,6 +583,8 @@ let caller = "request_directory_listing";
 
     let dir_path        =  file_path.substring( server_top_folder.length ).replace(/^[\/\\]|[\/\\]$/g,"");
     let dir_list        =   dir_path.replace(/\\/g," ").split(" ");
+
+    let net_address     = server_network.get_net_address();
 
     let href_root       =  scheme +"://"+ net_address +":"+ port;
     let href            =  href_root;
@@ -919,21 +792,22 @@ const STYLE_QTEXT = ""
 /*    SCRIPT_QTEXT {{{*/
 const SCRIPT_QTEXT = ""
     + "<meta name='color-scheme' content='light only'>"
-    + "<script src='/scripts/js_log.js     '></script>\n"
 
-    + "<script src='/scripts/js_folds.js   '></script>\n"
-    + "<script src='/scripts/js_store.js   '></script>\n"
-    + "<script src='/scripts/js_xpath.js   '></script>\n"
-    + "<script src='/scripts/js_linkify.js '></script>\n"
+    + "<script type='module' src='/scripts/js_log.js     '></script>\n"
 
-    + "<script src='/scripts/js_MODEL.js   '></script>\n"
-    + "<script src='/scripts/js_VIEW.js    '></script>\n"
-    + "<script src='/scripts/js_CNTRL.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_folds.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_store.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_xpath.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_linkify.js '></script>\n"
 
-    + "<script src='/scripts/js_ticker.js  '></script>\n"
-    + "<script src='/scripts/js_input.js   '></script>\n"
-    + "<script src='/scripts/notes.js      '></script>\n"
-    + "<script src='/scripts/js_notes.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_MODEL.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_VIEW.js    '></script>\n"
+    + "<script type='module' src='/scripts/js_CNTRL.js   '></script>\n"
+
+    + "<script type='module' src='/scripts/js_ticker.js  '></script>\n"
+    + "<script type='module' src='/scripts/js_input.js   '></script>\n"
+    + "<script type='module' src='/scripts/notes.js      '></script>\n"
+    + "<script type='module' src='/scripts/js_notes.js   '></script>\n"
     ;
 /*}}}*/
 /*}}}*/
@@ -958,8 +832,8 @@ if(config.LOG_MORE)
 /*}}}*/
 /*}}}*/
     /* FILE     ● err {{{*/
-    if(err) {
-log_R( err );
+    if( err ) {
+log_R(  err );
         if( server_notes.html_format_requested(file_name,query) )
         {
             writeHead(  response, caller+"", 404, HTML_RESPONSE_HEADER );
@@ -1049,6 +923,9 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
                   //.  replace( /[\n\r]( *)\/\/ */gm, "\n✔✓$1")
                   //.  replace(        /^ *\/\/ */  , "ℹ\n"  )
                 ;
+//{{{ FIXME would that help?
+//                data += "\n//# sourceURL="+ file_name.replace(/.*[\\\/]/,"");
+//}}}
             }
             else if( is_logging()) {
                 console.dir(request);
@@ -1068,6 +945,8 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
         }
         /*}}}*/
         /* WRITE FILE CONTENT .. replace (127.0.0.1|\blocalhost\b) with [net_address] {{{*/
+        let net_address     = server_network.get_net_address();
+
         if( server_notes.html_format_requested(file_name,query) )
         {
             let header
@@ -1130,7 +1009,15 @@ log_N("  ┌───────┐\n"
      +"  └───────┘");
         writeHead(response, caller, 200, HTML_RESPONSE_HEADER );
 
-        log_STATUS( response );
+        let modules = [ server
+            ,           server_header
+            ,           server_log
+            ,           server_network
+            ,           server_notes
+            ,           server_qtext
+        ];
+
+        log_STATUS(response, https_server, http__server, modules);
 
 //log_X("response.request_count["+response.request_count+"] reply_server_STATUS"+TRACE_CLOSE)
         response.end();
@@ -1143,8 +1030,18 @@ log_N("  ┌───────┐\n"
 
 
 
-return { name: "server", config , createServer }; /*{{{*/
-
-/*}}}*/
+return { name: "server"
+    ,    config
+    ,    createServer
+};
 })();
-server.createServer();
+try {
+    module.exports = server;
+    server.createServer();
+} catch(ex) {
+    console.log(ex.message);
+    console.trace();
+}
+/*
+:grep -l get_https_server
+*/

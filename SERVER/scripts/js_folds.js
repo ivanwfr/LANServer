@@ -1,14 +1,28 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260928:02h:09) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:21h:52) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
 //└────────────────────────────────────────────────────────────────────────────┘
-/* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true {{{*/
+/* IMPORT {{{*/
 
 /* globals js_log   */
 /* globals js_store */
 /* globals js_xpath */
+
+//port { js_CNTRL   } from "./js_CNTRL.js"
+//port { js_MODEL   } from "./js_MODEL.js"
+//port { js_VIEW    } from "./js_VIEW.js"
+//port { js_folds   } from "./js_folds.js"
+//port { js_input   } from "./js_input.js"
+//port { js_linkify } from "./js_linkify.js"
+import { js_log     } from "./js_log.js"
+//port { js_notes   } from "./js_notes.js"
+import { js_store   } from "./js_store.js"
+//port { js_ticker  } from "./js_ticker.js"
+import { js_xpath   } from "./js_xpath.js"
+//port { notes      } from "./notes.js"
+
 /*}}}*/
 let js_folds = (function() {
 "use strict";
@@ -20,9 +34,9 @@ let tag_this = true;//FIXMEfalse || log_this;
 //└────────────────────────────────────────────────────────────────────────────┘
 // log {{{
 /* eslint-disable no-unused-vars */
-let                               lbB  = js_log.lbB;
-let                               lbX  = js_log.lbX;
-let [lb1,lb2,lb3,lb4,lb5,lb6,lb7,lb8,lb9,lb0] = lbX;
+let                               lbB         = js_log.lbB;
+let                               lbX         = js_log.lbX;
+let [lb1,lb2,lb3,lb4,lb5,lb6,lb7,lb8,lb9,lb0] =  js_log.lbX;
 /* eslint-enable  no-unused-vars */
 //}}}
 
@@ -40,14 +54,6 @@ if(tag_this) console.log("⚫ %c js_folds.onload:", lbB+lb1);
 
     if( initialized ) return; // ...don't run twice
     /**/initialized = true;
-/* eslint-disable no-undef */
-//if(log_this) console.log("… js_folds:");
-//if(log_this) console.log("… js_store   \t● "+ typeof js_store   );
-//if(log_this) console.log("… js_xpath   \t● "+ typeof js_xpath   );
-//if(log_this) console.log("… js_linkify \t● "+ typeof js_linkify );
-//if(log_this) console.log("… js_notes   \t● "+ typeof js_notes   );
-//if(log_this) console.log("… js_notes   \t● "+ typeof js_XXX     );
-/* eslint-enable  no-undef */
 //}}}
 
     setTimeout(details_update_click_listeners,  250);
@@ -512,3 +518,4 @@ return { name : "js_folds"
 /*}}}*/
 }());
 document.addEventListener("DOMContentLoaded", js_folds.onload);
+export { js_folds }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */

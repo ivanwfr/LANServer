@@ -1,9 +1,9 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_MODEL.js      ● $APROJECTS/LANServer/SERVER       ● _TAG (260923:22h:29) │
+//│ js_MODEL.js      ● $APROJECTS/LANServer/SERVER       ● _TAG (260929:21h:49) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //| SKELTON FOR SERVER/scripts/notes.js
 //└────────────────────────────────────────────────────────────────────────────┘
-// eslint {{{
+// IMPORT {{{
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable object-shorthand */
@@ -16,6 +16,19 @@
                         //└─────────────┘
 /* globals    notes  */
 /* globals js_notes  */
+
+//port { js_CNTRL   } from "./js_CNTRL.js"
+//port { js_MODEL   } from "./js_MODEL.js"
+//port { js_VIEW    } from "./js_VIEW.js"
+//port { js_folds   } from "./js_folds.js"
+//port { js_input   } from "./js_input.js"
+//port { js_linkify } from "./js_linkify.js"
+import { js_log     } from "./js_log.js"
+import { js_notes   } from "./js_notes.js"
+//port { js_store   } from "./js_store.js"
+//port { js_ticker  } from "./js_ticker.js"
+//port { js_xpath   } from "./js_xpath.js"
+import { notes      } from "./notes.js"
 
 //}}}
 const js_MODEL   = (function () {
@@ -106,3 +119,4 @@ const js_MODEL   = (function () {
 
 
 })();
+export { js_MODEL }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */

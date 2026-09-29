@@ -112,11 +112,12 @@ min-height          : 8em;
 #saved_notes_TABLE>tbody tr:last-child     { background: linear-gradient(to bottom, #8884 30%, #4444 30%, #222); }
 /*}}}*/
 /* saved_notes_TABLE ● COLUMNS LAYOUT {{{*/
-#saved_notes_TABLE TD:nth-of-type( 1) {     width:  2em; } /* check     */
-#saved_notes_TABLE TD:nth-of-type( 2) {     width:  2em; } /* edit      */
-#saved_notes_TABLE TD:nth-of-type( 3) { max-width: 25em; } /* truncated */
-#saved_notes_TABLE TD:nth-of-type( 4) {     width: 11em; } /* timestamp */
-#saved_notes_TABLE TD:nth-of-type( 5) {     width:  2em; } /* delete    */
+#saved_notes_TABLE TD:nth-of-type( 1) {     width:  2em; } /* note_num  */
+#saved_notes_TABLE TD:nth-of-type( 2) {     width:  2em; } /* check     */
+#saved_notes_TABLE TD:nth-of-type( 3) {     width:  2em; } /* edit      */
+#saved_notes_TABLE TD:nth-of-type( 4) { max-width: 25em; } /* truncated */
+#saved_notes_TABLE TD:nth-of-type( 5) {     width: 11em; } /* timestamp */
+#saved_notes_TABLE TD:nth-of-type( 6) {     width:  2em; } /* delete    */
 
 /*}}}*/
 /* saved_notes_TABLE no_notes_yet {{{*/
@@ -288,6 +289,14 @@ min-height          : 8em;
 .note_row BUTTON::before {
     display         : inline-block;
     padding         : 0;
+}
+
+.note_num  {
+    background-color:           #000;
+    border-radius   :          0.3em;
+    border          : 1px inset #888;
+    padding         :        0 0.5em;
+    text-align      :            end;
 }
 
 .truncated {

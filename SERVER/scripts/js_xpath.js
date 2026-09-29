@@ -1,7 +1,7 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_xpath.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260913:22h:35) │
+//│ js_xpath.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:21h:57) │
 //└────────────────────────────────────────────────────────────────────────────┘
-/* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true {{{*/
+/* IMPORT {{{*/
 
 /*}}}*/
 let js_xpath = (function() { /* eslint-disable-line no-unused-vars */
@@ -104,7 +104,7 @@ let get_sibling_rank = function(node)
     return rank;
  };
 /*}}}*/
-/* EXPORT {{{*/
+/*● return {{{*/
 return {  name : "js_xpath"
     ,            get_nodeXPath
     ,            get_nodeXPath_as_key
@@ -112,3 +112,4 @@ return {  name : "js_xpath"
 };
 /*}}}*/
 })();
+export { js_xpath }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */

@@ -1,13 +1,26 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260925:20h:24) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260929:21h:58) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
+/* IMPORT {{{*/
 
 /* globals js_notes */
 /* globals js_store */
 /* globals js_input */
+
+//port { js_CNTRL   } from "./js_CNTRL.js"
+//port { js_MODEL   } from "./js_MODEL.js"
+//port { js_VIEW    } from "./js_VIEW.js"
+//port { js_folds   } from "./js_folds.js"
+import { js_input   } from "./js_input.js"
+//port { js_linkify } from "./js_linkify.js"
+//port { js_log     } from "./js_log.js"
+import { js_notes   } from "./js_notes.js"
+import { js_store   } from "./js_store.js"
+//port { js_ticker  } from "./js_ticker.js"
+//port { js_xpath   } from "./js_xpath.js"
+//port { notes      } from "./notes.js"
 
 /*}}}*/
 let notes = (function()
@@ -926,3 +939,5 @@ let update_summary = function()
     };
 //}}}
 })();
+export { notes }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . notes = notes; // exposed to inline onclick handlers

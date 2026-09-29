@@ -112,5 +112,4 @@ let log_N = function(arg0, ...rest) { if(tag_this) console.log(  N + arg0, ...re
     };
     //}}}
 })();
-try { module.exports = server_log; } catch(ex) {} /* server.js require */ /* eslint-disable-line no-unused-vars */ /* eslint-disable-line no-empty */
-
+try { module.exports = server_log; } catch(ex) { console.log(ex.message); }

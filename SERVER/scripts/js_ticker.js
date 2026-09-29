@@ -1,10 +1,23 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_ticker.js    ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:21h:59) │
+//│ js_ticker.js    ● $APROJECTS/LANServer/SERVER       ● _TAG (260929:21h:57) │
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
+/* IMPORT {{{*/
 
 /* globals  js_log */
 /* exported js_ticker */
+
+//port { js_CNTRL   } from "./js_CNTRL.js"
+//port { js_MODEL   } from "./js_MODEL.js"
+//port { js_VIEW    } from "./js_VIEW.js"
+//port { js_folds   } from "./js_folds.js"
+//port { js_input   } from "./js_input.js"
+//port { js_linkify } from "./js_linkify.js"
+import { js_log     } from "./js_log.js"
+//port { js_notes   } from "./js_notes.js"
+//port { js_store   } from "./js_store.js"
+//port { js_ticker  } from "./js_ticker.js"
+//port { js_xpath   } from "./js_xpath.js"
+//port { notes      } from "./notes.js"
 
 /*}}}*/
 let js_ticker = (() => {
@@ -31,9 +44,9 @@ let js_ticker = (() => {
     let b_X                                        = js_log.b_X;
     let lbX                                        = js_log.lbX;
     let lfX                                        = js_log.lfX;
-    let [b_0,b_1,b_2,b_3,b_4,b_5,b_6 ,b_7,b_8,b_9] =        b_X;
-    let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] =        lbX;
-    let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] =        lfX;
+    let [b_0,b_1,b_2,b_3,b_4,b_5,b_6 ,b_7,b_8,b_9] = js_log.b_X;
+    let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
+    let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
 
     /* eslint-enable  no-unused-vars */
     //}}}
@@ -213,8 +226,6 @@ if(is_logging()) console.log(b_4 +`loop @ ${new Date().toISOString()} [${interva
         ,    start
     };
 })();
-globalThis.js_ticker = js_ticker;
-
 // Devtools snippets {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ●  js_log.toggle(true)
@@ -232,3 +243,5 @@ globalThis.js_ticker = js_ticker;
 //│ ● js_ticker.stop();
 //└────────────────────────────────────────────────────────────────────────────┘
 //}}}
+//globalThis.js_ticker = js_ticker;
+export { js_ticker }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */

@@ -1,7 +1,7 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:20h:24) │
+//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260929:21h:53) │
 //├────────────────────────────────────────────────────────────────────────────┤
-/*{{{*/
+/* IMPORT {{{*/
 
 /* globals  js_store  */
 /* globals  js_notes  */
@@ -10,12 +10,24 @@
 
 /* exported js_input  */
 
+//port { js_CNTRL   } from "./js_CNTRL.js"
+//port { js_MODEL   } from "./js_MODEL.js"
+//port { js_VIEW    } from "./js_VIEW.js"
+//port { js_folds   } from "./js_folds.js"
+//port { js_input   } from "./js_input.js"
+//port { js_linkify } from "./js_linkify.js"
+//port { js_log     } from "./js_log.js"
+import { js_notes   } from "./js_notes.js"
+import { js_store   } from "./js_store.js"
+import { js_ticker  } from "./js_ticker.js"
+//port { js_xpath   } from "./js_xpath.js"
+import { notes      } from "./notes.js"
+
 /*}}}*/
-let js_input = (function() //{{{
+let js_input = (function()
 {
 let log_this = false;
 let tag_this = false || log_this;
-
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 GUI (js_notes)  GUI LEAK ● DATA ➔ VIEW                               🖥 │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -141,6 +153,8 @@ if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""))
     js_ticker.changeInterval( js_notes.AUTO_SAVE_IDLE_INTERVAL_MS );
 };
 /*}}}*/
+let get_input_storage_key = function() { return "input__"+ js_store.get_page_storage_key(); };
+let get_id_wh_storage_key = function() { return "id_wh__"+ js_store.get_page_storage_key(); };
 /*  input_save {{{*/
 let input_save = function(_caller)
 {
@@ -302,11 +316,7 @@ if(log_this) console.log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x 
     //note_DETAILS.open = true; // let load_details_open_state do this
 };
 /*}}}*/
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ PUBLIC
-    //└────────────────────────────────────────────────────────────────────────┘
-//{{{
+// return {{{
 return { add_notes_GUI
 
     //┌────────────────────────────────────────────────────────────────────────────┐
@@ -349,42 +359,11 @@ return { add_notes_GUI
 };
 //}}}
 })();
-/*}}}*/
-//└────────────────────────────────────────────────────────────────────────────┘
-
-let get_input_storage_key = function() { return "input__"+ js_store.get_page_storage_key(); };
-let get_id_wh_storage_key = function() { return "id_wh__"+ js_store.get_page_storage_key(); };
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ INPUT EVENTS                                                              🔴
-//├────────────────────────────────────────────────────────────────────────────┤
-//" Usage example {{{
-
-//    //┌────────────────────────────────────────────────────────────────────────┐
-//    //│ Initialize listener
-//    //└────────────────────────────────────────────────────────────────────────┘
-//    let unsubscribe = js_input_IO.on(input, (e) => {
-//      console.log(`Value changed: "${e.detail.oldValue}" → "${e.detail.newValue}"`);
-//    });
-
-//    //┌────────────────────────────────────────────────────────────────────────┐
-//    //│ Change via code (Triggers listener)
-//    //└────────────────────────────────────────────────────────────────────────┘
-//    js_input_IO.value = "Hello World";
-
-//    //┌────────────────────────────────────────────────────────────────────────┐
-//    //│ User types in the box (Triggers listener)
-//    //│ User types "Test" -> Listener fires: "Hello World" -> "Hello WorldTest"
-//    //└────────────────────────────────────────────────────────────────────────┘
-
-//    //┌────────────────────────────────────────────────────────────────────────┐
-//    //│ Stop listening
-//    //└────────────────────────────────────────────────────────────────────────┘
-//    unsubscribe();
-
-//    "}}}
-//├────────────────────────────────────────────────────────────────────────────┤
-let js_input_IO = (function() //{{{
+//└────────────────────────────────────────────────────────────────────────────┘
+let js_input_IO = (function()
 {
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ [textarea] gets initialized inside [on] subscription
@@ -486,7 +465,30 @@ return {
 };
 //}}}
 })();
-//}}}
-//└────────────────────────────────────────────────────────────────────────────┘
+//" Usage example {{{
 
-globalThis.js_input = js_input;
+//    //┌────────────────────────────────────────────────────────────────────────┐
+//    //│ Initialize listener
+//    //└────────────────────────────────────────────────────────────────────────┘
+//    let unsubscribe = js_input_IO.on(input, (e) => {
+//      console.log(`Value changed: "${e.detail.oldValue}" → "${e.detail.newValue}"`);
+//    });
+
+//    //┌────────────────────────────────────────────────────────────────────────┐
+//    //│ Change via code (Triggers listener)
+//    //└────────────────────────────────────────────────────────────────────────┘
+//    js_input_IO.value = "Hello World";
+
+//    //┌────────────────────────────────────────────────────────────────────────┐
+//    //│ User types in the box (Triggers listener)
+//    //│ User types "Test" -> Listener fires: "Hello World" -> "Hello WorldTest"
+//    //└────────────────────────────────────────────────────────────────────────┘
+
+//    //┌────────────────────────────────────────────────────────────────────────┐
+//    //│ Stop listening
+//    //└────────────────────────────────────────────────────────────────────────┘
+//    unsubscribe();
+
+//    "}}}
+//globalThis.js_input = js_input;
+export { js_input }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */

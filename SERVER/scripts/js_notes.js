@@ -1,27 +1,41 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260927:16h:08) │
+//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260929:22h:23) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
+/* IMPORT {{{*/
 
 // globals js_VIEW   */ // STUB FOR MVC VIEW
 /* globals notes     */
 /* globals js_input  */
 /* globals js_ticker */
 
+//port { js_CNTRL   } from "./js_CNTRL.js"
+//port { js_MODEL   } from "./js_MODEL.js"
+//port { js_VIEW    } from "./js_VIEW.js"
+//port { js_folds   } from "./js_folds.js"
+import { js_input   } from "./js_input.js"
+//port { js_linkify } from "./js_linkify.js"
+//port { js_log     } from "./js_log.js"
+//port { js_notes   } from "./js_notes.js"
+//port { js_store   } from "./js_store.js"
+import { js_ticker  } from "./js_ticker.js"
+//port { js_xpath   } from "./js_xpath.js"
+import { notes      } from "./notes.js"
+
 /*}}}*/
 let js_notes    = (function()
 {
+"use strict";
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ js_notes ● DATA ● LOAD ● LOCAL STORAGE ● NOTE TABLE ● STATUS LINE         🟤
 //└────────────────────────────────────────────────────────────────────────────┘
-//{{{
+// DATA LOAD TABLE STATUS UTIL {{{
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ js_notes ● DATA ● SERVER/style/notes.css ● SERVER/style/qtext.css         ●
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
+/* log BUTTONS NOTE_DETAILS_HTML BULLETS AUTO-SAVE-INTERVALS {{{*/
 let log_this = false;
 let tag_this = false || log_this;
 
@@ -48,10 +62,10 @@ const NOTE_DETAILS_HTML   = `
     <button   id="wide_button"         onclick='js_notes.wider                (event);'></button>
     <br>
     <textarea id="note_input_TEXTAREA" placeholder="${notes.PLACEHOLDER_CREATE_PROMPT}"></textarea>
-    <button   id="save_note_BUTTON"        XXclick='   notes.note_1_onclick_save  (event)'                               >Save Note</button>
-    <button   id="wasted_note_BUTTON"      onclick='   notes.note_7_onclick_wasted(event)' title='${BUTTON_WASTED_TITLE}'>${BUTTON_WASTED_NAME}</button>
-    <button       class="cb_BUTTON"        onclick='   notes.note_3_onclick_export(event)' title='${BUTTON_EXPORT_TITLE}'>${BUTTON_EXPORT_NAME}</button>
-    <button       class="cb_BUTTON"        onclick='   notes.note_2_onclick_import(event)' title='${BUTTON_IMPORT_TITLE}'>${BUTTON_IMPORT_NAME}</button>
+    <button   id="save_note_BUTTON"        XXclick='  notes.note_1_onclick_save  (event)'                               >Save Note</button>
+    <button   id="wasted_note_BUTTON"      onclick='  notes.note_7_onclick_wasted(event)' title='${BUTTON_WASTED_TITLE}'>${BUTTON_WASTED_NAME}</button>
+    <button       class="cb_BUTTON"        onclick='  notes.note_3_onclick_export(event)' title='${BUTTON_EXPORT_TITLE}'>${BUTTON_EXPORT_NAME}</button>
+    <button       class="cb_BUTTON"        onclick='  notes.note_2_onclick_import(event)' title='${BUTTON_IMPORT_TITLE}'>${BUTTON_IMPORT_NAME}</button>
     <DIV      id="saved_notes_DIV">
      <TABLE   id="saved_notes_TABLE"></TABLE>
     </DIV>
@@ -162,7 +176,6 @@ if(tag_this) console.log("onload");
     js_input.layout_load();
 
     //}}}
-//  js_VIEW.init();
 };
 /*}}}*/
 
@@ -300,7 +313,7 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
         nArray = [];
     }
     /*}}}*/
-    /* 2. POPULATE OR CLEAR [note_row] {{{*/
+    /* 2. POPULATE OR CLEAR [note_row] ● @see SERVER/style/notes.css {{{*/
     let innerHTML = nArray.length
         ? nArray.map((n, i) => ""
 + "<!--🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯-->"
@@ -309,15 +322,16 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
 +                            " data-content='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
 +                            " data-id='"     + i                                                           +"'"
 +  "                                                      XXXlick='js_notes.note_5_onclick_edit  (event, "+i+")'>"
++  "<TD><div    class='note_num' >"+                      (i+1)                                                +"</div>   </TD>"
 +  "<TD><button class='check_button'  title='Check note'  onclick='   notes.note_4_onclick_check (event, "+i+")'></button></TD>"
 +  "<TD><button class='edit_button'   title='Edit note'                                                         ></button></TD>"
-+  "<TD><div    class='truncated'>"+            escapeHTML(n.text)                                          +"</div>   </TD>"
++  "<TD><div    class='truncated'>"+            escapeHTML(n.text)                                             +"</div>   </TD>"
 +  "<TD><small  class='timestamp'                         onclick='event.cancelBubble = true;'>"+ new Date(n.timestamp).toLocaleString() +"</small></TD>"
 +  "<TD><button class='delete_button' title='Delete note' XXclick='   notes.note_6_onclick_delete(event, "+i+")'></button></TD>"
 + "</TR>"
 ).join("")
 
-        : "<TR><TD class='no_notes_yet_TD' colspan='5'>No notes yet</TD></TR";
+        : "<TR><TD class='no_notes_yet_TD' colspan='6'>No notes yet</TD></TR";
 
     saved_notes_TABLE.innerHTML =            "<TABLE id='saved_notes_TABLE'>"+ innerHTML +"</TABLE>";
     /*}}}*/
@@ -338,7 +352,7 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ js_notes ● STATUS LINE                                                    ●
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
+/* SHOW TAIL TUNE TICS {{{*/
 /*_ show_status {{{*/
 let show_status = function(msg)
 {
@@ -406,7 +420,7 @@ let tics_status = function( count )
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ js_notes ● UTIL                                                           ●
 //└────────────────────────────────────────────────────────────────────────────┘
-//{{{
+// CLIPBOARD ESCAPE {{{
 /* ● copy_to_clipboard {{{*/
 let copy_to_clipboard = function(buffer)
 {
@@ -493,7 +507,7 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
 //│ ● USER INPUT      ➔ input_listener [sync on first user input input empty]
 //│ ● js_notes.onload ➔ setInterval-AUTO_SAVE_IDLE_INTERVAL_MS
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
+/* auto ● same ● unchanged ● editing_note_index {{{*/
 /*_ save_note_auto {{{*/
 let save_note_auto = function(e={})
 {
@@ -745,7 +759,7 @@ let get_input_auto_insert_prefix = function()
 };
 /*}}}*/
 
-//{{{
+// return {{{
     return { name: "js_notes"
         ,    onload
         ,    AUTO_SAVE_IDLE_INTERVAL_MS
@@ -787,3 +801,5 @@ let get_input_auto_insert_prefix = function()
 //}}}
 })();
 document.addEventListener("DOMContentLoaded", js_notes.onload);
+export { js_notes }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_notes = js_notes; // exposed to inline onclick handlers

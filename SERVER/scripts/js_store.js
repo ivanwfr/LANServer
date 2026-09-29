@@ -1,10 +1,7 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260927:18h:31) │
+//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:21h:56) │
 //└────────────────────────────────────────────────────────────────────────────┘
-/* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true {{{*/
-
-/* eslint-disable no-unused-vars */
-
+/*{{{*/
 /*}}}*/
 let js_store = (function() { /* eslint-disable-line no-unused-vars */
 let log_this = false;
@@ -13,9 +10,13 @@ let log_this = false;
 //│ ● set ● get ● del
 //└────────────────────────────────────────────────────────────────────────────┘
 //{{{
-let setItem = function(key, val) {          try { if(val)  localStorage.setItem   (key,val); else localStorage.removeItem(key); } catch(ex) {} return val; }; /* eslint-disable-line no-empty */
-let getItem = function(key     ) { let val; try {    val = localStorage.getItem   (key    );                                    } catch(ex) {} return val; }; /* eslint-disable-line no-empty */
-let delItem = function(key     ) {          try { /*...*/  localStorage.removeItem(key    );                                    } catch(ex) {}             }; /* eslint-disable-line no-empty */
+/* eslint-disable no-empty       */
+/* eslint-disable no-unused-vars */
+let setItem = function(key, val) {          try { if(val)  localStorage.setItem   (key,val); else localStorage.removeItem(key); } catch(ex) {} return val; };
+let getItem = function(key     ) { let val; try {    val = localStorage.getItem   (key    );                                    } catch(ex) {} return val; };
+let delItem = function(key     ) {          try { /*...*/  localStorage.removeItem(key    );                                    } catch(ex) {}             };
+/* eslint-enable  no-unused-vars */
+/* eslint-enable  no-empty       */
 //}}}
 
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -132,3 +133,4 @@ return {  name : "js_store"
 };
 /*}}}*/
 })();
+export { js_store }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */

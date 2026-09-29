@@ -1,13 +1,13 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_log.js        ● $APROJECTS/LANServer/SERVER      ● _TAG (260928:17h:05) │
+//│ js_log.js        ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:21h:54) │
 //└────────────────────────────────────────────────────────────────────────────┘
-/* jshint {{{*/
+/* IMPORT {{{*/
 
 /* exported js_log   */
 
 /*}}}*/
-globalThis.js_log = (function() {
-
+let js_log = (function() {
+"use strict";
 let log_this = false;
 let tag_this = false || log_this;
 
@@ -182,4 +182,5 @@ let tag_this = false || log_this;
         ,    lbB         // BIG
     };
     //}}}
-}());
+})();
+export { js_log }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */

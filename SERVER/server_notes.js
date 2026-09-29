@@ -279,4 +279,4 @@ return { name: "server_notes"
     };
 })();
 /*}}}*/
-try { module.exports = server_notes; } catch(ex) {} /* server.js require */ /* eslint-disable-line no-unused-vars */ /* eslint-disable-line no-empty */
+try { module.exports = server_notes; } catch(ex) { console.log(ex.message); }

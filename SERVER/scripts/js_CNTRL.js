@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER    ● _TAG (260923:22h:50) │
+//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER    ● _TAG (260929:21h:49) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //{{{
 //│ Here is a minimal, clutter-free implementation of
@@ -10,7 +10,7 @@
 //│ and optional async side-effects (like calls to `js_MODEL` or `GUI`)
 //}}}
 //└────────────────────────────────────────────────────────────────────────────┘
-// eslint {{{
+// IMPORT {{{
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable object-shorthand */
@@ -19,9 +19,22 @@
 /* globals  js_log  */
                         //┌─────────────┐
 /* globals  js_MODEL */ //│ - Model     │
-/*          js_VIEW  */ //│ - View      │
+/*     r    js_VIEW  */ //│ - View      │
 /* exported js_CNTRL */ //│ ● Controler │
                         //└─────────────┘
+
+//port { js_CNTRL   } from "./js_CNTRL.js"
+import { js_MODEL   } from "./js_MODEL.js"
+//port { js_VIEW    } from "./js_VIEW.js"
+//port { js_folds   } from "./js_folds.js"
+//port { js_input   } from "./js_input.js"
+//port { js_linkify } from "./js_linkify.js"
+import { js_log     } from "./js_log.js"
+//port { js_notes   } from "./js_notes.js"
+//port { js_store   } from "./js_store.js"
+//port { js_ticker  } from "./js_ticker.js"
+//port { js_xpath   } from "./js_xpath.js"
+//port { notes      } from "./notes.js"
 
 //}}}
 const js_CNTRL     = (function () {
@@ -332,3 +345,4 @@ const js_CNTRL     = (function () {
 //}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 
+export { js_CNTRL }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */

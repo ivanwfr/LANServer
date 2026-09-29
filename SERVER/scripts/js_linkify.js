@@ -1,12 +1,25 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260925:03h:08) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260929:21h:54) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
 //└────────────────────────────────────────────────────────────────────────────┘
-/* jshint esversion: 9, laxbreak:true, laxcomma:true, boss:true */ /*{{{*/
+/* IMPORT {{{*/
 
 /* global js_folds */
+
+//port { js_CNTRL   } from "./js_CNTRL.js"
+//port { js_MODEL   } from "./js_MODEL.js"
+//port { js_VIEW    } from "./js_VIEW.js"
+import { js_folds   } from "./js_folds.js"
+//port { js_input   } from "./js_input.js"
+//port { js_linkify } from "./js_linkify.js"
+//port { js_log     } from "./js_log.js"
+//port { js_notes   } from "./js_notes.js"
+//port { js_store   } from "./js_store.js"
+//port { js_ticker  } from "./js_ticker.js"
+//port { js_xpath   } from "./js_xpath.js"
+//port { notes      } from "./notes.js"
 
 /*}}}*/
 let js_linkify  = (function() {
@@ -127,7 +140,7 @@ let format_summary_comments = function()
 
                 + "<em class='cb_copy'"
                 + "   style = 'float:right; opacity:0.5; margin-left: 2em;'"
-                + " onclick = 'js_linkify.copy_summary_text(event); return false;'" // i.e. cancelBubble
+                + " onclick = 'js_linkify.copy_container_text(event); return false;'" // i.e. cancelBubble
                 + ">⬜</em>"
                 + "&nbsp;"
 
@@ -181,30 +194,27 @@ let toggle_wrap = function(e)
     e.preventDefault          ();
 };
 /*}}}*/
-/*➔ copy_summary_text {{{*/
+/*➔ copy_container_text {{{*/
 /*{{{*/
 let note_input_TEXTAREA;
 /*}}}*/
-let copy_summary_text = function(e)
+let copy_container_text = function(e)
 {
     e.cancelBubble = true;
-    // SUMMARY
-/*{{{
-    let text
-        = e.target.parentElement
-        .   childNodes[0].textContent
-        .   substr(1).trim();  // skip button name
-}}}*/
-    let summary = e.target.closest("SUMMARY");
-    let details = summary.parentElement;
+
+    // COPY-SOURCE
+    let details = e.target.closest("DETAILS");
+    let pre     = details.querySelector(":scope > PRE");
+
+    // COPY-DESTINATION
     if(!note_input_TEXTAREA)  note_input_TEXTAREA = document.querySelector("#note_input_TEXTAREA");
 
-    // TEXT SOURCE
+    // SOURCE-TEXT
     let text
         =  (details.id == "note_DETAILS")
         &&  note_input_TEXTAREA
-        ?   note_input_TEXTAREA.value   // [NOTE    TEXT TO CLIPBOARD]
-        :   summary.textContent;        // [SUMMARY TEXT TO CLIPBOARD]
+        ?   note_input_TEXTAREA.value   // [NOTE TEXT TO CLIPBOARD]
+        :   pre    .textContent;        // [PRE  TEXT TO CLIPBOARD]
 
     // COPY TO RELEVANT TEXT AREA
     let ta = note_input_TEXTAREA || details.querySelector("TEXTAREA");
@@ -312,19 +322,21 @@ let linkify_file_pathes = function()
 /*➔ fold_open_012 {{{*/
 let fold_open_012 = function(e,state)
 {
-    let   container = e.target;
-
-    if(  !container )   container =           document;
-    while(container && (container.tagName !=  "DETAILS")) container = container.parentElement;
-    if(  !container || (container.tagName !=  "DETAILS")) return false; // may bubble up
+//{{{
+//  let   details = e.target;
+//    if(  !details )   details =           document;
+//    while(details && (details.tagName !=  "DETAILS")) details = details.parentElement;
+//    if(  !details || (details.tagName !=  "DETAILS")) return false; // may bubble up
+//}}}
+    let details = e.target.closest("DETAILS");
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PREVENT CLOSING DETAILS                                                │
     //└────────────────────────────────────────────────────────────────────────┘
     js_folds.set_shiftLatched(  true );
 
-    container.open = true;
-    let el_array = container.querySelectorAll("DETAILS");
+    details.open = true;
+    let el_array = details.querySelectorAll("DETAILS");
     let    count = 0;
     for(let el of el_array)
     {
@@ -348,127 +360,16 @@ let fold_open_012 = function(e,state)
     return count;
 };
 /*}}}*/
-// js_xpath {{{
-let js_xpath  = (function() {
-/*➔ get_nodeXPath {{{*/
-let get_nodeXPath = function(node)
-{
-    if(node instanceof Document) return "/";
-
-    let  node_type_pos_array;
-    for( node_type_pos_array = []
-    ;    node && !(node instanceof Document)
-    ;    node =   (node.nodeType == Node.ATTRIBUTE_NODE)
-              ?    node.ownerElement
-              :    node.parentNode
-    ) {
-        let node_type_pos = {};
-
-        /* TYPE */
-        switch( node.nodeType ) {
-            case Node.TEXT_NODE                   : node_type_pos.name =                   "text()" ; break;
-            case Node.ATTRIBUTE_NODE              : node_type_pos.name =       "@" + node.nodeName  ; break;
-            case Node.PROCESSING_INSTRUCTION_NODE : node_type_pos.name = "processing-instruction()" ; break;
-            case Node.COMMENT_NODE                : node_type_pos.name =                "comment()" ; break;
-            case Node.ELEMENT_NODE                : node_type_pos.name =             node.nodeName  ; break;
-        }
-
-        /* POS */
-        node_type_pos.position = get_sibling_rank( node );
-
-        node_type_pos_array.push( node_type_pos );
-    }
-
-    let nodeXPath = "";
-    for(let i=node_type_pos_array.length-1; i >= 0; i -= 1)
-    {
-        let node_type_pos   = node_type_pos_array[i];
-        nodeXPath += node_type_pos.name ? ("/"+node_type_pos.name) : ".";
-        if((node_type_pos.position != null) && (node_type_pos.position != "1"))
-            nodeXPath += "["+ node_type_pos.position+"]";
-    }
-
-    return nodeXPath.toLowerCase();
-};
-/*}}}*/
-/*➔ get_nodeXPath_target {{{*/
-let get_nodeXPath_target = function(nodeXPath)
-{
-    let first_node;
-    try {
-
-        let evaluator  = new XPathEvaluator();
-        let expression = evaluator.createExpression(nodeXPath);
-
-        let result     = expression.evaluate(document, XPathResult.ORDERED_NODE_ITERATOR_TYPE);
-
-        let node;
-        while(node = result.iterateNext())
-        {
-            if(!first_node)
-                first_node = node;
-        }
-
-    }
-    catch(ex) {
-        console.log(ex);
-    }
-    return first_node;
-};
-/*}}}*/
-/*_ get_sibling_rank ● siblings of same type (i.e. DIV, DETAILS, ...) {{{*/
-let get_sibling_rank = function(node)
-{
-    if(node.nodeType == Node.ATTRIBUTE_NODE) return null;
-
-    let rank = 1;
-    for(let prev_node =      node.previousElementSibling
-    ;       prev_node
-    ;       prev_node = prev_node.previousElementSibling
-    ) {
-        if(prev_node.nodeName == node.nodeName)
-            rank += 1;
-    }
-    return rank;
- };
-/*}}}*/
-/*_ get_parent_rank ● parent of same type (i.e. DIV, DETAILS, ...) {{{*/
-let get_parent_rank = function(parent,node)
-{
-    if(node.nodeType == Node.ATTRIBUTE_NODE) return null;
-
-    let rank = 0;
-    for(let prev_node =        node.parentElement
-    ;       prev_node && (prev_node != parent)
-    ;       prev_node =   prev_node.parentElement
-    ) {
-        if(prev_node.nodeName == node.nodeName)
-            rank += 1;
-    }
-    return rank;
- };
-/*}}}*/
-//{{{
-return { get_nodeXPath
-    ,    get_nodeXPath_target
-    ,    get_sibling_rank
-    ,    get_parent_rank
-};
-
-/*}}}*/
-})();
-//}}}
 
 // PUBLIC {{{
     return { onload
-        ,    copy_summary_text
-        ,    fold_open_012
-        ,    toggle_wrap    // onclick
-        // DEBUG
-        , js_xpath
+        ,    copy_container_text    // exposed to onclick
+        ,    fold_open_012          // exposed to onclick
+        ,    toggle_wrap            // exposed to onclick
     };
 
 /*}}}*/
 })();
-
 document.addEventListener("DOMContentLoaded", js_linkify.onload);
+export { js_linkify }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_linkify = js_linkify; // exposed to onclick

@@ -1,15 +1,7 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER       ● _TAG (260923:22h:26) │
-//├────────────────────────────────────────────────────────────────────────────┤
-//{{{
-//│ Here is how `js_VIEW.js` can be structured
-//│ using a clean IIFE pattern:
-//│
-//│ to wire up the event listeners to  `js_CNTRL.transition()`
-//│ and handle reactive UI updates via `js_CNTRL.subscribe ()
-//}}}
+//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:21h:49) │
 //└────────────────────────────────────────────────────────────────────────────┘
-// eslint {{{
+// IMPORT {{{
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable object-shorthand */
@@ -22,7 +14,28 @@
                         //└─────────────┘
 /* globals    notes  */
 /* globals js_notes  */
+/* globals js_input  */
 
+import { js_CNTRL   } from "./js_CNTRL.js"
+import { js_MODEL   } from "./js_MODEL.js"
+//port { js_VIEW    } from "./js_VIEW.js"
+//port { js_folds   } from "./js_folds.js"
+import { js_input   } from "./js_input.js"
+//port { js_linkify } from "./js_linkify.js"
+import { js_log     } from "./js_log.js"
+import { js_notes   } from "./js_notes.js"
+//port { js_store   } from "./js_store.js"
+//port { js_ticker  } from "./js_ticker.js"
+//port { js_xpath   } from "./js_xpath.js"
+//port { notes      } from "./notes.js"
+
+//}}}
+//{{{
+//│ Here is how `js_VIEW.js` can be structured
+//│ using a clean IIFE pattern:
+//│
+//│ to wire up the event listeners to  `js_CNTRL.transition()`
+//│ and handle reactive UI updates via `js_CNTRL.subscribe ()
 //}}}
 const js_VIEW    = (function () {
 
@@ -245,3 +258,4 @@ document.addEventListener("readystatechange", js_VIEW.init);
 //│ into the state machine transitions?
 //│}}}
 //└────────────────────────────────────────────────────────────────────────────┘
+export { js_VIEW }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
