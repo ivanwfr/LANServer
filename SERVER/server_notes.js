@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server_notes     ● $APROJECTS/LANServer/SERVER      ● _TAG (260928:21h:54) │
+//│ server_notes     ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:01h:07) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 // eslint-disable no-warning-comments */
@@ -80,9 +80,9 @@ let handle_request = function(request, response, body) // eslint-disable-line co
 {
 /*{{{*/
 let caller = "handle_request";
-log_C(caller+"("+request.url+")");
+if(is_logging()) log_X(C+caller+"("+request.url+")");
 /*}}}*/
-    /* NOTES    ● [upload_notes] ● [fetch_notes] {{{*/
+    /* upload_notes {{{*/
     let    consumed_by;
     if(   !consumed_by
        && (request.url    == "/upload_notes")
@@ -90,7 +90,8 @@ log_C(caller+"("+request.url+")");
     ) {
         consumed_by = handle_upload(request, response, body);
     }
-
+    /*}}}*/
+    /* fetch_notes {{{*/
     if(   !consumed_by
        &&  request.url.includes("/fetch_notes")
        && (request.method == "GET")
@@ -99,7 +100,7 @@ log_C(caller+"("+request.url+")");
 if(is_logging()) log_X(C+"consumed_by returned by handle_fetch=["+consumed_by+"]");
     }
     /*}}}*/
-    /* log      ● why_not_handled {{{*/
+    /* why_not_handled {{{*/
     if(!consumed_by)
     {
         let args
@@ -150,26 +151,23 @@ log_C(recap);
         /*}}}*/
     }
     /*}}}*/
-log_Y("consumed_by=["+consumed_by+"]");
+if(is_logging()) log_Y("handle_request: consumed_by=["+consumed_by+"]");
 };
 /*}}}*/
-/*_ handle_fetch {{{*/
+/*_ handle_fetch {{ {*/
 let handle_fetch = function(request, response)
 {
 /*{{{*/
 let caller = "handle_fetch";
-log_C(caller+"("+request.url+")");
+if(is_logging()) log_C(caller+"("+request.url+")");
 /*}}}*/
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ● from load_notes                                                      │
-    //│ ● in   SERVER/scripts/js_notes.js                                      │
-    //│ ● TODO: ADD URL_KEY FIELD FOR PER-PAGE NOTES_FILE NAMES                │
-    //└────────────────────────────────────────────────────────────────────────┘
+    /* notes_file {{{*/
     let notes_storage_key = request.url.replace(/.*=/,"");
     let notes_file        = get_notes_file_path( notes_storage_key );
-if(is_logging()) log_X("...notes_file=["+notes_file+"]");
 
+if(is_logging()) log_X("...notes_file=["+notes_file+"]");
+    /*}}}*/
+    /* READ FILE {{{*/
     let data;
     let consumed_by;
     try {
@@ -182,6 +180,8 @@ if(is_logging()) log_X("...notes_file=["+notes_file+"]");
 
         consumed_by = "notes_fetched("+ data.length +" bytes) ● "+ new Date( Date.now() ).toLocaleString();
     }
+    /*}}}*/
+    // err {{{
     catch( err )
     {
         consumed_by = err.message;
@@ -190,71 +190,56 @@ if(is_logging()) log_X("...notes_file=["+notes_file+"]");
       //response.end( "["+err.message+"]" );    // NO FILE ...so that Array.isArray(data) ● should fail in load_notes
         response.end( "[]" );
     }
-
-if(is_logging()) log_X(G+"..."+caller+": consumed_by=["+ consumed_by +"]");
-
+    //}}}
     return consumed_by;
 };
-/*}}}*/
-/*_ handle_upload {{{*/
+/*}} }*/
+/*_ handle_upload {{ {*/
 let handle_upload = function(request, response, body)
 {
 /*{{{*/
-let caller = "handle_upload";
+let caller = "handle_upload("+request.url+": body.length=["+body.length+"])";
+if(is_logging()) log_X(M+caller);
+    let    consumed_by;
 /*}}}*/
-if(is_logging()) log_X(Y+"handle_upload ● body:\n"+body);
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ● from upload_notes_to_server                                          │
-    //│ ● in   SERVER/scripts/js_build.js                                      │
-    //│ ● TODO: ADD URL_KEY FIELD FOR PER-PAGE NOTES_FILE NAMES                │
-    //└────────────────────────────────────────────────────────────────────────┘
-    try {
-        // parse notes.nArray {{{
-        let { notes_storage_key, nArray } = JSON.parse( body );
-        let notes_file = get_notes_file_path( notes_storage_key );
+    /* notes_file ● Parse and overwrite notes */
+    let { notes_storage_key, nArray } = JSON.parse( body );
 
+    let   notes_file                  = get_notes_file_path( notes_storage_key );
+
+// log {{{
 if(is_logging()) {
-  log_X(Y+"handle_upload");
-  log_X(B+"notes_file=["+notes_file+"]");
-  log_X(Y+"→ nArray:");
-  console.dir(     nArray );
+log_X(B+"notes_storage_key.\t["+ notes_storage_key +"]");
+log_X(B+"→ notes_file......\t["+ notes_file        +"]");
+log_X(Y+"→ nArray.length...\t["+ nArray.length     +"]");
 }
-        //}}}
-        // Overwrite notes — (propagate deletion) {{{
+//}}}
+    /*}}}*/
+    /* WRITE FILE {{{*/
+    try {
         let notes = nArray;
 
-        //}}}
-        // update notes_file as UTF-8 encoded content {{{
-        fs.writeFile(notes_file, JSON.stringify(notes, null, 2), "utf-8", (err) => {
-            // error {{{
-            if( err ) {
-                writeHead(response, caller+"("+err+")", 500, { "Content-Type": "application/json; charset=UTF-8" });
+        fs.writeFileSync(notes_file, JSON.stringify(notes, null, 2), "utf-8");
+        consumed_by = "notes_updated("+ Object.keys(nArray).length +" nArray) ● "+ new Date( Date.now() ).toLocaleString();
 
-                response.end(JSON.stringify({ status: "error", message: err.message }));
-console.warn("handle_upload: error "+ err.message);
-                return;
-            }
-            //}}}
-            // response {{{
-            writeHead(response, caller, 200, { "Content-Type": "application/json; charset=UTF-8" });
-
-            response.end(JSON.stringify({ status: "ok", notes_updated: Object.keys(nArray).length }));
-if(is_logging()) log_X ("handle_upload: notes_updated"      +" ("+ Object.keys(nArray).length +" nArray) ● "+ new Date( Date.now() ).toLocaleString());
-            //}}}
-        });
-        //}}}
+        writeHead(response, caller, 200, { "Content-Type": "application/json; charset=UTF-8" });
+        response.end(JSON.stringify({ status: "ok", notes_updated: Object.keys(nArray).length }));
+        /*}}}*/
     }
-        // exception {{{
-        catch( ex ) {
-            writeHead(response, caller+"("+ex+")", 400, { "Content-Type": "application/json; charset=UTF-8" });
-
-            response.end(JSON.stringify({ status: "error", message: "Invalid JSON format" }));
-            console.dir(ex);
-        }
-        //}}}
-    let    consumed_by = request.url;
+    /*}}}*/
+    // catch error {{{
+    catch( err ) {
+        consumed_by = caller +": error "+ err.message;
+//{{{
+        log_R(consumed_by);
+if(is_logging()) console.dir(err);
+//}}}
+        writeHead(response, caller+"("+err+")", 400, { "Content-Type": "application/json; charset=UTF-8" });
+        response.end(JSON.stringify({ status: "error", message: "Invalid JSON format" }));
+    }
+    //}}}
     return consumed_by;
-};
+ };
 /*}}}*/
 /*_ get_notes_file_path {{{*/
 let get_notes_file_path = function( notes_storage_key )
