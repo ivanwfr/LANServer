@@ -1,13 +1,15 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ ● SERVER/style/notes.css  ● $APROJECTS/LANServer  ● _TAG (260925:00h:23) │*/
+/*│ ● SERVER/style/notes.css  ● $APROJECTS/LANServer  ● _TAG (261001:00h:56) │*/
 /*│ ● SERVER/style/qtext.css                                                 │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
+/* margin ● DETAILS SUMMARY TABLE {{{*/
 #note_DETAILS:open    { background: initial; }
 #note_DETAILS:open    { cursor    :    auto; }
 #note_DETAILS:open    { margin    : initial; }
 #note_DETAILS SUMMARY { margin    : initial; }
 #note_DETAILS TABLE   { margin    : initial; }
-
+/*}}}*/
+/* STATE MACHINE {{{*/
 #smTracer {
     position        : sticky;
     display         : inline-block;
@@ -32,14 +34,16 @@
 }
 }}}*/
 
+/* LOADING READY INPUT UPDATE {{{*/
 #smTracer         SPAN                 { margin: 0.5em; }
 #smTracer         SPAN                 {  color: #404040F0; }
 #smTracer.LOADING SPAN.LOADING         {  color: #964B00F0; }
 #smTracer.READY     SPAN.READY         {  color: #FF0000F0; }
 #smTracer.INPUT     SPAN.INPUT         {  color: #FFA500F0; }
 #smTracer.UPDATE   SPAN.UPDATE         {  color: #FFFF00F0; }
+/*}}}*/
 
-/*{{{
+/* visibility {{{
 #smTracer                 SPAN         { color  : #FF05;                            }
 #smTracer                 SPAN::before { display: inline-block; translate : 100% 0; }
 
@@ -56,7 +60,7 @@
 
 /* ✈ ⚙ 🧍 */
 
-/*{{{
+/* keyframes {{{
 @keyframes logging_anim {
     0% { translate: 0         0    ; }
    50% { translate: 30em      1em  ; }
@@ -68,7 +72,7 @@
   100% { transform: rotate(-360deg); }
 }
 }}}*/
-
+/*}}}*/
 /* scrollbar {{{*/
 #note_input_TEXTAREA                                { scrollbar-width :       thin; }
 #note_input_TEXTAREA                                { scrollbar-color : #DDD #6666; }
@@ -179,17 +183,22 @@ min-height          : 8em;
     text-align      : center;
 }
 /*}}}*/
+/* cb_BUTTON {{{*/
 .cb_BUTTON { float: right; }
 
+/*}}}*/
+/* disabled hover {{{*/
          .cb_BUTTON:not([disabled]):hover,
 #wasted_note_BUTTON:not([disabled]):hover,
   #save_note_BUTTON:not([disabled]):hover  {
       transform: scale(1.1);
 }
 
+/*}}}*/
+/* BUTTON LAYOUT {{{*/
 .cb_BUTTON,
 #wasted_note_BUTTON,
-#save_note_BUTTON  { /*{{{*/
+#save_note_BUTTON  {
     margin          : 0.5em;
     cursor          : pointer;
     padding         : 6px 12px;
@@ -198,11 +207,15 @@ min-height          : 8em;
     border-radius   : 4px;
     outline-offset  : 4px;
 }
-#save_note_BUTTON  { outline         : 4px groove #800; } /* RED    */ 
-#wasted_note_BUTTON{ outline         : 4px groove #840; } /* ORANGE */
-#wasted_note_BUTTON.clear_deleted_notes{ outline: 4px groove #F80; } /* BRIGHTER */
-.cb_BUTTON         { outline         : 4px groove #00A; } /* BLUE   */ 
-
+/*}}}*/
+/* BUTTON outline {{{*/
+#save_note_BUTTON                       { outline: 4px groove #800; } /* RED      */ 
+#save_note_BUTTON.notes_uploaded        { outline: 4px  solid #040; } /* GREEN    */
+#wasted_note_BUTTON                     { outline: 4px groove #840; } /* ORANGE   */
+#wasted_note_BUTTON.clear_deleted_notes { outline: 4px groove #F80; } /* BRIGHTER */
+.cb_BUTTON                              { outline: 4px groove #00A; } /* BLUE     */ 
+/*}}}*/
+/* BUTTONS [disabled] {{{*/
 .cb_BUTTON[disabled],
 #wasted_note_BUTTON[disabled],
 #save_note_BUTTON[disabled]  {
@@ -213,13 +226,8 @@ min-height          : 8em;
     text-decoration : line-through;
 }}}*/
 }
-#save_note_BUTTON.notes_uploaded {
-    outline         : 4px solid #040;
-}
-
-/*┌────────────────────────────────────────────────────────────┐*/
-/*│ @see note.et_editing_note_index                            │*/
-/*└────────────────────────────────────────────────────────────┘*/
+/*}}}*/
+/* save_note_BUTTON BULLET {{{*/
 #save_note_BUTTON[editing_note_num  ]::before {  margin: 0.2em; }
 #save_note_BUTTON[bullet_ecc_num="1"]::before { content:  "🟤"; }
 #save_note_BUTTON[bullet_ecc_num="2"]::before { content:  "🔴"; }
