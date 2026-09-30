@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260929:21h:54) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260930:18h:39) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -258,8 +258,12 @@ let linkify_file_pathes = function()
            || line.match(/\/\w+\.css/)
            || line.match(/\/\w+\.js/ )
           ) {
-            let path     = line.replace(/^.*\s(\S+\.(ahk|css|js)).*$/g, "$1");
+            let path     = line
+                .replace(/^.*\s(\S+\.(ahk|css|js)).*$/g, "$1")
+                .replace(/.*\"/,"");    // i.e. [require("./server0_log.js]
+
             let parents  = path.split("/").filter(Boolean);  // remove falsy items
+
             let fileName = parents.pop();
 
             let up_count =  0;
@@ -271,10 +275,20 @@ let linkify_file_pathes = function()
                 ;   (f >= 0) && (p >= 0)
                 ;  --f       , --p
                ) {
-                if(folders[f] != parents[p]) {
+                // current dir is current parent {{{
+                if(parents[p]== ".")
+                {
+                    sub_fold   = folders[f] +"/"+ sub_fold;
+                    up_count  += 1;
+                }
+                //}}}
+                // ...going deeper {{{
+                else if(folders[f] != parents[p])
+                {
                     up_count  += 1;
                     sub_fold   = parents[p] +"/"+ sub_fold;
                 }
+                //}}}
             }
             let a_href  = root +"/";
             for(     f  = 0; f < (folders.length - up_count); ++f)
@@ -283,15 +297,15 @@ let linkify_file_pathes = function()
             a_href     += sub_fold + fileName;
 
 //{{{
-//console.log("%c "          +        path     .padEnd(48)
-//           +"%c "          + String(parents ).padEnd(24)
-//           +"%c "          +        up_count
-//           +"%c "          +        a_href
-//           ,"background-color: #000; color: #F00"
-//           ,"background-color: #000; color: #F0F"
-//           ,"background-color: #222; color: #0FF"
-//           ,"background-color: #00F; color: #FF0"
-//           );
+console.log("%c "          +        path     .padEnd(48)
+           +"%c "          + String(parents ).padEnd(24)
+           +"%c "          +        up_count
+           +"%c "          +        a_href
+           ,"background-color: #000; color: #F00"
+           ,"background-color: #000; color: #F0F"
+           ,"background-color: #222; color: #0FF"
+           ,"background-color: #00F; color: #FF0"
+           );
 //}}}
 //{{{
 //console.log(                       line         );
