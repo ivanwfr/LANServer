@@ -1,15 +1,21 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-/*│ server_network.js           */ const SERVER_NETWORK_TAG = "(260929:04h:10)";
+/*│ server1_network.js           */ const SERVER_NETWORK_TAG = "(261001:00h:30)";
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
 
-/*}}}*/
-let server_network = (function() {
+let server1_network = (function() {
 "use strict";
 
-//  server_log {{{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ REQUIRE
+//└────────────────────────────────────────────────────────────────────────────┘
+//● Node.js             ● os {{{
+let { networkInterfaces }       = require("os"   );
+//}}}
+//● Server  Modules:    ● log header listener network notes qtext {{{
+let server0_log      = require("./server0_log.js");
+//...{{{
 /* eslint-disable no-unused-vars */
-let server_log = require("../SERVER/server_log.js");
+// INLINING:
 let { log
     ,    toggle
     ,    is_logging
@@ -44,63 +50,39 @@ let { log
     ,    TRACE_OPEN
     ,    TRACE_CLOSE
 
-} = server_log;
+} = server0_log;
 /* eslint-enable  no-unused-vars */
 //}}}
-/*{{{*/
-//● Node.js ● fs http https networkInterfaces {{{
-let   fs                        = require("fs"   );
-let { networkInterfaces }       = require("os"   );
+//t server1_network  = require("./server1_network.js");
+//t server2_listener = require("./server2_listener.js");
+//t server3_header   = require("./server3_header.js");
+//t server4_file     = require("./server4_file.js");
+//t server5_content  = require("./server5_content.js");
+//t server6_notes    = require("./server6_notes.js");
 //}}}
-//➔ config ● PORT STATUS {{{
-let   config =
-{     LOAD_STATUS               : ""
+//● Server Config:      ● config https http modules {{{
 
-    , PORT_HTTP                 :  81
-    , PORT_HTTPS                : 444
-};
+let config;
+let config_json;
+let https_server;
+let http__server;
+let modules = [];
 
-let config_LOAD_STATUS_log = function(msg)
+let onload = function(args)
 {
-    if( config.LOAD_STATUS )
-        config.LOAD_STATUS +=  LF;
-    else
-        config.LOAD_STATUS  =  "";
-    config.LOAD_STATUS     += msg;
+    config              = args.config;
+    config_json         = args.config_json;
+    https_server        = args.https_server;
+    http__server        = args.http__server;
+    modules             = args.modules;
 };
 /*}}}*/
-//➔ config.json / config_dev.json {{{
-const CONFIG_JSON               = "config.json" ;
-const CONFIG_DEV_JSON           = "config_dev.json" ;
-let   config_json               = "../"+(fs.existsSync( CONFIG_DEV_JSON ) ? CONFIG_DEV_JSON : CONFIG_JSON);
 
-try {
-    config                      = require(      config_json );
-    config_LOAD_STATUS_log(       `CONFIG    [${config_json}]`);
-
-
-
-
-} catch(ex) {
-    let cwd = process.cwd().replace(/\\/g,"/");
-    config_LOAD_STATUS_log(       "****************************************"         + LF
-                                + "*** ERROR WHILE LOADING FILE ["+ config_json  +"]"+ LF
-                                + "*** IN FOLDER ["+                cwd          +"]"+ LF
-                                + "*** "+ ex.message.replace(/\n/g,"\n*** ")         + LF
-                                + "****************************************"             );
-}
-/*}}}*/
-/*}}}*/
-
-//  server_notes {{{
-let server_notes = require("../SERVER/server_notes.js");
-
-//}}}
-
-let started_folder      = process.cwd().replace(/\\/g,"/");
-let server_top_folder   = process.cwd().replace(/\\/g,"/")+"/LAN";
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ STATUS
+//└────────────────────────────────────────────────────────────────────────────┘
 /*_ log_STATUS {{{*/
-let log_STATUS = function(response, https_server, http__server, modules=[]) // eslint-disable-line complexity
+let log_STATUS = function(response)
 {
     /* CLEAR TERMINAL {{{*/
 //  log_CLEAR();
@@ -121,24 +103,25 @@ if( response )
 
 /*}}}*/
     /*}}}*/
-    /* [config dir_items] {{{*/
+    /* CONFIG ● FOLDERS ● PORT ● CERT ● MODULES {{{*/
     s  = "┌───────────────────────────────────────────────────────────────────── CONFIG ─┐";
 
     s += LF+`
 │ ${SERVER_NETWORK_TAG}
 ├
-│ CONFIG            [${config_json        }]
-│ CWD               [${process.cwd()      }]
+│ CONFIG           [${config_json        }]
+│ CWD              [${process.cwd()      }]
+│ LAN_FOLDER       [${config.LAN_FOLDER  }]
 ├
-│ PORT_HTTP         [${config.PORT_HTTP   }]
-│ PORT_HTTPS        [${config.PORT_HTTPS  }]
-│  KEY_PEM          [${config. KEY_PEM    }]
-│ CERT_PEM          [${config.CERT_PEM    }]
+│ PORT_HTTP        [${config.PORT_HTTP   }]
+│ PORT_HTTPS       [${config.PORT_HTTPS  }]
+│  KEY_PEM         [${config. KEY_PEM    }]
+│ CERT_PEM         [${config.CERT_PEM    }]
 ├
     `.trim();
 
     modules.forEach((m) => { s += LF+
-`│ ${m.name.padEnd(14)}   ${ ellipsis( JSON.stringify( Object.keys( m            ) ), 60) }`;
+`│ ${m.name.padEnd(16)} ${ ellipsis( JSON.stringify(Object.keys(m)).replace(/[\",]+/g," "), 80) }`;
     });
 
     s += LF+"└──────────────────────────────────────────────────────────────────────────────┘";
@@ -153,7 +136,9 @@ if( response )
     /*}}}*/
     /*}}}*/
     /*}}}*/
-    /* FOLDER {{{*/
+    /* FOLDERS {{{*/
+    let started_folder      = process.cwd().replace(/\\/g,"/");
+    let server_top_folder   = process.cwd().replace(/\\/g,"/")+"/"+ config.LAN_FOLDER;
 
     s = `
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -207,8 +192,10 @@ if( response )
     /*}}}*/
     log_G("└────────────────────────────────┘");
 
+    // NETWORK {{{
     log_net_info( response );
 
+    //}}}
 };
 /*}}}*/
 /*_ log_net_info {{{*/
@@ -253,12 +240,15 @@ console.table( results );
 };
 /*}}}*/
 
-    // return {{{
-    return { name: "server_network"
+    // return ● log_net_info, log_STATUS, get_net_address {{{
+    return { name: "server1_network"
+        ,    onload
         ,    log_net_info
         ,    log_STATUS
         ,    get_net_address : () => net_address
     };
     //}}}
 })();
-try { module.exports = server_network; } catch(ex) { console.log(ex.message); }
+// module.exports {{{
+try { module.exports = server1_network;                  } catch(ex) { console.log(ex.message); console.trace(); }
+//}}}

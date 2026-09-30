@@ -1,20 +1,24 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server_notes     ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:01h:07) │
+//│ server6_notes     ● $APROJECTS/LANServer/SERVER         _TAG (260930:23h:48)
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
-// eslint-disable no-warning-comments */
+/* IMPORT {{{*/
 
 /*}}}*/
-let server_notes = (function() {
+let server6_notes = (function() {
 "use strict";
 
-//● Node.js ● fs {{{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ REQUIRE
+//└────────────────────────────────────────────────────────────────────────────┘
+//● Node.js             ● fs path {{{
 let   fs                        = require("fs"   );
 let   path                      = require("path" );
 //}}}
-//  server_log {{{
+//● Server Modules:     ● log header ● listener ● network ● notes ● qtext {{{
+let server0_log      = require("./server0_log.js");
+//...{{{
 /* eslint-disable no-unused-vars */
-let server_log = require("../SERVER/server_log.js");
+// INLINING:
 let { log
     ,    toggle
     ,    is_logging
@@ -49,36 +53,25 @@ let { log
     ,    TRACE_OPEN
     ,    TRACE_CLOSE
 
-} = server_log;
+} = server0_log;
 /* eslint-enable  no-unused-vars */
 //}}}
+//t server1_network  = require("./server1_network.js");
+//t server2_listener = require("./server2_listener.js");
+//t server3_header   = require("./server3_header.js");
+//t server4_file     = require("./server4_file.js");
+//t server5_content  = require("./server5_content.js");
+//t server6_notes    = require("./server6_notes.js");
+//}}}
+//            ● Server Config:      ● ...
 
-/*_ writeHead {{{*/
-let writeHead = function(response, _caller, ...args)
-{
-if(is_logging()) log_X(Y+"● writeHead "+_caller);
-
-    response.writeHead(...args);
-//console.trace();//FIXME
-};
-/*}}}*/
-/*_ get_query_arg {{{*/
-let get_query_arg = function(query, arg)
-{
-    //log_N(query)
-    //log_N(arg  )
-    if(!query || !arg) return "";
-
-    let    query_regexp = new RegExp(arg+"=([^&]*)");
-    let    query_match  = query.match(query_regexp);
-    return query_match  ? query_match[1] : "";
-};
-/*}}}*/
-
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ NOTES ● GET ● POST
+//└────────────────────────────────────────────────────────────────────────────┘
 /*● handle_request {{{*/
 let handle_request = function(request, response, body) // eslint-disable-line complexity
 {
-/*{{{*/
+/* log {{{*/
 let caller = "handle_request";
 if(is_logging()) log_X(C+caller+"("+request.url+")");
 /*}}}*/
@@ -88,7 +81,7 @@ if(is_logging()) log_X(C+caller+"("+request.url+")");
        && (request.url    == "/upload_notes")
        && (request.method == "POST")
     ) {
-        consumed_by = handle_upload(request, response, body);
+        consumed_by = hanle_POST(request, response, body);
     }
     /*}}}*/
     /* fetch_notes {{{*/
@@ -96,20 +89,20 @@ if(is_logging()) log_X(C+caller+"("+request.url+")");
        &&  request.url.includes("/fetch_notes")
        && (request.method == "GET")
     ) {
-        consumed_by = handle_fetch(request, response);
-if(is_logging()) log_X(C+"consumed_by returned by handle_fetch=["+consumed_by+"]");
+        consumed_by = handle_GET(request, response);
+if(is_logging()) log_X(C+"consumed_by returned by handle_GET=["+consumed_by+"]");
     }
     /*}}}*/
     /* why_not_handled {{{*/
     if(!consumed_by)
     {
         let args
-            = {    user_id : get_query_arg(body, "user_id" )
-                ,     lang : get_query_arg(body, "lang"    )
-                ,  subject : get_query_arg(body, "subject" )
-                , question : get_query_arg(body, "question")
-                , feedback : get_query_arg(body, "feedback")
-                ,  comment : get_query_arg(body, "comment" )
+            = {    user_id : server0_log.get_query_arg(body, "user_id" )
+                ,     lang : server0_log.get_query_arg(body, "lang"    )
+                ,  subject : server0_log.get_query_arg(body, "subject" )
+                , question : server0_log.get_query_arg(body, "question")
+                , feedback : server0_log.get_query_arg(body, "feedback")
+                ,  comment : server0_log.get_query_arg(body, "comment" )
             };
 let recap
     = "  ┌─────────────────────────────────────────────────────────────────┐\n"
@@ -134,7 +127,7 @@ log_C(recap);
 
             let ack_message =   why_not_handled.trim();
 
-            writeHead(response, caller+" ("+ack_message+")", 200, "OK", {"Content-Type": "text/html; charset=UTF-8"});
+            server0_log.writeHead(response, caller+" ("+ack_message+")", 200, "OK", {"Content-Type": "text/html; charset=UTF-8"});
 
             if(request.method == "POST") {
                 response.write(        ack_message );
@@ -154,11 +147,11 @@ log_C(recap);
 if(is_logging()) log_Y("handle_request: consumed_by=["+consumed_by+"]");
 };
 /*}}}*/
-/*_ handle_fetch {{ {*/
-let handle_fetch = function(request, response)
+/*_ handle_GET {{{*/
+let handle_GET = function(request, response)
 {
-/*{{{*/
-let caller = "handle_fetch";
+/* log {{{*/
+let caller = "handle_GET";
 if(is_logging()) log_C(caller+"("+request.url+")");
 /*}}}*/
     /* notes_file {{{*/
@@ -173,7 +166,7 @@ if(is_logging()) log_X("...notes_file=["+notes_file+"]");
     try {
         data = fs.readFileSync( notes_file );
 
-        writeHead(response, caller, 200, { "Content-Type": "application/json; charset=UTF-8" });
+        server0_log.writeHead(response, caller, 200, { "Content-Type": "application/json; charset=UTF-8" });
 
         if(data.length) response.end( data );
         else            response.end( "[]" );
@@ -186,23 +179,23 @@ if(is_logging()) log_X("...notes_file=["+notes_file+"]");
     {
         consumed_by = err.message;
 
-        writeHead(response, caller, 200, { "Content-Type": "application/json; charset=UTF-8" });
+        server0_log.writeHead(response, caller, 200, { "Content-Type": "application/json; charset=UTF-8" });
       //response.end( "["+err.message+"]" );    // NO FILE ...so that Array.isArray(data) ● should fail in load_notes
         response.end( "[]" );
     }
     //}}}
     return consumed_by;
 };
-/*}} }*/
-/*_ handle_upload {{ {*/
-let handle_upload = function(request, response, body)
+/*}}}*/
+/*_ hanle_POST {{{*/
+let hanle_POST = function(request, response, body)
 {
-/*{{{*/
-let caller = "handle_upload("+request.url+": body.length=["+body.length+"])";
+/* log {{{*/
+let caller = "hanle_POST("+request.url+": body.length=["+body.length+"])";
 if(is_logging()) log_X(M+caller);
     let    consumed_by;
 /*}}}*/
-    /* notes_file ● Parse and overwrite notes */
+    /* notes_file ● Parse and overwrite notes {{{*/
     let { notes_storage_key, nArray } = JSON.parse( body );
 
     let   notes_file                  = get_notes_file_path( notes_storage_key );
@@ -222,9 +215,8 @@ log_X(Y+"→ nArray.length...\t["+ nArray.length     +"]");
         fs.writeFileSync(notes_file, JSON.stringify(notes, null, 2), "utf-8");
         consumed_by = "notes_updated("+ Object.keys(nArray).length +" nArray) ● "+ new Date( Date.now() ).toLocaleString();
 
-        writeHead(response, caller, 200, { "Content-Type": "application/json; charset=UTF-8" });
+        server0_log.writeHead(response, caller, 200, { "Content-Type": "application/json; charset=UTF-8" });
         response.end(JSON.stringify({ status: "ok", notes_updated: Object.keys(nArray).length }));
-        /*}}}*/
     }
     /*}}}*/
     // catch error {{{
@@ -234,49 +226,34 @@ log_X(Y+"→ nArray.length...\t["+ nArray.length     +"]");
         log_R(consumed_by);
 if(is_logging()) console.dir(err);
 //}}}
-        writeHead(response, caller+"("+err+")", 400, { "Content-Type": "application/json; charset=UTF-8" });
+        server0_log.writeHead(response, caller+"("+err+")", 400, { "Content-Type": "application/json; charset=UTF-8" });
         response.end(JSON.stringify({ status: "error", message: "Invalid JSON format" }));
     }
     //}}}
     return consumed_by;
  };
 /*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ private
+//└────────────────────────────────────────────────────────────────────────────┘
 /*_ get_notes_file_path {{{*/
 let get_notes_file_path = function( notes_storage_key )
 {
 //  let file_name  = notes_storage_key.replace(/.*__/, "");
 //  /**/file_name  = file_name.replace(/\./g,"_");
-    let started_folder = process.cwd().replace(/\\/g,"/");
+    let              started_folder = process.cwd().replace(/\\/g,"/");
     return path.join(started_folder +"/STORAGE/", notes_storage_key +".json");
 };
 /*}}}*/
-/*_ html_format_requested {{{*/
-/*{{{*/
-let prev_file_name;
-let cooldown_timer;
-/*}}}*/
-let html_format_requested = function(file_name,query)
-{
-    if( !cooldown_timer )
-    {
-        cooldown_timer = setTimeout(() => {
-            cooldown_timer = false;
-            prev_file_name = file_name;
-            setTimeout(() => prev_file_name = undefined, 5000); // clear history
-        }, 500); //............................................ // while processsing the same request
-    }
-    let state =  (file_name == prev_file_name           )
-        ||       (    query && query.startsWith("qtext"))
-    ;
 
-if(is_logging()) log_X("html_format_requested("+ file_name +") ...return "+!!state+"");
-    return state;
-};
-/*}}}*/
-return { name: "server_notes"
-    ,           handle_request
-    ,           html_format_requested
+    /* return handle_request {{{*/
+    return { name: "server6_notes"
+        ,           handle_request
     };
+    /*}}}*/
 })();
 /*}}}*/
-try { module.exports = server_notes; } catch(ex) { console.log(ex.message); }
+//    module.exports {{{
+try { module.exports = server6_notes;                    } catch(ex) { console.log(ex.message); console.trace(); }
+//}}}

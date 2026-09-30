@@ -1,15 +1,21 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server_header.js                                       _TAG (260929:02h:51)
+//│ server3_header.js                                      _TAG (261001:00h:13)
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 
 /*}}}*/
-let server_header = (function() {
+let server3_header = (function() {
 "use strict";
 
-//  server_log {{{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ REQUIRE
+//└────────────────────────────────────────────────────────────────────────────┘
+//            ● Node.js Modules:    ● ...
+//● Server Modules:     ● log header listener network notes qtext {{{
+let server0_log      = require("./server0_log.js");
+//...{{{
 /* eslint-disable no-unused-vars */
-let server_log = require("../SERVER/server_log.js");
+// INLINING:
 let { log
     ,    toggle
     ,    is_logging
@@ -44,24 +50,32 @@ let { log
     ,    TRACE_OPEN
     ,    TRACE_CLOSE
 
-} = server_log;
+} = server0_log;
 /* eslint-enable  no-unused-vars */
 //}}}
-//  server_notes {{{
-let server_notes = require("../SERVER/server_notes.js");
-
+//t server1_network  = require("./server1_network.js");
+//t server2_listener = require("./server2_listener.js");
+//t server3_header   = require("./server3_header.js");
+//t server4_file     = require("./server4_file.js");
+//t server5_content  = require("./server5_content.js");
+//t server6_notes    = require("./server6_notes.js");
 //}}}
+//            ● Server Config:      ● ...
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ RESPONSE HEADER
+//│ CUSTOM RESPONSE HEADER
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
 /* Content-Type HEADERS {{{*/
 const   MISC_ARRAY           = [
     "Makefile"          // Makefile
   , "[\\\\\\/]\\.\\w+"  // .prefix
   , "[\\\\\\/]_\\w+"    // _prefix
 ];
+
+const   DEFAULT_TEXT_PLAIN   = { "Content-Type" : "text/plain;      charset=UTF-8" };
+const   HTML_RESPONSE_HEADER = { "Content-Type" : "text/html;       charset=UTF-8", "Access-Control-Allow-Origin" : "*"
+                               , "color-scheme" : "light only" };
+
 const     JS_RESPONSE_HEADER = { "Content-Type" : "text/javascript; charset=utf-8" };
 const     SH_RESPONSE_HEADER = { "Content-Type" : "text/sh;         charset=utf-8" };
 const     MD_RESPONSE_HEADER = { "Content-Type" : "text/md;         charset=utf-8" };
@@ -76,10 +90,6 @@ const    BAT_RESPONSE_HEADER = { "Content-Type" : "text/bat;        charset=utf-
 const    LUA_RESPONSE_HEADER = { "Content-Type" : "text/lua;        charset=utf-8" };
 const   JSON_RESPONSE_HEADER = { "Content-Type" : "text/json;       charset=utf-8" };
 const   MISC_RESPONSE_HEADER = { "Content-Type" : "text/misc;       charset=utf-8" };
-
-const   DEFAULT_TEXT_PLAIN   = { "Content-Type" : "text/plain;      charset=UTF-8" };
-const   HTML_RESPONSE_HEADER = { "Content-Type" : "text/html;       charset=UTF-8", "Access-Control-Allow-Origin" : "*"
-                               , "color-scheme" : "light only" };
 
 const    DOC_RESPONSE_HEADER = { "Content-Type" : "application/msword" };
 const    ICO_RESPONSE_HEADER = { "Content-Type" : "image/x-icon"       };
@@ -105,18 +115,26 @@ let get_response_200_header = function(_file_name,query)
     let header;
     MISC_ARRAY.forEach((pattern) => {
         let re = RegExp(pattern, "mgi");
+// log {{{
 //log_X(re);
+//}}}
         if(!header && file_name.match(re))
         {
+// log {{{
 //g_B("match: "+ re +" ["+file_name.replace(/.*[\\\/]/,"")+"]");
 log_B(                    file_name.replace(/.*[\\\/]/,"")    );
+//}}}
             header = MISC_RESPONSE_HEADER;
         }
     });
     if(header) return header;
     /*}}}*/
-    /*  server_notes.tml_format_requested {{{*/
-    if( server_notes.html_format_requested(_file_name,query) )
+
+    //┌────────────────────────────────────────────────────────────────────────────┐
+    //│ PRETTY PRINT HTML EMBEDING
+    //└────────────────────────────────────────────────────────────────────────────┘
+    /* js    css    ahk    awk    vim    txt {{{*/
+    if( server0_log.html_format_requested(_file_name,query) )
     {
         if (file_name.endsWith("js"     )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("css"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
@@ -160,13 +178,14 @@ log_B(                    file_name.replace(/.*[\\\/]/,"")    );
 
 };
 /*}}}*/
-/*}}}*/
 
-
-    // return {{{
-    return { name: "server_header"
+    // return ● get_response_200_header {{{
+    return { name: "server3_header"
+        ,    get_HTML_RESPONSE_HEADER : () => HTML_RESPONSE_HEADER
         ,    get_response_200_header
     };
     //}}}
 })();
-try { module.exports = server_header; } catch(ex) { console.log(ex.message); }
+//    module.exports {{{
+try { module.exports = server3_header;                   } catch(ex) { console.log(ex.message); console.trace(); }
+//}}}

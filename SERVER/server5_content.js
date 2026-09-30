@@ -1,15 +1,21 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server_qtext.js                                        _TAG (260929:03h:25)
+//│ server5_content.js                                        _TAG (261001:00h:35)
 //└────────────────────────────────────────────────────────────────────────────┘
-/*{{{*/
+/* IMPORT {{{*/
 
 /*}}}*/
-let server_qtext = (function() {
+let server5_content = (function() {
 "use strict";
 
-//  server_log {{{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ REQUIRE
+//└────────────────────────────────────────────────────────────────────────────┘
+//            ● Node.js Modules:    ● ...
+//  ● Server Modules:     ● log header ● listener ● network ● notes ● qtext {{{
+let server0_log      = require("./server0_log.js");
+//...{{{
 /* eslint-disable no-unused-vars */
-let server_log = require("../SERVER/server_log.js");
+// INLINING:
 let { log
     ,    toggle
     ,    is_logging
@@ -44,51 +50,29 @@ let { log
     ,    TRACE_OPEN
     ,    TRACE_CLOSE
 
-} = server_log;
+} = server0_log;
 /* eslint-enable  no-unused-vars */
 //}}}
-//  server_notes {{{
-let server_notes = require("../SERVER/server_notes.js");
-
+//t server4_file     = require("./server4_file.js");
+let server1_network  = require("./server1_network.js");
+//t server2_listener = require("./server2_listener.js");
+let server3_header   = require("./server3_header.js");
+//t server5_content  = require("./server5_content.js");
+//t server6_notes    = require("./server6_notes.js");
 //}}}
-//  server_header {{{
-let server_header = require("../SERVER/server_header.js");
+//● Server Config:      ● config https http modules {{{
 
-let get_response_200_header = server_header.get_response_200_header;
-//}}}
-//  server_network {{{
-let server_network = require("../SERVER/server_network.js");
+let config;
 
-let get_net_address = server_network.get_net_address;
-//}}}
-
-/*_ writeHead {{{*/
-let writeHead = function(response, _caller, ...args)
+let onload = function(args)
 {
-if(is_logging()) log_X(Y+"● writeHead "+_caller);
-
-    response.writeHead(...args);
-//console.trace();//FIXME
-};
-/*}}}*/
-/*_ get_query_arg {{{*/
-let get_query_arg = function(query, arg)
-{
-    //log_N(query)
-    //log_N(arg  )
-    if(!query || !arg) return "";
-
-    let    query_regexp = new RegExp(arg+"=([^&]*)");
-    let    query_match  = query.match(query_regexp);
-    return query_match  ? query_match[1] : "";
+    config              = args.config;
 };
 /*}}}*/
 
-const   HTML_RESPONSE_HEADER = { "Content-Type" : "text/html;       charset=UTF-8", "Access-Control-Allow-Origin" : "*"
-                               , "color-scheme" : "light only" };
-/*_ customize_FILE_CONTENT {{{*/
-/*{{{*/
-const DEFAULT_URI_PATH = "./index.html";
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ PRETTY-PRINT FOLDING AND BOXING
+//└────────────────────────────────────────────────────────────────────────────┘
 const FOLD_OPEN = "{{{"; /* eslint-disable-line no-unused-vars */
 const FOLD_CLOSE= "}}}"; /* eslint-disable-line no-unused-vars */
 /*    STYLE_QTEXT {{{*/
@@ -100,38 +84,38 @@ const STYLE_QTEXT = ""
 /*    SCRIPT_QTEXT {{{*/
 const SCRIPT_QTEXT = ""
     + "<meta name='color-scheme' content='light only'>"
-    + "<script src='/scripts/js_log.js     '></script>\n"
+    + "<script type='module' src='/scripts/js_log.js     '></script>\n"
 
-    + "<script src='/scripts/js_folds.js   '></script>\n"
-    + "<script src='/scripts/js_store.js   '></script>\n"
-    + "<script src='/scripts/js_xpath.js   '></script>\n"
-    + "<script src='/scripts/js_linkify.js '></script>\n"
+    + "<script type='module' src='/scripts/js_folds.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_store.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_xpath.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_linkify.js '></script>\n"
 
-    + "<script src='/scripts/js_MODEL.js   '></script>\n"
-    + "<script src='/scripts/js_VIEW.js    '></script>\n"
-    + "<script src='/scripts/js_CNTRL.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_MODEL.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_VIEW.js    '></script>\n"
+    + "<script type='module' src='/scripts/js_CNTRL.js   '></script>\n"
 
-    + "<script src='/scripts/js_ticker.js  '></script>\n"
-    + "<script src='/scripts/js_input.js   '></script>\n"
-    + "<script src='/scripts/notes.js      '></script>\n"
-    + "<script src='/scripts/js_notes.js   '></script>\n"
+    + "<script type='module' src='/scripts/js_ticker.js  '></script>\n"
+    + "<script type='module' src='/scripts/js_input.js   '></script>\n"
+    + "<script type='module' src='/scripts/notes.js      '></script>\n"
+    + "<script type='module' src='/scripts/js_notes.js   '></script>\n"
     ;
 /*}}}*/
-/*}}}*/
-let customize_FILE_CONTENT = function(request, file_name, query, response, err, data)
+/*_ details_folding {{{*/
+let details_folding = function(request, file_name, query, response, err, data)
 {
-/*{{{*/
-let caller = "customize_FILE_CONTENT("+file_name+")";
+/* log {{{*/
+let caller = "details_folding("+file_name+")";
 /*}}}*/
     /* QUERY    ● lang ● user_id {{{*/
-    let    lang = get_query_arg(query,    "lang");
-    let user_id = get_query_arg(query, "user_id");
+    let    lang = server0_log.get_query_arg(query,    "lang");
+    let user_id = server0_log.get_query_arg(query, "user_id");
 
     let  params = (user_id   ? C+     " user_id=["+ user_id   +"]" : "")
         +         (lang      ? Y+        " lang=["+ lang      +"]" : "")
     ;
-/*{{{*/
-if( is_logging() )
+/* log {{{*/
+if(is_logging())
     log_G(G+"  ┌────────────────────────────────────────────────────────────────────────────┐\n"
          +G+"● │ RESPONSE FILES (async)                                                     │\n"
          +G+"  │ "+file_name+" "+params+"\n"
@@ -139,11 +123,11 @@ if( is_logging() )
 /*}}}*/
 /*}}}*/
     /* FILE     ● err {{{*/
-    if(err) {
-log_R( err );
-        if( server_notes.html_format_requested(file_name,query) )
+    if( err ) {
+log_R(  err );
+        if( server0_log.html_format_requested(file_name,query) )
         {
-            writeHead(  response, caller+"", 404, HTML_RESPONSE_HEADER );
+            server0_log.writeHead(  response, caller+"", 404, server3_header.get_HTML_RESPONSE_HEADER());
 
             response.write("<pre style='background:black; color:#DDD;'>"
                            +"<b> file_name=["+    file_name +"</b>"
@@ -153,13 +137,13 @@ log_R( err );
                           );
         }
         else {
-            writeHead(  response, caller, 404, {"Content-Type": "text/plain"});
+            server0_log.writeHead(  response, caller, 404, {"Content-Type": "text/plain"});
 
-            response.write( "customize_FILE_CONTENT ["+file_name+"] :\n"
+            response.write( "details_folding ["+file_name+"] :\n"
                            +JSON.stringify(err)
                           );
         }
-//log_X("response.request_count["+response.request_count+"] customize_FILE_CONTENT"+TRACE_CLOSE)
+//log_X("response.request_count["+response.request_count+"] details_folding"+TRACE_CLOSE)
         response.end();
     }
 /*}}}*/
@@ -168,7 +152,7 @@ log_R( err );
         /* RESPONSE HEADER {{{*/
 
         let response_200_header
-            = get_response_200_header(file_name,query);
+            = server3_header.get_response_200_header(file_name,query);
 if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type"]+"]");//FIXME
 
         if( response.content_disposition )
@@ -180,7 +164,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
 
         if( response_200_header )
         {
-            writeHead(  response, caller, 200, response_200_header);
+            server0_log.writeHead(  response, caller, 200, response_200_header);
 
         }
         /*}}}*/
@@ -191,7 +175,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
         if(data.includes( FOLD_OPEN ))
         {
             // ?qtext
-            if(   server_notes.html_format_requested(file_name,query)
+            if(   server0_log.html_format_requested(file_name,query)
               && !file_name.match(/\.htm/)
               ) {
                 data = String(data)
@@ -231,6 +215,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
                   //.  replace(        /^ *\/\/ */  , "ℹ\n"  )
                 ;
             }
+            //{{{
             else if( is_logging()) {
                 console.dir(request);
                 let    host = request.headers.host;
@@ -246,12 +231,13 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
                     + "<hr>\n"
                     +  data;
             }
+            //}}}
         }
         /*}}}*/
         /* WRITE FILE CONTENT .. replace (127.0.0.1|\blocalhost\b) with [net_address] {{{*/
-        let net_address     = get_net_address();
+        let net_address     = server1_network.get_net_address();
 
-        if( server_notes.html_format_requested(file_name,query) )
+        if( server0_log.html_format_requested(file_name,query) )
         {
             let header
                 = "<title>"+file_name.replace(/.*[\\\/]/,"")+"</title>\n"
@@ -262,7 +248,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
             response.write( "<pre>"+ data +"</pre>");
         }
         else {
-            if(net_address && DEFAULT_URI_PATH.includes(file_name))
+            if(net_address && config.DEFAULT_URI_PATH.includes(file_name))
                 data = String(data).replace(/(127.0.0.1|\blocalhost\b)/gm, net_address);
 
 /*{{{
@@ -278,17 +264,20 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
         if( user_id ) response.write("<input type='hidden' id='user_id' name='user_id' value='"+user_id+"' />");
 
         /*}}}*/
-//log_X("response.request_count["+response.request_count+"] customize_FILE_CONTENT"+TRACE_CLOSE)
+//log_X("response.request_count["+response.request_count+"] details_folding"+TRACE_CLOSE)
         response.end();
     }
 /*}}}*/
 };
 /*}}}*/
 
-    // return {{{
-    return { name: "server_qtext"
-        ,    customize_FILE_CONTENT
+    // return ● server5_content, details_folding {{{
+    return { name: "server5_content"
+        ,    onload
+        ,    details_folding
     };
     //}}}
 })();
-try { module.exports = server_qtext; } catch(ex) { console.log(ex.message); }
+//    module.exports {{{
+try { module.exports = server5_content;                  } catch(ex) { console.log(ex.message); console.trace(); }
+//}}}
