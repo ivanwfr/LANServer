@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                        _TAG (261002:03h:46)
+//│ server5_content.js                                     _TAG (261003:00h:25)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -179,43 +179,32 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
             if(   server0_log.html_format_requested(file_name,query)
               && !file_name.match(/\.htm/)
               ) {
+
                 data = String(data)
                 // html entities
-                    .  replace(                   /</gm, "&lt;"                                )
-                    .  replace(                   />/gm, "&gt;"                                )
+                    .  replace(                   /</gm, "&lt;"                                 )
+                    .  replace(                   />/gm, "&gt;"                                 )
                 // foldings
-                    .  replace(   /(.*{{ *{.*)\r*\n*/gm, "<details><summary>$1</summary><pre>" )
-                    .  replace(   /(.*}} *}.*)\r*\n*/gm,                   "$1</pre></details>")
+                    .  replace(   /(.*{{ *{.*) *\r*\n/gm, "<details><summary>$1</summary><pre>" )
+                    .  replace(   /(.*}} *}.*) *\r*\n/gm,                   "$1</pre></details>")
                 // remove vim fold markers
-                    .  replace(         / *;* *{{ *{/gm, " "                                   )
-                    .  replace(         / *;* *}} *}/gm, " "                                   )
-                // box
-/*{{{
-                    .  replace(               /\/\/┌/gm , "TOP┌")
-                    .  replace(               /\/\/│/gm , "MID│")
-                    .  replace(               /\/\/└/gm , "BOT└")
-}}}*/
-/*{{{
-                    .  replace(               /\/\/┌/gm , "🟤🔴🟠┌")
-                    .  replace(               /\/\/│/gm , "🟤🔴🟠│")
-                    .  replace(               /\/\/└/gm , "🟤🔴🟠└")
-}}}*/
-
+                    .  replace(         / *;* *{{ *{/gm, " "                                    )
+                    .  replace(         / *;* *}} *}/gm, " "                                    )
+                // box borders
                     .  replace( / *\/[\/\\*] *(┌.*$)/gm , "<BOXU>$1</BOXU>")
                     .  replace( / *\/[\/\\*] *(│.*$)/gm , "<BOXM>$1</BOXM>")
                     .  replace( / *\/[\/\\*] *(└.*$)/gm , "<BOXD>$1</BOXD>")
-
+                // box separators
                     .  replace( / *\/[\/\\*] *(├.*$)/gm , "<BOXM>$1</BOXM>")
                     .  replace( / *\/[\/\\*] *(┼.*$)/gm , "<BOXM>$1</BOXM>")
                     .  replace( / *\/[\/\\*] *(┤.*$)/gm , "<BOXM>$1</BOXM>")
-
-                    .  replace(         /[└┘┌┐│─├┼┤]/gm , " "              )
-
-                // comments {{{
-                  //.  replace(   /[\n\r]( *)\/\/ */gm, "\n✔✓$1"          )
-                  //.  replace(          /^ *\/\/ */  , "ℹ\n"             )
-                //}}}
+                // embedded LF
+                    .  replace( /\\n/gm , "\u21B2") // ↲
                 ;
+
+                // MARKDOWN TABLES TO HTML
+                data = md_to_html.convert( data );
+
             }
             //{{{
             else if( is_logging()) {
@@ -273,13 +262,139 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
 };
 /*}}}*/
 
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ MARKDOWN TO HTML
+//└────────────────────────────────────────────────────────────────────────────┘
+//  md_to_html { {{
+let md_to_html = (function() {
+"use strict";
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ Convert a Markdown table string into an HTML table string.
+//│
+//│ Handles:
+//│ - Header row and separator row (|---|---|)
+//│ - Multiple data rows
+//│ - Inline pipes in cells (escaped as \|||)
+//│ - Leading/trailing whitespace
+//│
+//└────────────────────────────────────────────────────────────────────────────┘
+/*● convert {{{*/
+const TABLE_DELIM_1 = "- | -";
+const TABLE_DELIM_2 =  "-|-";
+
+let convert = function(data_in)
+{
+    let data_out = "";
+
+  //const lines = data_in.split("\n").map((l) => l.trim()); // keep empty lines
+    const lines = data_in.split("\n")                     ; // keep indentation
+
+    for(let i = 0; i < lines.length; ++i)
+    {
+        let reached_md_table
+            =   (i < lines.length -1)
+             && (    lines[i+1].includes( TABLE_DELIM_1 )
+                 ||  lines[i+1].includes( TABLE_DELIM_2 ));
+
+        if( reached_md_table )
+        {
+            let table_lines = lines[i] + "\n";
+            while(i < lines.length && lines[i].includes("|"))
+            {
+                let cell =     lines[i  ].trim();
+                if( cell )
+                    table_lines += cell + "\n";
+                i += 1;
+            }
+
+            if( table_lines ) {
+                data_out   += convert_table_to_html( table_lines.trim() );
+            }
+            data_out     += lines[i] + "\n";
+        }
+        else {
+            data_out     += lines[i] + "\n";
+        }
+    }
+
+    return data_out;
+};
+/*}}}*/
+/*_ convert_table_to_html {{{*/
+let convert_table_to_html = function( md_table )
+{
+    // Split into lines, ignore empty lines
+    const lines = md_table.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
+
+    if (lines.length < 2) return "";
+
+    // Parse header
+    const headerCells = parseRow(lines[0]);
+    // Skip separator line (lines[1])
+    // Parse data rows
+    const dataRows = [];
+    for (let i = 2; i < lines.length; i++) {
+        dataRows.push(parseRow(lines[i]));
+    }
+
+    // Build HTML
+    let html = "<table class='markdown_table'>\n<thead>\n<tr>\n";
+    for (const cell of headerCells) {
+        html += `  <th>${cell.trim()}</th>\n`;
+    }
+    html += "</tr>\n</thead>\n<tbody>\n";
+    for (const row of dataRows) {
+        html += "<tr>\n";
+        for (const cell of row) {
+            html += `  <td>${cell.trim()}</td>\n`;
+        }
+        html += "</tr>\n";
+    }
+    html += "</tbody>\n</table>";
+    return html;
+};
+/*}}}*/
+/*_ parseRow {{{*/
+let parseRow = function(line)
+{
+    //┌────────────────────────────────────────────────────────────────────────────┐
+    //│ Parse a markdown table row into an array of cell strings.
+    //│ Handles escaped pipes (\\|) and surrounding pipes.
+    //└────────────────────────────────────────────────────────────────────────────┘
+
+  // Remove leading/trailing pipe and whitespace
+  let trimmed = line.trim();
+  if (trimmed.startsWith("|")) trimmed = trimmed.slice(1);
+  if (trimmed.endsWith  ("|")) trimmed = trimmed.slice(0, -1);
+
+  // Split on unescaped pipes
+
+// 1. ADDS EMPTY CELLS
+  return trimmed.split(/\|(?=([^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : ""))                            ; // leaves empty cells
+
+// 2. EMPTY CELLS MAY SHIFT COLUMNS TO THE LEFT
+//return trimmed.split(/\|(?=([^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : "")).filter((e) => e.length > 0); // left-shift on missing columns
+
+};
+/*}}}*/
+    // return {{{
+    return { name: "md_to_html"
+        ,    convert
+    };
+    //}}}
+})();
+//}} }
+
     // return ● server5_content, details_folding {{{
     return { name: "server5_content"
         ,    onload
         ,    details_folding
+        ,    md_to_html
     };
     //}}}
 })();
 //    module.exports {{{
 try { module.exports = server5_content;                  } catch(ex) { console.log(ex.message); console.trace(); }
 //}}}
+globalThis.server5_content = server5_content; //DEBUG ONLY

@@ -1,6 +1,17 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261001:17h:43) │*/
+/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261003:00h:51) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
+
+/*{{{
+}}}*/
+.markdown_table    { border-collapse : collapse; }
+.markdown_table    {            color: #FFDF; }
+.markdown_table TH { background-color: #333; border: 1px solid #555; }
+.markdown_table TD { background-color: #000; border: 1px solid #444; }
+
+.markdown_table TH { padding: 0.5em; }
+.markdown_table TD { padding: 0.5em; }
+
 /* BODY {{{*/
 BODY      { background-color: #111; }
 BODY      {    margin-bottom:  50%; }
@@ -99,6 +110,7 @@ DETAILS:not(open)  >SUMMARY { margin-left :     0em; padding-left: 0.5em; }
 
 /*}} }*/
 /* DETAILS.close_on_margin_click {{{*/
+TD:has(>.timestamp):hover,
 DETAILS.close_on_margin_click {
   background: repeating-linear-gradient( 45deg
     ,                                   #4448 0px

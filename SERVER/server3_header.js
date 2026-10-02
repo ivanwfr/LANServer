@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server3_header.js                                      _TAG (261001:00h:13)
+//│ server3_header.js                                      _TAG (261002:20h:20)
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 
@@ -137,6 +137,7 @@ log_B(                    file_name.replace(/.*[\\\/]/,"")    );
     if( server0_log.html_format_requested(_file_name,query) )
     {
         if (file_name.endsWith("js"     )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("md"     )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("css"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("ahk"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("awk"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
@@ -147,6 +148,7 @@ log_B(                    file_name.replace(/.*[\\\/]/,"")    );
     return (file_name.endsWith("html"   )) ? HTML_RESPONSE_HEADER
         :  (file_name.endsWith("htm"    )) ? HTML_RESPONSE_HEADER
 
+        :  (file_name.endsWith("md"     )) ?  AHK_RESPONSE_HEADER
         :  (file_name.endsWith("ahk"    )) ?  AHK_RESPONSE_HEADER
         :  (file_name.endsWith("awk"    )) ?  AWK_RESPONSE_HEADER
         :  (file_name.endsWith("css"    )) ?  CSS_RESPONSE_HEADER

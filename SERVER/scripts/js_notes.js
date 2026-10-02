@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261002:03h:57)
+//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261003:00h:34)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵 View Helper: Renders, layouts, and scrolls notes in the DOM    │
 //│    State Management ➔ js_CNTRL (via js_MODEL, js_VIEW)            │
@@ -125,7 +125,7 @@ if(tag_this) console.log("🔵 add_notes_DETAILS");
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ PUBLIC ● LAYOUT & RENDER                                          │
 //└─────────────────────────────────────────────────────────────────[...]
-/*_ layout_notes ● Populate or clear notes table {{{*/
+/*● layout_notes ● Populate or clear notes table {{{*/
 /*{{{*/
 //│ Purpose: Render nArray into saved_notes_TABLE
 //│ Called from: js_MODEL after save/delete, js_VIEW on state change
@@ -156,18 +156,17 @@ if(tag_this) console.log("🔵 layout_notes ← "+ _caller);
     /* 2. POPULATE OR CLEAR [note_row] ● @see SERVER/style/notes.css {{{*/
     let innerHTML = nArray.length
         ? nArray.map((n, i) => ""
-+ "<!--🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯-->"
-+ "<TR          class='note_row "+   notes.get_checked(i)+(n.text.includes(AUTO_SAVE_TAG) ? " auto_save":"")+"'"
-//                                  " title='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
-+                            " data-content='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
-+                            " data-id='"     + i                                                           +"'"
++ "<!--🟤🟤🟤🟤🟤🟤🟤🟤🟤🟤-->"
++ "<TR         class='"+ lon_class  (nArray,i) +"'"
++     "      data-id='"+                    i  +"'"
++     " data-content='"+ lon_content(nArray,i) +"'"
 +  "                                                     >"
-+  "<TD><div    class='note_num' >"+                      (i+1)                                                +"</div>   </TD>"
-+  "<TD><button class='check_button'  title='Check note'  onclick='   notes.note_4_onclick_check (event, "+i+")'></button></TD>"
-+  "<TD><button class='edit_button'   title='Edit note'                                                         ></button></TD>"
-+  "<TD><div    class='truncated'>"+            escapeHTML(n.text)                                             +"</div>   </TD>"
-+  "<TD><small  class='timestamp'                         onclick='event.cancelBubble = true;'>"+ new Date(n.timestamp).toLocaleString() +"</small></TD>"
-+  "<TD><button class='delete_button' title='Delete note'                                                      ></button></TD>"
++  "<TD><div    class='note_num' >"+                      (i+1)                                           +"</div>   </TD>"
++  "<TD><button class='check_button'  title='Check note'  onclick='notes.note_4_onclick_check(event,"+i+")'></button></TD>"
++  "<TD><button class='edit_button'   title='Edit note'                                                    ></button></TD>"
++  "<TD><div    class='truncated'>"+                      escapeHTML(n.text)                              +"</div>   </TD>"
++  "<TD onclick='event.cancelBubble = true;'><small  class='timestamp'>"+ lon_time(nArray, i )             +"</small></TD>"
++  "<TD><button class='delete_button' title='Delete note'                                                  ></button></TD>"
 + "</TR>"
 ).join("")
 
@@ -202,6 +201,26 @@ if(tag_this) console.log("🔵 layout_notes ← "+ _caller);
         log("%c● layout_cnt:\t%c["+ layout_count      +"]", lf6, lb2);
         log("%c● nArray.len:\t%c["+ nArray.length     +"]", lf6, lb3);
     }
+};
+/*}}}*/
+/*_ lon_class {{{*/
+let lon_class = function(nArray,i)
+{
+    return "note_row "
+        +   notes.get_checked(i)
+        +  (nArray[i].text.includes( AUTO_SAVE_TAG ) ? " auto_save":"")+"'";
+};
+/*}}}*/
+/*_ lon_content {{{*/
+let lon_content = function(nArray,i)
+{
+    return escapeHTML( nArray[i].text ).replace(AUTO_SAVE_TAG, "");
+};
+/*}}}*/
+/*_ lon_time {{{*/
+let lon_time = function(nArray,i)
+{
+    return new Date( nArray[i].timestamp ).toLocaleString();
 };
 /*}}}*/
 
@@ -465,7 +484,7 @@ if(tag_this) console.log("🔵 tics_status: "+ count);
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ PUBLIC ● UTILITY ● STRING ESCAPING & FORMATTING                  │
 //└─────────────────────────────────────────────────────────────────[...]
-/*●  escapeHTML ● Sanitize text for HTML {{{*/
+/*● escapeHTML ● Sanitize text for HTML {{{*/
 let escapeHTML = function(text)
 {
     if (!text) return "";

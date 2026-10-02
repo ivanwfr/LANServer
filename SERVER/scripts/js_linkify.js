@@ -257,6 +257,7 @@ let linkify_file_pathes = function()
     let lines = pre.innerHTML.split("\n");
     lines.forEach((line) => {
         if(   line.match(/\/\w+\.ahk/)
+           || line.match(/\/\w+\.md/ )
            || line.match(/\/\w+\.css/)
            || line.match(/\/\w+\.js/ )
           ) {
