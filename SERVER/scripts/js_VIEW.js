@@ -1,20 +1,21 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:21h:49) │
+//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (261002:04h:00) │
 //└────────────────────────────────────────────────────────────────────────────┘
 // IMPORT {{{
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable object-shorthand */
 
-/* globals  js_log  */
-                        //┌─────────────┐
-/* -------- js_MODEL */ //│ - Model     │
-/* exported js_VIEW  */ //│ ● View      │
-/* globals  js_CNTRL */ //│ - Controler │
-                        //└─────────────┘
-/* globals    notes  */
-/* globals js_notes  */
-/* globals js_input  */
+/* globals  js_log    */
+                         //┌─────────────┐
+/* -------- js_MODEL  */ //│ - Model     │
+/* exported js_VIEW   */ //│ ● View      │
+/* globals  js_CNTRL  */ //│ - Controler │
+                         //└─────────────┘
+/* globals    notes   */
+/* globals js_details */
+/* globals js_notes   */
+/* globals js_input   */
 
 import { js_CNTRL   } from "./js_CNTRL.js"
 import { js_MODEL   } from "./js_MODEL.js"
@@ -23,7 +24,7 @@ import { js_MODEL   } from "./js_MODEL.js"
 import { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
 import { js_log     } from "./js_log.js"
-import { js_notes   } from "./js_notes.js"
+import { js_details } from "./js_details.js"
 //port { js_store   } from "./js_store.js"
 //port { js_ticker  } from "./js_ticker.js"
 //port { js_xpath   } from "./js_xpath.js"
@@ -166,9 +167,9 @@ const js_VIEW    = (function () {
 //      saveBtn   .disabled    = false;
 //      saveBtn   .textContent = "Update Note #"+ (parseInt(payload.id)+1);
 //}}}
-        log("%c● VIEW CALLING js_notes.note_5_onclick_edit"  , lf6 +lbB);
+        log("%c● VIEW CALLING js_details.note_5_onclick_edit"  , lf6 +lbB);
         //}}}
-                              js_notes.note_5_onclick_edit({}, parseInt(payload.id) );
+                              js_details.note_5_onclick_edit({}, parseInt(payload.id) );
         break;
 
         //}}}

@@ -1,5 +1,5 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (260927:19h:53) │*/
+/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261001:17h:43) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 /* BODY {{{*/
 BODY      { background-color: #111; }
@@ -80,7 +80,9 @@ DETAILS:open                { background-color: #F006;    }
 DETAILS:open                { margin      :   2em 1em; padding-left:   2em; }
 DETAILS:not(open)           { margin      : 0.2em 0.5em; padding-left:   0em; }
 
+/*{{{//FIXME
 DETAILS:open       >PRE     { margin-left :    -1em; padding-left: 0.5em; }
+}}}*/
 DETAILS:not(open)  >PRE     { margin-left :     0em; padding-left: 0.5em; }
 DETAILS:open       >PRE     { margin-top  :     2px;                      }
 
@@ -220,7 +222,6 @@ DETAILS:not([open]) SUMMARY EM {
 PRE:has(DETAILS[open]) { background-color: #000; }
 .cb_copy {
     float           : right;
-    opacity         :   0.5;
     margin-left     :   2em;
     font-weight     :   900;
     font-size       : 16px;
@@ -231,5 +232,4 @@ PRE:has(DETAILS[open]) { background-color: #000; }
     display         : inline-block;
     translate       : -1.1em -0.3em;
     font-weight     : 900;
-    opacity         : 0.5;
 }

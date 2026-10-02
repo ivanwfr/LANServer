@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:21h:52) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261002:02h:17) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -27,7 +27,7 @@ import { js_xpath   } from "./js_xpath.js"
 let js_folds = (function() {
 "use strict";
 let log_this = false;
-let tag_this = true;//FIXMEfalse || log_this;
+let tag_this = false || log_this;
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INLINING ● SERVER/scripts/js_log.js

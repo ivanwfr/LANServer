@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (260930:18h:39) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261002:02h:08) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -7,12 +7,13 @@
 /* IMPORT {{{*/
 
 /* global js_folds */
+/* global js_input */
 
 //port { js_CNTRL   } from "./js_CNTRL.js"
 //port { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
 import { js_folds   } from "./js_folds.js"
-//port { js_input   } from "./js_input.js"
+import { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
 //port { js_log     } from "./js_log.js"
 //port { js_notes   } from "./js_notes.js"
@@ -133,13 +134,13 @@ let format_summary_comments = function()
             el.innerHTML
                 = el.innerHTML
                 + "<em "
-                + "   style = 'float:right; opacity:0.5; margin-left: 2em;'"
+                + "   style = 'float:right; margin-left: 2em;'"
                 + " onclick = 'js_linkify.fold_open_012(event, 2);'"
                 + ">▶◀</em>"
                 + "&nbsp;"
 
                 + "<em class='cb_copy'"
-                + "   style = 'float:right; opacity:0.5; margin-left: 2em;'"
+                + "   style = 'float:right; margin-left: 2em;'"
                 + " onclick = 'js_linkify.copy_container_text(event); return false;'" // i.e. cancelBubble
                 + ">⬜</em>"
                 + "&nbsp;"
@@ -217,7 +218,8 @@ let copy_container_text = function(e)
         :   pre    .textContent;        // [PRE  TEXT TO CLIPBOARD]
 
     // COPY TO RELEVANT TEXT AREA
-    let ta = note_input_TEXTAREA || details.querySelector("TEXTAREA");
+ // let ta = note_input_TEXTAREA || details.querySelector("TEXTAREA");
+    let ta = js_input;
 
     // APPEND TEXT TO TEXTAREA
     if( ta && (details.id != "note_DETAILS"))
@@ -297,15 +299,15 @@ let linkify_file_pathes = function()
             a_href     += sub_fold + fileName;
 
 //{{{
-console.log("%c "          +        path     .padEnd(48)
-           +"%c "          + String(parents ).padEnd(24)
-           +"%c "          +        up_count
-           +"%c "          +        a_href
-           ,"background-color: #000; color: #F00"
-           ,"background-color: #000; color: #F0F"
-           ,"background-color: #222; color: #0FF"
-           ,"background-color: #00F; color: #FF0"
-           );
+//console.log("%c "          +        path     .padEnd(48)
+//           +"%c "          + String(parents ).padEnd(24)
+//           +"%c "          +        up_count
+//           +"%c "          +        a_href
+//           ,"background-color: #000; color: #F00"
+//           ,"background-color: #000; color: #F0F"
+//           ,"background-color: #222; color: #0FF"
+//           ,"background-color: #00F; color: #FF0"
+//           );
 //}}}
 //{{{
 //console.log(                       line         );

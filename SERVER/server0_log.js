@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server0_log.js ● termio ● ANSII-TERMINAL                _TAG (260930:23h:47)
+//│ server0_log.js ● termio ● ANSII-TERMINAL                _TAG (261001:01h:15)
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 // eslint-disable no-warning-comments */
@@ -33,6 +33,14 @@ const B   = ESC+"[1;34m"                ; //    BLUE
 const M   = ESC+"[1;35m"                ; // MAGENTA
 const C   = ESC+"[1;36m"                ; //    CYAN
 const N   = ESC+"[0m"                   ; //      NC
+
+// TODO:  FIND ECC COLOR FOR ANSII-TERMINAL {{{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ const lfX = [ R, G, Y, B, M, C, N ]     ;
+//│ //            2  5  4  6  7
+//└────────────────────────────────────────────────────────────────────────────┘
+//}}}
+
 //}}}
 // log, log_X .. log_N, console {{{
 let log   = console.log;

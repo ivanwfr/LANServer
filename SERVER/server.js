@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-/*│ server.js                 */ const SERVER_JS_TAG = "server (260930:23h:10)"; /* eslint-disable-line no-unused-vars */
+/*│ server.js                 */ const SERVER_JS_TAG = "server (261001:02h:35)";
 //└────────────────────────────────────────────────────────────────────────────┘
 
 let server = (function() {
@@ -15,46 +15,6 @@ let   https                     = require("https");
 //}}}
 //● Server  Modules:    ● log header listener network notes qtext {{{
 let server0_log      = require("./server0_log.js");
-//...{{{
-/* eslint-disable no-unused-vars */
-// INLINING:
-let { log
-    ,    toggle
-    ,    is_logging
-    ,    is_tagging
-    ,    ellipsis
-
-    ,    N
-
-    ,    R
-    ,    G
-    ,    B
-
-    ,    M
-    ,    C
-    ,    Y
-
-    ,    log_N
-
-    ,    log_R
-    ,    log_G
-    ,    log_B
-
-    ,    log_C
-    ,    log_M
-    ,    log_Y
-
-    ,    log_X
-
-    ,    LF
-    ,    ESC
-
-    ,    TRACE_OPEN
-    ,    TRACE_CLOSE
-
-} = server0_log;
-/* eslint-enable  no-unused-vars */
-//}}}
 let server1_network  = require("./server1_network.js");
 let server2_listener = require("./server2_listener.js");
 let server3_header   = require("./server3_header.js");
@@ -105,7 +65,50 @@ catch(ex) {
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ CREATE SERVER
+//│ INLINING
+//└────────────────────────────────────────────────────────────────────────────┘
+//{{{
+/* eslint-disable no-unused-vars */
+let { log
+    ,    toggle
+    ,    is_logging
+    ,    is_tagging
+    ,    ellipsis
+
+    ,    N
+
+    ,    R
+    ,    G
+    ,    B
+
+    ,    M
+    ,    C
+    ,    Y
+
+    ,    log_N
+
+    ,    log_R
+    ,    log_G
+    ,    log_B
+
+    ,    log_C
+    ,    log_M
+    ,    log_Y
+
+    ,    log_X
+
+    ,    LF
+    ,    ESC
+
+    ,    TRACE_OPEN
+    ,    TRACE_CLOSE
+
+} = server0_log;
+/* eslint-enable  no-unused-vars */
+//}}}
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ SERVER
 //└────────────────────────────────────────────────────────────────────────────┘
 /*➔ createServer .. [http__server] [https_server] {{{*/
 /*{{{*/
@@ -174,8 +177,8 @@ let createServer = function()
 };
 /*}}}*/
 
-// return ● createServer config, http {{{
-return { name: "server"
+// return ● createServer {{{
+return { name: SERVER_JS_TAG
     ,    createServer
 };
 //}}}

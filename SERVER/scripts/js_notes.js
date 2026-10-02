@@ -1,22 +1,23 @@
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260929:22h:23) │
-//├────────────────────────────────────────────────────────────────────────────┤
-//│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
-//└────────────────────────────────────────────────────────────────────────────┘
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261002:03h:57)
+//├─────────────────────────────────────────────────────────────────[...]
+//│ 🔵 View Helper: Renders, layouts, and scrolls notes in the DOM    │
+//│    State Management ➔ js_CNTRL (via js_MODEL, js_VIEW)            │
+//│    Data  Operations ➔ notes.js (via js_MODEL)                     │
+//└─────────────────────────────────────────────────────────────────[...]
 /* IMPORT {{{*/
 
 // globals js_VIEW   */ // STUB FOR MVC VIEW
 /* globals notes     */
-/* globals js_input  */
-/* globals js_ticker */
+/* globals js_log    */
 
 //port { js_CNTRL   } from "./js_CNTRL.js"
 //port { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
 //port { js_folds   } from "./js_folds.js"
-import { js_input   } from "./js_input.js"
+//port { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
-//port { js_log     } from "./js_log.js"
+import { js_log     } from "./js_log.js"
 //port { js_notes   } from "./js_notes.js"
 //port { js_store   } from "./js_store.js"
 import { js_ticker  } from "./js_ticker.js"
@@ -27,284 +28,122 @@ import { notes      } from "./notes.js"
 let js_notes    = (function()
 {
 "use strict";
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes ● DATA ● LOAD ● LOCAL STORAGE ● NOTE TABLE ● STATUS LINE         🟤
-//└────────────────────────────────────────────────────────────────────────────┘
-// DATA LOAD TABLE STATUS UTIL {{{
 
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes ● DATA ● SERVER/style/notes.css ● SERVER/style/qtext.css         ●
-//└────────────────────────────────────────────────────────────────────────────┘
-/* log BUTTONS NOTE_DETAILS_HTML BULLETS AUTO-SAVE-INTERVALS {{{*/
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ js_notes ● VIEW HELPER ● RENDER ● LAYOUT ● SCROLL              🖥 │
+//└─────────────────────────────────────────────────────────────────[...]
+// ● log-items inlining ● SERVER/scripts/js_log.js {{{
+/* eslint-disable no-unused-vars */
+
+let log                                        = js_log.log;
+let is_logging                                 = js_log.is_logging;
+let console_clear                              = js_log.console_clear;
+
+let ellipsis                                   = js_log.ellipsis;
+let get_src_link                               = js_log.get_src_link;
+
+let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
+let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
+let lbB                                        = js_log.lbB;
+let lbX                                        = js_log.lbX;
+
+/* eslint-enable  no-unused-vars */
+//}}}
+// ● log configuration {{{
 let log_this = false;
 let tag_this = false || log_this;
+//}}}
 
-/* ●  BUTTONS {{{*/
-const BUTTON_WASTED_NAME  = "No Deleted Notes";
-const BUTTON_WASTED_TITLE = "▲ Import Deleted Notes";
-
-const BUTTON_EXPORT_NAME  = "Export → 📝";
-const BUTTON_EXPORT_TITLE = "Export Notes\nto Clipboard";
-
-//nst BUTTON_IMPORT_NAME  = "<sub>↓</sub> Import <sup>↑</sup>";
-const BUTTON_IMPORT_NAME  =            "↓ Import ↑";
-const BUTTON_IMPORT_TITLE = "Import Notes\npasted in Input\n▲ above";
-
-const STATUS_LINE_TITLE   = "Click: brighter — bigger — dimmer";
-
-/*}}}*/
-/* ●  NOTE_DETAILS_HTML {{{*/
-const NOTE_DETAILS_HTML   = `
-<summary >📝 My Notes for This Page</summary>
-<div>
-    <button   id="narr_button"         onclick='js_notes.narrower             (event);'></button>
-    <button   id="tune_button"         onclick='js_notes.tunesize             (event);'></button>
-    <button   id="wide_button"         onclick='js_notes.wider                (event);'></button>
-    <br>
-    <textarea id="note_input_TEXTAREA" placeholder="${notes.PLACEHOLDER_CREATE_PROMPT}"></textarea>
-    <button   id="save_note_BUTTON"        XXclick='  notes.note_1_onclick_save  (event)'                               >Save Note</button>
-    <button   id="wasted_note_BUTTON"      onclick='  notes.note_7_onclick_wasted(event)' title='${BUTTON_WASTED_TITLE}'>${BUTTON_WASTED_NAME}</button>
-    <button       class="cb_BUTTON"        onclick='  notes.note_3_onclick_export(event)' title='${BUTTON_EXPORT_TITLE}'>${BUTTON_EXPORT_NAME}</button>
-    <button       class="cb_BUTTON"        onclick='  notes.note_2_onclick_import(event)' title='${BUTTON_IMPORT_TITLE}'>${BUTTON_IMPORT_NAME}</button>
-    <DIV      id="saved_notes_DIV">
-     <TABLE   id="saved_notes_TABLE"></TABLE>
-    </DIV>
-    <div      id="status_line"         onclick='js_notes.tune_status  (event);' title='${STATUS_LINE_TITLE}'  ></div>
-</div>
-`;
-/*}}}*/
-
-/*_ wider {{{*/
-let wider = function()
-{
-if(tag_this) console.log("wider");
-
-    let rect = input.getBoundingClientRect();
-    input.style.width = parseInt(rect.width * 1.2)+"px";
-};
-/*}}}*/
-/*_ tunesize {{{*/
-let tunesize = function(e)
-{
-if(tag_this) console.log("tunesize");
-
-    let w;
-    switch(e.target.className)
-    {
-    case "layout1": w =  "300px";  input.style.width = w;  saved_notes_DIV.style.width = w; e.target.title = e.target.className = "layout2"; break; /* eslint-disable-line no-multi-assign */
-    case "layout2": w =  "700px";  input.style.width = w;  saved_notes_DIV.style.width = w; e.target.title = e.target.className = "layout3"; break; /* eslint-disable-line no-multi-assign */
-    case "layout3": w =  "900px";  input.style.width = w;  saved_notes_DIV.style.width = w; e.target.title = e.target.className = "layout4"; break; /* eslint-disable-line no-multi-assign */
-    case "layout4": w = "1000px";  input.style.width = w;  saved_notes_DIV.style.width = w; e.target.title = e.target.className = "default"; break; /* eslint-disable-line no-multi-assign */
-    default       : w =  "500px";  input.style.width = w;  saved_notes_DIV.style.width = w; e.target.title = e.target.className = "layout1"; break; /* eslint-disable-line no-multi-assign */
-    }
-};
-/*}}}*/
-/*_ narrower {{{*/
-let narrower = function(e) /* eslint-disable-line no-unused-vars */
-{
-if(tag_this) console.log("narrower");
-
-    let rect = input.getBoundingClientRect();
-    input.style.width = parseInt(rect.width * 0.8)+"px";
-};
-/*}}}*/
-
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ CONSTANTS ● BULLETS ● AUTO_SAVE_INTERVALS ● CSS BG                │
+//└─────────────────────────────────────────────────────────────────[...]
 /* ●  BULLETS {{{*/
 const BULLETS
-        = [ "◯"
-          , "🟤"
-          , "🔴"
-          , "🟠"
-          , "🟡"
-          , "🟢"
-          , "🔵"
-          , "🟣"
-          , "⚫"
-          , "⚪️"
-        ];
+    = [ "◯"
+      , "🟤"
+      , "🔴"
+      , "🟠"
+      , "🟡"
+      , "🟢"
+      , "🔵"
+      , "🟣"
+      , "⚫"
+      , "⚪️"
+    ];
 
 /*}}}*/
-// ●  auto_save INTERVAL ● auto_save TAG ●  CSS BG {{{
+// ●  auto_save INTERVAL ● auto_save TAG {{{
 const AUTO_SAVE_IDLE_INTERVAL_MS = 5000;
 const AUTO_SAVE_EDIT_INTERVAL_MS = 1000;
 const AUTO_SAVE_TAG         = "(auto_save)\n";
-const BG = [ /* eslint-disable-line no-unused-vars */
-  "#964B00A0"
-, "#FF0000A0"
-, "#FFA500A0"
-, "#FFFF00A0"
-, "#9ACD32A0"
-, "#6495EDA0"
-, "#EE82EEA0"
-, "#A0A0A0A0"
-, "#FFFFFFA0"
-, "#00000080"
-];
 //}}}
 
-/*}}}*/
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes ● LOAD                                                           ●
-//└────────────────────────────────────────────────────────────────────────────┘
-/* onload {{{*/
-let onload = function()
-{
-if(tag_this) console.log("onload");
-    // Save unfinished Notes when the user is leaving the tab {{{
-    document.addEventListener("visibilitychange", function(e) {
-        if( document.hidden )
-        {
-            js_input.input_save("visibilitychange listener");
-            notes.note_1_onclick_save ( e );
-        }
-    });
-    //}}}
-    // Auto-save user input content until submitted with a save-buton click {{{
-    js_ticker.setInterval(() => notes.note_1_onclick_save({ type: "auto_save" }), AUTO_SAVE_IDLE_INTERVAL_MS);
-
-    //}}}
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ GUI LEAK ● DATA ➔ VIEW                                                 │
-    //└────────────────────────────────────────────────────────────────────────┘
-    add_notes_DETAILS();
-    // Load saved Notes from localStorage {{{
-    layout_notes("onload");
-
-    //}}}
-    // Restore last stored layout {{{*/
-    js_input.layout_load();
-
-    //}}}
-};
-/*}}}*/
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes ● NOTES TABLE                                                    ●
-//└────────────────────────────────────────────────────────────────────────────┘
-/*_ add_notes_DETAILS {{{*/
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ PRIVATE STATE ● DOM REFERENCES                                    │
+//└─────────────────────────────────────────────────────────────────[...]
 /*{{{*/
-let note_DETAILS;
 let saved_notes_DIV;
 let saved_notes_TABLE;
-let input;
-let save_note_BUTTON;
-let wasted_note_BUTTON;
-let status_line;
-
+let layout_count = 0;
 /*}}}*/
-let add_notes_DETAILS = function()
+
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ PRIVATE ● INITIALIZATION & DOM SETUP                              │
+//└─────────────────────────────────────────────────────────────────[...]
+/*_ add_notes_DETAILS ● Initialize DOM refs {{{*/
+let add_notes_DETAILS = function(args)
 {
-if(tag_this) console.log("🔴 add_notes_DETAILS");
+if(tag_this) console.log("🔵 add_notes_DETAILS");
 
-    // Create a Notes section near the bottom of the page {{{
-/*{{{
-    let note_DETAILS_STYLE          = document.createElement("LINK");
-        note_DETAILS_STYLE.href     = NOTES_DETAILS_CSS_DATA;
-        note_DETAILS_STYLE.id       = "notes_details_style";
-        note_DETAILS_STYLE.type     = "text/css";
-        note_DETAILS_STYLE.charset  = "utf-8";
-        note_DETAILS_STYLE.rel      = "stylesheet";
-    document.getElementsByTagName("head")[0].appendChild( note_DETAILS_STYLE );
-}}}*/
+    //┌─────────────────────────────────────────────────────────────[...]
+    //│ CACHE DOM REFERENCES (from js_notes context, passed by VIEW)
+    //└─────────────────────────────────────────────────────────────[...]
+    saved_notes_DIV     = args.saved_notes_DIV    || document.querySelector("#saved_notes_DIV"  );
+    saved_notes_TABLE   = args.saved_notes_TABLE  || document.querySelector("#saved_notes_TABLE");
 
-    note_DETAILS                    = document.createElement("DETAILS");
-    note_DETAILS.id                 = "note_DETAILS";
-    note_DETAILS.className          = "empty";
-    note_DETAILS.innerHTML          = NOTE_DETAILS_HTML;
+    //┌─────────────────────────────────────────────────────────────[...]
+    //│ VERIFY DOM AVAILABILITY
+    //└─────────────────────────────────────────────────────────────[...]
+    if(!saved_notes_DIV  ) {
+        if( is_logging() ) log("%c● saved_notes_DIV not found", lb1+lbB);
+        return false;
+    }
+    if(!saved_notes_TABLE) {
+        if( is_logging() ) log("%c● saved_notes_TABLE not found", lb1+lbB);
+        return false;
+    }
 
-    document.body.appendChild( note_DETAILS );
-    //}}}
-//    /* ● sm_badge {{{*/
-//    if( smTracer.log() )
-//    {
-//        let div
-//            = document.createElement("DIV");
+    if( is_logging() ) {
+        log("%c● saved_notes_DIV  :\t"+ (saved_notes_DIV   && saved_notes_DIV  .tagName), lf6 );
+        log("%c● saved_notes_TABLE:\t"+ (saved_notes_TABLE && saved_notes_TABLE.tagName), lf6 );
+    }
 
-//        div.id
-//            = "smTracer";
-
-//        div.innerHTML
-//            = "<span title='LOADING' class='LOADING'>🅻</span>"
-//            + "<span title='READY'   class='READY'  >🆁</span>"
-//            + "<span title='INPUT'   class='INPUT'  >🅸</span>"
-//            + "<span title='UPDATE'  class='UPDATE' >🆄</span>";
-
-//        note_DETAILS
-//            .parentElement
-//            .insertBefore(div, note_DETAILS);
-
-//        div.classList.add("logging");
-//        div.addEventListener("click", (e) => e.target.classList.toggle("logging", smTracer.logging()));
-//    }
-//    /*}}}*/
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ DOM ● note_DETAILS ● saved_notes_TABLE ● input ● save_note_BUTTON      │
-    //└────────────────────────────────────────────────────────────────────────┘
-    //{{{
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ NOTES ● scrollable div and table                                       │
-    //└────────────────────────────────────────────────────────────────────────┘
-    saved_notes_DIV     = document.querySelector("#saved_notes_DIV"  );
-    saved_notes_TABLE   = document.querySelector("#saved_notes_TABLE");
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ INPUT TEXTAREA                                                         │
-    //└────────────────────────────────────────────────────────────────────────┘
-    input               = document.querySelector("#note_input_TEXTAREA");
-    input.setAttribute("placeholder", notes.PLACEHOLDER_CREATE_PROMPT);
-
-    input.addEventListener("blur" , input_blur_listener);
-    input.addEventListener("focus", input_focus_listener);
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ SAVE BUTTON                                                            │
-    //└────────────────────────────────────────────────────────────────────────┘
-    save_note_BUTTON    = document.querySelector("#save_note_BUTTON");
-    save_note_BUTTON    .setAttribute("disabled",""); // 2 arguments required
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ WASTED BUTTON                                                          │
-    //└────────────────────────────────────────────────────────────────────────┘
-    wasted_note_BUTTON  = document.querySelector("#wasted_note_BUTTON");
-    wasted_note_BUTTON  .setAttribute("disabled",""); // 2 arguments required
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ STATUS-LINE                                                            │
-    //└────────────────────────────────────────────────────────────────────────┘
-    status_line         = document.querySelector("#status_line");
-
-    //}}}
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ GUI VIEW LEAK ➔ DATA
-    //└────────────────────────────────────────────────────────────────────────┘
-    notes.add_notes_GUI( { input
-                         , note_DETAILS
-                         , saved_notes_TABLE
-                         , save_note_BUTTON
-                         , wasted_note_BUTTON
-   });
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ GUI VIEW ➔ INPUT EVENTS HANDLER
-    //└────────────────────────────────────────────────────────────────────────┘
-    js_input.add_notes_GUI( { input
-                         ,    note_DETAILS
-                         ,    saved_notes_DIV
-                         ,    saved_notes_TABLE
-   });
-
+    return true;
 };
 /*}}}*/
-//_ layout_notes — 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯ {{{
-/*{{{*/
-let layout_count = 0;
 
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ PUBLIC ● LAYOUT & RENDER                                          │
+//└─────────────────────────────────────────────────────────────────[...]
+/*_ layout_notes ● Populate or clear notes table {{{*/
+/*{{{*/
+//│ Purpose: Render nArray into saved_notes_TABLE
+//│ Called from: js_MODEL after save/delete, js_VIEW on state change
+//│ @param {string} _caller - Debug label
+//│ @param {number} index - Which note to highlight (optional)
 /*}}}*/
-let layout_notes = function(_caller="?",index=-1)
+let layout_notes = function(_caller="?", index=-1)
 {
-if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
+if(tag_this) console.log("🔵 layout_notes ← "+ _caller);
+
+    //┌──────────────────────────────────────────────────────────────[...]
+    //│ ENSURE TABLE IS AVAILABLE
+    //└──────────────────────────────────────────────────────────────[...]
+    if(!saved_notes_TABLE) {
+        if( is_logging() ) log("%c● layout_notes: TABLE NOT FOUND", lb1+lbB);
+        return;
+    }
+
     /* 1. LOAD NOTES from server or localStorage {{{*/
     let nArray = notes.get_nArray();
     if(!nArray.length && !notes.get_notes_loaded_from())
@@ -313,6 +152,7 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
         nArray = [];
     }
     /*}}}*/
+
     /* 2. POPULATE OR CLEAR [note_row] ● @see SERVER/style/notes.css {{{*/
     let innerHTML = nArray.length
         ? nArray.map((n, i) => ""
@@ -321,63 +161,277 @@ if(tag_this) console.log("🔴 layout_notes ← "+ _caller);
 //                                  " title='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
 +                            " data-content='"+ escapeHTML(n.text).replace(AUTO_SAVE_TAG               , "")+"'"
 +                            " data-id='"     + i                                                           +"'"
-+  "                                                      XXXlick='js_notes.note_5_onclick_edit  (event, "+i+")'>"
++  "                                                     >"
 +  "<TD><div    class='note_num' >"+                      (i+1)                                                +"</div>   </TD>"
 +  "<TD><button class='check_button'  title='Check note'  onclick='   notes.note_4_onclick_check (event, "+i+")'></button></TD>"
 +  "<TD><button class='edit_button'   title='Edit note'                                                         ></button></TD>"
 +  "<TD><div    class='truncated'>"+            escapeHTML(n.text)                                             +"</div>   </TD>"
 +  "<TD><small  class='timestamp'                         onclick='event.cancelBubble = true;'>"+ new Date(n.timestamp).toLocaleString() +"</small></TD>"
-+  "<TD><button class='delete_button' title='Delete note' XXclick='   notes.note_6_onclick_delete(event, "+i+")'></button></TD>"
++  "<TD><button class='delete_button' title='Delete note'                                                      ></button></TD>"
 + "</TR>"
 ).join("")
 
-        : "<TR><TD class='no_notes_yet_TD' colspan='6'>No notes yet</TD></TR";
+        : "<TR><TD class='no_notes_yet_TD' colspan='6'>No notes yet</TD></TR>";
 
     saved_notes_TABLE.innerHTML =            "<TABLE id='saved_notes_TABLE'>"+ innerHTML +"</TABLE>";
     /*}}}*/
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ IF "No notes yet" → layout_notes will be called with next load results │
-    //└────────────────────────────────────────────────────────────────────────┘
+
+    //┌──────────────────────────────────────────────────────────────[...]
+    //│ LAYOUT COUNTER (for status display)
+    //└──────────────────────────────────────────────────────────────[...]
     layout_count += 1;
-    tail_status(tics_status(layout_count), notes.get_notes_loaded_from());
 
-    // STANDOUT LAST HANDLED NOTE
-    notes.standout_note_at_index( index );
+    //┌──────────────────────────────────────────────────────────────[...]
+    //│ HIGHLIGHT LAST HANDLED NOTE
+    //└──────────────────────────────────────────────────────────────[...]
+    standout_note_at_index( index );
 
-    // DISPLAY FILE NAME ● NUMBER OF NOTE ● FROM SERVER OR CLIENT
+    //┌──────────────────────────────────────────────────────────────[...]
+    //│ UPDATE SUMMARY (via notes.js)
+    //└──────────────────────────────────────────────────────────────[...]
     notes.update_summary();
-};
-//}}}
 
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes ● STATUS LINE                                                    ●
-//└────────────────────────────────────────────────────────────────────────────┘
-/* SHOW TAIL TUNE TICS {{{*/
-/*_ show_status {{{*/
+    //┌──────────────────────────────────────────────────────────────[...]
+    //│ DEBUG: Log layout operation
+    //└──────────────────────────────────────────────────────────────[...]
+    if( is_logging() ) {
+        let caller = "js_notes ● layout_notes";
+        log("%c"+caller                                   , lf6     );
+        log("%c● _caller...:\t%c["+ _caller           +"]", lf6, lb0);
+        log("%c● index.....:\t%c["+ index             +"]", lf6, lb1);
+        log("%c● layout_cnt:\t%c["+ layout_count      +"]", lf6, lb2);
+        log("%c● nArray.len:\t%c["+ nArray.length     +"]", lf6, lb3);
+    }
+};
+/*}}}*/
+
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ PUBLIC ● TABLE STATUS & HIGHLIGHTING                             │
+//└─────────────────────────────────────────────────────────────────[...]
+/*_ standout_note_at_index ● Highlight note row {{{*/
+/*{{{*/
+let standout_note_index;
+/*}}}*/
+let standout_note_at_index = function(index)
+{
+if(tag_this) console.log("🔵 standout_note_at_index: "+ index);
+
+    if(index < 0)
+        index = standout_note_index;
+
+    // clip at last note
+    if( index >= notes.get_nArray().length)
+        index  = notes.get_nArray().length - 1;
+
+    // fallback to last standout_note_index
+    let is_last_note
+        =  (index >= 0)
+        && (index == (notes.get_nArray().length -1));
+
+    if( is_last_note && is_last_note_auto_save() )
+        index = standout_note_index;
+
+    document.querySelectorAll(".standout").forEach((el) => el.classList.remove("standout"));
+
+    if(index >= 0)
+    {
+        standout_note_index = index;
+        note_scrollIntoView( index );
+    }
+};
+/*}}}*/
+
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ PUBLIC ● SCROLLING UTILITIES                                      │
+//└─────────────────────────────────────────────────────────────────[...]
+/*_ note_scrollIntoView ● Scroll note into viewport {{{*/
+let note_scrollIntoView = function(index=-1)
+{
+if(tag_this) console.log("🔵 note_scrollIntoView: "+ index);
+
+    let nArray = notes.get_nArray();
+    if( !nArray.length ) return;
+
+    if(   (index <  0            )
+       || (index >= nArray.length)
+      )
+        index  = nArray.length - 1;
+
+    let tr = saved_notes_TABLE.firstElementChild.children[ index ];
+    if( tr )
+        tr.classList.add("standout");
+
+    scroll_TR_intoView(tr);
+};
+/*}}}*/
+/*_ scroll_TR_intoView ● Debounced scroll handler {{{*/
+/* debounce timeout {{{*/
+let SCROLL_TR_INTOVIEW_DELAY = 500;
+let scroll_TR_intoView_timeout;
+let scroll_TR_intoView = function(tr)
+{
+if(tag_this) console.log("🔵 scroll_TR_intoView: debounce set");
+
+    if(scroll_TR_intoView_timeout) clearTimeout( scroll_TR_intoView_timeout );
+       scroll_TR_intoView_timeout =  setTimeout( scroll_TR_intoView_handler , SCROLL_TR_INTOVIEW_DELAY, tr);
+};
+/*}}}*/
+let scroll_TR_intoView_handler = function(tr)
+{
+if(tag_this) console.log("🔵 scroll_TR_intoView_handler: %c"+ellipsis(tr.innerText.trim(),50), "color: magenta");
+
+    scroll_TR_intoView_timeout = null;
+
+    //┌──────────────────────────────────────────────────────────────[...]
+    //│ Get the nearest scrollable ancestor (vertical only)
+    //└──────────────────────────────────────────────────────────────[...]
+    let        box = getClosestScrollableAncestor( tr );
+    if(       !box ) return;
+
+    let   row_rect =  tr.getBoundingClientRect();
+    let   box_rect = box.getBoundingClientRect();
+
+    //┌──────────────────────────────────────────────────────────────[...]
+    //│ Calculate scroll offset to center row in viewport
+    //└──────────────────────────────────────────────────────────────[...]
+    let offset_old  = parseInt(row_rect.top - box_rect.top     );
+    let offset_new  = parseInt(  offset_old - box_rect.height/2);
+
+    // [tr] is already fully visible, no scroll required
+    if(   (row_rect.top    > box_rect.top)
+       && (row_rect.bottom < box_rect.bottom)
+     )
+        return;
+    let box_scrollY = box.scrollTop + offset_new;
+
+    //┌──────────────────────────────────────────────────────────────[...]
+    //│ Use requestAnimationFrame to ensure DOM is ready
+    //└──────────────────────────────────────────────────────────────[...]
+    requestAnimationFrame(() => {
+        box.scrollTo({ top: box_scrollY, behavior: "smooth" });
+    });
+};
+/*}}}*/
+/*_ getClosestScrollableAncestor ● Find scrollable parent {{{*/
+let getClosestScrollableAncestor = function(el)
+{
+    if(    !el ) return null;
+
+    return (el == document.documentElement)
+            ? null
+            : ( el.scrollHeight > el.clientHeight)
+              ? el
+              : getClosestScrollableAncestor(el.parentElement);
+};
+/*}}}*/
+
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ PUBLIC ● SIZING & LAYOUT CONTROLS                                │
+//└─────────────────────────────────────────────────────────────────[...]
+/*_ wider ● Increase textarea width {{{*/
+let wider = function()
+{
+if(tag_this) console.log("🔵 wider");
+
+    let input = get_input();
+    if(!input) return;
+
+    let rect = input.getBoundingClientRect();
+    input.style.width = parseInt(rect.width * 1.2)+"px";
+};
+/*}}}*/
+/*_ narrower ● Decrease textarea width {{{*/
+let narrower = function(e) /* eslint-disable-line no-unused-vars */
+{
+if(tag_this) console.log("🔵 narrower");
+
+    let input = get_input();
+    if(!input) return;
+
+    let rect = input.getBoundingClientRect();
+    input.style.width = parseInt(rect.width * 0.8)+"px";
+};
+/*}}}*/
+/*_ tunesize ● Cycle layout sizes {{{*/
+let tunesize = function(e)
+{
+if(tag_this) console.log("🔵 tunesize");
+
+    if(!e.target) return;
+
+    let w;
+    switch(e.target.className)
+    {
+    case "layout1": w =  "300px";  update_layout_width(w); e.target.title = e.target.className = "layout2"; break; /* eslint-disable-line no-multi-assign */
+    case "layout2": w =  "700px";  update_layout_width(w); e.target.title = e.target.className = "layout3"; break; /* eslint-disable-line no-multi-assign */
+    case "layout3": w =  "900px";  update_layout_width(w); e.target.title = e.target.className = "layout4"; break; /* eslint-disable-line no-multi-assign */
+    case "layout4": w = "1000px";  update_layout_width(w); e.target.title = e.target.className = "default"; break; /* eslint-disable-line no-multi-assign */
+    default       : w =  "500px";  update_layout_width(w); e.target.title = e.target.className = "layout1"; break; /* eslint-disable-line no-multi-assign */
+    }
+};
+/*}}}*/
+/*_ update_layout_width ● Helper for tunesize {{{*/
+let update_layout_width = function(w)
+{
+    let input = get_input();
+    if(!input) return;
+
+    input.style.width = w;
+    if(saved_notes_DIV)
+        saved_notes_DIV.style.width = w;
+};
+/*}}}*/
+
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ PUBLIC ● STATUS LINE & FEEDBACK                                  │
+//└─────────────────────────────────────────────────────────────────[...]
+/*_ tune_status ● Cycle status display modes {{{*/
+let tune_status = function(e) /* eslint-disable-line no-unused-vars */
+{
+if(tag_this) console.log("🔵 tune_status");
+
+    let status_line = get_status_line();
+    if(!status_line) return;
+
+    if     ( !status_line.classList.contains("brighter") ) status_line.classList.add   ("brighter");
+    else if( !status_line.classList.contains("bigger"  ) ) status_line.classList.add   ("bigger"  );
+    else {                                                 status_line.classList.remove("brighter");
+                                                           status_line.classList.remove("bigger"  );
+    }
+};
+/*}}}*/
+/*_ show_status ● Display status message {{{*/
 let show_status = function(msg)
 {
-if(log_this) console.log("⚫ show_status( "+msg+" )");
+if(tag_this) console.log("🔵 show_status( "+msg+" )");
+
+    let status_line = get_status_line();
+    if(!status_line) return;
 
     status_line.msg        = msg;
     status_line.innerHTML  = msg +" "+ (status_line.tail_msg || "");
 
-    // ...with a copy to [save_note_BUTTON] title
-    save_note_BUTTON.title = msg;
+    // ... with a copy to [save_note_BUTTON] title
+    let save_note_BUTTON = document.querySelector("#save_note_BUTTON");
+    if( save_note_BUTTON ) save_note_BUTTON.title = msg;
 };
 /*}}}*/
-/*_ tail_status {{{*/
+/*_ tail_status ● Update tail message in status line {{{*/
 /*{{{*/
 let tail_msg_1;
 let tail_msg_2;
 /*}}}*/
 let tail_status = function(...args)
 {
+    let status_line = get_status_line();
+    if(!status_line) return;
+
     // CACHE
     tail_msg_1 = args[0] ? args[0] : tail_msg_1;
     tail_msg_2 = args[1] ? args[1] : tail_msg_2;
 
     // TITLE
-    status_line.title = STATUS_LINE_TITLE
+    status_line.title = "Click: brighter — bigger — dimmer"
         + (tail_msg_1 ? "\n● " + tail_msg_1 : "")
         + (tail_msg_2 ? "\n● " + tail_msg_2 : "")
         +               "\n● x"+ layout_count +" layout count";
@@ -391,19 +445,11 @@ let tail_status = function(...args)
     show_status(status_line.msg || "…");
 };
 /*}}}*/
-/*_ tune_status {{{*/
-let tune_status = function(e) /* eslint-disable-line no-unused-vars */
-{
-    if     ( !status_line.classList.contains("brighter") ) status_line.classList.add   ("brighter");
-    else if( !status_line.classList.contains("bigger"  ) ) status_line.classList.add   ("bigger"  );
-    else {                                                 status_line.classList.remove("brighter");
-                                                           status_line.classList.remove("bigger"  );
-    }
-};
-/*}}}*/
-/*_ tics_status {{{*/
+/*_ tics_status ● Format layout count as bullet string {{{*/
 let tics_status = function( count )
 {
+if(tag_this) console.log("🔵 tics_status: "+ count);
+
     let   cent = parseInt(       count / 100);
     let   tens = parseInt(       count /  10);
     let   unit =                 count %  10 ;
@@ -415,22 +461,11 @@ let tics_status = function( count )
     return b_cent + b_tens + b_unit;
 };
 /*}}}*/
-/*}}}*/
 
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_notes ● UTIL                                                           ●
-//└────────────────────────────────────────────────────────────────────────────┘
-// CLIPBOARD ESCAPE {{{
-/* ● copy_to_clipboard {{{*/
-let copy_to_clipboard = function(buffer)
-{
-if(tag_this) console.log("copy_to_clipboard:");
-if(log_this) console.log( buffer );
-
-    navigator.clipboard.writeText( buffer );
-};
-/*}}}*/
-/*● escapeHTML {{{*/
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ PUBLIC ● UTILITY ● STRING ESCAPING & FORMATTING                  │
+//└─────────────────────────────────────────────────────────────────[...]
+/*●  escapeHTML ● Sanitize text for HTML {{{*/
 let escapeHTML = function(text)
 {
     if (!text) return "";
@@ -442,180 +477,36 @@ let escapeHTML = function(text)
         .replace(/'/g, "&#039;");
 };
 /*}}}*/
-//}}}
-
-//}}}
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟢 EDIT   ● note_5_onclick_edit                                         ✎  │
-//└────────────────────────────────────────────────────────────────────────────┘
-//● note_5_onclick_edit ● onclick ● note_row {{{
-let note_5_onclick_edit = function(e,index)
+/*● copy_to_clipboard ● Copy text to system clipboard {{{*/
+let copy_to_clipboard = function(buffer)
 {
-if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
+if(tag_this) console.log("🔵 copy_to_clipboard");
+if(log_this) console.log( buffer );
 
-    // STORE CURRENT INPUT CONTENT (WILL BE RESTORED BY NEXT RELOAD)
-    js_input.input_save("note_5_onclick_edit");
-
-    // TOGGLE OFF ANY CURRENT EDIT
-    let editing_note_index  = get_editing_note_index();
-    if( editing_note_index >= 0)
-    {
-        js_input.reset_input("note_5_onclick_edit");
-        if(index == editing_note_index)
-            return;
-    }
-
-    // COMMIT INPUT CONTENT AS A [NEW] OR [EDITED] NOTE
-    notes.note_1_onclick_save ( e );
-
-    // CLEAR TEXTAREA EDIT PROMPT
-    notes.reset_input_placeholder();
-
-    let  note_row;
-    if(e.target)
-    {
-        for(   note_row =   e.target
-             ; note_row && !note_row.classList.contains("note_row")
-             ; note_row =   note_row.parentElement
-           );
-
-        input.value = note_row.dataset.content;
-    }
-    else {
-        let nArray = notes.get_nArray();
-        input.value = nArray[index].text;
-    }
-
-    input.classList.remove("auto_insert_prefix");
-
-    // EDITING A [checked] NOTE (OR NOT)
-    if( notes.get_checked(index)) input.classList.add   ("checked");
-    else                          input.classList.remove("checked");
-
-    // ADD [index] INNTO [save_note_BUTTON] ATTRIBUTES
-    set_editing_note_index( index );
-
-    // MAKE FIRST SYNCHRONOUS CALL TO START TRACKING CHANGES
-    notes.note_1_onclick_save( { type: "auto_save" } );
-};
-//}}}
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ CALLERS OF `save_note_auto`
-//│ ● USER CLICK      ➔ CLICK SAVE BUTTON
-//│ ● USER INPUT      ➔ input_listener [sync on first user input input empty]
-//│ ● js_notes.onload ➔ setInterval-AUTO_SAVE_IDLE_INTERVAL_MS
-//└────────────────────────────────────────────────────────────────────────────┘
-/* auto ● same ● unchanged ● editing_note_index {{{*/
-/*_ save_note_auto {{{*/
-let save_note_auto = function(e={})
-{
-//{{{
-let caller = "save_note_auto";
-if(tag_this) console.log("🔴 "+ caller);
-
-//}}}
-    // SAME AS ORIGINAL ● save_note_BUTTON disabled {{{
-    let   text = input.value.trim();
-    if(  !text
-       || is_input_auto_insert_prefix()
-       || is_input_same_as_original()
-      ) {
-        save_note_BUTTON.setAttribute("disabled","");
-
-        if(is_last_note_auto_save())
-        {
-if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
-
-            let nArray = notes.get_nArray();
-            notes.note_6_onclick_delete(e, nArray.length-1);
-
-            js_ticker.changeInterval( js_notes.AUTO_SAVE_IDLE_INTERVAL_MS );
-            input.classList.remove("edit");
-        }
-        return;
-    }
-    //}}}
-    /* NO INPUT TEXT ● ...return {{{*/
-    if( !text )
-        return;
-    /*}}}*/
-    // SOME INPUT MODS              ● save_note_BUTTON  enabled {{{
-    else {
-        save_note_BUTTON.removeAttribute("disabled");
-    }
-    //}}}
-    // SAME AS LAST SAVED {{{
-    if( is_input_same_as_last_auto_save() )
-    {
-        return;
-    }
-    //}}}
-    // CHANGED ● ADDING AUTO_SAVE NOTE {{{
-    let nArray = notes.get_nArray();
-    let index;
-    if( is_last_note_auto_save() )
-    {
-        index = nArray.length-1;
-    }
-    else {
-        index = nArray.length;
-    }
-    if( index >= 0) {
-        text      = AUTO_SAVE_TAG + text;
-        if(index >= nArray.length) nArray.push({ text , timestamp: Date.now() });
-        else                       nArray[index].text = text;
-        js_notes.layout_notes(caller, index);
-
-            js_ticker.changeInterval( js_notes.AUTO_SAVE_EDIT_INTERVAL_MS );
-            input.classList.add("edit");
-    }
-    //}}}
+    navigator.clipboard.writeText( buffer );
 };
 /*}}}*/
-/*_ is_input_same_as_original {{{*/
-let is_input_same_as_original = function()
+
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ PRIVATE ● DOM HELPER GETTERS                                      │
+//└─────────────────────────────────────────────────────────────────[...]
+/*_ get_input ● Safe accessor for textarea {{{*/
+let get_input = function()
 {
-    let text    = input.value.trim();
-
-    // edited note index
-    let index = get_editing_note_index();
-
-    // no original to compare to
-    if(index < 0)
-        return false;
-
-    // input text == note text
-    let auto_save_text = AUTO_SAVE_TAG + text;
-
-    let nArray = notes.get_nArray();
-    if(   nArray[index].text.trim()
-       != auto_save_text.substring(AUTO_SAVE_TAG.length).trim()
-      )
-        return false;
-
-if(log_this) console.log("⚫ AUTO_SAVE SAME AS ORIGINAL");
-    return true;
+    return document.querySelector("#note_input_TEXTAREA");
 };
 /*}}}*/
-/*_ is_input_same_as_last_auto_save {{{*/
-let is_input_same_as_last_auto_save = function()
+/*_ get_status_line ● Safe accessor for status line {{{*/
+let get_status_line = function()
 {
-    let nArray = notes.get_nArray();
-    let text    = input.value.trim();
-    if(!nArray.length)
-        return false;
-
-    let auto_save_text  = AUTO_SAVE_TAG + text;
-    if(nArray[nArray.length-1].text.trim() != auto_save_text.trim())
-        return false;
-
-if(log_this) console.log("🔵 AUTO_SAVE: INPUT UNCHANGED");
-    return true;
+    return document.querySelector("#status_line");
 };
-            /*}}}*/
-/*_ is_last_note_auto_save {{{*/
+/*}}}*/
+
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ PRIVATE ● HELPER STATE CHECKERS (moved from js_notes.js)          │
+//└─────────────────────────────────────────────────────────────────[...]
+/*_ is_last_note_auto_save ● Check if last note is auto-save {{{*/
 let is_last_note_auto_save = function()
 {
     let nArray = notes.get_nArray();
@@ -625,181 +516,84 @@ let is_last_note_auto_save = function()
     if(!nArray[nArray.length-1].text.startsWith(AUTO_SAVE_TAG) )
        return false;
 
-if(log_this) console.log("🟣 AUTO_SAVE: LAST SAVED");
+if(log_this) console.log("🔵 IS_LAST_NOTE_AUTO_SAVE");
    return true;
 };
 /*}}}*/
-/*_ set_editing_note_index {{{*/
-/*{{{*/
-const EDITING_NOTE_NUM       = "editing_note_num";
-const BULLET_ECC_NUM         = "bullet_ecc_num";
-/*}}}*/
-let set_editing_note_index = function(index)
-{
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ SET   SAVE BUTTON ATTRIBUTE [EDITING_NOTE_NUM]
-    //└────────────────────────────────────────────────────────────────────────┘
-
-    if(index >= 0) {
-        save_note_BUTTON.innerText= "Update Note #"+   (index + 1);
-        save_note_BUTTON.setAttribute(EDITING_NOTE_NUM, index + 1);
-        save_note_BUTTON.setAttribute(BULLET_ECC_NUM  ,(index + 1) % 10);
-
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ MARK PREVIOUS EDITED NOTE
-        //└────────────────────────────────────────────────────────────────────┘
-        saved_notes_TABLE.querySelectorAll(".editing").forEach((el) => {
-            el.classList.remove(            "editing");
-            el.classList.add   (            "edited" );
-        });
-
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ SELECTED EDITING NOTE
-        //└────────────────────────────────────────────────────────────────────┘
-        saved_notes_TABLE.firstElementChild.children[index].classList.add("editing");
-    }
-    // CLEAR SAVE BUTTON ATTRIBUTE EDITING_NOTE_NUM
-    else {
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ EDITING NOTE LIST ITEM DONE
-        //└────────────────────────────────────────────────────────────────────┘
-        saved_notes_TABLE.querySelectorAll(".editing").forEach((el) => {
-            el.classList.remove(            "editing");
-            el.classList.add   (            "edited");
-        });
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│     let nArray = notes.get_nArray();
-//│     save_note_BUTTON.innerText        = "Add Note #"+ (nArray.length+1);
-//│     save_note_BUTTON.setAttribute(      "disabled","");
-//│     save_note_BUTTON.removeAttribute( EDITING_NOTE_NUM );
-//│     save_note_BUTTON.removeAttribute( BULLET_ECC_NUM   );
-//└────────────────────────────────────────────────────────────────────────────┘
-        index = notes.get_nArray().length;
-        save_note_BUTTON.innerText=    "Add Note #"+   (index + 1);
-        save_note_BUTTON.setAttribute(      "disabled","");
-        save_note_BUTTON.removeAttribute( EDITING_NOTE_NUM );
-        save_note_BUTTON.setAttribute(BULLET_ECC_NUM  ,(index + 1) % 10);
-    }
-
-    // standout edited note
-    notes.standout_note_at_index( index );
-};
-/*}}}*/
-/*_ get_editing_note_index {{{*/
-let get_editing_note_index = function()
-{
-    //┌──────────────────────────────────┐
-    //│ VIEW BUTTON AS DATA SOURE !!!!!! │
-    //└──────────────────────────────────┘
-    let    attr  = save_note_BUTTON.getAttribute( EDITING_NOTE_NUM );
-    let    index = (attr != null) ? parseInt(attr-1) : -1;
-    return index;
-};
-/*}}}*/
-/*}}}*/
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ INPUT FOCUS-BLUR
-//└────────────────────────────────────────────────────────────────────────────┘
-/*● input_focus_listener {{{*/
-let input_focus_listener = function()
-{
-//console.log("🟢 input_focus_listener");
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ● INSERT AUTO-INSERT NEW NOTE NUM
-    //└────────────────────────────────────────────────────────────────────────┘
-    if(!input.value ) {
-        input.value      = get_input_auto_insert_prefix();
-        input.classList.add("auto_insert_prefix");
-    }
-};
-/*}}}*/
-/*● input_blur_listener {{{*/
-let input_blur_listener = function()
-{
-//console.log("⚫ input_blur_listener");
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ● CANCEL AUTO-INSERT NEW NOTE NUM
-    //└────────────────────────────────────────────────────────────────────────┘
-    if( is_input_auto_insert_prefix() )
-    {
-        input.value = "";
-        save_note_auto();
-    }
-};
-/*}}}*/
-/*● is_input_auto_insert_prefix {{{*/
-let is_input_auto_insert_prefix = function()
-{
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ● CHECK  AUTO-INSERT NEW NOTE NUM
-    //└────────────────────────────────────────────────────────────────────────┘
-    if(!input      ) return false;
-    if(!input.value) return false;
-
-    // contains the auto-number (trimming aside)
-
-    let     new_note_num  = get_input_auto_insert_prefix();
-    return (new_note_num.trim() == input.value.trim());
-
-};
-//}}}
-/*_ get_input_auto_insert_prefix {{{*/
-let get_input_auto_insert_prefix = function()
-{
-    let nArray       = notes.get_nArray();
-    let num =           nArray.length + 1;
-
-    if( is_last_note_auto_save() )
-       num -= 1;
-
-    return             num+".\t";
-};
-/*}}}*/
-
 // return {{{
     return { name: "js_notes"
-        ,    onload
-        ,    AUTO_SAVE_IDLE_INTERVAL_MS
-        ,    AUTO_SAVE_EDIT_INTERVAL_MS
 
-        ,    get_input  : () => input
+        //┌──────────────────────────────────────────────────────────────[...]
+        //│ INITIALIZATION
+        //├──────────────────────────────────────────────────────────────[...]
+        //│ Called by js_VIEW to cache DOM references
+        //└──────────────────────────────────────────────────────────────[...]
+        ,    add_notes_DETAILS
 
-        //   onclick
+        //┌──────────────────────────────────────────────────────────────[...]
+        //│ LAYOUT & RENDERING
+        //├──────────────────────────────────────────────────────────────[...]
+        //│ Called by js_MODEL, js_VIEW on state changes
+        //└──────────────────────────────────────────────────────────────[...]
+        ,    layout_notes
+        ,    standout_note_at_index
+
+        //┌──────────────────────────────────────────────────────────────[...]
+        //│ SCROLLING
+        //├──────────────────────────────────────────────────────────────[...]
+        //│ Called when highlighting notes
+        //└──────────────────────────────────────────────────────────────[...]
+        ,    note_scrollIntoView
+
+        //┌──────────────────────────────────────────────────────────────[...]
+        //│ SIZING & LAYOUT CONTROLS
+        //├──────────────────────────────────────────────────────────────[...]
+        //│ Called by onclick handlers (inline HTML)
+        //└──────────────────────────────────────────────────────────────[...]
         ,    wider
         ,    tunesize
         ,    narrower
+
+        //┌──────────────────────────────────────────────────────────────[...]
+        //│ STATUS LINE DISPLAY
+        //├──────────────────────────────────────────────────────────────[...]
+        //│ Called by js_MODEL, js_VIEW, or inline handlers
+        //└──────────────────────────────────────────────────────────────[...]
+        ,    show_status
         ,    tune_status
+        ,    tail_status
+        ,    tics_status
 
-        // used by notes
-        , copy_to_clipboard
-        , show_status
+        //┌──────────────────────────────────────────────────────────────[...]
+        //│ UTILITY
+        //├──────────────────────────────────────────────────────────────[...]
+        ,    copy_to_clipboard
+        ,    escapeHTML
 
-    // EDIT ● WAS IN SERVER/scripts/notes.js
-    ,    note_5_onclick_edit            //...onclick
-    ,    set_editing_note_index
-    ,    get_editing_note_index
-    ,    save_note_auto
-    ,    is_input_same_as_original
-    ,    is_input_same_as_last_auto_save
-    ,    is_last_note_auto_save
+        //┌──────────────────────────────────────────────────────────────[...]
+        //│ CONSTANTS (for external consumption)
+        //├──────────────────────────────────────────────────────────────[...]
+        ,    AUTO_SAVE_IDLE_INTERVAL_MS
+        ,    AUTO_SAVE_EDIT_INTERVAL_MS
 
-        // DEBUG ONLY
-        , get_input_auto_insert_prefix
-        , is_input_auto_insert_prefix
-        , escapeHTML
-        , escape_note : (index) => escapeHTML( notes.get_nArray()[index].text )
-        , layout_notes
-        , print_note  : (index) =>             notes.get_nArray()[index].text
-        , tail_status
-        , tics_status
+        //┌──────────────────────────────────────────────────────────────[...]
+        //│ DEBUG ONLY
+        //├──────────────────────────────────────────────────────────────[...]
+        , layout_count : () => layout_count
         , log         : () => { log_this = !log_this; console.log("log_this=["+log_this+"]"); }
-        , tag         : () => { tag_this = !tag_this; console.tag("tag_this=["+tag_this+"]"); }
-};
+        , tag         : () => { tag_this = !tag_this; console.log("tag_this=["+tag_this+"]"); }
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵 ▼▼▼ MVC REFACTORING ZONE ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+//└────────────────────────────────────────────────────────────────────────────┘
+        , is_last_note_auto_save
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵 ▲▲▲ MVC REFACTORING ZONE ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+//└────────────────────────────────────────────────────────────────────────────┘
+    };
+
 //}}}
+
 })();
-document.addEventListener("DOMContentLoaded", js_notes.onload);
 export { js_notes }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
 window . js_notes = js_notes; // exposed to inline onclick handlers

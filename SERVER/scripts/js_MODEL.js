@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_MODEL.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:21h:49) │
+//│ js_MODEL.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261002:04h:01) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //| SKELTON FOR SERVER/scripts/notes.js
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -8,14 +8,15 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable object-shorthand */
 
-/* globals  js_log   */
-                        //┌─────────────┐
-/* exported js_MODEL */ //│ ● Model     │
-/* -------- js_VIEW  */ //│ - View      │
-/* globals  js_CNTRL */ //│ - Controler │
-                        //└─────────────┘
-/* globals    notes  */
-/* globals js_notes  */
+/* globals  js_log    */
+                         //┌─────────────┐
+/* exported js_MODEL  */ //│ ● Model     │
+/* -------- js_VIEW   */ //│ - View      │
+/* globals  js_CNTRL  */ //│ - Controler │
+                         //└─────────────┘
+/* globals    notes   */
+/* globals js_details */
+/* globals js_notes   */
 
 //port { js_CNTRL   } from "./js_CNTRL.js"
 //port { js_MODEL   } from "./js_MODEL.js"
@@ -24,7 +25,7 @@
 //port { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
 import { js_log     } from "./js_log.js"
-import { js_notes   } from "./js_notes.js"
+import { js_details } from "./js_details.js"
 //port { js_store   } from "./js_store.js"
 //port { js_ticker  } from "./js_ticker.js"
 //port { js_xpath   } from "./js_xpath.js"
@@ -85,9 +86,9 @@ const js_MODEL   = (function () {
             log("%c"+caller                                             , lb1     );
             log("%c● noteId......:\t%c["+ noteId                        , lf1, lb7);
         }
-        log("%c● SM CALLING js_notes.note_5_onclick_edit"  , lb1+lbB);
+        log("%c● SM CALLING js_details.note_5_onclick_edit"  , lb1+lbB);
         //}}}
-                            js_notes.note_5_onclick_edit({}, parseInt(noteId) );
+                            js_details.note_5_onclick_edit({}, parseInt(noteId) );
     };
     /*}}}*/
     /*  remove  ● note_6_onclick_delete {{{*/
@@ -108,7 +109,7 @@ const js_MODEL   = (function () {
     // return  ● edit ● save ● remove {{{
     let get_editing_note_index = function()
     {
-        return js_notes.get_editing_note_index();
+        return js_details.get_editing_note_index();
     };
     return { edit
         ,    save

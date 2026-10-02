@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                        _TAG (261001:00h:35)
+//│ server5_content.js                                        _TAG (261002:03h:46)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -98,6 +98,7 @@ const SCRIPT_QTEXT = ""
     + "<script type='module' src='/scripts/js_ticker.js  '></script>\n"
     + "<script type='module' src='/scripts/js_input.js   '></script>\n"
     + "<script type='module' src='/scripts/notes.js      '></script>\n"
+    + "<script type='module' src='/scripts/js_details.js '></script>\n"
     + "<script type='module' src='/scripts/js_notes.js   '></script>\n"
     ;
 /*}}}*/
@@ -180,39 +181,40 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
               ) {
                 data = String(data)
                 // html entities
-                    .  replace(                /</gm, "&lt;"                                )
-                    .  replace(                />/gm, "&gt;"                                )
+                    .  replace(                   /</gm, "&lt;"                                )
+                    .  replace(                   />/gm, "&gt;"                                )
                 // foldings
-                    .  replace(/(.*{{ *{.*)\r*\n*/gm, "<details><summary>$1</summary><pre>" )
-                    .  replace(/(.*}} *}.*)\r*\n*/gm,                   "$1</pre></details>")
+                    .  replace(   /(.*{{ *{.*)\r*\n*/gm, "<details><summary>$1</summary><pre>" )
+                    .  replace(   /(.*}} *}.*)\r*\n*/gm,                   "$1</pre></details>")
                 // remove vim fold markers
-                    .  replace(      / *;* *{{ *{/gm, " "                                   )
-                    .  replace(      / *;* *}} *}/gm, " "                                   )
+                    .  replace(         / *;* *{{ *{/gm, " "                                   )
+                    .  replace(         / *;* *}} *}/gm, " "                                   )
                 // box
 /*{{{
-                    .  replace(           /\/\/┌/gm , "TOP┌")
-                    .  replace(           /\/\/│/gm , "MID│")
-                    .  replace(           /\/\/└/gm , "BOT└")
+                    .  replace(               /\/\/┌/gm , "TOP┌")
+                    .  replace(               /\/\/│/gm , "MID│")
+                    .  replace(               /\/\/└/gm , "BOT└")
 }}}*/
 /*{{{
-                    .  replace(           /\/\/┌/gm , "🟤🔴🟠┌")
-                    .  replace(           /\/\/│/gm , "🟤🔴🟠│")
-                    .  replace(           /\/\/└/gm , "🟤🔴🟠└")
+                    .  replace(               /\/\/┌/gm , "🟤🔴🟠┌")
+                    .  replace(               /\/\/│/gm , "🟤🔴🟠│")
+                    .  replace(               /\/\/└/gm , "🟤🔴🟠└")
 }}}*/
 
-                    .  replace(         / *\/\/ *(┌.*$)/gm , "<BOXU>$1</BOXU>")
-                    .  replace(         / *\/\/ *(│.*$)/gm , "<BOXM>$1</BOXM>")
-                    .  replace(         / *\/\/ *(└.*$)/gm , "<BOXD>$1</BOXD>")
+                    .  replace( / *\/[\/\\*] *(┌.*$)/gm , "<BOXU>$1</BOXU>")
+                    .  replace( / *\/[\/\\*] *(│.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace( / *\/[\/\\*] *(└.*$)/gm , "<BOXD>$1</BOXD>")
 
-                    .  replace(         / *\/\/ *(├.*$)/gm , "<BOXM>$1</BOXM>")
-                    .  replace(         / *\/\/ *(┼.*$)/gm , "<BOXM>$1</BOXM>")
-                    .  replace(         / *\/\/ *(┤.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace( / *\/[\/\\*] *(├.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace( / *\/[\/\\*] *(┼.*$)/gm , "<BOXM>$1</BOXM>")
+                    .  replace( / *\/[\/\\*] *(┤.*$)/gm , "<BOXM>$1</BOXM>")
 
-                    .  replace(          /[└┘┌┐│─├┼┤]/gm , " "           )
+                    .  replace(         /[└┘┌┐│─├┼┤]/gm , " "              )
 
-                // comments
-                  //.  replace( /[\n\r]( *)\/\/ */gm, "\n✔✓$1")
-                  //.  replace(        /^ *\/\/ */  , "ℹ\n"  )
+                // comments {{{
+                  //.  replace(   /[\n\r]( *)\/\/ */gm, "\n✔✓$1"          )
+                  //.  replace(          /^ *\/\/ */  , "ℹ\n"             )
+                //}}}
                 ;
             }
             //{{{

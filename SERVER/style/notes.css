@@ -1,5 +1,5 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ ● SERVER/style/notes.css  ● $APROJECTS/LANServer  ● _TAG (261001:00h:56) │*/
+/*│ ● SERVER/style/notes.css  ● $APROJECTS/LANServer  ● _TAG (261001:23h:42) │*/
 /*│ ● SERVER/style/qtext.css                                                 │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 /* margin ● DETAILS SUMMARY TABLE {{{*/
@@ -340,48 +340,66 @@ min-height          : 8em;
 .auto_save .check_button { visibility: hidden; }
 .auto_save .edit_button  { visibility: hidden; }
 /*}}}*/
-/* note_row ● hover     ● standout {{{*/
 
-/* ROW */
-.note_row.standout              { background-color: #333 !important; outline: 1px dotted #FF0; }
-.note_row:hover                 { background-color: #444 !important;                           }
-.note_row.editing               { background-color: #000 !important; outline: 1px dashed #FF0; }
+/*┌──────────┐*/
+/*│ NOTE ROW
+/*└──────────┘*/
+/*{{{*/
+/*┌──────────────────────────────────────────────────┐*/
+/*│ NOTE ROW ● [TD BUTTON] ● [padding border]
+/*└──────────────────────────────────────────────────┘*/
+/*{{{*/
+.note_row                BUTTON { padding: 0 0  ; border: 1px solid #0000; }
+#saved_notes_TABLE:hover BUTTON { padding: 0 1em; border: 1px solid #8888; }
 
-/* ROW EDITING => EDITED */
-.note_row.editing,
-.note_row.edited                { border-left: 5px solid #FF8; margin-left: 5px; opacity: 0.5; }
-.note_row.editing.checked,
-.note_row.edited.checked        { border-left: 5px solid #0FD;                   opacity: 0.5; }
-.note_row.checked:hover,
-.note_row:hover                 {                                                opacity: 1.0; }
-/*{{{
-}}}*/
+.note_row:hover          TD     { padding: 1em 0; }
+.note_row.standout       TD     { padding: 1em 0; }
+/*}}}*/
+/*┌────────────────────────────────────────────────────────────────────────────┐*/
+/*│ NOTE ROW ● [TD BUTTON] ● [transition]
+/*└────────────────────────────────────────────────────────────────────────────┘*/
+/*{{{*/
+.note_row                BUTTON { transition: all 1000ms  500ms ease-out; }
+#saved_notes_TABLE:hover BUTTON { transition: all  200ms    0ms ease    ; }
 
-/*{{{
-.note_row.editing .edit_button,
-.note_row.edited  .edit_button  { border: 1px solid #FFF8 !important; }
-}}}*/
+.note_row                TD     { transition: all 1000ms 5000ms ease-out; }
+.note_row:hover          TD     { transition: all  200ms    0ms ease    ; }
+.note_row.standout       TD     { transition: all  200ms    0ms ease    ; }
 
-/* BUTTONS */
-.note_row                BUTTON { padding: 0 0  ; transition: all 1000ms  500ms ease-out; border: 1px solid #0000; }
-#saved_notes_TABLE:hover BUTTON { padding: 0 1em; transition: all  200ms    0ms ease    ; border: 1px solid #8888; }
-
-/* TD */
-.note_row                TD     {                 transition: all 1000ms 2000ms ease-out; }
-.note_row:hover          TD     { padding: 1em 0; transition: all  200ms    0ms ease    ; }
-.note_row.standout       TD     { padding: 1em 0; transition: all  200ms    0ms ease    ; }
-
-/*{{{
+/*}}}*/
+/*❌{{{
 .note_row          BUTTON::before { padding: 0   0  ; transition: padding 1000ms      500ms ease-out; }
 .note_row:hover    BUTTON         { padding: 0 2.0em 0 0 ; transition: padding 200ms ease    0ms    ; }
 .note_row.standout BUTTON         { padding: 0 2.0em 0 0 ; transition: padding 200ms ease    0ms    ; }
 .note_row:hover    BUTTON::before { padding: 0 1.0em;                                                 }
 .note_row.standout BUTTON::before { padding: 0 1.0em;                                                 }
 }}}*/
-
-/*{{{
+/*❌{{{
 #saved_notes_TABLE::hover         BUTTON::before { padding: 0 1.0em; }
 #saved_notes_TABLE:has(.standout) BUTTON::before { padding: 0 1.0em; }
 }}}*/
+/*┌──────────────────────────────────────────────────┐*/
+/*│ [standout hover .editing] ● [background outline]
+/*└──────────────────────────────────────────────────┘*/
+/*{{{*/
+.note_row.standout              { background-color: #333 !important; outline: 1px dotted #FF0; }
+.note_row:hover                 { background-color: #444 !important;                           }
+.note_row.editing               { background-color: #000 !important; outline: 1px dashed #FF0; }
+/*}}}*/
 
+/*┌──────────────────────────────────────────────────┐*/
+/*│ EDITING => EDITED
+/*└──────────────────────────────────────────────────┘*/
+/*{{{*/
+.note_row.editing,
+.note_row.edited                { border-left: 5px solid #FF8; margin-left: 5px; opacity: 0.5; }
+.note_row.editing.checked,
+.note_row.edited.checked        { border-left: 5px solid #0FD;                   opacity: 0.5; }
+.note_row.checked:hover,
+.note_row:hover                 {                                                opacity: 1.0; }
+/*❌{{{
+.note_row.editing .edit_button,
+.note_row.edited  .edit_button  { border: 1px solid #FFF8 !important; }
+}}}*/
+/*}}}*/
 /*}}}*/

@@ -1,14 +1,15 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (260929:21h:53) │
+//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (261002:03h:59) │
 //├────────────────────────────────────────────────────────────────────────────┤
 /* IMPORT {{{*/
 
-/* globals  js_store  */
-/* globals  js_notes  */
-/* globals     notes  */
-/* globals  js_ticker */
+/* globals  js_store   */
+/* globals  js_details */
+/* globals  js_notes   */
+/* globals     notes   */
+/* globals  js_ticker  */
 
-/* exported js_input  */
+/* exported js_input   */
 
 //port { js_CNTRL   } from "./js_CNTRL.js"
 //port { js_MODEL   } from "./js_MODEL.js"
@@ -17,6 +18,7 @@
 //port { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
 //port { js_log     } from "./js_log.js"
+import { js_details } from "./js_details.js"
 import { js_notes   } from "./js_notes.js"
 import { js_store   } from "./js_store.js"
 import { js_ticker  } from "./js_ticker.js"
@@ -56,9 +58,11 @@ let input_listener = function(e)
 {
 if(tag_this) console.log("🟣 input_listener: "+ e.type);
 
+try{
     let input_value = input.value.trim();
     if( input_value )
     {
+
         //┌────────────────────────────────────────────────────────────────────┐
         //│ IGNORE blank header and trailer changes
         //└────────────────────────────────────────────────────────────────────┘
@@ -83,26 +87,26 @@ if(tag_this) console.log( "input_value changed:\n"
         //}}}
 
         //┌────────────────────────────────────────────────────────────────────┐
-        //│ on first user-input ● transitioning from empty
+        //│ on first user-input
         //└────────────────────────────────────────────────────────────────────┘
         //{{{
-        if( !e.detail.oldValue
-          || js_notes.is_input_auto_insert_prefix()
+        if(  !e.detail.oldValue
+           || js_details.is_input_auto_insert_prefix()
           ) {
             notes.reset_input_placeholder();
-            js_notes.save_note_auto( e );
-            note_DETAILS.classList.remove("empty");
+            js_details.save_note_auto( e );
         }
         // SERVER/style/notes.css
         // SERVER/style/qtext.css
         //}}}
         // USER MAY HAVE REMOVED ITS CHANGES ● (...back to auto prefix) {{{
-        if( !input.value || js_notes.is_input_auto_insert_prefix() )
+        if(  !input.value
+           || js_details.is_input_auto_insert_prefix() )
         {
             if(!input.classList.contains("auto_insert_prefix"))
             {
                 input.classList.add(     "auto_insert_prefix");
-                js_notes.save_note_auto( e );
+                js_details.save_note_auto( e );
                 return;
             }
         }
@@ -111,16 +115,16 @@ if(tag_this) console.log( "input_value changed:\n"
         if(input.classList.contains(     "auto_insert_prefix"))
         {
             input.classList.remove(      "auto_insert_prefix");
-          //js_notes.save_note_auto( e );
+          //js_details.save_note_auto( e );
           //    return;
         }
         //}}}
         // check if `auto_insert_prefix` style may apply {{{
-        if(    js_notes.is_input_auto_insert_prefix()
+        if(    js_details.is_input_auto_insert_prefix()
            && !input.classList.contains("auto_insert_prefix")
           ) {
             input.classList.add(        "auto_insert_prefix");
-            js_notes.save_note_auto( e );
+            js_details.save_note_auto( e );
 
             return;
         }
@@ -128,12 +132,26 @@ if(tag_this) console.log( "input_value changed:\n"
     }
     else {
         notes.note_1_onclick_save ( { type: "auto_save" } ); // text cleared ...worth a synchronized update
-        note_DETAILS.classList.add("empty");
 
         reset_input("input_listener: ❌input empty");
     }
+}
+finally {
+    input_check_empty_state();
+}
 };
 /*}}}*/
+/*  input_check_empty_state {{{*/
+let input_check_empty_state = function()
+{
+    let nothing_worth_to_copy
+        = !input.value
+        || js_details.is_input_auto_insert_prefix();
+
+    note_DETAILS.classList.toggle("empty", nothing_worth_to_copy);
+};
+/*}}}*/
+
 /*  reset_input {{{*/
 let reset_input = function(_caller)
 {
@@ -142,17 +160,19 @@ if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""))
     // CLEAR TEXTAREA CONTENT
     input.dataset.content = input.value; // backup, not used yet...
 
-    input.value           = "";
+  //input.value           = "";
+    js_input_IO.value     = "";
 
     input.classList.remove("edit"              );
     input.classList.remove("auto_insert_prefix");
 
     // UPDATE STANDOUT IN [saved_notes_DIV]
-    js_notes.set_editing_note_index(-1);
+    js_details.set_editing_note_index(-1);
 
     js_ticker.changeInterval( js_notes.AUTO_SAVE_IDLE_INTERVAL_MS );
 };
 /*}}}*/
+
 let get_input_storage_key = function() { return "input__"+ js_store.get_page_storage_key(); };
 let get_id_wh_storage_key = function() { return "id_wh__"+ js_store.get_page_storage_key(); };
 /*  input_save {{{*/
@@ -160,7 +180,7 @@ let input_save = function(_caller)
 {
 if(tag_this) console.log("🟣 input_save"+ (_caller ? (" ← "+_caller) : ""));
 
-    if( js_notes.is_input_auto_insert_prefix() ) return;
+    if( js_details.is_input_auto_insert_prefix() ) return;
 
     // STORE CURRENT INPUT CONTENT (WILL BE RESTORED BY NEXT RELOAD)
     let input_storage_key = get_input_storage_key();
@@ -213,7 +233,7 @@ if(tag_this) console.log("🟣 input_load");
         if(text == note.text)
         {
             let note_row = saved_notes_TABLE.firstElementChild.children[index];
-            js_notes.note_5_onclick_edit({ target: note_row }, index);
+            js_details.note_5_onclick_edit({ target: note_row }, index);
 // TRYING INPUT.FOCUS() TO RESUME NOTE EDIT {{{
 //          input.addEventListener("mouseenter", (event) => event.target.focus());
 //          input.addEventListener("mouseenter", ()      =>        input.focus());
@@ -224,7 +244,8 @@ if(tag_this) console.log("🟣 input_load");
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ RELOAD UNCOMMITED INPUT CONTENT FROM PREVIOUS SESSION                  │
     //└────────────────────────────────────────────────────────────────────────┘
-    input.value = text;
+ // input.value = text;
+ js_input.value = text;
 
     // SCROLL LAST NOTE INTO VIEW
     notes.note_scrollIntoView();
@@ -232,6 +253,7 @@ if(tag_this) console.log("🟣 input_load");
 if(log_this) console.log( text );
 };
 /*}}}*/
+
 /*_ layout_look {{{*/
 /*{{{*/
 const ID_WH_SAVE_COOLDOWN = 2000;
@@ -322,7 +344,7 @@ return { add_notes_GUI
     //┌────────────────────────────────────────────────────────────────────────────┐
     ,    reset_input
     //│ ● called by
-    //│   js_notes.note_5_onclick_edit
+    //│   js_details.note_5_onclick_edit
     //│    notes.note_1_onclick_save
     //│    notes.note_2_onclick_import
     //│    notes.note_6_onclick_delete
@@ -332,7 +354,7 @@ return { add_notes_GUI
     , input_save
     //│ ● called by
     //│   js_notes.onload ➔ visibilitychange listener
-    //│   js_notes.note_5_onclick_edit
+    //│   js_details.note_5_onclick_edit
     //└────────────────────────────────────────────────────────────────────────────┘
 
     //┌────────────────────────────────────────────────────────────────────────────┐
@@ -347,6 +369,8 @@ return { add_notes_GUI
     //│ ● called by
     //│      js_notes.onload
     //└────────────────────────────────────────────────────────────────────────────┘
+    , get value()       { return input.value      ; }
+    , set value(val)    {  js_input_IO.value = val; }
 
     //┌────────────────────────────────────────────────────────────────────────────┐
     //│ PRIVATE:

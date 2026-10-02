@@ -1,10 +1,11 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (260929:21h:58) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261002:03h:58) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
+/* globals js_details */
 /* globals js_notes */
 /* globals js_store */
 /* globals js_input */
@@ -16,6 +17,7 @@
 import { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
 //port { js_log     } from "./js_log.js"
+import { js_details } from "./js_details.js"
 import { js_notes   } from "./js_notes.js"
 import { js_store   } from "./js_store.js"
 //port { js_ticker  } from "./js_ticker.js"
@@ -278,16 +280,16 @@ if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
 
     if( !input ) return;
 
-    if( js_notes.is_input_auto_insert_prefix() ) return;
+    if( js_details.is_input_auto_insert_prefix() ) return;
 
     /* input text {{{*/
     let  text = input.value.trim();
 
     //}}}
-    // if js_notes.save_note_auto ...return {{{
+    // if js_details.save_note_auto ...return {{{
     if(e.type == "auto_save")
     {
-        js_notes.save_note_auto( e );
+        js_details.save_note_auto( e );
 
         return;
     }
@@ -304,7 +306,7 @@ if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
 
     //}}}
     // REPLACE NOTE {{{
-    let index  = js_notes.get_editing_note_index();
+    let index  = js_details.get_editing_note_index();
     if( index >= 0)
     {
         //┌────────────────────────────────────────────────────────────────────┐
@@ -346,13 +348,6 @@ if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
 let note_2_onclick_import = function(e)
 {
 if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
-/*{{{
-// requires clipboard access permission
-    navigator
-        .clipboard
-        .readText()
-        .then((buffer) => { input.value = buffer; });
-}}}*/
     // IF INPUT IS EMPTY {{{
     let buffer = input.value.trim();
     if(!buffer) {
@@ -549,7 +544,7 @@ if(tag_this) console.log("🟡 note_4_onclick_check: "+ e.type);
 //  layout_notes("note_4_onclick_check", index);
 
     // SYNC INPUT ● while editing checked note
-    if(js_notes.get_editing_note_index() == index)
+    if(js_details.get_editing_note_index() == index)
     {
         if( get_checked(index)) input  .classList.add   ("checked");
         else                    input  .classList.remove("checked");
@@ -589,7 +584,7 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
 
     //}}}
 
-    let deleting_editing_note   = (index == js_notes.get_editing_note_index());
+    let deleting_editing_note   = (index == js_details.get_editing_note_index());
     let deleting_auto_save_note = (index == nArray.length) && js_notes.is_last_note_auto_save();
     if( deleting_editing_note || deleting_auto_save_note)
         js_input.reset_input("note_6_onclick_delete");
@@ -617,13 +612,13 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
     js_notes.layout_notes("note_6_onclick_delete", index);
 
     // SHIFT EDITING NOTE DIV
-    let editing_note_index  = js_notes.get_editing_note_index();
+    let editing_note_index  = js_details.get_editing_note_index();
     if( editing_note_index >= 0)
     {
         if(index < editing_note_index)
-            js_notes.set_editing_note_index(editing_note_index -1 );
+            js_details.set_editing_note_index(editing_note_index -1 );
         else
-            js_notes.set_editing_note_index(editing_note_index    );
+            js_details.set_editing_note_index(editing_note_index    );
     }
 };
 //}}}
@@ -647,7 +642,8 @@ if(tag_this) console.log("🟠 "+e.target.innerText +"note_7_onclick_wasted");
     // DISPLAY DELETED NOTE AS A BUFFER TO IMPORT
     if( wasted_note_BUTTON.innerText != CLEAR_DELETED_NOTES)
     {
-        input.value = note_7_onclick_wasted_get_buffer() +"\n";
+    //  input.value = note_7_onclick_wasted_get_buffer() +"\n";
+     js_input.value = note_7_onclick_wasted_get_buffer() +"\n";
 
         // SHOW HOW TO CLEAR DELETED NOTES
         wasted_note_BUTTON    .classList.add("clear_deleted_notes");    // SERVER/style/notes.css
@@ -663,7 +659,8 @@ if(tag_this) console.log("🟠 "+e.target.innerText +"note_7_onclick_wasted");
     }
     // NEXT CLICK WILL PURGE DELETED NOTE ARRAY
     else {
-        input.value = "";
+     // input.value = "";
+     js_input.value = "";
         nArray_wasted_del_note_index(-1);
     }
 };
@@ -765,8 +762,6 @@ let standout_note_at_index = function(index)
     if( is_last_note && js_notes.is_last_note_auto_save() )
         index = standout_note_index;
 
-    document.querySelectorAll(".standout").forEach((el) => el.classList.remove("standout"));
-
     if(index >= 0)
     {
         standout_note_index = index;
@@ -784,6 +779,11 @@ let note_scrollIntoView = function(index=-1)
        || (index >= nArray.length)
       )
         index  = nArray.length - 1;
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ CLEAR CURRENT STANDOUT NOTE ROW                ● @see ./style/notes.css
+    //└────────────────────────────────────────────────────────────────────────┘
+    document.querySelectorAll(".standout").forEach((el) => el.classList.remove("standout"));
 
     let tr = saved_notes_TABLE.firstElementChild.children[ index ];
     if( tr )
@@ -876,10 +876,11 @@ let getClosestScrollableAncestor = function(el)
 let update_summary = function()
 {
     let summary = note_DETAILS.firstElementChild;
+    let   count = notes.get_nArray().length;
 
     summary.childNodes[0].textContent = ""
         +     js_store.get_page_fileName()
-        +" ("+   notes.get_nArray().length +" notes)"
+        +" ("+   count +" note"+((count > 1) ? "s":"")+")"
         +" " +   notes_loaded_from
         ;
 };
@@ -907,15 +908,6 @@ let update_summary = function()
 
         // SAVE
         ,    note_1_onclick_save            //...onclick
-
-    // EDIT ● MOVED in SERVER/scripts/js_notes.js
-  //,    note_5_onclick_edit            //...onclick
-  //,    set_editing_note_index
-  //,    get_editing_note_index
-  //,    save_note_auto
-  //,    is_input_same_as_original
-  //,    is_input_same_as_last_auto_save
-  //,    is_last_note_auto_save
 
         // DELETE
         ,    note_6_onclick_delete          //...onclick
