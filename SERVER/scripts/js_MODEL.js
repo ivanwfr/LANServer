@@ -121,3 +121,4 @@ const js_MODEL   = (function () {
 
 })();
 export { js_MODEL }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_MODEL = js_MODEL;

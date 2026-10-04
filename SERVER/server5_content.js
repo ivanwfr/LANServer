@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261003:00h:25)
+//│ server5_content.js                                     _TAG (261004:23h:36)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -13,9 +13,8 @@ let server5_content = (function() {
 //            ● Node.js Modules:    ● ...
 //  ● Server Modules:     ● log header ● listener ● network ● notes ● qtext {{{
 let server0_log      = require("./server0_log.js");
-//...{{{
+// log inlining {{{
 /* eslint-disable no-unused-vars */
-// INLINING:
 let { log
     ,    toggle
     ,    is_logging
@@ -170,7 +169,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
         }
         /*}}}*/
         //┌──────────────────────┐
-        //│ VIM FOLD ● BOX FORMAT
+        //│ VIM FOLD ● BOX FORMAT @see /SERVER/style/qtext.css
         //└──────────────────────┘
         /* qtext turn VIM FOLDS into DETAILS SUMMARY {{{*/
         if(data.includes( FOLD_OPEN ))
@@ -200,6 +199,8 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
                     .  replace( / *\/[\/\\*] *(┤.*$)/gm , "<BOXM>$1</BOXM>")
                 // embedded LF
                     .  replace( /\\n/gm , "\u21B2") // ↲
+                // remove utf-8 boxing (or not)
+                //  .  replace(         /[└┘┌┐│─├┼┤]/gm , " "              )
                 ;
 
                 // MARKDOWN TABLES TO HTML
@@ -242,12 +243,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
             if(net_address && config.DEFAULT_URI_PATH.includes(file_name))
                 data = String(data).replace(/(127.0.0.1|\blocalhost\b)/gm, net_address);
 
-/*{{{
-            data = "<button onclick='document.location.replace(document.location.url +\"?qtext\")'>?qtext</button>\n"
-                 + "<pre>"+ data +"</pre>";
-}}}*/
-
-            response.write(       data);
+            response.write( data );
         }
         /*}}}*/
         /* ADD HIDDEN ATTRIBUTES ● lang ● user_id {{{*/
@@ -294,6 +290,7 @@ let convert = function(data_in)
     {
         let reached_md_table
             =   (i < lines.length -1)
+             && (    lines[i+1].trim().startsWith("|")  )
              && (    lines[i+1].includes( TABLE_DELIM_1 )
                  ||  lines[i+1].includes( TABLE_DELIM_2 ));
 
@@ -330,24 +327,26 @@ let convert_table_to_html = function( md_table )
     if (lines.length < 2) return "";
 
     // Parse header
-    const headerCells = parseRow(lines[0]);
+    const headerCells = parseRow(lines[0].replace(/\\/g,"_backslash_")) ;
     // Skip separator line (lines[1])
     // Parse data rows
     const dataRows = [];
     for (let i = 2; i < lines.length; i++) {
-        dataRows.push(parseRow(lines[i]));
+        dataRows.push(  parseRow(lines[i].replace(/\\/g,"_backslash_")));
     }
 
     // Build HTML
     let html = "<table class='markdown_table'>\n<thead>\n<tr>\n";
     for (const cell of headerCells) {
-        html += `  <th>${cell.trim()}</th>\n`;
+        let     text = cell.trim().replace(/_backslash_/g,"\\");
+        html        += `  <th>${text}</th>\n`;
     }
     html += "</tr>\n</thead>\n<tbody>\n";
     for (const row of dataRows) {
         html += "<tr>\n";
         for (const cell of row) {
-            html += `  <td>${cell.trim()}</td>\n`;
+            let text = cell.trim().replace(/_backslash_/g,"\\");
+            html    += `  <td>${text}</td>\n`;
         }
         html += "</tr>\n";
     }

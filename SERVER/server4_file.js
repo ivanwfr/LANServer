@@ -165,7 +165,6 @@ const STYLE_DIR = `
 <!-- style {{{-->
   <style>
 /* style CUSTOM_HTML_TAG_... {{{*/
-
     ${ CUSTOM_HTML_TAG_FOLDER},
     ${ CUSTOM_HTML_TAG_JS    },
     ${ CUSTOM_HTML_TAG_IMG   },
@@ -200,7 +199,7 @@ const STYLE_DIR = `
     ${ CUSTOM_HTML_TAG_FILE  }::before { content:  '…'; color: #F00; }
 
 /*}}}*/
-/* style body input btn_copy li {{{*/
+/* style body input div_copy li {{{*/
    body      { color: #FEE; background-color: #111; line-height: 1.5em; }
 A:link    {            color: #8FF; }
 A:visited {            color: #F0F; }
@@ -212,15 +211,41 @@ A:visited {            color: #F0F; }
     background-color: transparent;
     border          : none;
    }
-   #btn_copy {
-       display: inline-block;
-       cursor: pointer;
-       user-select: none;
-/*{{{
+   #div_copy {
+       display      : contents;
        border-radius: 0.5em;
-       border: 1px solid white;
-       background: #8888;
+       border       : 1px solid white;
+       background   : #8888;
+   }
+   #div_copy::before {
+    content         : "📋🗁";
+    position        : fixed;
+    top             : 2em;
+    left            : 1em;
+   }
+   #div_copy,
+   #div_copy * {
+       cursor: pointer;
+   }
+   #div_copy * {
+/*{{{
+    pointer-events: none;
+       position     : fixed;
+       top          : 2em;
+       left         : 2em;
 }}}*/
+   }
+   #div_copy.clicked::after {
+     content        : "...path is in the clipboard";
+     font-style     : italic;
+     font-size      : 150%;
+     color          : #888F;
+   }
+   #div_copy.clicked>INPUT {
+/*{{{
+    opacity: 0.5;
+}}}*/
+    display: none;
    }
 /*
    LI:nth-of-type(odd) { padding-left: 3em; }
@@ -233,14 +258,22 @@ A:visited {            color: #F0F; }
  </head>
 <!--}}}-->
  <body> <!--{{{-->
-  Index of:
-  <em title="copy folder path\nto clipboard" id="btn_copy"
-      onclick='
-      let input = event.target.nextElementSibling;
-      input.select();
-      document.execCommand("copy");
-      '>📋</em>
-  <input type="text" value="{file_path}">
+  <div   id  ="div_copy"
+      title  ="copy folder path\nto clipboard"
+      onmousedown='this.querySelector("INPUT").select();
+               document.execCommand("copy"); this.classList.add   ("clicked");
+               setTimeout(()              => this.querySelector("A").click() , 2500);
+/*{{{
+}}}*/
+               setTimeout(()              => this.classList.remove("clicked"), 3000);
+      '>
+       
+       Index of<a  href="about:blank"
+          title="copy path and...\n...open a new tab..."
+         target="LANServer drive"
+       ></a>
+       <input type="text" value="{file_path}">
+      </div>
   <br>      <b    style='margin-left:4em;'                  > {top_title} </b>
   <br>      <b    style='margin-left:4em;'                  > {link_list} </b>
   <ul>

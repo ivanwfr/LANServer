@@ -517,5 +517,6 @@ return { name : "js_folds"
 
 /*}}}*/
 }());
-document.addEventListener("DOMContentLoaded", js_folds.onload);
 export { js_folds }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_folds = js_folds;
+document.addEventListener("DOMContentLoaded", js_folds.onload);

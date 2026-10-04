@@ -1,9 +1,11 @@
-/*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261003:00h:51) │*/
+
+/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261003:02h:25) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 
 /*{{{
 }}}*/
+.markdown_table TR:nth-of-type(even) * { background-color: #0004; }
+.markdown_table TD { white-space: pre; }
 .markdown_table    { border-collapse : collapse; }
 .markdown_table    {            color: #FFDF; }
 .markdown_table TH { background-color: #333; border: 1px solid #555; }
@@ -46,46 +48,12 @@ A:visited {            color: #F0F; }
 .bg9>SUMMARY, .bg9>PRE  {          outline: 1px solid #FFFFFF80; }
 
 /*}}}*/
-/* BOX ● [U]p [M]iddle [D]own {{{*/
-BOXU,
-BOXM,
-BOXD {
- display             : inline-block;
- border-collapse     : collapse;
- border-left         : 8px solid #ffffff88;
- min-width           : 50%;
- background          : linear-gradient(to right, #6665, #0001);
- padding             : 0;
- color               : #EEE;
-}
-BOXU { border-radius    : 0.5em 0.5em 0     0    ; }
-BOXD { border-radius    : 0     0     0.5em 0.5em; }
-/*{{{
-BOXD:has(+DETAILS)      { border-radius    : 0; }
-}}}*/
-/*}}}*/
 
 /* cursor user-select transition {{{*/
 SUMMARY                     { user-select   : none;                           }
 DETAILS                     { cursor        : pointer;                        }
 DETAILS:open                { cursor        : context-menu;                   }
 SUMMARY                     { transition    : background-color 300ms ease-in; }
-/*}}}*/
-/* BOX margin padding {{{*/
-
-           BOXU             { margin-top :  1em; }
-           BOXU, BOXM, BOXD { margin-left:  0em; }
-                    SUMMARY {                    padding     : 0.5em; }
-                        PRE {                    padding     : 0.5em; }
-
-DETAILS:open                { background-color: #F006;    }
-
-/*
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ ● see SERVER/scripts/js_folds.js details_click_listener
-//│ ● DETAILS:open
-//└────────────────────────────────────────────────────────────────────────────┘
-*/
 /*}}}*/
 /* DETAILS margin padding {{ {*/
 DETAILS:open                { margin      :   2em 1em; padding-left:   2em; }
@@ -205,6 +173,7 @@ DETAILS:open>SUMMARY        { font-weight     : 100   !important; }
 DETAILS:open>SUMMARY        { color           : white !important; }
 /*}}}*/
 /* color {{{*/
+DETAILS:open                { background-color: #F006;    }
 DETAILS:open       >SUMMARY { background-color  : #333  !important; }
 DETAILS:open        PRE     { background-color  : #222 ;            }
 DETAILS:not([open])>SUMMARY { background-color  : #22B ; }
@@ -245,3 +214,80 @@ PRE:has(DETAILS[open]) { background-color: #000; }
     translate       : -1.1em -0.3em;
     font-weight     : 900;
 }
+
+
+
+
+/* BOX SUMMARY PRE ● margin ● padding {{{*/
+           BOXU             { margin-top :  1em; }
+           BOXU, BOXM, BOXD { margin-left:  0em; }
+                    SUMMARY {                    padding     : 0.5em; }
+                        PRE {                    padding     : 0.5em; }
+
+/*}}}*/
+
+/* BOX ● border-radius padding {{{*/
+BOXU,
+BOXM,
+BOXD {
+ display             : inline-block;
+ border-collapse     : collapse;
+ min-width           : 50%;
+ padding             : 0;
+ color               : #EEE;
+}
+BOXU { border-radius : 0.5em 0.5em 0     0    ; }
+BOXD { border-radius : 0     0     0.5em 0.5em; }
+/*}}}*/
+
+/* BOX ● COLORS {{{*/
+/* UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU, MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM, DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD */
+
+BOXU,
+BOXM,
+BOXD { border-style: solid; }
+
+BOXU { border-width: 3px 0   0   16px; }
+BOXM { border-width: 0   0   0   16px; }
+BOXD { border-width: 0   0   3px 16px; }
+
+BOXU:nth-of-type( 1), BOXU:nth-of-type( 1) ~ BOXM, BOXU:nth-of-type( 1) ~ BOXD { background-color: #964B0010; border-color: #964B0080; }
+BOXU:nth-of-type( 2), BOXU:nth-of-type( 2) ~ BOXM, BOXU:nth-of-type( 2) ~ BOXD { background-color: #FF000010; border-color: #FF000080; }
+BOXU:nth-of-type( 3), BOXU:nth-of-type( 3) ~ BOXM, BOXU:nth-of-type( 3) ~ BOXD { background-color: #FFA50010; border-color: #FFA50080; }
+BOXU:nth-of-type( 4), BOXU:nth-of-type( 4) ~ BOXM, BOXU:nth-of-type( 4) ~ BOXD { background-color: #FFFF0010; border-color: #FFFF0080; }
+BOXU:nth-of-type( 5), BOXU:nth-of-type( 5) ~ BOXM, BOXU:nth-of-type( 5) ~ BOXD { background-color: #9ACD3210; border-color: #9ACD3280; }
+BOXU:nth-of-type( 6), BOXU:nth-of-type( 6) ~ BOXM, BOXU:nth-of-type( 6) ~ BOXD { background-color: #6495ED10; border-color: #6495ED80; }
+BOXU:nth-of-type( 7), BOXU:nth-of-type( 7) ~ BOXM, BOXU:nth-of-type( 7) ~ BOXD { background-color: #EE82EE10; border-color: #EE82EE80; }
+BOXU:nth-of-type( 8), BOXU:nth-of-type( 8) ~ BOXM, BOXU:nth-of-type( 8) ~ BOXD { background-color: #A0A0A010; border-color: #A0A0A080; }
+BOXU:nth-of-type( 9), BOXU:nth-of-type( 9) ~ BOXM, BOXU:nth-of-type( 9) ~ BOXD { background-color: #FFFFFF10; border-color: #FFFFFF80; }
+BOXU:nth-of-type(10), BOXU:nth-of-type(10) ~ BOXM, BOXU:nth-of-type(10) ~ BOXD { background-color: #10104010; border-color: #10104080; box-shadow: 0 0 1px 0px #FFF; }
+
+/*{{{
+    BOXU:nth-of-type(10)                                                    ~ BOXD { background    : linear-gradient(   1deg, #101040D0 10%, #10101080 90%, #0001); }
+    BOXU:nth-of-type( 6)                                                    ~ BOXD { background    : linear-gradient(   1deg, #6495ED80 10%, #6495ED80 20%, #0001); }
+    BOXU:nth-of-type( 1)                                                    ~ BOXD { background    : linear-gradient(   1deg, #964B0080 10%, #964B0080 20%, #0001); }
+    BOXU:nth-of-type( 5)                                                    ~ BOXD { background    : linear-gradient(   1deg, #9ACD3280 10%, #9ACD3280 20%, #0001); }
+    BOXU:nth-of-type( 8)                                                    ~ BOXD { background    : linear-gradient(   1deg, #A0A0A080 10%, #A0A0A080 20%, #0001); }
+    BOXU:nth-of-type( 7)                                                    ~ BOXD { background    : linear-gradient(   1deg, #EE82EE80 10%, #EE82EE80 20%, #0001); }
+    BOXU:nth-of-type( 2)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FF000080 10%, #FF000080 20%, #0001); }
+    BOXU:nth-of-type( 3)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FFA50080 10%, #FFA50080 20%, #0001); }
+    BOXU:nth-of-type( 4)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FFFF0080 10%, #FFFF0080 20%, #0001); }
+    BOXU:nth-of-type( 9)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FFFFFF80 10%, #FFFFFF80 20%, #0001); }
+    BOXU:nth-of-type(10)                                                           { background    : linear-gradient( 179deg, #101040D0 10%, #10101080 90%, #0001); }
+    BOXU:nth-of-type( 6)                                                           { background    : linear-gradient( 179deg, #6495ED80 10%, #6495ED80 20%, #0001); }
+    BOXU:nth-of-type( 1)                                                           { background    : linear-gradient( 179deg, #964B0080 10%, #964B0080 20%, #0001); }
+    BOXU:nth-of-type( 5)                                                           { background    : linear-gradient( 179deg, #9ACD3280 10%, #9ACD3280 20%, #0001); }
+    BOXU:nth-of-type( 8)                                                           { background    : linear-gradient( 179deg, #A0A0A080 10%, #A0A0A080 20%, #0001); }
+    BOXU:nth-of-type( 7)                                                           { background    : linear-gradient( 179deg, #EE82EE80 10%, #EE82EE80 20%, #0001); }
+    BOXU:nth-of-type( 2)                                                           { background    : linear-gradient( 179deg, #FF000080 10%, #FF000080 20%, #0001); }
+    BOXU:nth-of-type( 3)                                                           { background    : linear-gradient( 179deg, #FFA50080 10%, #FFA50080 20%, #0001); }
+    BOXU:nth-of-type( 4)                                                           { background    : linear-gradient( 179deg, #FFFF0080 10%, #FFFF0080 20%, #0001); }
+    BOXU:nth-of-type( 9)                                                           { background    : linear-gradient( 179deg, #FFFFFF80 10%, #FFFFFF80 20%, #0001); }
+}}}*/
+
+/*{{{
+       background    : linear-gradient(  90deg, #6665 10%, #222 20%, #0001);
+BOXU { background    : linear-gradient( 179deg, #FFF8 10%, #444 20%, #0001); }
+BOXD { background    : linear-gradient(   1deg, #FFF8 10%, #444 20%, #0001); }
+}}}*/
+/*}}}*/

@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_log.js        ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:21h:54) │
+//│ js_log.js        ● $APROJECTS/LANServer/SERVER      ● _TAG (261004:01h:15) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -69,10 +69,8 @@ let tag_this = false || log_this;
 
     let toggle = function(state)
     {
-        // true or false
-        if(typeof state != "undefined") log_this =     state;
-        // or toggle
-        else                            log_this = !log_this;
+        if(typeof state != "undefined") log_this =     state; // true or false
+        else                            log_this = !log_this; // ... or toggle
 
         console.log("log_this: "+ log_this);
         return       log_this;
@@ -184,3 +182,4 @@ let tag_this = false || log_this;
     //}}}
 })();
 export { js_log }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_log = js_log;

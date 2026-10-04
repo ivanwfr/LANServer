@@ -245,3 +245,4 @@ if(is_logging()) console.log(b_4 +`loop @ ${new Date().toISOString()} [${interva
 //}}}
 //globalThis.js_ticker = js_ticker;
 export { js_ticker }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_ticker = js_ticker;

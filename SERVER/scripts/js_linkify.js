@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261002:02h:08) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261004:22h:52) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -116,11 +116,8 @@ let colorize_details = function()
 /*_ format_summary_comments {{{*/
 let format_summary_comments = function()
 {
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ trimming, summary copy button, fold button                             │
-    //└────────────────────────────────────────────────────────────────────────┘
     for(let el of document.querySelectorAll("summary")) {
-        // COMMENTS TRIMMING {{{
+        // TRIM: / and * {{{
         el.textContent
             = el.textContent
                 .replace(/\/\//, "")
@@ -129,13 +126,13 @@ let format_summary_comments = function()
               ;
 
         //}}}
-        // COPY TO CLIPBOARD AND FOLDING BUTTONS {{{
+        // BUTTONS: cb_copy & fold_close_open_toggle {{{
 //      if( el.innerHTML.trim() ) // FOLD_OPEN comments with no text may have DETAILS children
             el.innerHTML
                 = el.innerHTML
                 + "<em "
                 + "   style = 'float:right; margin-left: 2em;'"
-                + " onclick = 'js_linkify.fold_open_012(event, 2);'"
+                + " onclick = 'js_linkify.fold_close_open_toggle(event, 2);'"
                 + ">▶◀</em>"
                 + "&nbsp;"
 
@@ -167,10 +164,7 @@ let format_summary_comments = function()
             ;
         //}}}
     }
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ HIDE FOLD BUTTON FOR DETAILS WITH NO EMBEDDED FOLDS TO OPEN            │
-    //└────────────────────────────────────────────────────────────────────────┘
-    //{{{
+    // HIDE FOLD BUTTON FOR DETAILS WITH NO EMBEDDED FOLDS TO OPEN {{{
     document.querySelectorAll("DETAILS:not(:has(DETAILS))").forEach((el) => {
         let child =    el.firstElementChild;
         child     = child && child.firstElementChild;
@@ -196,54 +190,60 @@ let toggle_wrap = function(e)
 };
 /*}}}*/
 /*➔ copy_container_text {{{*/
-/*{{{*/
 let note_input_TEXTAREA;
-/*}}}*/
 let copy_container_text = function(e)
 {
+    // PREVENT SUMMARY FOLDE-EVENT {{{
     e.cancelBubble = true;
 
-    // COPY-SOURCE
+    //}}}
+    // COPY-SOURCE {{{
     let details = e.target.closest("DETAILS");
     let pre     = details.querySelector(":scope > PRE");
 
-    // COPY-DESTINATION
+    //}}}
+    // COPY-DESTINATION {{{
     if(!note_input_TEXTAREA)  note_input_TEXTAREA = document.querySelector("#note_input_TEXTAREA");
 
-    // SOURCE-TEXT
+    //}}}
+    // SOURCE-TEXT {{{
     let text
         =  (details.id == "note_DETAILS")
         &&  note_input_TEXTAREA
         ?   note_input_TEXTAREA.value   // [NOTE TEXT TO CLIPBOARD]
         :   pre    .textContent;        // [PRE  TEXT TO CLIPBOARD]
 
-    // COPY TO RELEVANT TEXT AREA
+    //}}}
+    // COPY TO RELEVANT TEXT AREA {{{
  // let ta = note_input_TEXTAREA || details.querySelector("TEXTAREA");
     let ta = js_input;
 
-    // APPEND TEXT TO TEXTAREA
+    //}}}
+    // APPEND TEXT TO TEXTAREA {{{
     if( ta && (details.id != "note_DETAILS"))
         ta.value += (ta.value ? "\n":"") + text;
 
-    // COPY TO CLIPBOARD
+    //}}}
+    // COPY TO CLIPBOARD {{{
     navigator.clipboard.writeText( text );
 
+    //}}}
 };
 /*}}}*/
 /*_ linkify_file_pathes {{{*/
 let linkify_file_pathes = function()
 {
-//console.log("LINKIFY:");
-
-    let href          = document.location.href;
+    // location ● href ● folders {{{
+// log {{{
 //  let href          = "https://192.168.1.14:447/LAN/AHK/HIDCONTROL/AHK/HID/DEV_VID_PID_AXIS.ahk";
-
+//}}}
+    let href          = document.location.href;
     let root          = href  .replace(/^(.*\/\/[^\/]*)\/.*/, "$1");    // up to first /
     let file          = href  .replace(/^.*\/(.*)$/           , "$1");  // after last  /
     let folder        = href  .substr(root.length);                     // after first /
         folder        = folder.substr(0, folder.length -file.length);   // before file
     let folders       = folder.split("/").filter(Boolean);              // remove falsy items
-//{{{
+// log href root file folder {{{
 //console.log("➔ href   = ["+href+"]");
 //console.log("➔ root   = ["+root+"]");
 //console.log("➔ file   = ["+file+"]");
@@ -251,107 +251,128 @@ let linkify_file_pathes = function()
 //console.log("%c folders: "+ String(folders).padStart(47) ,"background-color: #000; color: #F0F");
 //console.log("🟤🔴🟠🟡🟢🔵🟣⚫⚪️");
 //}}}
-
+    //}}}
+    // CONTENT PATH ➔ ANCHOR ELEMENT {{{
     let innerHTML = "";
-    let pre   = document.querySelector("PRE");
-    let lines = pre.innerHTML.split("\n");
+    let       pre = document.querySelector("PRE");
+    let     lines = pre.innerHTML.split("\n");
     lines.forEach((line) => {
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ REBASE FULLY QUALIFIED HREF
+//└────────────────────────────────────────────────────────────────────────────┘
+/* merging {{{
+
+CURRENT FOLDER PATH:       https://192.168.1.14:447/SERVER/scripts/js_linkify.js
+
+| location / file_path   | overlapping sub-folders parsing                       |
+| - -------- - --------- | ----------------------------------------------------- |
+| ● *CURRENT FOLDER PATH | https://192.168.1.14:447/SERVER/scripts               |
+| + *RELATIVE FILE PATH* |                          SERVER/scripts/js_linkify.js |
+| =                    ➔ | https://192.168.1.14:447/SERVER/scripts/js_linkify.js |
+
+}}}*/
+        // 1. RE-BASE FILES: ahk, md, css, js {{{
         if(   line.match(/\/\w+\.ahk/)
            || line.match(/\/\w+\.md/ )
            || line.match(/\/\w+\.css/)
            || line.match(/\/\w+\.js/ )
           ) {
             let path     = line
-                .replace(/^.*\s(\S+\.(ahk|css|js)).*$/g, "$1")
-                .replace(/.*\"/,"");    // i.e. [require("./server0_log.js]
+                .replace(/^.*\s(\S+\.(ahk|md|css|js)).*$/g, "$1")
+                .replace(                          /.*\"/ ,   "") // i.e. [require("./server0_log.js]
+                .replace(                       /<\/?td>/g,   "") // i.e. [require("./server0_log.js]
+            ;
 
-            let parents  = path.split("/").filter(Boolean);  // remove falsy items
-
-            let fileName = parents.pop();
-
-            let up_count =  0;
-            let sub_fold = "";
-            let      f;
-            let      p;
-            for(     f  = folders.length-1
-                ,    p  = parents.length-1
-                ;   (f >= 0) && (p >= 0)
-                ;  --f       , --p
-               ) {
-                // current dir is current parent {{{
-                if(parents[p]== ".")
-                {
-                    sub_fold   = folders[f] +"/"+ sub_fold;
-                    up_count  += 1;
-                }
-                //}}}
-                // ...going deeper {{{
-                else if(folders[f] != parents[p])
-                {
-                    up_count  += 1;
-                    sub_fold   = parents[p] +"/"+ sub_fold;
-                }
-                //}}}
+            // ROOTED FILE NAME {{{
+            let a_href;
+            if( path.startsWith("/") )
+            {
+                a_href = root + path;
             }
-            let a_href  = root +"/";
-            for(     f  = 0; f < (folders.length - up_count); ++f)
-                a_href += folders[f] +"/";
+            //}}}
+            // ... OR PARSE SUB FOLDER {{{
+            else {
+                let parents  = path.split("/").filter(Boolean);  // remove falsy items
 
-            a_href     += sub_fold + fileName;
+                let fileName = parents.pop();
 
-//{{{
-//console.log("%c "          +        path     .padEnd(48)
-//           +"%c "          + String(parents ).padEnd(24)
-//           +"%c "          +        up_count
-//           +"%c "          +        a_href
-//           ,"background-color: #000; color: #F00"
-//           ,"background-color: #000; color: #F0F"
-//           ,"background-color: #222; color: #0FF"
-//           ,"background-color: #00F; color: #FF0"
-//           );
-//}}}
-//{{{
-//console.log(                       line         );
-//console.log(".......path=["+       path     +"]");
-//console.log("....parents=["+String(parents) +"]");
-//console.log("...up_count=["+       up_count +"]");
-//console.log(".....a_href=["+       a_href   +"]");
-//}}}
+                let up_count =  0;
+                let sub_fold = "";
+                let      f;
+                let      p;
+                for(     f  = folders.length-1
+                    ,    p  = parents.length-1
+                    ;   (f >= 0) && (p >= 0)
+                    ;  --f       , --p
+                   ) {
+                    // current dir is current parent {{{
+                    if(parents[p] == ".")
+                    {
+                        sub_fold   = folders[f] +"/"+ sub_fold;
+                        up_count  += 1;
+                    }
+                    //}}}
+                    // ...going deeper {{{
+                    else if(folders[f] != parents[p])
+                    {
+                        up_count  += 1;
+                        sub_fold   = parents[p] +"/"+ sub_fold;
+                    }
+                    //}}}
+                }
+                a_href      = root +"/";
+
+                for(     f  = 0; f < (folders.length - up_count); ++f)
+                    a_href += folders[f] +"/";
+
+                a_href     += sub_fold + fileName;
+            }
+            //}}}
 
             let a = "<a href='"+ a_href +"'>"+path+"</a>";
             innerHTML += line.replace(path, a) +"\n";
         }
+        //}}}
+        // 2. A HREF {{{
         else if(line.includes("http") && !line.includes("href"))
         {
-            innerHTML += line.replace(/(https?:\/\/\S*)/, "<a href='$1'> $1 </a>") +"\n";
+            //.........................(111111)(222222)(33333333)
+            let matches = line.match(/^( *<td>)(http.*)(<\/td> *)$/);  // @see /SERVER/server5_content.js markdown table to html
+            if( matches ) {
+                let url = matches[2];
+                let   a = "<a href='"+url+"'>"+url+"</a>";
+                innerHTML += matches[1]+ a + matches[3]+"\n";
+            }
+            else {
+                let url = line.trim();
+                innerHTML += line.replace(/(https?:\/\/\S*)/, "<a href='"+url+"'>"+url+" </a>") +"\n";
+            }
         }
+        //}}}
+        // 3. ALL OTHER LINES {{{
         else {
             innerHTML += line +"\n";
         }
+        //}}}
     });
     pre.innerHTML = innerHTML;
+    //}}}
 };
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ FOLDING                                                                    │
 //└────────────────────────────────────────────────────────────────────────────┘
-/*➔ fold_open_012 {{{*/
-let fold_open_012 = function(e,state)
+/*➔ fold_close_open_toggle {{{*/
+let fold_close_open_toggle = function(e,state)
 {
-//{{{
-//  let   details = e.target;
-//    if(  !details )   details =           document;
-//    while(details && (details.tagName !=  "DETAILS")) details = details.parentElement;
-//    if(  !details || (details.tagName !=  "DETAILS")) return false; // may bubble up
-//}}}
-    let details = e.target.closest("DETAILS");
-
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PREVENT CLOSING DETAILS                                                │
     //└────────────────────────────────────────────────────────────────────────┘
     js_folds.set_shiftLatched(  true );
 
+    let  details = e.target.closest("DETAILS");
     details.open = true;
     let el_array = details.querySelectorAll("DETAILS");
     let    count = 0;
@@ -381,12 +402,12 @@ let fold_open_012 = function(e,state)
 // PUBLIC {{{
     return { onload
         ,    copy_container_text    // exposed to onclick
-        ,    fold_open_012          // exposed to onclick
+        ,    fold_close_open_toggle // exposed to onclick
         ,    toggle_wrap            // exposed to onclick
     };
 
 /*}}}*/
 })();
-document.addEventListener("DOMContentLoaded", js_linkify.onload);
 export { js_linkify }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
 window . js_linkify = js_linkify; // exposed to onclick
+document.addEventListener("DOMContentLoaded", js_linkify.onload);

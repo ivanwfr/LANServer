@@ -516,3 +516,4 @@ return {
 //    "}}}
 //globalThis.js_input = js_input;
 export { js_input }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_input = js_input;

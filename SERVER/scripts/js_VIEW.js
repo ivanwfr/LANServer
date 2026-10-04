@@ -260,3 +260,4 @@ document.addEventListener("readystatechange", js_VIEW.init);
 //│}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 export { js_VIEW }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_VIEW = js_VIEW;

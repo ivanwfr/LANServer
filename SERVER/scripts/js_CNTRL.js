@@ -346,3 +346,4 @@ const js_CNTRL     = (function () {
 //└────────────────────────────────────────────────────────────────────────────┘
 
 export { js_CNTRL }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window.js_CNTRL = js_CNTRL;

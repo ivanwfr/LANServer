@@ -134,3 +134,4 @@ return {  name : "js_store"
 /*}}}*/
 })();
 export { js_store }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_store = js_store;

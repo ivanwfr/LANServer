@@ -113,3 +113,4 @@ return {  name : "js_xpath"
 /*}}}*/
 })();
 export { js_xpath }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_xpath = js_xpath;
