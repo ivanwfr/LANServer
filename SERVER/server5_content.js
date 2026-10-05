@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261004:23h:36)
+//│ server5_content.js                                     _TAG (261005:02h:20)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -190,9 +190,9 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
                     .  replace(         / *;* *{{ *{/gm, " "                                    )
                     .  replace(         / *;* *}} *}/gm, " "                                    )
                 // box borders
-                    .  replace( / *\/[\/\\*] *(┌.*$)/gm , "<BOXU>$1</BOXU>")
+                    .  replace( / *\/[\/\\*] *(┌.*$)/gm , "<div></div><BOXU>$1</BOXU>"  ) // block + inline-block
                     .  replace( / *\/[\/\\*] *(│.*$)/gm , "<BOXM>$1</BOXM>")
-                    .  replace( / *\/[\/\\*] *(└.*$)/gm , "<BOXD>$1</BOXD>")
+                    .  replace( / *\/[\/\\*] *(└.*$)/gm , "<BOXD>$1</BOXD><div></div>\n") // inline-block + block
                 // box separators
                     .  replace( / *\/[\/\\*] *(├.*$)/gm , "<BOXM>$1</BOXM>")
                     .  replace( / *\/[\/\\*] *(┼.*$)/gm , "<BOXM>$1</BOXM>")
@@ -200,7 +200,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
                 // embedded LF
                     .  replace( /\\n/gm , "\u21B2") // ↲
                 // remove utf-8 boxing (or not)
-                //  .  replace(         /[└┘┌┐│─├┼┤]/gm , " "              )
+                    .  replace(         /[└┘┌┐│─├┼┤]/gm , " "              )
                 ;
 
                 // MARKDOWN TABLES TO HTML

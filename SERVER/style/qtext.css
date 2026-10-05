@@ -1,5 +1,5 @@
 
-/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261003:02h:25) │*/
+/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261005:02h:20) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 
 /*{{{
@@ -187,7 +187,8 @@ DETAILS:not([open])>SUMMARY {
 DETAILS:not([open])>SUMMARY { background-color  : #22B;  }  /* overridden by js_linkify */
 SUMMARY                     { background-color  : #008 ; }  /* overridden by js_linkify */
 
-SUMMARY                     {            color  : #FFA ; }
+BODY,
+SUMMARY,
 PRE                         {            color  : #FFA ; }
 /*}}}*/
 /* SUMMARY EM ● wrap {{{*/
@@ -219,8 +220,9 @@ PRE:has(DETAILS[open]) { background-color: #000; }
 
 
 /* BOX SUMMARY PRE ● margin ● padding {{{*/
-           BOXU             { margin-top :  1em; }
-           BOXU, BOXM, BOXD { margin-left:  0em; }
+           BOXU             { margin: 0.5em 0 0 0; }
+                 BOXM       { margin: 0     0 0 0; }
+                       BOXD { margin: 0     0 0.5em 0; }
                     SUMMARY {                    padding     : 0.5em; }
                         PRE {                    padding     : 0.5em; }
 
@@ -230,12 +232,19 @@ PRE:has(DETAILS[open]) { background-color: #000; }
 BOXU,
 BOXM,
 BOXD {
- display             : inline-block;
  border-collapse     : collapse;
  min-width           : 50%;
  padding             : 0;
  color               : #EEE;
 }
+
+DIV:has(+BOXU)    { height: 0; /*border: 2px dashed #F00; height: 1px;*/ }
+         BOXD+DIV { height: 0; /*border: 2px dashed #0F0; height: 1px;*/ }
+
+BOXU,
+BOXM,
+BOXD { display       : inline-block; }
+
 BOXU { border-radius : 0.5em 0.5em 0     0    ; }
 BOXD { border-radius : 0     0     0.5em 0.5em; }
 /*}}}*/

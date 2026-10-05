@@ -1,14 +1,12 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER    ● _TAG (260929:21h:49) │
+//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER    ● _TAG (261005:01h:32) │
 //├────────────────────────────────────────────────────────────────────────────┤
-//{{{
-//│ Here is a minimal, clutter-free implementation of
-//│ a State Machine using an **IIFE** pattern:
-//│
-//│ It uses a finite state machine table where each
-//│ state defines allowed transitions, target next states,
-//│ and optional async side-effects (like calls to `js_MODEL` or `GUI`)
-//}}}
+//│ Here is a minimal, clutter-free implementation of                          │
+//│ a State Machine using an **IIFE** pattern:                                 │
+//│                                                                            │
+//│ It uses a finite state machine table where each                            │
+//│ state defines allowed transitions, target next states,                     │
+//│ and optional async side-effects (like calls to `js_MODEL` or `GUI`)        │
 //└────────────────────────────────────────────────────────────────────────────┘
 // IMPORT {{{
 
@@ -333,7 +331,7 @@ const js_CNTRL     = (function () {
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ### KEY TAKEAWAYS FROM THIS IMPLEMENTATION:
-//{{{
+//│
 //│ 1. **State Isolation**: Actions in transient states
 //│ (`SAVING`, `DELETING`) are omitted in the lookup
 //│ table. Any user clicks arriving while in these states
@@ -342,8 +340,6 @@ const js_CNTRL     = (function () {
 //│ 2. **Predictable Flow**: The state machine directly
 //│ manages the async boundary with `js_MODEL`, then cleanly
 //│ transitions back to `IDLE` before updating listeners.
-//}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 
 export { js_CNTRL }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
-window.js_CNTRL = js_CNTRL;

@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261004:01h:20)
+//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261005:00h:31)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵 View Helper: Renders, layouts, and scrolls notes in the DOM
 //│    State Management ➔ js_CNTRL (via js_MODEL, js_VIEW)
@@ -291,9 +291,8 @@ let layout_get_note_time = function(note)
 //│ TABLE STATUS & HIGHLIGHTING 🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠
 //└─────────────────────────────────────────────────────────────────[...]
 /*_ standout_note_at_index ● Highlight note row {{{*/
-/*{{{*/
 let standout_note_index;
-/*}}}*/
+
 let standout_note_at_index = function(index)
 {
 if(tag_this) console.log("🔵 standout_note_at_index: "+ index);
@@ -504,10 +503,9 @@ if(tag_this) console.log("🔵 show_status( "+msg+" )");
 };
 /*}}}*/
 /*_ tail_status ● Update tail message in status line {{{*/
-/*{{{*/
 let tail_msg_1;
 let tail_msg_2;
-/*}}}*/
+
 let tail_status = function(...args)
 {
     let status_line = get_status_line();
