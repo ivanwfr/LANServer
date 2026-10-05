@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261005:02h:20)
+//│ server5_content.js                                     _TAG (261005:17h:36)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -174,40 +174,83 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
         /* qtext turn VIM FOLDS into DETAILS SUMMARY {{{*/
         if(data.includes( FOLD_OPEN ))
         {
-            // ?qtext
+            // ?qtext {{{
             if(   server0_log.html_format_requested(file_name,query)
               && !file_name.match(/\.htm/)
               ) {
 
-                data = String(data)
-                // html entities
-                    .  replace(                   /</gm, "&lt;"                                 )
-                    .  replace(                   />/gm, "&gt;"                                 )
-                // foldings
-                    .  replace(   /(.*{{ *{.*) *\r*\n/gm, "<details><summary>$1</summary><pre>" )
-                    .  replace(   /(.*}} *}.*) *\r*\n/gm,                   "$1</pre></details>")
-                // remove vim fold markers
-                    .  replace(         / *;* *{{ *{/gm, " "                                    )
-                    .  replace(         / *;* *}} *}/gm, " "                                    )
-                // box borders
-                    .  replace( / *\/[\/\\*] *(┌.*$)/gm , "<div></div><BOXU>$1</BOXU>"  ) // block + inline-block
-                    .  replace( / *\/[\/\\*] *(│.*$)/gm , "<BOXM>$1</BOXM>")
-                    .  replace( / *\/[\/\\*] *(└.*$)/gm , "<BOXD>$1</BOXD><div></div>\n") // inline-block + block
-                // box separators
-                    .  replace( / *\/[\/\\*] *(├.*$)/gm , "<BOXM>$1</BOXM>")
-                    .  replace( / *\/[\/\\*] *(┼.*$)/gm , "<BOXM>$1</BOXM>")
-                    .  replace( / *\/[\/\\*] *(┤.*$)/gm , "<BOXM>$1</BOXM>")
-                // embedded LF
-                    .  replace( /\\n/gm , "\u21B2") // ↲
-                // remove utf-8 boxing (or not)
-                    .  replace(         /[└┘┌┐│─├┼┤]/gm , " "              )
-                ;
+                data = String(data);
 
+                // PRE-CHAR FILTER {{{
+                // html entities
+                data =         data.replace(                   /</gm, "&lt;"            )
+                    .               replace(                   />/gm, "&gt;"            )
+                ;
+                //}}}
+                // LINE FILTER {{{
+let   data_out = "";
+const    lines = data.split("\n");
+for(let i = 0; i < lines.length; ++i)
+{
+    let l = lines[i];
+// BOX BORDERS
+    l =         l.  replace(             / *\/[\/\\*] *(┌.*$)/g,            "<BOXU>$1</BOXU>"  ); // PRE-LINE
+
+    l =         l.  replace(             / *\/[\/\\*] *(│.*$)/g, "<BOXM>$1</BOXM>");
+
+    l =         l.  replace(             / *\/[\/\\*] *(└.*$)/g, "<BOXD>$1</BOXD>"             ); // PRE-LINE
+
+// BOX SEPARATORS
+    l =         l.  replace(             / *\/[\/\\*] *(├.*$)/g, "<BOXM>$1</BOXM>");
+    l =         l.  replace(             / *\/[\/\\*] *(┼.*$)/g, "<BOXM>$1</BOXM>");
+    l =         l.  replace(             / *\/[\/\\*] *(┤.*$)/g, "<BOXM>$1</BOXM>");
+// BOX PARSE-DONE
+if( l.includes("BOX") )
+    l =         l.  replace(             /[└┘┌┐│─├┼┤]+/g       , ""               );
+
+// FOLD-OPEN-CLOSE .. ANY LINE
+    l =         l.  replace(     /(.*)\{\{\{(.*)/, "<details><summary>$1 $2</summary><pre>" );
+    l =         l.  replace(     /(.*)\}\}\}(.*)/,                   "$1 $2</pre></details>");
+
+// remove COMMENT EN
+    l =         l.  replace(                        / *\/\* */, ""               ); // 👉  /*   👈
+    l =         l.  replace(                        / *\*\/ */, ""               ); // 👉  */   👈
+// remove COMMENT Copilot
+    l =         l.  replace(                     / *\[\.+\] */, ""               ); // 👉 [...] 👈
+
+
+// add a newline
+//{{{
+//    let s = l.trim();
+//    if(     s.length
+//       &&  !s.endsWith("<pre>"     )
+//     &&  !s.endsWith("</boxd>"   )
+//     &&  !s.endsWith("</details>")
+//      )
+          l += "\n";
+//}}}
+
+    data_out += l;
+}
+data = data_out;
+                //}}}
+                // POST-CHAR FILTER {{{
+                data =         data
+                // remove utf-8 boxing (or not)
+//                  .               replace(        /[└┘┌┐│─├┼┤]+/gm , "&nbsp;"         )
+                // embedded LF
+                    .               replace(                 /\\n/gm , "\u21B2"         ) // ↲
+                // remove vim fold markers
+                  //.               replace(         / *;* *\{\{\{/gm, " "               )
+                  //.               replace(         / *;* *\}\}\}/gm, " "               )
+                ;
+                //}}}
                 // MARKDOWN TABLES TO HTML
                 data = md_to_html.convert( data );
 
             }
-            //{{{
+            //}}}
+            // !qtext {{{
             else if( is_logging()) {
                 console.dir(request);
                 let    host = request.headers.host;
@@ -253,7 +296,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
         /*}}}*/
 //log_X("response.request_count["+response.request_count+"] details_folding"+TRACE_CLOSE)
         response.end();
-    }
+     }
 /*}}}*/
 };
 /*}}}*/
@@ -261,7 +304,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ MARKDOWN TO HTML
 //└────────────────────────────────────────────────────────────────────────────┘
-//  md_to_html { {{
+//  md_to_html {{{
 let md_to_html = (function() {
 "use strict";
 
@@ -283,8 +326,8 @@ let convert = function(data_in)
 {
     let data_out = "";
 
-  //const lines = data_in.split("\n").map((l) => l.trim()); // keep empty lines
-    const lines = data_in.split("\n")                     ; // keep indentation
+  //const lines = data_in.split("\n").map((l) => l.trim())                ; // keep empty lines
+    const lines = data_in.split("\n")                                     ; // keep indentation
 
     for(let i = 0; i < lines.length; ++i)
     {
@@ -296,17 +339,16 @@ let convert = function(data_in)
 
         if( reached_md_table )
         {
-            let table_lines = lines[i] + "\n";
+            let table_rows = lines[i] + "\n";
             while(i < lines.length && lines[i].includes("|"))
             {
-                let cell =     lines[i  ].trim();
-                if( cell )
-                    table_lines += cell + "\n";
+                let row =    lines[i].trim();
+                if( row ) table_rows += row + "\n";
                 i += 1;
             }
 
-            if( table_lines ) {
-                data_out   += convert_table_to_html( table_lines.trim() );
+            if( table_rows ) {
+                data_out   += convert_table_to_html( table_rows.trim() );
             }
             data_out     += lines[i] + "\n";
         }
@@ -383,7 +425,7 @@ let parseRow = function(line)
     };
     //}}}
 })();
-//}} }
+//}}}
 
     // return ● server5_content, details_folding {{{
     return { name: "server5_content"
