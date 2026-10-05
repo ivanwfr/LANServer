@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261004:22h:52) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261005:18h:48) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -337,6 +337,7 @@ CURRENT FOLDER PATH:       https://192.168.1.14:447/SERVER/scripts/js_linkify.js
         // 2. A HREF {{{
         else if(line.includes("http") && !line.includes("href"))
         {
+            // URL IN A markdown table {{{
             //.........................(111111)(222222)(33333333)
             let matches = line.match(/^( *<td>)(http.*)(<\/td> *)$/);  // @see /SERVER/server5_content.js markdown table to html
             if( matches ) {
@@ -344,9 +345,12 @@ CURRENT FOLDER PATH:       https://192.168.1.14:447/SERVER/scripts/js_linkify.js
                 let   a = "<a href='"+url+"'>"+url+"</a>";
                 innerHTML += matches[1]+ a + matches[3]+"\n";
             }
+            //}}}
+            // or we have a blank or EOL at end of http url {{{
             else {
-                let url = line.trim();
-                innerHTML += line.replace(/(https?:\/\/\S*)/, "<a href='"+url+"'>"+url+" </a>") +"\n";
+                innerHTML += line.replace(/(https?:\/\/[^>|<|\s]+)(>|<|\s|$)/, "<a href='$1'>$1</a>$2") +"\n";
+                //.......................................................................▲▲..▲▲....▲▲
+                ///////////////////////////(SCHEME_____URL_______)(BOUNDARY)....<aaaaaaaaaaaaaaaaa>BOUNDARY
             }
         }
         //}}}
