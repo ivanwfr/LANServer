@@ -1,41 +1,65 @@
-
-/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261005:02h:20) │*/
+/*┌──────────────────────────────────────────────────────────────────────────┐*/
+/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261005:15h:59) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
+/* BOX {{{*/
+/* BOX ● padding {{{*/
+BOXU,
+BOXM,
+BOXD {
+ padding             : 0;
+}
 
 /*{{{
+DIV:has(+BOXU)     { height: 0.5em; }
+         BOXD+DIV  { height: 0.5em; }
+DIV:has(+DIV+BOXU) { height: 0.0em; }
+DIV+DIV:has(+BOXU) { height: 0.0em; }
+
+DIV:has(+BOXU)     {                  border: 2px dashed #888;   }
+         BOXD+DIV  {                  border: 2px dashed #888;   }
+DIV:has(+DIV+BOXU) {                  border: 2px dashed #F0F;   }
+DIV+DIV:has(+BOXU) {                  border: 2px dashed #0FF;   }
 }}}*/
-.markdown_table TR:nth-of-type(even) * { background-color: #0004; }
-.markdown_table TD { white-space: pre; }
-.markdown_table    { border-collapse : collapse; }
-.markdown_table    {            color: #FFDF; }
-.markdown_table TH { background-color: #333; border: 1px solid #555; }
-.markdown_table TD { background-color: #000; border: 1px solid #444; }
 
-.markdown_table TH { padding: 0.5em; }
-.markdown_table TD { padding: 0.5em; }
-
-/* BODY {{{*/
-BODY      { background-color: #111; }
-BODY      {    margin-bottom:  50%; }
-BODY *    {      font-family: monospace; }
 /*}}}*/
-/* A {{{*/
-A:link    {            color: #8FF; }
-A:visited {            color: #F0F; }
+/* BOX ● COLORS {{{*/
+/* UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU, MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM, DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD */
+BOXU:nth-of-type( 1), BOXU:nth-of-type( 1) ~ BOXM, BOXU:nth-of-type( 1) ~ BOXD { background-color: #964B0010; border-color: #964B0080; }
+BOXU:nth-of-type( 2), BOXU:nth-of-type( 2) ~ BOXM, BOXU:nth-of-type( 2) ~ BOXD { background-color: #FF000010; border-color: #FF000080; }
+BOXU:nth-of-type( 3), BOXU:nth-of-type( 3) ~ BOXM, BOXU:nth-of-type( 3) ~ BOXD { background-color: #FFA50010; border-color: #FFA50080; }
+BOXU:nth-of-type( 4), BOXU:nth-of-type( 4) ~ BOXM, BOXU:nth-of-type( 4) ~ BOXD { background-color: #FFFF0010; border-color: #FFFF0080; }
+BOXU:nth-of-type( 5), BOXU:nth-of-type( 5) ~ BOXM, BOXU:nth-of-type( 5) ~ BOXD { background-color: #9ACD3210; border-color: #9ACD3280; }
+BOXU:nth-of-type( 6), BOXU:nth-of-type( 6) ~ BOXM, BOXU:nth-of-type( 6) ~ BOXD { background-color: #6495ED10; border-color: #6495ED80; }
+BOXU:nth-of-type( 7), BOXU:nth-of-type( 7) ~ BOXM, BOXU:nth-of-type( 7) ~ BOXD { background-color: #EE82EE10; border-color: #EE82EE80; }
+BOXU:nth-of-type( 8), BOXU:nth-of-type( 8) ~ BOXM, BOXU:nth-of-type( 8) ~ BOXD { background-color: #A0A0A010; border-color: #A0A0A080; }
+BOXU:nth-of-type( 9), BOXU:nth-of-type( 9) ~ BOXM, BOXU:nth-of-type( 9) ~ BOXD { background-color: #FFFFFF10; border-color: #FFFFFF80; }
+BOXU:nth-of-type(10), BOXU:nth-of-type(10) ~ BOXM, BOXU:nth-of-type(10) ~ BOXD { background-color: #10104010; border-color: #10104080; box-shadow: 0 0 1px 0px #FFF; }
+
+/* linear-gradient {{{
+    BOXU:nth-of-type(10)                                                    ~ BOXD { background    : linear-gradient(   1deg, #101040D0 10%, #10101080 90%, #0001); }
+    BOXU:nth-of-type( 6)                                                    ~ BOXD { background    : linear-gradient(   1deg, #6495ED80 10%, #6495ED80 20%, #0001); }
+    BOXU:nth-of-type( 1)                                                    ~ BOXD { background    : linear-gradient(   1deg, #964B0080 10%, #964B0080 20%, #0001); }
+    BOXU:nth-of-type( 5)                                                    ~ BOXD { background    : linear-gradient(   1deg, #9ACD3280 10%, #9ACD3280 20%, #0001); }
+    BOXU:nth-of-type( 8)                                                    ~ BOXD { background    : linear-gradient(   1deg, #A0A0A080 10%, #A0A0A080 20%, #0001); }
+    BOXU:nth-of-type( 7)                                                    ~ BOXD { background    : linear-gradient(   1deg, #EE82EE80 10%, #EE82EE80 20%, #0001); }
+    BOXU:nth-of-type( 2)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FF000080 10%, #FF000080 20%, #0001); }
+    BOXU:nth-of-type( 3)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FFA50080 10%, #FFA50080 20%, #0001); }
+    BOXU:nth-of-type( 4)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FFFF0080 10%, #FFFF0080 20%, #0001); }
+    BOXU:nth-of-type( 9)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FFFFFF80 10%, #FFFFFF80 20%, #0001); }
+    BOXU:nth-of-type(10)                                                           { background    : linear-gradient( 179deg, #101040D0 10%, #10101080 90%, #0001); }
+    BOXU:nth-of-type( 6)                                                           { background    : linear-gradient( 179deg, #6495ED80 10%, #6495ED80 20%, #0001); }
+    BOXU:nth-of-type( 1)                                                           { background    : linear-gradient( 179deg, #964B0080 10%, #964B0080 20%, #0001); }
+    BOXU:nth-of-type( 5)                                                           { background    : linear-gradient( 179deg, #9ACD3280 10%, #9ACD3280 20%, #0001); }
+    BOXU:nth-of-type( 8)                                                           { background    : linear-gradient( 179deg, #A0A0A080 10%, #A0A0A080 20%, #0001); }
+    BOXU:nth-of-type( 7)                                                           { background    : linear-gradient( 179deg, #EE82EE80 10%, #EE82EE80 20%, #0001); }
+    BOXU:nth-of-type( 2)                                                           { background    : linear-gradient( 179deg, #FF000080 10%, #FF000080 20%, #0001); }
+    BOXU:nth-of-type( 3)                                                           { background    : linear-gradient( 179deg, #FFA50080 10%, #FFA50080 20%, #0001); }
+    BOXU:nth-of-type( 4)                                                           { background    : linear-gradient( 179deg, #FFFF0080 10%, #FFFF0080 20%, #0001); }
+    BOXU:nth-of-type( 9)                                                           { background    : linear-gradient( 179deg, #FFFFFF80 10%, #FFFFFF80 20%, #0001); }
+}}}*/
 /*}}}*/
-
-/* ECC background outline {{{*/
-.bg0>SUMMARY            { background-color: #10101080 !important; }
-.bg1>SUMMARY            { background-color: #964B0080 !important; }
-.bg2>SUMMARY            { background-color: #FF000080 !important; }
-.bg3>SUMMARY            { background-color: #FFA50080 !important; }
-.bg4>SUMMARY            { background-color: #FFFF0080 !important; }
-.bg5>SUMMARY            { background-color: #9ACD3280 !important; }
-.bg6>SUMMARY            { background-color: #6495ED80 !important; }
-.bg7>SUMMARY            { background-color: #EE82EE80 !important; }
-.bg8>SUMMARY            { background-color: #A0A0A080 !important; }
-.bg9>SUMMARY            { background-color: #FFFFFF80 !important; }
-
+/*}}}*/
+/* outline  ● ECC ● SUMMARY ● PRE {{{*/
 .bg0>SUMMARY, .bg0>PRE  {          outline: 1px solid #80808080; }
 .bg1>SUMMARY, .bg1>PRE  {          outline: 1px solid #964B0080; }
 .bg2>SUMMARY, .bg2>PRE  {          outline: 1px solid #FF000080; }
@@ -48,36 +72,33 @@ A:visited {            color: #F0F; }
 .bg9>SUMMARY, .bg9>PRE  {          outline: 1px solid #FFFFFF80; }
 
 /*}}}*/
+/* background {{{*/
 
-/* cursor user-select transition {{{*/
-SUMMARY                     { user-select   : none;                           }
-DETAILS                     { cursor        : pointer;                        }
-DETAILS:open                { cursor        : context-menu;                   }
-SUMMARY                     { transition    : background-color 300ms ease-in; }
+/* markdown_table ● background {{{*/
+.markdown_table TH                     { background-color: #333; border: 1px solid #555; }
+.markdown_table TD                     { background-color: #000; border: 1px solid #444; }
+.markdown_table TR:nth-of-type(even) * { background-color: #0004; }
 /*}}}*/
-/* DETAILS margin padding {{ {*/
-DETAILS:open                { margin      :   2em 1em; padding-left:   2em; }
-DETAILS:not(open)           { margin      : 0.2em 0.5em; padding-left:   0em; }
-
-/*{{{//FIXME
-DETAILS:open       >PRE     { margin-left :    -1em; padding-left: 0.5em; }
-}}}*/
-DETAILS:not(open)  >PRE     { margin-left :     0em; padding-left: 0.5em; }
-DETAILS:open       >PRE     { margin-top  :     2px;                      }
-
-DETAILS:open       >SUMMARY { margin-left :    -2em; padding-left: 0.5em; }
-DETAILS:not(open)  >SUMMARY { margin-left :     0em; padding-left: 0.5em; }
-
-/*{{{
+/* blurred ● background {{{
 .blurred * {
   background-color        : #FFF4;
   backdrop-filter         : blur(10px) !important;
   -webkit-backdrop-filter : blur(10px) !important;
 }
 }}}*/
-
-/*}} }*/
-/* DETAILS.close_on_margin_click {{{*/
+/* bg<n> ECC background {{{*/
+.bg0>SUMMARY            { background-color: #10101080 !important; }
+.bg1>SUMMARY            { background-color: #964B0080 !important; }
+.bg2>SUMMARY            { background-color: #FF000080 !important; }
+.bg3>SUMMARY            { background-color: #FFA50080 !important; }
+.bg4>SUMMARY            { background-color: #FFFF0080 !important; }
+.bg5>SUMMARY            { background-color: #9ACD3280 !important; }
+.bg6>SUMMARY            { background-color: #6495ED80 !important; }
+.bg7>SUMMARY            { background-color: #EE82EE80 !important; }
+.bg8>SUMMARY            { background-color: #A0A0A080 !important; }
+.bg9>SUMMARY            { background-color: #FFFFFF80 !important; }
+/*}}}*/
+/* stipped background ● ● note_row.timestamp {{{*/
 TD:has(>.timestamp):hover,
 DETAILS.close_on_margin_click {
   background: repeating-linear-gradient( 45deg
@@ -86,14 +107,14 @@ DETAILS.close_on_margin_click {
     ,                                   #1118 4px
     ,                                   #1118 8px
   );
-/*{{{
+/* colors {{{
   background: repeating-linear-gradient( 45deg
   ,                                     #856100dd 0px
   ,                                     #775700dd 8px
   ,                                     #1d1d1ddd 8px
   ,                                     #717171dd 16px);
 }}}*/
-/*{{{
+/* colors {{{
   background: repeating-linear-gradient( 45deg
     ,                                   #FC48 0px
     ,                                   #FC48 8px
@@ -103,22 +124,122 @@ DETAILS.close_on_margin_click {
 }}}*/
 }
 /*}}}*/
-/* pointer {{{*/
-DETAILS:open       >PRE     { cursor      : pointer; }
 
+BODY                        { background-color:  #111; }
+
+DETAILS:not([open])>SUMMARY { background-color: #22B; }
+DETAILS:not([open])>SUMMARY { background-color: #22B; }  /* overridden by js_linkify */
+DETAILS:open                { background-color: #F006;    }
+/*
+
+DETAILS:open       >SUMMARY { background-color: #333 !important; }
+
+// PROMPT   ● Regex lookahead and lookbehind table {{{
+You: I would like a comparision table between GVim and Javascript syntax for regex lookahead and lookbehind
+
+}}}
+
+*/
+/*{{{
+DETAILS:open       >SUMMARY { background-color: #333 !important; }
+}}}*/
+DETAILS:open       >PRE     { background-color: #222; }
+
+SUMMARY                     { background-color: #008; }  /* overridden by js_linkify */
+
+PRE:has(DETAILS[open]) { background-color: #000; }
+/*}}}*/
+/* color {{{*/
+BODY, SUMMARY, PRE   { color: #FFA ; }
+BOXU, BOXM, BOXD     { color: #EEE ; }
+A:link               { color: #8FF ; }
+A:visited            { color: #F0F ; }
+.markdown_table      { color: #FFDF; }
+/*
+DETAILS:open>SUMMARY { color: white !important; }
+*/
+/*}}}*/
+/* border {{{*/
+/* markdown_table   ● border {{{*/
+.markdown_table  { border-collapse : collapse; }
+
+/*}}}*/
+/* BOX              ● border {{{*/
+
+BOXU,
+BOXM,
+BOXD { border-style: solid; }
+
+BOXU { border-width: 3px 0   0   16px; }
+BOXM { border-width: 0   0   0   16px; }
+BOXD { border-width: 0   0   3px 16px; }
+
+
+BOXU, BOXM, BOXD { border-collapse : collapse; }
+
+BOXU             { border-radius   : 0.5em 0.5em 0     0    ; }
+BOXD             { border-radius   : 0     0     0.5em 0.5em; }
+
+/*}}}*/
+/* DETAILS          ● border {{{*/
+DETAILS.bg0:open            { box-shadow        : -3px 0px 0px 1px #10101080; }
+DETAILS.bg1:open            { box-shadow        : -3px 0px 0px 1px #964B0080; }
+DETAILS.bg2:open            { box-shadow        : -3px 0px 0px 1px #FF000080; }
+DETAILS.bg3:open            { box-shadow        : -3px 0px 0px 1px #FFA50080; }
+DETAILS.bg4:open            { box-shadow        : -3px 0px 0px 1px #FFFF0080; }
+DETAILS.bg5:open            { box-shadow        : -3px 0px 0px 1px #9ACD3280; }
+DETAILS.bg6:open            { box-shadow        : -3px 0px 0px 1px #6495ED80; }
+DETAILS.bg7:open            { box-shadow        : -3px 0px 0px 1px #EE82EE80; }
+DETAILS.bg8:open            { box-shadow        : -3px 0px 0px 1px #A0A0A080; }
+DETAILS.bg9:open            { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
+DETAILS:open                { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
+
+DETAILS                     { border-radius     : 0em 1em 1em 0em; }
+DETAILS:not(open)  >SUMMARY { border-radius     : 0.2em 1em 1em 0.2em; }
+DETAILS:open                { border-radius     : 0.5em;             }
+DETAILS:open       >SUMMARY { border-radius     : 0.5em 0.5em 0em 0em; }
+DETAILS:open        PRE     { border-radius     : 0em 0em 0.5em 0.5em; }
+
+DETAILS>SUMMARY             { border-left       : 0.5em solid #0004; }
+DETAILS:open       >SUMMARY { border-left       : 0;               }
+/*}}}*/
+/*}}}*/
+/* margin   ● padding {{{*/
+
+BODY      {    margin-bottom:  50%; }
+
+.markdown_table          TH {                            padding: 0.5em;      }
+.markdown_table          TD {                            padding: 0.5em;      }
+
+                       BOXU { margin: 0.5em 1em   0   0;                      }
+                       BOXM { margin: 0     1em   0   0;                      }
+                       BOXD { margin: 0     1em 0.5em 0;                      }
+
+DETAILS:open                { margin: 2.0em 1.0em;       padding-left: 2.0em; }
+DETAILS:not(open)           { margin: 0.2em 0.5em;       padding-left: 0    ; }
+
+                        PRE {                            padding:      0.5em; }
+DETAILS:not(open)  >    PRE { margin-left:    0em;       padding-left: 0.5em; }
+DETAILS:open       >    PRE { margin-top :    2px;                            }
+                                            
+DETAILS:open       >SUMMARY { margin-left:   -2em;       padding-left: 0.5em; }
+DETAILS:not(open)  >SUMMARY { margin-left:    0em;       padding-left: 0.5em; }
+                                            
+                    SUMMARY {                            padding:      0.5em; }
+                                            
+.cb_copy                    { margin-left:    2em; }
+
+/*}}}*/
+/* font {{{*/
+BODY                      * { font-family: monospace; }
+DETAILS:not([open])>SUMMARY { font-weight: 900           ; }
+DETAILS:open       >SUMMARY { font-weight: 900 !important; } /*//FIXME*/
+.cb_copy                    { font-weight     :   900; font-size       : 16px; }
+.cb_copy::after             { font-weight     : 900; }
 /*}}}*/
 /* transition {{{*/
-DETAILS                     { transition  : margin 300ms ease-out; }
-
-/*}}}*/
-/* width {{{*/
-DETAILS                     { width             : fit-content;     }
-/*}}}*/
-/* UNFOLD COOLDOWN ● DO NOT CLOSE OTHER DETAILS DURING `unfold_cooldown` {{{*/
-/* filter {{{
-.unfold_cooldown  PRE     { filter: brightness( 0.5); }
-.unfold_cooldown  SUMMARY { filter: brightness( 1.0); }
-}}}*/
+DETAILS                     { transition  :           margin 300ms ease-out; }
+SUMMARY                     { transition  : background-color 300ms ease-in ; }
 /* filter {{{
 .unfold_cooldown DETAILS:open >SUMMARY {
     filter: brightness(0.5);
@@ -146,157 +267,43 @@ DETAILS                     { width             : fit-content;     }
 }
 }}}*/
 /*}}}*/
-/* border {{{*/
-DETAILS.bg0:open            { box-shadow        : -3px 0px 0px 1px #10101080; }
-DETAILS.bg1:open            { box-shadow        : -3px 0px 0px 1px #964B0080; }
-DETAILS.bg2:open            { box-shadow        : -3px 0px 0px 1px #FF000080; }
-DETAILS.bg3:open            { box-shadow        : -3px 0px 0px 1px #FFA50080; }
-DETAILS.bg4:open            { box-shadow        : -3px 0px 0px 1px #FFFF0080; }
-DETAILS.bg5:open            { box-shadow        : -3px 0px 0px 1px #9ACD3280; }
-DETAILS.bg6:open            { box-shadow        : -3px 0px 0px 1px #6495ED80; }
-DETAILS.bg7:open            { box-shadow        : -3px 0px 0px 1px #EE82EE80; }
-DETAILS.bg8:open            { box-shadow        : -3px 0px 0px 1px #A0A0A080; }
-DETAILS.bg9:open            { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
-DETAILS:open                { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
+/* width    ● white-space {{{*/
+           DETAILS { width: fit-content;                }
+  BOXU, BOXM, BOXD { width: 98%; min-width: 50%;        }
+             .wrap { width: 50%; white-space: pre-line; } /* @see js_linkify.toggle_wrap */
+.markdown_table TD {             white-space: pre;      }
 
-DETAILS                     { border-radius     : 0em 1em 1em 0em; }
-DETAILS:not(open)  >SUMMARY { border-radius     : 0.2em 1em 1em 0.2em; }
-DETAILS:open                { border-radius     : 0.5em;             }
-DETAILS:open       >SUMMARY { border-radius     : 0.5em 0.5em 0em 0em; }
-DETAILS:open        PRE     { border-radius     : 0em 0em 0.5em 0.5em; }
+/*}}}*/
+/* cursor   ● user-select {{{*/
+DETAILS          { cursor     : pointer;      }
+DETAILS:open     { cursor     : context-menu; }
+DETAILS:open>PRE { cursor     : pointer;      }
 
-DETAILS>SUMMARY             { border-left       : 0.5em solid #0004; }
-DETAILS:open       >SUMMARY { border-left       : 0;               }
+SUMMARY          { user-select: none;         }
 /*}}}*/
-/* font {{{*/
-DETAILS:open>SUMMARY        { font-weight     : 100   !important; }
-DETAILS:open>SUMMARY        { color           : white !important; }
-/*}}}*/
-/* color {{{*/
-DETAILS:open                { background-color: #F006;    }
-DETAILS:open       >SUMMARY { background-color  : #333  !important; }
-DETAILS:open        PRE     { background-color  : #222 ;            }
-DETAILS:not([open])>SUMMARY { background-color  : #22B ; }
-DETAILS:not([open])>SUMMARY {
-    font-weight     :  900;
-    font-size       : 120%;
-/*{{{
-    text-shadow     : 1px 1px 2px #FFF8;
-}}}*/
-}
-DETAILS:not([open])>SUMMARY { background-color  : #22B;  }  /* overridden by js_linkify */
-SUMMARY                     { background-color  : #008 ; }  /* overridden by js_linkify */
+/* display {{{*/
+               BOXU, BOXM, BOXD { display: inline-block   ; }
+DETAILS:not([open]) SUMMARY EM  { display: none !important; }
+.cb_copy::after                 { display: inline-block   ; }
 
-BODY,
-SUMMARY,
-PRE                         {            color  : #FFA ; }
 /*}}}*/
-/* SUMMARY EM ● wrap {{{*/
-DETAILS:not([open]) SUMMARY EM {
-    display: none !important;
-}
-.wrap {
-    white-space: pre-line;
-    width      : 50%;
-}
-/*}}}*/
-
-PRE:has(DETAILS[open]) { background-color: #000; }
+/* cb_copy  ● float ● align ● content {{{*/
 .cb_copy {
     float           : right;
-    margin-left     :   2em;
-    font-weight     :   900;
-    font-size       : 16px;
     vertical-align  : middle;
 }
 .cb_copy::after {
     content         : "⬜";             /* ⬛⬜ ⧉ ▢ 🖵 📝 */
-    display         : inline-block;
     translate       : -1.1em -0.3em;
-    font-weight     : 900;
 }
-
-
-
-
-/* BOX SUMMARY PRE ● margin ● padding {{{*/
-           BOXU             { margin: 0.5em 0 0 0; }
-                 BOXM       { margin: 0     0 0 0; }
-                       BOXD { margin: 0     0 0.5em 0; }
-                    SUMMARY {                    padding     : 0.5em; }
-                        PRE {                    padding     : 0.5em; }
-
 /*}}}*/
-
-/* BOX ● border-radius padding {{{*/
-BOXU,
-BOXM,
-BOXD {
- border-collapse     : collapse;
- min-width           : 50%;
- padding             : 0;
- color               : #EEE;
-}
-
-DIV:has(+BOXU)    { height: 0; /*border: 2px dashed #F00; height: 1px;*/ }
-         BOXD+DIV { height: 0; /*border: 2px dashed #0F0; height: 1px;*/ }
-
-BOXU,
-BOXM,
-BOXD { display       : inline-block; }
-
-BOXU { border-radius : 0.5em 0.5em 0     0    ; }
-BOXD { border-radius : 0     0     0.5em 0.5em; }
-/*}}}*/
-
-/* BOX ● COLORS {{{*/
-/* UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU, MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM, DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD */
-
-BOXU,
-BOXM,
-BOXD { border-style: solid; }
-
-BOXU { border-width: 3px 0   0   16px; }
-BOXM { border-width: 0   0   0   16px; }
-BOXD { border-width: 0   0   3px 16px; }
-
-BOXU:nth-of-type( 1), BOXU:nth-of-type( 1) ~ BOXM, BOXU:nth-of-type( 1) ~ BOXD { background-color: #964B0010; border-color: #964B0080; }
-BOXU:nth-of-type( 2), BOXU:nth-of-type( 2) ~ BOXM, BOXU:nth-of-type( 2) ~ BOXD { background-color: #FF000010; border-color: #FF000080; }
-BOXU:nth-of-type( 3), BOXU:nth-of-type( 3) ~ BOXM, BOXU:nth-of-type( 3) ~ BOXD { background-color: #FFA50010; border-color: #FFA50080; }
-BOXU:nth-of-type( 4), BOXU:nth-of-type( 4) ~ BOXM, BOXU:nth-of-type( 4) ~ BOXD { background-color: #FFFF0010; border-color: #FFFF0080; }
-BOXU:nth-of-type( 5), BOXU:nth-of-type( 5) ~ BOXM, BOXU:nth-of-type( 5) ~ BOXD { background-color: #9ACD3210; border-color: #9ACD3280; }
-BOXU:nth-of-type( 6), BOXU:nth-of-type( 6) ~ BOXM, BOXU:nth-of-type( 6) ~ BOXD { background-color: #6495ED10; border-color: #6495ED80; }
-BOXU:nth-of-type( 7), BOXU:nth-of-type( 7) ~ BOXM, BOXU:nth-of-type( 7) ~ BOXD { background-color: #EE82EE10; border-color: #EE82EE80; }
-BOXU:nth-of-type( 8), BOXU:nth-of-type( 8) ~ BOXM, BOXU:nth-of-type( 8) ~ BOXD { background-color: #A0A0A010; border-color: #A0A0A080; }
-BOXU:nth-of-type( 9), BOXU:nth-of-type( 9) ~ BOXM, BOXU:nth-of-type( 9) ~ BOXD { background-color: #FFFFFF10; border-color: #FFFFFF80; }
-BOXU:nth-of-type(10), BOXU:nth-of-type(10) ~ BOXM, BOXU:nth-of-type(10) ~ BOXD { background-color: #10104010; border-color: #10104080; box-shadow: 0 0 1px 0px #FFF; }
-
-/*{{{
-    BOXU:nth-of-type(10)                                                    ~ BOXD { background    : linear-gradient(   1deg, #101040D0 10%, #10101080 90%, #0001); }
-    BOXU:nth-of-type( 6)                                                    ~ BOXD { background    : linear-gradient(   1deg, #6495ED80 10%, #6495ED80 20%, #0001); }
-    BOXU:nth-of-type( 1)                                                    ~ BOXD { background    : linear-gradient(   1deg, #964B0080 10%, #964B0080 20%, #0001); }
-    BOXU:nth-of-type( 5)                                                    ~ BOXD { background    : linear-gradient(   1deg, #9ACD3280 10%, #9ACD3280 20%, #0001); }
-    BOXU:nth-of-type( 8)                                                    ~ BOXD { background    : linear-gradient(   1deg, #A0A0A080 10%, #A0A0A080 20%, #0001); }
-    BOXU:nth-of-type( 7)                                                    ~ BOXD { background    : linear-gradient(   1deg, #EE82EE80 10%, #EE82EE80 20%, #0001); }
-    BOXU:nth-of-type( 2)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FF000080 10%, #FF000080 20%, #0001); }
-    BOXU:nth-of-type( 3)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FFA50080 10%, #FFA50080 20%, #0001); }
-    BOXU:nth-of-type( 4)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FFFF0080 10%, #FFFF0080 20%, #0001); }
-    BOXU:nth-of-type( 9)                                                    ~ BOXD { background    : linear-gradient(   1deg, #FFFFFF80 10%, #FFFFFF80 20%, #0001); }
-    BOXU:nth-of-type(10)                                                           { background    : linear-gradient( 179deg, #101040D0 10%, #10101080 90%, #0001); }
-    BOXU:nth-of-type( 6)                                                           { background    : linear-gradient( 179deg, #6495ED80 10%, #6495ED80 20%, #0001); }
-    BOXU:nth-of-type( 1)                                                           { background    : linear-gradient( 179deg, #964B0080 10%, #964B0080 20%, #0001); }
-    BOXU:nth-of-type( 5)                                                           { background    : linear-gradient( 179deg, #9ACD3280 10%, #9ACD3280 20%, #0001); }
-    BOXU:nth-of-type( 8)                                                           { background    : linear-gradient( 179deg, #A0A0A080 10%, #A0A0A080 20%, #0001); }
-    BOXU:nth-of-type( 7)                                                           { background    : linear-gradient( 179deg, #EE82EE80 10%, #EE82EE80 20%, #0001); }
-    BOXU:nth-of-type( 2)                                                           { background    : linear-gradient( 179deg, #FF000080 10%, #FF000080 20%, #0001); }
-    BOXU:nth-of-type( 3)                                                           { background    : linear-gradient( 179deg, #FFA50080 10%, #FFA50080 20%, #0001); }
-    BOXU:nth-of-type( 4)                                                           { background    : linear-gradient( 179deg, #FFFF0080 10%, #FFFF0080 20%, #0001); }
-    BOXU:nth-of-type( 9)                                                           { background    : linear-gradient( 179deg, #FFFFFF80 10%, #FFFFFF80 20%, #0001); }
+/* filter {{{*/
+/*┌────────────────────────────────────────────────────────────────────────────┐*/
+/*│ UNFOLD COOLDOWN ● DO NOT CLOSE OTHER DETAILS DURING *unfold_cooldown*
+/*└────────────────────────────────────────────────────────────────────────────┘*/
+/* unfold_cooldown {{{
+.unfold_cooldown  PRE     { filter: brightness( 0.5); }
+.unfold_cooldown  SUMMARY { filter: brightness( 1.0); }
 }}}*/
 
-/*{{{
-       background    : linear-gradient(  90deg, #6665 10%, #222 20%, #0001);
-BOXU { background    : linear-gradient( 179deg, #FFF8 10%, #444 20%, #0001); }
-BOXD { background    : linear-gradient(   1deg, #FFF8 10%, #444 20%, #0001); }
-}}}*/
 /*}}}*/
