@@ -1,0 +1,2013 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: https://192.168.1.14:447/DOC/LANServer/sample.txt
+Subject: sample.txt
+Date: Wed, 7 Oct 2026 16:59:10 +0200
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--jF8as5YBrlCKYgb61hFuIQD6SLfgd0nzummfuKzV2D----"
+
+
+------MultipartBoundary--jF8as5YBrlCKYgb61hFuIQD6SLfgd0nzummfuKzV2D----
+Content-Type: text/html
+Content-ID: <frame-9251562D81B18FF4B942CE23340951BF@mhtml.blink>
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://192.168.1.14:447/DOC/LANServer/sample.txt
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3DUTF-8"><title>sample.txt</title>
+<meta name=3D"color-scheme" content=3D"light only">
+
+
+
+
+
+
+
+
+
+
+
+
+<link type=3D"text/css" href=3D"https://192.168.1.14:447/style/notes.css" r=
+el=3D"stylesheet"><link type=3D"text/css" href=3D"https://192.168.1.14:447/=
+style/qtext.css" rel=3D"stylesheet"></head><body color_num=3D"1"><pre color=
+_num=3D"9">//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 Absolutely. Here is the correct next step:
+//=E2=94=82
+//=E2=94=82 =E2=97=8F a complete refactoring contract for the 6 files you l=
+isted,
+//=E2=94=82 =E2=97=8F written as an IDL-style specification,
+//=E2=94=82 =E2=97=8F with explicit old =E2=86=92 new ownership, signatures=
+,
+//=E2=94=82 =E2=97=8F callers,
+//=E2=94=82 =E2=97=8F callees,
+//=E2=94=82 =E2=97=8F and state transfer rules.
+//=E2=94=82
+//=E2=94=82 This is the kind of contract that makes the migration safe
+//=E2=94=82 in GVim and keeps the app working while you move logic.
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 1. Refactoring principles
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg1"><summary style=3D"color: rgb(0=
+, 0, 0);">These are the rules that must hold:  <em style=3D"float: right; m=
+argin-left: 2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em clas=
+s=3D"cb_copy" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;=
+<em style=3D"border       : 0px solid yellow;            position     : abs=
+olute;            color        : white;            text-shadow  : 1px 1px 1=
+px black;            padding      : 0.5em;            display      : inline=
+-block;            font-weight  : 900;            font-size    : 16px;     =
+       border-radius: 1em;            border       : 1px solid #F0FA;      =
+   background-color:           #202F;            line-height  : 0.8em;     =
+       transition   : all 200ms ease-out;            margin-top: -0.5em;   =
+         ">=E2=86=B7</em>&nbsp;</summary><pre>- js_CNTRL.js owns transition=
+s and state
+- js_MODEL.js owns model-facing operations
+- notes.js owns raw note data and persistence
+- js_notes.js owns rendering helpers only
+- js_VIEW.js owns event-to-intent wiring and UI refreshes
+- js_details.js is temporary glue only, not real business logic
+
+No module should silently =E2=80=9Cborrow=E2=80=9D state from another modul=
+e.
+
+Important invariants:
+
+- The editing index is controller state, not view state
+- The auto-save draft is controller state or transient model state, not js_=
+notes.js state
+- The deleted-note queue is model state and must remain synchronized
+- Any DOM mutation must be in js_VIEW.js or js_notes.js
+- Any server/storage mutation must be in notes.js or js_MODEL.js
+- js_details.js may remain only as a bootstrapping adapter until migration =
+is complete
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 2. Final target architecture
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg2"><summary style=3D"color: rgb(0=
+, 0, 0);">Target responsibility map:  <em style=3D"float: right; margin-lef=
+t: 2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_c=
+opy" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=
+=3D"border       : 0px solid yellow;            position     : absolute;   =
+         color        : white;            text-shadow  : 1px 1px 1px black;=
+            padding      : 0.5em;            display      : inline-block;  =
+          font-weight  : 900;            font-size    : 16px;            bo=
+rder-radius: 1em;            border       : 1px solid #F0FA;         backgr=
+ound-color:           #202F;            line-height  : 0.8em;            tr=
+ansition   : all 200ms ease-out;            margin-top: -0.5em;            =
+">=E2=86=B7</em>&nbsp;</summary><pre>- js_CNTRL.js
+- currentState
+- transition(action, payload)
+- subscribe(listener)
+- getState()
+- state machine only
+
+- js_MODEL.js
+- fa=C3=A7ade between controller and notes.js
+- calls domain operations
+- no DOM
+- no UI classes
+- no inline HTML generation
+
+- notes.js
+- persistent note array
+- deleted-note queue
+- storage keys
+- fetch/upload sync
+- note CRUD logic
+- no DOM output
+- no UI state
+
+- js_notes.js
+- render helpers
+- highlight row
+- scroll
+- layout
+- status line styling
+- DOM escaping
+- no editing state
+- no auto-save state
+- no deleted-note queue logic
+
+- js_VIEW.js
+- binds DOM events to transitions
+- subscribes to controller
+- refreshes UI from state
+- no direct note persistence logic
+
+- js_details.js
+- only DOM bootstrap and legacy forwarding
+- temporary compatibility adapter
+- should disappear once migration is complete
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 3. Core data contract
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg3"><summary style=3D"color: rgb(0=
+, 0, 0);">Type definitions:  <em style=3D"float: right; margin-left: 2em; v=
+isibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" styl=
+e=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"borde=
+r       : 0px solid yellow;            position     : absolute;            =
+color        : white;            text-shadow  : 1px 1px 1px black;         =
+   padding      : 0.5em;            display      : inline-block;           =
+ font-weight  : 900;            font-size    : 16px;            border-radi=
+us: 1em;            border       : 1px solid #F0FA;         background-colo=
+r:           #202F;            line-height  : 0.8em;            transition =
+  : all 200ms ease-out;            margin-top: -0.5em;            ">=E2=86=
+=B7</em>&nbsp;</summary><pre>- Note
+- checked: boolean
+- text: string
+- timestamp: number
+
+- WastedNote
+- same shape as Note
+
+- State
+- IDLE
+- EDITING
+- SAVING
+- DELETING
+- IMPORTING
+- EXPORTING
+- CHECKING
+- LOADING
+- ERROR
+
+- UIState
+- editingNoteIndex: number
+- inputDirty: boolean
+- autoInsertPrefix: boolean
+- noteSelectedId: number | null
+
+This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor =
+js_details.js.
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 4. Module-by-module IDL specification
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg4"><summary style=3D"color: rgb(0=
+, 0, 0);">js_CNTRL js_MODEL notes js_notes js_VIEW js_details  <em style=3D=
+"float:right; margin-left: 2em;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"=
+cb_copy" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em s=
+tyle=3D"border       : 0px solid yellow;            position     : absolute=
+;            color        : white;            text-shadow  : 1px 1px 1px bl=
+ack;            padding      : 0.5em;            display      : inline-bloc=
+k;            font-weight  : 900;            font-size    : 16px;          =
+  border-radius: 1em;            border       : 1px solid #F0FA;         ba=
+ckground-color:           #202F;            line-height  : 0.8em;          =
+  transition   : all 200ms ease-out;            margin-top: -0.5em;        =
+    ">=E2=86=B7</em>&nbsp;</summary><pre color_num=3D"6"><details class=3D"=
+close_on_margin_click bg1"><summary style=3D"color: rgb(0, 0, 0);">=E2=94=
+=82 4.1 js_CNTRL.js  <em style=3D"float: right; margin-left: 2em; visibilit=
+y: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" style=3D"flo=
+at:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"border       =
+: 0px solid yellow;            position     : absolute;            color   =
+     : white;            text-shadow  : 1px 1px 1px black;            paddi=
+ng      : 0.5em;            display      : inline-block;            font-we=
+ight  : 900;            font-size    : 16px;            border-radius: 1em;=
+            border       : 1px solid #F0FA;         background-color:      =
+     #202F;            line-height  : 0.8em;            transition   : all =
+200ms ease-out;            margin-top: -0.5em;            ">=E2=86=B7</em>&=
+nbsp;</summary><pre>//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 4.1 js_CNTRL.js
+//=E2=94=82=20
+//=E2=94=82 Purpose:
+//=E2=94=82 - finite state machine
+//=E2=94=82 - action routing
+//=E2=94=82 - state notifications
+//=E2=94=82=20
+//=E2=94=82 Public API:
+//=E2=94=82=20
+//=E2=94=82 - subscribe(listener: (state: string, payload?: any) =3D&gt; vo=
+id): void
+//=E2=94=82 - transition(action: string, payload?: any): void
+//=E2=94=82 - getState(): string
+//=E2=94=82=20
+//=E2=94=82 State-driven actions:
+//=E2=94=82 - SELECT_NOTE
+//=E2=94=82 - SAVE_NOTE
+//=E2=94=82 - DELETE_NOTE
+//=E2=94=82 - CANCEL
+//=E2=94=82 - CHECK_NOTE
+//=E2=94=82 - IMPORT_NOTES
+//=E2=94=82 - EXPORT_NOTES
+//=E2=94=82 - LOAD_NOTES
+//=E2=94=82=20
+//=E2=94=82 Controller responsibilities:
+//=E2=94=82 - accept only intents from js_VIEW.js
+//=E2=94=82 - call js_MODEL.js methods
+//=E2=94=82 - notify subscribers after state change
+//=E2=94=82 - maintain currentState and emit state updates
+//=E2=94=82=20
+//=E2=94=82 Callers:
+//=E2=94=82 - js_VIEW.js
+//=E2=94=82=20
+//=E2=94=82 Callees:
+//=E2=94=82 - js_MODEL.js
+//=E2=94=82=20
+//=E2=94=82 No direct DOM work.
+//=E2=94=82=20
+//=E2=94=82 Allowed transitions:
+//=E2=94=82 - IDLE =E2=86=92 SELECT_NOTE =E2=86=92 EDITING
+//=E2=94=82 - IDLE =E2=86=92 SAVE_NOTE =E2=86=92 SAVING =E2=86=92 IDLE
+//=E2=94=82 - IDLE =E2=86=92 DELETE_NOTE =E2=86=92 DELETING =E2=86=92 IDLE
+//=E2=94=82 - EDITING =E2=86=92 SAVE_NOTE =E2=86=92 SAVING =E2=86=92 IDLE
+//=E2=94=82 - EDITING =E2=86=92 DELETE_NOTE =E2=86=92 DELETING =E2=86=92 ID=
+LE
+//=E2=94=82 - EDITING =E2=86=92 CANCEL =E2=86=92 IDLE
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+ </pre></details>
+<details class=3D"close_on_margin_click bg2"><summary style=3D"color: rgb(0=
+, 0, 0);">=E2=94=82 4.2 js_MODEL.js  <em style=3D"float: right; margin-left=
+: 2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_co=
+py" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=
+=3D"border       : 0px solid yellow;            position     : absolute;   =
+         color        : white;            text-shadow  : 1px 1px 1px black;=
+            padding      : 0.5em;            display      : inline-block;  =
+          font-weight  : 900;            font-size    : 16px;            bo=
+rder-radius: 1em;            border       : 1px solid #F0FA;         backgr=
+ound-color:           #202F;            line-height  : 0.8em;            tr=
+ansition   : all 200ms ease-out;            margin-top: -0.5em;            =
+">=E2=86=B7</em>&nbsp;</summary><pre>//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 4.2 js_MODEL.js
+//=E2=94=82=20
+//=E2=94=82 Purpose:
+//=E2=94=82 - fa=C3=A7ade to notes.js
+//=E2=94=82 - hide model implementation details from controller and UI
+//=E2=94=82 - keep state machine clean
+//=E2=94=82=20
+//=E2=94=82 Public API:
+//=E2=94=82=20
+//=E2=94=82 - save(payload: { content: string, editingIndex?: number }): an=
+y
+//=E2=94=82 - edit(noteId: number): void
+//=E2=94=82 - remove(noteId: number): void
+//=E2=94=82 - getEditingNoteIndex(): number
+//=E2=94=82 - load(): void
+//=E2=94=82 - check(noteId: number): any
+//=E2=94=82 - import(buffer: string): { count: number, message: string }
+//=E2=94=82 - export(): { buffer: string, message: string }
+//=E2=94=82=20
+//=E2=94=82 This file should not own DOM.
+//=E2=94=82 It should not know about saved_notes_TABLE.
+//=E2=94=82 It should not know about textarea refs.
+//=E2=94=82=20
+//=E2=94=82 Current file is too skeletal; in the target model, it should pr=
+oxy:
+//=E2=94=82=20
+//=E2=94=82 - save() =E2=86=92 notes.saveNote(...)
+//=E2=94=82 - remove() =E2=86=92 notes.deleteNote(...)
+//=E2=94=82 - check() =E2=86=92 notes.checkNote(...)
+//=E2=94=82 - import() =E2=86=92 notes.importNotes(...)
+//=E2=94=82 - export() =E2=86=92 notes.exportNotes(...)
+//=E2=94=82=20
+//=E2=94=82 Callers:
+//=E2=94=82 - js_CNTRL.js
+//=E2=94=82 - maybe legacy js_VIEW.js during migration
+//=E2=94=82=20
+//=E2=94=82 Callees:
+//=E2=94=82 - notes.js
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+ </pre></details>
+<details class=3D"close_on_margin_click bg3"><summary style=3D"color: rgb(0=
+, 0, 0);">=E2=94=82 4.3 notes.js  <em style=3D"float: right; margin-left: 2=
+em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy"=
+ style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"=
+border       : 0px solid yellow;            position     : absolute;       =
+     color        : white;            text-shadow  : 1px 1px 1px black;    =
+        padding      : 0.5em;            display      : inline-block;      =
+      font-weight  : 900;            font-size    : 16px;            border=
+-radius: 1em;            border       : 1px solid #F0FA;         background=
+-color:           #202F;            line-height  : 0.8em;            transi=
+tion   : all 200ms ease-out;            margin-top: -0.5em;            ">=
+=E2=86=B7</em>&nbsp;</summary><pre>//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 4.3 notes.js
+//=E2=94=82=20
+//=E2=94=82 This is the central model layer and the most important file to =
+keep pure.
+//=E2=94=82=20
+//=E2=94=82 Public API:
+//=E2=94=82=20
+//=E2=94=82 - get_nArray(): Note[]
+//=E2=94=82 - get_checked(index: number): string
+//=E2=94=82 - get_notes_loaded_from(): string | undefined
+//=E2=94=82 - getWastedNotes(): WastedNote[]
+//=E2=94=82 - load_notes(): void
+//=E2=94=82 - load_server_notes(data: any): void
+//=E2=94=82 - load_client_notes(): void
+//=E2=94=82 - saveNote(payload: { content: string, editingIndex?: number })=
+: Note | null
+//=E2=94=82 - deleteNote(noteIndex: number): Note | null
+//=E2=94=82 - checkNote(noteIndex: number): Note | null
+//=E2=94=82 - importNotes(buffer: string): { count: number, message: string=
+ }
+//=E2=94=82 - exportNotes(): { buffer: string, message: string }
+//=E2=94=82 - restoreNote(): { buffer: string, message: string }
+//=E2=94=82 - clearWastedNotes(): { count: number }
+//=E2=94=82 - request_server_upload(upload_reason?: string | false): void
+//=E2=94=82 - request_server_upload_pending(): string | false
+//=E2=94=82 - upload_notes_to_server(_caller?: string): void
+//=E2=94=82 - note_1_onclick_save(e?: Event): void
+//=E2=94=82 - note_2_onclick_import(e: Event): void
+//=E2=94=82 - note_3_onclick_export(e: Event): void
+//=E2=94=82 - note_4_onclick_check(e: Event, index: number): void
+//=E2=94=82 - note_6_onclick_delete(e: Event, index: number): void
+//=E2=94=82 - note_7_onclick_wasted(e: Event): void
+//=E2=94=82 - center_input_placeholder(placeholder: string, delay: number):=
+ void
+//=E2=94=82 - reset_input_placeholder(): void
+//=E2=94=82 - nArray_wasted_add_deleted_note(deleted_note: Note): void
+//=E2=94=82 - nArray_wasted_del_imported_note(imported_note_args: { text: s=
+tring }): void
+//=E2=94=82 - nArray_wasted_del_note_index(index: number): void
+//=E2=94=82=20
+//=E2=94=82 Important: these last 3 must stay, because they are part of the=
+ deleted-note-sync semantics.
+//=E2=94=82=20
+//=E2=94=82 This is the part your earlier refactor broke:
+//=E2=94=82 - nArray_wasted_del_imported_note
+//=E2=94=82 - nArray_wasted_del_note_index
+//=E2=94=82=20
+//=E2=94=82 Those functions are required to keep:
+//=E2=94=82 - nArray_wasted in sync with actual deleted notes
+//=E2=94=82 - re-imported deleted notes removed from wasted queue
+//=E2=94=82 - button text/title and queue state correct
+//=E2=94=82=20
+//=E2=94=82 Migration rule:
+//=E2=94=82 - Remove DOM mutations from this file completely
+//=E2=94=82 - Keep data manipulation and persistence here
+//=E2=94=82 - If a function currently touches save_note_BUTTON, wasted_note=
+_BUTTON, status_line, or the table, move that logic to js_VIEW.js or js_not=
+es.js
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+ </pre></details>
+<details class=3D"close_on_margin_click bg4"><summary style=3D"color: rgb(0=
+, 0, 0);">=E2=94=82 4.4 js_notes.js  <em style=3D"float: right; margin-left=
+: 2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_co=
+py" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=
+=3D"border       : 0px solid yellow;            position     : absolute;   =
+         color        : white;            text-shadow  : 1px 1px 1px black;=
+            padding      : 0.5em;            display      : inline-block;  =
+          font-weight  : 900;            font-size    : 16px;            bo=
+rder-radius: 1em;            border       : 1px solid #F0FA;         backgr=
+ound-color:           #202F;            line-height  : 0.8em;            tr=
+ansition   : all 200ms ease-out;            margin-top: -0.5em;            =
+">=E2=86=B7</em>&nbsp;</summary><pre>//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 4.4 js_notes.js
+//=E2=94=82=20
+//=E2=94=82 Purpose:
+//=E2=94=82 - render, layout, scroll, escape text, and display helper UI
+//=E2=94=82 - no business data logic
+//=E2=94=82 - no direct persistence
+//=E2=94=82=20
+//=E2=94=82 Public API:
+//=E2=94=82=20
+//=E2=94=82 - add_notes_DETAILS(args: { saved_notes_DIV: HTMLElement, saved=
+_notes_TABLE: HTMLElement }): boolean
+//=E2=94=82 - layout_notes(_caller?: string, index?: number): void
+//=E2=94=82 - standout_note_at_index(index: number): void
+//=E2=94=82 - note_scrollIntoView(index?: number): void
+//=E2=94=82 - wider(): void
+//=E2=94=82 - narrower(): void
+//=E2=94=82 - tunesize(e: Event): void
+//=E2=94=82 - show_status(msg: string): void
+//=E2=94=82 - tune_status(e: Event): void
+//=E2=94=82 - tail_status(...args: string[]): void
+//=E2=94=82 - tics_status(count: number): string
+//=E2=94=82 - copy_to_clipboard(buffer: string): void
+//=E2=94=82 - escapeHTML(text: string): string
+//=E2=94=82 - get_input(): HTMLTextAreaElement | null
+//=E2=94=82 - get_status_line(): HTMLElement | null
+//=E2=94=82 - is_last_note_auto_save(): boolean
+//=E2=94=82 - AUTO_SAVE_IDLE_INTERVAL_MS: number
+//=E2=94=82 - AUTO_SAVE_EDIT_INTERVAL_MS: number
+//=E2=94=82=20
+//=E2=94=82 This file must not own:
+//=E2=94=82 - editing index
+//=E2=94=82 - current input value
+//=E2=94=82 - auto-save compare state
+//=E2=94=82 - auto-insert prefix logic
+//=E2=94=82 - save button disabled/enabled state
+//=E2=94=82 - delete-queue state
+//=E2=94=82=20
+//=E2=94=82 These belong to:
+//=E2=94=82 - js_CNTRL.js for state transitions
+//=E2=94=82 - js_VIEW.js for display update orchestration
+//=E2=94=82 - js_details.js temporarily for bootstrapping
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+ </pre></details>
+<details class=3D"close_on_margin_click bg5"><summary style=3D"color: rgb(0=
+, 0, 0);">=E2=94=82 4.5 js_VIEW.js  <em style=3D"float: right; margin-left:=
+ 2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_cop=
+y" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=
+=3D"border       : 0px solid yellow;            position     : absolute;   =
+         color        : white;            text-shadow  : 1px 1px 1px black;=
+            padding      : 0.5em;            display      : inline-block;  =
+          font-weight  : 900;            font-size    : 16px;            bo=
+rder-radius: 1em;            border       : 1px solid #F0FA;         backgr=
+ound-color:           #202F;            line-height  : 0.8em;            tr=
+ansition   : all 200ms ease-out;            margin-top: -0.5em;            =
+">=E2=86=B7</em>&nbsp;</summary><pre>//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 4.5 js_VIEW.js
+//=E2=94=82=20
+//=E2=94=82 Purpose:
+//=E2=94=82 - event binding and UI refresh
+//=E2=94=82 - listens to controller state changes
+//=E2=94=82 - invokes controller transitions when user interacts
+//=E2=94=82 - re-renders view based on state
+//=E2=94=82=20
+//=E2=94=82 Public API:
+//=E2=94=82=20
+//=E2=94=82 - init(e?: Event): void
+//=E2=94=82 - bindEvents(): void
+//=E2=94=82 - render(currentState: string, payload?: any): void
+//=E2=94=82=20
+//=E2=94=82 View responsibilities:
+//=E2=94=82 - saveBtn click =E2=86=92 js_CNTRL.transition("SAVE_NOTE", payl=
+oad)
+//=E2=94=82 - row click on delete button =E2=86=92 js_CNTRL.transition("DEL=
+ETE_NOTE", noteId)
+//=E2=94=82 - row click on note =E2=86=92 js_CNTRL.transition("SELECT_NOTE"=
+, { id, content })
+//=E2=94=82 - listen to state updates and update buttons/textarea/table acc=
+ordingly
+//=E2=94=82=20
+//=E2=94=82 Callers:
+//=E2=94=82 - DOMContentLoaded
+//=E2=94=82 - js_CNTRL.subscribe
+//=E2=94=82=20
+//=E2=94=82 Callees:
+//=E2=94=82 - js_CNTRL.transition
+//=E2=94=82 - js_MODEL
+//=E2=94=82 - js_notes.js
+//=E2=94=82 - js_input.js if still used at this stage
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+ </pre></details>
+<details class=3D"close_on_margin_click bg6"><summary style=3D"color: rgb(0=
+, 0, 0);">=E2=94=82 4.6 js_details.js  <em style=3D"float: right; margin-le=
+ft: 2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_=
+copy" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em styl=
+e=3D"border       : 0px solid yellow;            position     : absolute;  =
+          color        : white;            text-shadow  : 1px 1px 1px black=
+;            padding      : 0.5em;            display      : inline-block; =
+           font-weight  : 900;            font-size    : 16px;            b=
+order-radius: 1em;            border       : 1px solid #F0FA;         backg=
+round-color:           #202F;            line-height  : 0.8em;            t=
+ransition   : all 200ms ease-out;            margin-top: -0.5em;           =
+ ">=E2=86=B7</em>&nbsp;</summary><pre>//=E2=94=8C=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 4.6 js_details.js
+//=E2=94=82=20
+//=E2=94=82 Purpose:
+//=E2=94=82 - bootstrap DOM
+//=E2=94=82 - compatibility adapter
+//=E2=94=82 - transitional glue only
+//=E2=94=82=20
+//=E2=94=82 Public API:
+//=E2=94=82=20
+//=E2=94=82 - onload(): void
+//=E2=94=82 - add_notes_details(): boolean
+//=E2=94=82 - note_5_onclick_edit(e: Event, index: number): void
+//=E2=94=82 - set_editing_note_index(index: number): void
+//=E2=94=82 - get_editing_note_index(): number
+//=E2=94=82 - save_note_auto(e?: Event): void
+//=E2=94=82 - input_focus_listener(): void
+//=E2=94=82 - input_blur_listener(): void
+//=E2=94=82 - is_input_auto_insert_prefix(): boolean
+//=E2=94=82 - get_input_auto_insert_prefix(): string
+//=E2=94=82=20
+//=E2=94=82 This file should gradually lose responsibilities. It is allowed=
+ to remain only until the controller/view split is complete.
+//=E2=94=82=20
+//=E2=94=82 It should not own long-term:
+//=E2=94=82 - note persistence
+//=E2=94=82 - data mutation
+//=E2=94=82 - server sync
+//=E2=94=82 - deleted-note queue management
+//=E2=94=82 - render logic
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+ </pre></details>
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 5. Exact migration map: old =E2=86=92 new =E2=97=8F This is the=
+ important part.
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg5"><summary style=3D"color: rgb(0=
+, 0, 0);"> State,index =E2=97=8F Save-delete-import-export =E2=97=8F wated =
+array =E2=97=8F Render  <em style=3D"float:right; margin-left: 2em;">=E2=96=
+=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" style=3D"float:right; margin-l=
+eft: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"border       : 0px solid yellow=
+;            position     : absolute;            color        : white;     =
+       text-shadow  : 1px 1px 1px black;            padding      : 0.5em;  =
+          display      : inline-block;            font-weight  : 900;      =
+      font-size    : 16px;            border-radius: 1em;            border=
+       : 1px solid #F0FA;         background-color:           #202F;       =
+     line-height  : 0.8em;            transition   : all 200ms ease-out;   =
+         margin-top: -0.5em;            ">=E2=86=B7</em>&nbsp;</summary><pr=
+e color_num=3D"4">//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 5.1 State and editing index
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg1"><summary style=3D"color: rgb(0=
+, 0, 0);"> <em style=3D"float: right; margin-left: 2em; visibility: hidden;=
+">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" style=3D"float:right; =
+margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"border       : 0px soli=
+d yellow;            position     : absolute;            color        : whi=
+te;            text-shadow  : 1px 1px 1px black;            padding      : =
+0.5em;            display      : inline-block;            font-weight  : 90=
+0;            font-size    : 16px;            border-radius: 1em;          =
+  border       : 1px solid #F0FA;         background-color:           #202F=
+;            line-height  : 0.8em;            transition   : all 200ms ease=
+-out;            margin-top: -0.5em;            ">=E2=86=B7</em>&nbsp;</sum=
+mary><pre>Current old owners:
+- js_details.js:
+  - get_editing_note_index
+  - set_editing_note_index
+  - save_note_auto
+- js_notes.js:
+  - get_editing_note_index
+  - set_editing_note_index
+  - save_note_auto
+  - is_input_same_as_original
+  - is_input_same_as_last_auto_save
+  - is_last_note_auto_save
+
+New owners:
+- js_CNTRL.js owns:
+  - current editing state
+  - editingNoteIndex
+  - inputDirty
+  - autoSaveDraft
+- js_VIEW.js owns:
+  - button text and disabled state
+  - textarea input rendering
+  - row highlighting
+
+Function migration:
+- set_editing_note_index(index) =E2=86=92 controller state + view update
+- get_editing_note_index() =E2=86=92 js_CNTRL.getState() / state payload / =
+controller-held store
+- save_note_auto() =E2=86=92 state transition logic inside js_CNTRL.js or j=
+s_MODEL.js wrapper
+- is_input_same_as_original() =E2=86=92 transition guard in controller or m=
+odel helper
+- is_input_same_as_last_auto_save() =E2=86=92 controller guard
+- is_last_note_auto_save() =E2=86=92 notes.js helper only if in the data la=
+yer, otherwise controller state
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 5.2 Save/delete/import/export
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg2"><summary style=3D"color: rgb(0=
+, 0, 0);"> <em style=3D"float: right; margin-left: 2em; visibility: hidden;=
+">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" style=3D"float:right; =
+margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"border       : 0px soli=
+d yellow;            position     : absolute;            color        : whi=
+te;            text-shadow  : 1px 1px 1px black;            padding      : =
+0.5em;            display      : inline-block;            font-weight  : 90=
+0;            font-size    : 16px;            border-radius: 1em;          =
+  border       : 1px solid #F0FA;         background-color:           #202F=
+;            line-height  : 0.8em;            transition   : all 200ms ease=
+-out;            margin-top: -0.5em;            ">=E2=86=B7</em>&nbsp;</sum=
+mary><pre>Current old owners:
+- notes.js
+  - note_1_onclick_save
+  - note_2_onclick_import
+  - note_3_onclick_export
+  - note_4_onclick_check
+  - note_6_onclick_delete
+  - note_7_onclick_wasted
+
+New owners:
+- js_VIEW.js:
+  - event dispatch to actions
+  - button handlers
+- js_CNTRL.js:
+  - SAVE_NOTE / DELETE_NOTE / CHECK_NOTE / IMPORT_NOTES / EXPORT_NOTES
+- js_MODEL.js:
+  - fa=C3=A7ade methods for those actions
+- notes.js:
+  - actual note-array mutation and persistence
+
+Function migration:
+- note_1_onclick_save =E2=86=92 controller action SAVE_NOTE =E2=86=92 js_MO=
+DEL.save()
+- note_2_onclick_import =E2=86=92 controller action IMPORT_NOTES =E2=86=92 =
+js_MODEL.import()
+- note_3_onclick_export =E2=86=92 controller action EXPORT_NOTES =E2=86=92 =
+js_MODEL.export()
+- note_4_onclick_check =E2=86=92 controller action CHECK_NOTE =E2=86=92 js_=
+MODEL.check()
+- note_6_onclick_delete =E2=86=92 controller action DELETE_NOTE =E2=86=92 j=
+s_MODEL.remove()
+- note_7_onclick_wasted =E2=86=92 view + controller queue orchestration, no=
+t model logic
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 5.3 Wasted notes cleanup
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg3"><summary style=3D"color: rgb(0=
+, 0, 0);"> <em style=3D"float: right; margin-left: 2em; visibility: hidden;=
+">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" style=3D"float:right; =
+margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"border       : 0px soli=
+d yellow;            position     : absolute;            color        : whi=
+te;            text-shadow  : 1px 1px 1px black;            padding      : =
+0.5em;            display      : inline-block;            font-weight  : 90=
+0;            font-size    : 16px;            border-radius: 1em;          =
+  border       : 1px solid #F0FA;         background-color:           #202F=
+;            line-height  : 0.8em;            transition   : all 200ms ease=
+-out;            margin-top: -0.5em;            ">=E2=86=B7</em>&nbsp;</sum=
+mary><pre>This is the required contract.
+
+Current required functions to preserve:
+
+- nArray_wasted_add_deleted_note(deleted_note: Note): void
+- nArray_wasted_del_imported_note(imported_note_args: { text: string }): vo=
+id
+- nArray_wasted_del_note_index(index: number): void
+
+These are not optional. They ensure:
+- deleted notes remain in the queue
+- imported notes are removed from queue when reintroduced
+- deleted-note button state stays in sync
+
+New ownship:
+- notes.js keeps them
+- js_MODEL.js exposes accessors if needed
+- js_VIEW.js uses the count to update the button label
+
+If a refactor removes these, the delete queue becomes stale.
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 5.4 Render functions
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg4"><summary style=3D"color: rgb(0=
+, 0, 0);"> <em style=3D"float: right; margin-left: 2em; visibility: hidden;=
+">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" style=3D"float:right; =
+margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"border       : 0px soli=
+d yellow;            position     : absolute;            color        : whi=
+te;            text-shadow  : 1px 1px 1px black;            padding      : =
+0.5em;            display      : inline-block;            font-weight  : 90=
+0;            font-size    : 16px;            border-radius: 1em;          =
+  border       : 1px solid #F0FA;         background-color:           #202F=
+;            line-height  : 0.8em;            transition   : all 200ms ease=
+-out;            margin-top: -0.5em;            ">=E2=86=B7</em>&nbsp;</sum=
+mary><pre>Current old owners:
+- js_notes.js
+- notes.js
+- js_details.js
+
+New owners:
+- js_notes.js only:
+  - layout_notes
+  - standout_note_at_index
+  - note_scrollIntoView
+  - escapeHTML
+  - show_status
+  - copy_to_clipboard
+  - wider/narrower/tunesize
+
+No data mutation allowed here.
+ </pre></details>
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 6. Explicit IDL-style contracts
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg6"><summary style=3D"color: rgb(0=
+, 0, 0);"> js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em style=
+=3D"float:right; margin-left: 2em;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=
+=3D"cb_copy" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<=
+em style=3D"border       : 0px solid yellow;            position     : abso=
+lute;            color        : white;            text-shadow  : 1px 1px 1p=
+x black;            padding      : 0.5em;            display      : inline-=
+block;            font-weight  : 900;            font-size    : 16px;      =
+      border-radius: 1em;            border       : 1px solid #F0FA;       =
+  background-color:           #202F;            line-height  : 0.8em;      =
+      transition   : all 200ms ease-out;            margin-top: -0.5em;    =
+        ">=E2=86=B7</em>&nbsp;</summary><pre color_num=3D"6"><details class=
+=3D"close_on_margin_click bg1"><summary style=3D"color: rgb(0, 0, 0);">6.1 =
+js_CNTRL.js contract  <em style=3D"float: right; margin-left: 2em; visibili=
+ty: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" style=3D"fl=
+oat:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"border      =
+ : 0px solid yellow;            position     : absolute;            color  =
+      : white;            text-shadow  : 1px 1px 1px black;            padd=
+ing      : 0.5em;            display      : inline-block;            font-w=
+eight  : 900;            font-size    : 16px;            border-radius: 1em=
+;            border       : 1px solid #F0FA;         background-color:     =
+      #202F;            line-height  : 0.8em;            transition   : all=
+ 200ms ease-out;            margin-top: -0.5em;            ">=E2=86=B7</em>=
+&nbsp;</summary><pre>interface js_CNTRL {
+  subscribe(listener: (state: string, payload?: any) =3D&gt; void): void;
+  transition(action: string, payload?: any): void;
+  getState(): string;
+}
+
+Action semantics:
+- SELECT_NOTE(payload: { id: number, content?: string }): void
+- SAVE_NOTE(payload: { content: string, editingIndex?: number }): void
+- DELETE_NOTE(noteId: number): void
+- CHECK_NOTE(noteId: number): void
+- IMPORT_NOTES(buffer: string): void
+- EXPORT_NOTES(): void
+- CANCEL(): void
+ </pre></details>
+<details class=3D"close_on_margin_click bg2"><summary style=3D"color: rgb(0=
+, 0, 0);">6.2 js_MODEL.js contract  <em style=3D"float: right; margin-left:=
+ 2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_cop=
+y" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=
+=3D"border       : 0px solid yellow;            position     : absolute;   =
+         color        : white;            text-shadow  : 1px 1px 1px black;=
+            padding      : 0.5em;            display      : inline-block;  =
+          font-weight  : 900;            font-size    : 16px;            bo=
+rder-radius: 1em;            border       : 1px solid #F0FA;         backgr=
+ound-color:           #202F;            line-height  : 0.8em;            tr=
+ansition   : all 200ms ease-out;            margin-top: -0.5em;            =
+">=E2=86=B7</em>&nbsp;</summary><pre>interface js_MODEL {
+  save(payload: { content: string, editingIndex?: number }): any;
+  edit(noteId: number): void;
+  remove(noteId: number): void;
+  getEditingNoteIndex(): number;
+  load(): void;
+  check(noteId: number): any;
+  import(buffer: string): { count: number, message: string };
+  export(): { buffer: string, message: string };
+}
+ </pre></details>
+<details class=3D"close_on_margin_click bg3"><summary style=3D"color: rgb(0=
+, 0, 0);">6.3 notes.js contract  <em style=3D"float: right; margin-left: 2e=
+m; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" =
+style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"b=
+order       : 0px solid yellow;            position     : absolute;        =
+    color        : white;            text-shadow  : 1px 1px 1px black;     =
+       padding      : 0.5em;            display      : inline-block;       =
+     font-weight  : 900;            font-size    : 16px;            border-=
+radius: 1em;            border       : 1px solid #F0FA;         background-=
+color:           #202F;            line-height  : 0.8em;            transit=
+ion   : all 200ms ease-out;            margin-top: -0.5em;            ">=E2=
+=86=B7</em>&nbsp;</summary><pre>interface notes {
+  get_nArray(): Note[];
+  get_checked(index: number): string;
+  get_notes_loaded_from(): string | undefined;
+  getWastedNotes(): WastedNote[];
+  load_notes(): void;
+  saveNote(payload: { content: string, editingIndex?: number }): Note | nul=
+l;
+  deleteNote(noteIndex: number): Note | null;
+  checkNote(noteIndex: number): Note | null;
+  importNotes(buffer: string): { count: number, message: string };
+  exportNotes(): { buffer: string, message: string };
+  restoreNote(): { buffer: string, message: string };
+  clearWastedNotes(): { count: number };
+  request_server_upload(upload_reason?: string | false): void;
+  request_server_upload_pending(): string | false;
+  upload_notes_to_server(_caller?: string): void;
+  note_1_onclick_save(e?: Event): void;
+  note_2_onclick_import(e: Event): void;
+  note_3_onclick_export(e: Event): void;
+  note_4_onclick_check(e: Event, index: number): void;
+  note_6_onclick_delete(e: Event, index: number): void;
+  note_7_onclick_wasted(e: Event): void;
+}
+
+Required internal functions to preserve:
+- nArray_wasted_add_deleted_note(deleted_note: Note): void
+- nArray_wasted_del_imported_note(imported_note_args: { text: string }): vo=
+id
+- nArray_wasted_del_note_index(index: number): void
+ </pre></details>
+<details class=3D"close_on_margin_click bg4"><summary style=3D"color: rgb(0=
+, 0, 0);">6.4 js_notes.js contract  <em style=3D"float: right; margin-left:=
+ 2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_cop=
+y" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=
+=3D"border       : 0px solid yellow;            position     : absolute;   =
+         color        : white;            text-shadow  : 1px 1px 1px black;=
+            padding      : 0.5em;            display      : inline-block;  =
+          font-weight  : 900;            font-size    : 16px;            bo=
+rder-radius: 1em;            border       : 1px solid #F0FA;         backgr=
+ound-color:           #202F;            line-height  : 0.8em;            tr=
+ansition   : all 200ms ease-out;            margin-top: -0.5em;            =
+">=E2=86=B7</em>&nbsp;</summary><pre>interface js_notes {
+  add_notes_DETAILS(args: { saved_notes_DIV: HTMLElement, saved_notes_TABLE=
+: HTMLElement }): boolean;
+  layout_notes(_caller?: string, index?: number): void;
+  standout_note_at_index(index: number): void;
+  note_scrollIntoView(index?: number): void;
+  wider(): void;
+  narrower(): void;
+  tunesize(e: Event): void;
+  show_status(msg: string): void;
+  tune_status(e: Event): void;
+  tail_status(...args: string[]): void;
+  tics_status(count: number): string;
+  copy_to_clipboard(buffer: string): void;
+  escapeHTML(text: string): string;
+  get_input(): HTMLTextAreaElement | null;
+  get_status_line(): HTMLElement | null;
+  is_last_note_auto_save(): boolean;
+  AUTO_SAVE_IDLE_INTERVAL_MS: number;
+  AUTO_SAVE_EDIT_INTERVAL_MS: number;
+}
+ </pre></details>
+<details class=3D"close_on_margin_click bg5"><summary style=3D"color: rgb(0=
+, 0, 0);">6.5 js_VIEW.js contract  <em style=3D"float: right; margin-left: =
+2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy=
+" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D=
+"border       : 0px solid yellow;            position     : absolute;      =
+      color        : white;            text-shadow  : 1px 1px 1px black;   =
+         padding      : 0.5em;            display      : inline-block;     =
+       font-weight  : 900;            font-size    : 16px;            borde=
+r-radius: 1em;            border       : 1px solid #F0FA;         backgroun=
+d-color:           #202F;            line-height  : 0.8em;            trans=
+ition   : all 200ms ease-out;            margin-top: -0.5em;            ">=
+=E2=86=B7</em>&nbsp;</summary><pre>interface js_VIEW {
+  init(e?: Event): void;
+  bindEvents(): void;
+  render(currentState: string, payload?: any): void;
+}
+ </pre></details>
+<details class=3D"close_on_margin_click bg6"><summary style=3D"color: rgb(0=
+, 0, 0);">6.6 js_details.js contract  <em style=3D"float: right; margin-lef=
+t: 2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_c=
+opy" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=
+=3D"border       : 0px solid yellow;            position     : absolute;   =
+         color        : white;            text-shadow  : 1px 1px 1px black;=
+            padding      : 0.5em;            display      : inline-block;  =
+          font-weight  : 900;            font-size    : 16px;            bo=
+rder-radius: 1em;            border       : 1px solid #F0FA;         backgr=
+ound-color:           #202F;            line-height  : 0.8em;            tr=
+ansition   : all 200ms ease-out;            margin-top: -0.5em;            =
+">=E2=86=B7</em>&nbsp;</summary><pre>interface js_details {
+  onload(): void;
+  add_notes_details(): boolean;
+  note_5_onclick_edit(e: Event, index: number): void;
+  set_editing_note_index(index: number): void;
+  get_editing_note_index(): number;
+  save_note_auto(e?: Event): void;
+  input_focus_listener(): void;
+  input_blur_listener(): void;
+  is_input_auto_insert_prefix(): boolean;
+  get_input_auto_insert_prefix(): string;
+}
+ </pre></details>
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 7. Required API-preserving migration strategy
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg7"><summary style=3D"color: rgb(0=
+, 0, 0);"> js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em style=
+=3D"float: right; margin-left: 2em; visibility: hidden;">=E2=96=B6=E2=97=80=
+</em>&nbsp;<em class=3D"cb_copy" style=3D"float:right; margin-left: 2em;">=
+=E2=AC=9C</em>&nbsp;<em style=3D"border       : 0px solid yellow;          =
+  position     : absolute;            color        : white;            text=
+-shadow  : 1px 1px 1px black;            padding      : 0.5em;            d=
+isplay      : inline-block;            font-weight  : 900;            font-=
+size    : 16px;            border-radius: 1em;            border       : 1p=
+x solid #F0FA;         background-color:           #202F;            line-h=
+eight  : 0.8em;            transition   : all 200ms ease-out;            ma=
+rgin-top: -0.5em;            ">=E2=86=B7</em>&nbsp;</summary><pre>This is t=
+he key point.
+
+When moving from the current code to the clean architecture,
+preserve the public behavior, not the exact function names, while
+keeping the same semantics.
+
+Recommended migration template:
+
+- js_details.js
+  - keep only bootstrapping and compatibility
+  - call js_VIEW.init()
+  - call js_MODEL.load()
+  - pass DOM refs to js_VIEW
+
+- js_VIEW.js
+  - each click becomes a controller intent
+  - no model calls directly
+  - no direct array mutation
+
+- js_CNTRL.js
+  - owns the transition table
+  - calls js_MODEL
+  - handles state change events
+
+- js_MODEL.js
+  - delegates to notes.js
+  - no DOM, no render logic
+
+- notes.js
+  - becomes the pure note-domain model
+  - no UI logic
+  - preserves deleted queue functions
+
+- js_notes.js
+  - becomes render helper only
+  - no state machine logic
+  - no deleted-note queue logic
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 8. Final recommendation
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg8"><summary style=3D"color: rgb(0=
+, 0, 0);"> semantics state ownership adapter API  <em style=3D"float: right=
+; margin-left: 2em; visibility: hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em c=
+lass=3D"cb_copy" style=3D"float:right; margin-left: 2em;">=E2=AC=9C</em>&nb=
+sp;<em style=3D"border       : 0px solid yellow;            position     : =
+absolute;            color        : white;            text-shadow  : 1px 1p=
+x 1px black;            padding      : 0.5em;            display      : inl=
+ine-block;            font-weight  : 900;            font-size    : 16px;  =
+          border-radius: 1em;            border       : 1px solid #F0FA;   =
+      background-color:           #202F;            line-height  : 0.8em;  =
+          transition   : all 200ms ease-out;            margin-top: -0.5em;=
+            ">=E2=86=B7</em>&nbsp;</summary><pre>The safest refactor is not=
+ =E2=80=9Ccopy/paste split by file with partial removal.=E2=80=9D
+It is:
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 - keep current semantics
+//=E2=94=82 - identify all state-bearing functions
+//=E2=94=82 - transfer ownership explicitly
+//=E2=94=82 - preserve all deleted-note cleanup functions
+//=E2=94=82 - keep js_details.js as adapter until the transition is complet=
+e
+//=E2=94=82 - do not delete API surface before the controller/view split is=
+ complete
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+
+This is exactly the kind of migration that can be done
+in a disciplined GVim workflow without losing traceability.
+The critical mapping to keep from breaking the app:
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 - editing state =E2=86=92 js_CNTRL.js
+//=E2=94=82 - data state =E2=86=92 notes.js
+//=E2=94=82 - DOM rendering =E2=86=92 js_notes.js + js_VIEW.js
+//=E2=94=82 - bootstrap glue =E2=86=92 js_details.js
+//=E2=94=82 - deleted-note queue cleanup =E2=86=92 notes.js
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+ </pre></details>
+//=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+//=E2=94=82 9. Credits cap
+//=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+<details class=3D"close_on_margin_click bg9"><summary style=3D"color: rgb(0=
+, 0, 0);"> <em style=3D"float: right; margin-left: 2em; visibility: hidden;=
+">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" style=3D"float:right; =
+margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"border       : 0px soli=
+d yellow;            position     : absolute;            color        : whi=
+te;            text-shadow  : 1px 1px 1px black;            padding      : =
+0.5em;            display      : inline-block;            font-weight  : 90=
+0;            font-size    : 16px;            border-radius: 1em;          =
+  border       : 1px solid #F0FA;         background-color:           #202F=
+;            line-height  : 0.8em;            transition   : all 200ms ease=
+-out;            margin-top: -0.5em;            ">=E2=86=B7</em>&nbsp;</sum=
+mary><pre>At this point, no practical credits issue is likely to block
+the migration spec itself.
+
+The design and migration guide is large,
+but it is still comfortably within
+the normal working budget for this environment.
+
+If you want, the next useful step is this:
+I can give you a final =E2=80=9Cstate ownership matrix=E2=80=9D
+with every function mapped exactly to:
+" =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=90
+" =E2=94=82 - owner
+" =E2=94=82 - caller
+" =E2=94=82 - callee
+" =E2=94=82 - stateful or stateless
+" =E2=94=82 - retain/transfer/delete
+" =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=98
+
+This would be your exact implementation checklist for the migration.
+=E2=AF=80
+ </pre></details>
+
+
+
+</pre><details id=3D"note_DETAILS" class=3D"empty bg1">
+<summary style=3D"color: rgb(0, 0, 0);">sample_txt (0 note) =E2=80=A6nothin=
+g yet for this file<em style=3D"float: right; margin-left: 2em; visibility:=
+ hidden;">=E2=96=B6=E2=97=80</em>&nbsp;<em class=3D"cb_copy" style=3D"float=
+:right; margin-left: 2em;">=E2=AC=9C</em>&nbsp;<em style=3D"border       : =
+0px solid yellow;            position     : absolute;            color     =
+   : white;            text-shadow  : 1px 1px 1px black;            padding=
+      : 0.5em;            display      : inline-block;            font-weig=
+ht  : 900;            font-size    : 16px;            border-radius: 1em;  =
+          border       : 1px solid #F0FA;         background-color:        =
+   #202F;            line-height  : 0.8em;            transition   : all 20=
+0ms ease-out;            margin-top: -0.5em;            ">=E2=86=B7</em>&nb=
+sp;</summary>
+<div>
+    <button id=3D"narr_button"></button>
+    <button id=3D"tune_button"></button>
+    <button id=3D"wide_button"></button>
+    <br>
+    <textarea id=3D"note_input_TEXTAREA" placeholder=3D"Type your note here=
+..." data-content=3D""></textarea>
+    <button id=3D"save_note_BUTTON" xxclick=3D"  notes.note_1_onclick_save =
+ (event)" disabled=3D"" bullet_ecc_num=3D"1">Add Note #1</button>
+    <button id=3D"wasted_note_BUTTON" title=3D"=E2=96=B2 Import Deleted Not=
+es" disabled=3D"">No Deleted Notes</button>
+    <button class=3D"cb_BUTTON" title=3D"Export Notes
+to Clipboard">Export =E2=86=92 =F0=9F=93=9D</button>
+    <button class=3D"cb_BUTTON" title=3D"Import Notes
+pasted in Input
+=E2=96=B2 above">=E2=86=93 Import =E2=86=91</button>
+    <div id=3D"saved_notes_DIV">
+     <table id=3D"saved_notes_TABLE"><tbody><tr><td class=3D"no_notes_yet_T=
+D" colspan=3D"6">No notes yet</td></tr></tbody></table>
+    </div>
+    <div id=3D"status_line" title=3D"Click: brighter =E2=80=94 bigger =E2=
+=80=94 dimmer"></div>
+</div>
+</details></body></html>
+------MultipartBoundary--jF8as5YBrlCKYgb61hFuIQD6SLfgd0nzummfuKzV2D----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://192.168.1.14:447/style/qtext.css
+
+@charset "utf-8";
+
+boxu, boxm, boxd { padding: 0px; }
+
+boxu:nth-of-type(1), boxu:nth-of-type(1) ~ boxm, boxu:nth-of-type(1) ~ boxd=
+ { background-color: rgba(150, 75, 0, 0.063); border-color: rgba(150, 75, 0=
+, 0.5); }
+
+boxu:nth-of-type(2), boxu:nth-of-type(2) ~ boxm, boxu:nth-of-type(2) ~ boxd=
+ { background-color: rgba(255, 0, 0, 0.063); border-color: rgba(255, 0, 0, =
+0.5); }
+
+boxu:nth-of-type(3), boxu:nth-of-type(3) ~ boxm, boxu:nth-of-type(3) ~ boxd=
+ { background-color: rgba(255, 165, 0, 0.063); border-color: rgba(255, 165,=
+ 0, 0.5); }
+
+boxu:nth-of-type(4), boxu:nth-of-type(4) ~ boxm, boxu:nth-of-type(4) ~ boxd=
+ { background-color: rgba(255, 255, 0, 0.063); border-color: rgba(255, 255,=
+ 0, 0.5); }
+
+boxu:nth-of-type(5), boxu:nth-of-type(5) ~ boxm, boxu:nth-of-type(5) ~ boxd=
+ { background-color: rgba(154, 205, 50, 0.063); border-color: rgba(154, 205=
+, 50, 0.5); }
+
+boxu:nth-of-type(6), boxu:nth-of-type(6) ~ boxm, boxu:nth-of-type(6) ~ boxd=
+ { background-color: rgba(100, 149, 237, 0.063); border-color: rgba(100, 14=
+9, 237, 0.5); }
+
+boxu:nth-of-type(7), boxu:nth-of-type(7) ~ boxm, boxu:nth-of-type(7) ~ boxd=
+ { background-color: rgba(238, 130, 238, 0.063); border-color: rgba(238, 13=
+0, 238, 0.5); }
+
+boxu:nth-of-type(8), boxu:nth-of-type(8) ~ boxm, boxu:nth-of-type(8) ~ boxd=
+ { background-color: rgba(160, 160, 160, 0.063); border-color: rgba(160, 16=
+0, 160, 0.5); }
+
+boxu:nth-of-type(9), boxu:nth-of-type(9) ~ boxm, boxu:nth-of-type(9) ~ boxd=
+ { background-color: rgba(255, 255, 255, 0.063); border-color: rgba(255, 25=
+5, 255, 0.5); }
+
+boxu:nth-of-type(10), boxu:nth-of-type(10) ~ boxm, boxu:nth-of-type(10) ~ b=
+oxd { background-color: rgba(16, 16, 64, 0.063); border-color: rgba(16, 16,=
+ 64, 0.5); box-shadow: rgb(255, 255, 255) 0px 0px 1px 0px; }
+
+.bg0 > summary, .bg0 > pre { outline: rgba(128, 128, 128, 0.5) solid 1px; }
+
+.bg1 > summary, .bg1 > pre { outline: rgba(150, 75, 0, 0.5) solid 1px; }
+
+.bg2 > summary, .bg2 > pre { outline: rgba(255, 0, 0, 0.5) solid 1px; }
+
+.bg3 > summary, .bg3 > pre { outline: rgba(255, 165, 0, 0.5) solid 1px; }
+
+.bg4 > summary, .bg4 > pre { outline: rgba(255, 255, 0, 0.5) solid 1px; }
+
+.bg5 > summary, .bg5 > pre { outline: rgba(154, 205, 50, 0.5) solid 1px; }
+
+.bg6 > summary, .bg6 > pre { outline: rgba(100, 149, 237, 0.5) solid 1px; }
+
+.bg7 > summary, .bg7 > pre { outline: rgba(238, 130, 238, 0.5) solid 1px; }
+
+.bg8 > summary, .bg8 > pre { outline: rgba(160, 160, 160, 0.5) solid 1px; }
+
+.bg9 > summary, .bg9 > pre { outline: rgba(255, 255, 255, 0.5) solid 1px; }
+
+.markdown_table th { background-color: rgb(51, 51, 51); border: 1px solid r=
+gb(85, 85, 85); }
+
+.markdown_table td { background-color: rgb(0, 0, 0); border: 1px solid rgb(=
+68, 68, 68); }
+
+.markdown_table tr:nth-of-type(2n) * { background-color: rgba(0, 0, 0, 0.26=
+7); }
+
+.bg0 > summary { background-color: rgba(16, 16, 16, 0.5) !important; }
+
+.bg1 > summary { background-color: rgba(150, 75, 0, 0.5) !important; }
+
+.bg2 > summary { background-color: rgba(255, 0, 0, 0.5) !important; }
+
+.bg3 > summary { background-color: rgba(255, 165, 0, 0.5) !important; }
+
+.bg4 > summary { background-color: rgba(255, 255, 0, 0.5) !important; }
+
+.bg5 > summary { background-color: rgba(154, 205, 50, 0.5) !important; }
+
+.bg6 > summary { background-color: rgba(100, 149, 237, 0.5) !important; }
+
+.bg7 > summary { background-color: rgba(238, 130, 238, 0.5) !important; }
+
+.bg8 > summary { background-color: rgba(160, 160, 160, 0.5) !important; }
+
+.bg9 > summary { background-color: rgba(255, 255, 255, 0.5) !important; }
+
+td:has(> .timestamp):hover, details.close_on_margin_click { background: rep=
+eating-linear-gradient(45deg, rgba(68, 68, 68, 0.533) 0px, rgba(68, 68, 68,=
+ 0.533) 4px, rgba(17, 17, 17, 0.533) 4px, rgba(17, 17, 17, 0.533) 8px); }
+
+body { background-color: rgb(17, 17, 17); }
+
+details:not([open]) > summary { background-color: rgb(34, 34, 187); }
+
+details:not([open]) > summary { background-color: rgb(34, 34, 187); }
+
+details:open { background-color: rgba(255, 0, 0, 0.4); }
+
+details:open > pre { background-color: rgb(34, 34, 34); }
+
+summary { background-color: rgb(0, 0, 136); }
+
+pre:has(details[open]) { background-color: rgb(0, 0, 0); }
+
+body, summary, pre { color: rgb(255, 255, 170); }
+
+boxu, boxm, boxd { color: rgb(238, 238, 238); }
+
+a:link { color: rgb(136, 255, 255); }
+
+a:visited { color: rgb(255, 0, 255); }
+
+.markdown_table { color: rgb(255, 255, 221); }
+
+.markdown_table { border-collapse: collapse; }
+
+boxu, boxm, boxd { border-style: solid; }
+
+boxu { border-width: 3px 0px 0px 16px; }
+
+boxm { border-width: 0px 0px 0px 16px; }
+
+boxd { border-width: 0px 0px 3px 16px; }
+
+boxu, boxm, boxd { border-collapse: collapse; }
+
+boxu { border-radius: 0.5em 0.5em 0px 0px; }
+
+boxd { border-radius: 0px 0px 0.5em 0.5em; }
+
+details.bg0:open { box-shadow: rgba(16, 16, 16, 0.5) -3px 0px 0px 1px; }
+
+details.bg1:open { box-shadow: rgba(150, 75, 0, 0.5) -3px 0px 0px 1px; }
+
+details.bg2:open { box-shadow: rgba(255, 0, 0, 0.5) -3px 0px 0px 1px; }
+
+details.bg3:open { box-shadow: rgba(255, 165, 0, 0.5) -3px 0px 0px 1px; }
+
+details.bg4:open { box-shadow: rgba(255, 255, 0, 0.5) -3px 0px 0px 1px; }
+
+details.bg5:open { box-shadow: rgba(154, 205, 50, 0.5) -3px 0px 0px 1px; }
+
+details.bg6:open { box-shadow: rgba(100, 149, 237, 0.5) -3px 0px 0px 1px; }
+
+details.bg7:open { box-shadow: rgba(238, 130, 238, 0.5) -3px 0px 0px 1px; }
+
+details.bg8:open { box-shadow: rgba(160, 160, 160, 0.5) -3px 0px 0px 1px; }
+
+details.bg9:open { box-shadow: rgba(255, 255, 255, 0.5) -3px 0px 0px 1px; }
+
+details:open { box-shadow: rgba(255, 255, 255, 0.5) -3px 0px 0px 1px; }
+
+details { border-radius: 0em 1em 1em 0em; }
+
+details:not(open) > summary { border-radius: 0.2em 1em 1em 0.2em; }
+
+details:open { border-radius: 0.5em; }
+
+details:open > summary { border-radius: 0.5em 0.5em 0em 0em; }
+
+details:open pre { border-radius: 0em 0em 0.5em 0.5em; }
+
+details > summary { border-left: 0.5em solid rgba(0, 0, 0, 0.267); }
+
+details:open > summary { border-left: 0px; }
+
+body { margin-bottom: 50%; }
+
+.markdown_table th { padding: 0.5em; }
+
+.markdown_table td { padding: 0.5em; }
+
+boxu { margin: 0.5em 1em 0px 0px; }
+
+boxm { margin: 0px 1em 0px 0px; }
+
+boxd { margin: 0px 1em 0.5em 0px; }
+
+details:open { margin: 2em 1em; padding-left: 2em; }
+
+details:not(open) { margin: 0.2em 0.5em; padding-left: 0px; }
+
+pre { padding: 0.5em; }
+
+details:not(open) > pre { margin-left: 0em; padding-left: 0.5em; }
+
+details:open > pre { margin-top: 2px; }
+
+details:open > summary { margin-left: -2em; padding-left: 0.5em; }
+
+details:not(open) > summary { margin-left: 0em; padding-left: 0.5em; }
+
+summary { padding: 0.5em; }
+
+.cb_copy { margin-left: 2em; }
+
+body * { font-family: monospace; }
+
+details:not([open]) > summary { font-weight: 900; }
+
+details:open > summary { font-weight: 900 !important; }
+
+.cb_copy { font-weight: 900; font-size: 16px; }
+
+.cb_copy::after { font-weight: 900; }
+
+details { transition: margin 300ms ease-out; }
+
+summary { transition: background-color 300ms ease-in; }
+
+details { width: fit-content; }
+
+boxu, boxm, boxd { width: 98%; min-width: 50%; }
+
+.wrap { width: 50%; white-space: pre-line; }
+
+.markdown_table td { white-space: pre; }
+
+details { cursor: pointer; }
+
+details:open { cursor: context-menu; }
+
+details:open > pre { cursor: pointer; }
+
+summary { user-select: none; }
+
+boxu, boxm, boxd { display: inline-block; }
+
+details:not([open]) summary em { display: none !important; }
+
+.cb_copy::after { display: inline-block; }
+
+.cb_copy { float: right; vertical-align: middle; }
+
+.cb_copy::after { content: "=E2=AC=9C"; translate: -1.1em -0.3em; }
+------MultipartBoundary--jF8as5YBrlCKYgb61hFuIQD6SLfgd0nzummfuKzV2D----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://192.168.1.14:447/style/notes.css
+
+@charset "utf-8";
+
+body { opacity: 0; animation: 250ms ease 2000ms 1 normal forwards running f=
+adeIn; }
+
+@keyframes fadeIn {=20
+  100% { opacity: 1; }
+}
+
+#note_DETAILS:open { background: initial; }
+
+#note_DETAILS:open { cursor: auto; }
+
+#note_DETAILS:open { margin: initial; }
+
+#note_DETAILS summary { margin: initial; }
+
+#note_DETAILS table { margin: initial; }
+
+#smTracer { position: sticky; display: inline-block; cursor: pointer; font-=
+size: 3em; }
+
+#smTracer.logging { border-radius: 0.25em; border: 3px outset red; backgrou=
+nd-color: rgb(0, 0, 0); box-shadow: rgb(0, 0, 0) 2px 2px 2px inset; }
+
+#smTracer span { margin: 0.5em; }
+
+#smTracer span { color: rgba(64, 64, 64, 0.94); }
+
+#smTracer.LOADING span.LOADING { color: rgba(150, 75, 0, 0.94); }
+
+#smTracer.READY span.READY { color: rgba(255, 0, 0, 0.94); }
+
+#smTracer.INPUT span.INPUT { color: rgba(255, 165, 0, 0.94); }
+
+#smTracer.UPDATE span.UPDATE { color: rgba(255, 255, 0, 0.94); }
+
+#note_input_TEXTAREA { scrollbar-width: thin; }
+
+#note_input_TEXTAREA { scrollbar-color: rgb(221, 221, 221) rgba(102, 102, 1=
+02, 0.4); }
+
+#saved_notes_DIV { scrollbar-width: thin; }
+
+#saved_notes_DIV { scrollbar-color: rgb(221, 221, 221) rgba(102, 102, 102, =
+0.4); }
+
+#saved_notes_DIV { margin-top: 1rem; padding-right: 5px; width: 100%; min-w=
+idth: 100%; resize: both; overflow: auto; min-height: 8em; height: 30%; }
+
+#saved_notes_TABLE { width: 100%; border-collapse: collapse; }
+
+#saved_notes_TABLE > tbody { border-radius: 1em; outline: rgba(119, 119, 11=
+9, 0.533) solid 2px; outline-offset: -2px; }
+
+#saved_notes_TABLE > tbody tr:first-child td { padding-top: 3em; }
+
+#saved_notes_TABLE > tbody tr:last-child td { padding-bottom: 3em; }
+
+#saved_notes_TABLE > tbody tr:first-child { border-radius: 1em 1em 0em 0em;=
+ }
+
+#saved_notes_TABLE > tbody tr:last-child { border-radius: 0em 0em 1em 1em; =
+}
+
+#saved_notes_TABLE > tbody tr:first-child { background: linear-gradient(rgb=
+a(136, 136, 136, 0.267) 30%, rgba(68, 68, 68, 0.267) 30%, rgb(34, 34, 34));=
+ }
+
+#saved_notes_TABLE > tbody tr:last-child { background: linear-gradient(rgba=
+(136, 136, 136, 0.267) 30%, rgba(68, 68, 68, 0.267) 30%, rgb(34, 34, 34)); =
+}
+
+#saved_notes_TABLE td:nth-of-type(1) { width: 2em; }
+
+#saved_notes_TABLE td:nth-of-type(2) { width: 2em; }
+
+#saved_notes_TABLE td:nth-of-type(3) { width: 2em; }
+
+#saved_notes_TABLE td:nth-of-type(4) { max-width: 25em; }
+
+#saved_notes_TABLE td:nth-of-type(5) { width: 11em; cursor: grab; }
+
+#saved_notes_TABLE td:nth-of-type(6) { width: 2em; }
+
+#saved_notes_TABLE .no_notes_yet_TD { text-align: center; color: rgb(136, 1=
+36, 136); font-style: italic; }
+
+#narr_button { float: left; background: rgb(34, 34, 34); color: rgb(0, 4, 6=
+8); text-shadow: rgb(255, 255, 255) 1px 1px 1px; width: 33%; margin-left: 0=
+em; }
+
+#tune_button { float: left; background: rgb(34, 34, 34); color: rgb(0, 4, 6=
+8); text-shadow: rgb(255, 255, 255) 1px 1px 1px; width: 33%; margin-left: 0=
+em; }
+
+#wide_button { float: right; background: rgb(34, 34, 34); color: rgb(0, 4, =
+68); text-shadow: rgb(255, 255, 255) 1px 1px 1px; width: 33%; margin-right:=
+ 0em; }
+
+#narr_button::before { content: "< < < <"; }
+
+#tune_button::before { content: "=E2=97=8F =E2=97=8F =E2=97=8F =E2=97=8F"; =
+}
+
+#wide_button::after { content: "> > > >"; }
+
+#tune_button.layout1::before { content: "=E2=9C=93 =E2=97=8F =E2=97=8F =E2=
+=97=8F"; }
+
+#tune_button.layout2::before { content: "=E2=97=8F =E2=9C=93 =E2=97=8F =E2=
+=97=8F"; }
+
+#tune_button.layout3::before { content: "=E2=97=8F =E2=97=8F =E2=9C=93 =E2=
+=97=8F"; }
+
+#tune_button.layout4::before { content: "=E2=97=8F =E2=97=8F =E2=97=8F =E2=
+=9C=93"; }
+
+#note_DETAILS { margin-top: 2rem; border: 1px solid rgb(204, 204, 204); bor=
+der-radius: 6px; padding: 1rem; }
+
+#note_DETAILS.empty > summary > em { opacity: 0.2 !important; }
+
+#note_DETAILS > summary { cursor: pointer; font-weight: bold; }
+
+#note_input_TEXTAREA { display: block; margin-bottom: 10px; border: 1px sol=
+id rgb(221, 221, 221); border-radius: 4px; height: 8em; min-height: 5em; mi=
+n-width: 100%; padding: 8px; background-color: rgb(34, 34, 34); color: rgb(=
+255, 255, 136); }
+
+#note_input_TEXTAREA.auto_insert_prefix { color: rgba(255, 255, 0, 0.267); =
+}
+
+#note_input_TEXTAREA.edit { outline: magenta solid 3px; outline-offset: 1px=
+; }
+
+#note_input_TEXTAREA.center_input_placeholder { text-align: center; }
+
+.cb_BUTTON { float: right; }
+
+.cb_BUTTON:not([disabled]):hover, #wasted_note_BUTTON:not([disabled]):hover=
+, #save_note_BUTTON:not([disabled]):hover { transform: scale(1.1); }
+
+.cb_BUTTON, #wasted_note_BUTTON, #save_note_BUTTON { margin: 0.5em; cursor:=
+ pointer; padding: 6px 12px; background: transparent; color: white; border-=
+radius: 4px; outline-offset: 4px; }
+
+#save_note_BUTTON { outline: rgb(136, 0, 0) groove 4px; }
+
+#save_note_BUTTON.notes_uploaded { outline: rgb(0, 68, 0) solid 4px; }
+
+#wasted_note_BUTTON { outline: rgb(136, 68, 0) groove 4px; }
+
+#wasted_note_BUTTON.clear_deleted_notes { outline: rgb(255, 136, 0) groove =
+4px; }
+
+.cb_BUTTON { outline: rgb(0, 0, 170) groove 4px; }
+
+.cb_BUTTON[disabled], #wasted_note_BUTTON[disabled], #save_note_BUTTON[disa=
+bled] { background: rgb(34, 34, 34); color: rgb(136, 136, 136); font-style:=
+ italic; }
+
+#save_note_BUTTON[editing_note_num]::before { margin: 0.2em; }
+
+#save_note_BUTTON[bullet_ecc_num=3D"1"]::before { content: "=F0=9F=9F=A4"; =
+}
+
+#save_note_BUTTON[bullet_ecc_num=3D"2"]::before { content: "=F0=9F=94=B4"; =
+}
+
+#save_note_BUTTON[bullet_ecc_num=3D"3"]::before { content: "=F0=9F=9F=A0"; =
+}
+
+#save_note_BUTTON[bullet_ecc_num=3D"4"]::before { content: "=F0=9F=9F=A1"; =
+}
+
+#save_note_BUTTON[bullet_ecc_num=3D"5"]::before { content: "=F0=9F=9F=A2"; =
+}
+
+#save_note_BUTTON[bullet_ecc_num=3D"6"]::before { content: "=F0=9F=94=B5"; =
+}
+
+#save_note_BUTTON[bullet_ecc_num=3D"7"]::before { content: "=F0=9F=9F=A3"; =
+}
+
+#save_note_BUTTON[bullet_ecc_num=3D"8"]::before { content: "=E2=9A=AB"; }
+
+#save_note_BUTTON[bullet_ecc_num=3D"9"]::before { content: "=E2=9A=AA=EF=B8=
+=8F"; }
+
+#save_note_BUTTON[bullet_ecc_num=3D"0"]::before { content: "=E2=97=AF "; }
+
+#status_line { user-select: none; transform: translate(0px, 0.5rem); border=
+: 0px; border-radius: 4px; padding: 0px; background: rgba(136, 136, 136, 0.=
+133); color: rgb(136, 136, 136); opacity: 0.5; }
+
+.tail_msg { float: right; border-radius: 1em; border: 1px inset rgb(136, 13=
+6, 136); margin-left: 1em; padding: 0px 0.5em; text-shadow: rgb(170, 170, 1=
+70) 2px 1px 2px; }
+
+#status_line.brighter { opacity: 1; color: rgb(221, 221, 255); }
+
+#status_line.bigger { font-size: 150%; }
+
+.note_row { user-select: none; outline-offset: -2px; border-radius: 0.3em; =
+background-color: rgb(34, 34, 34); color: rgb(221, 221, 68); }
+
+.note_row * { cursor: pointer; }
+
+.note_row.auto_save { color: rgb(136, 136, 136); }
+
+.note_row .timestamp { color: rgb(136, 136, 136); margin-right: 1em; }
+
+.note_row button { border-width: medium; border-style: none; border-color: =
+currentcolor; border-image: initial; border-radius: 0.5em; background: none=
+; padding: 0px; color: red; margin-right: 0.2em; }
+
+.note_row button::before { display: inline-block; padding: 0px; }
+
+.note_num { background-color: rgb(0, 0, 0); border-radius: 0.3em; border: 1=
+px inset rgb(136, 136, 136); padding: 0px 0.5em; text-align: end; }
+
+.truncated { white-space: nowrap; overflow: hidden; text-overflow: ellipsis=
+; }
+
+.timestamp { white-space: nowrap; margin: 0px 0.5em; }
+
+.check_button { color: red; }
+
+.editing .edit_button::before { content: "=E2=9C=8E"; color: yellow; }
+
+.edit_button::before { content: "=E2=9C=90"; color: red; }
+
+.delete_button::before { content: "=E2=9C=95"; background-color: rgba(255, =
+0, 0, 0.267); padding: 0.4em; }
+
+.check_button::before { content: "=F0=9F=94=B5"; }
+
+.checked .check_button::before { content: "=E2=9C=85"; }
+
+.check_button.onShift::before { font-size: 150%; border: 1px solid white; }
+
+#note_input_TEXTAREA.checked { color: rgb(0, 255, 0); }
+
+.note_row.checked { color: rgb(0, 255, 0); }
+
+.checked .check_button { color: rgb(0, 255, 0); }
+
+.auto_save .check_button { visibility: hidden; }
+
+.auto_save .edit_button { visibility: hidden; }
+
+.note_row button { padding: 0px; border: 1px solid rgba(0, 0, 0, 0); }
+
+#saved_notes_TABLE:hover button { padding: 0px 1em; border: 1px solid rgba(=
+136, 136, 136, 0.533); }
+
+.note_row:hover td { padding: 1em 0px; }
+
+.note_row.standout td { padding: 1em 0px; }
+
+.note_row button { transition: 1000ms ease-out 500ms; }
+
+#saved_notes_TABLE:hover button { transition: 200ms; }
+
+.note_row td { transition: 1000ms ease-out 5000ms; }
+
+.note_row:hover td { transition: 200ms; }
+
+.note_row.standout td { transition: 200ms; }
+
+.note_row.standout { outline: rgb(255, 255, 0) dotted 1px; background-color=
+: rgb(51, 51, 51) !important; }
+
+.note_row:hover { background-color: rgb(68, 68, 68) !important; }
+
+.note_row.editing { outline: rgb(255, 255, 0) dashed 1px; background-color:=
+ rgb(0, 0, 0) !important; }
+
+.note_row.editing, .note_row.edited { border-left: 5px solid rgb(255, 255, =
+136); margin-left: 5px; opacity: 0.5; }
+
+.note_row.editing.checked, .note_row.edited.checked { border-left: 5px soli=
+d rgb(0, 255, 221); opacity: 0.5; }
+
+.note_row.checked:hover, .note_row:hover { opacity: 1; }
+------MultipartBoundary--jF8as5YBrlCKYgb61hFuIQD6SLfgd0nzummfuKzV2D------
