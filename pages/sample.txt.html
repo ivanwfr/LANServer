@@ -33,34 +33,38 @@
 <body>
 <pre color_num="9">
 
-<detailsclass="close_on_margin_click bg7" open="">
-<summary style="color: rgb(0, 0, 0);"> PROMPT   ● notes_refactored.js 261007  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>I can't use the refoactored version of notes.js, here is why:
-1. You removed the the `_TAG` timestamp, which makes it impossble
-to relate to the version you refactored from.
-2. You did not tell where the functions you removed would be
-transfered to, and what their name and arguments would become.
-3. You removed the calls to nArray_wasted_del_imported_note
-   and You deleted the function `nArray_wasted_del_note_index`.
-   ...as a result, the `nArray_wasted` cleanup is now out of sync.
+<boxu>                                                                        </boxu>
+<boxm> PROMPT   ● notes_refactored.js ● 261007                                </boxm>  
+<boxd>                                                                        </boxd>
+<boxu>                                                                        </boxu>
+<boxm> I can't use the refoactored version of notes.js, here is why:          </boxm>
+<boxm>                                                                        </boxm>
+<boxm> 1. You removed the the `_TAG` timestamp, which makes it impossble      </boxm>
+<boxm> to relate to the version you refactored from.                          </boxm>
+<boxm> 2. You did not tell where the functions you removed would be           </boxm>
+<boxm> transfered to, and what their name and arguments would become.         </boxm>
+<boxm> 3. You removed the calls to nArray_wasted_del_imported_note            </boxm>
+<boxm>    and You deleted the function `nArray_wasted_del_note_index`.        </boxm>
+<boxm>    ...as a result, the `nArray_wasted` cleanup is now out of sync.     </boxm>
+<boxm>                                                                        </boxm>
+<boxm> At this stage, your file by file source code refactoring does not help </boxm>
+<boxm> without a detailed IDL specification when the API changes.             </boxm>
+<boxm>                                                                        </boxm>
+<boxm> So, the only useful refactoring I can see would be your 100%           </boxm>
+<boxm> refactoring proposal based on these files:                             </boxm>
+<boxm> 1. js_MODEL.js                                                         </boxm>
+<boxm> 2. js_VIEW.js                                                          </boxm>
+<boxm> 3. js_CNTRL.js                                                         </boxm>
+<boxm> 4. notes.js                                                            </boxm>
+<boxm> 5. js_notes.js                                                         </boxm>
+<boxm> 6. js_details.js                                                       </boxm>
+<boxm>                                                                        </boxm>
+<boxm> Tell me if a credits cap is likely get in the way at this stage.       </boxm>
+<boxd>                                                                        </boxd>
 
-At this stage, your file by file source code refactoring does not help
-without a detailed IDL specification when the API changes.
-
-So, the only useful refactoring I can see would be your 100%
-refactoring proposal based on these files:
-1. js_MODEL.js
-2. js_VIEW.js
-3. js_CNTRL.js
-4. notes.js
-5. js_notes.js
-6. js_details.js
-
-Tell me if a credits cap is likely get in the way at this stage.
-
- </pre>
-</details>
-
+<boxu>                                                                              </boxu>
+<boxm> REPLY    ● Copilot on GitHub                                                 </boxm>  
+<boxd>                                                                              </boxd>
 <boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
 <boxm>│ Absolutely. Here is the correct next step:                                  </boxm>
 <boxm>│                                                                             </boxm>
