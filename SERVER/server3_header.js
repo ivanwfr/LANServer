@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server3_header.js                                      _TAG (261002:20h:20)
+//│ server3_header.js                                      _TAG (261007:01h:46)
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 
@@ -133,44 +133,52 @@ log_B(                    file_name.replace(/.*[\\\/]/,"")    );
     //┌────────────────────────────────────────────────────────────────────────────┐
     //│ PRETTY PRINT HTML EMBEDING
     //└────────────────────────────────────────────────────────────────────────────┘
-    /* js    css    ahk    awk    vim    txt {{{*/
+    /* ahk asp awk css js lua md tmc txt vim {{{*/
     if( server0_log.html_format_requested(_file_name,query) )
     {
-        if (file_name.endsWith("js"     )) return { "Content-Type" : "text/html;  charset=UTF-8" };
-        if (file_name.endsWith("md"     )) return { "Content-Type" : "text/html;  charset=UTF-8" };
-        if (file_name.endsWith("css"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("ahk"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("asp"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("awk"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
-        if (file_name.endsWith("vim"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("css"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("js"     )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("lua"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("log"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("md"     )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("tmc"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("txt"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("vim"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
     }
     /*}}}*/
     return (file_name.endsWith("html"   )) ? HTML_RESPONSE_HEADER
         :  (file_name.endsWith("htm"    )) ? HTML_RESPONSE_HEADER
 
-        :  (file_name.endsWith("md"     )) ?  AHK_RESPONSE_HEADER
         :  (file_name.endsWith("ahk"    )) ?  AHK_RESPONSE_HEADER
+        :  (file_name.endsWith("asp"    )) ?  AHK_RESPONSE_HEADER
         :  (file_name.endsWith("awk"    )) ?  AWK_RESPONSE_HEADER
         :  (file_name.endsWith("css"    )) ?  CSS_RESPONSE_HEADER
+        :  (file_name.endsWith("js"     )) ?   JS_RESPONSE_HEADER
+        :  (file_name.endsWith("lua"    )) ?  LUA_RESPONSE_HEADER
+        :  (file_name.endsWith("md"     )) ?   MD_RESPONSE_HEADER
+        :  (file_name.endsWith("vim"    )) ?  VIM_RESPONSE_HEADER
+
+        :  (file_name.endsWith("log"    )) ? DEFAULT_TEXT_PLAIN
+        :  (file_name.endsWith("xml"    )) ? DEFAULT_TEXT_PLAIN
+
+        :  (file_name.endsWith("json"   )) ? JSON_RESPONSE_HEADER
         :  (file_name.endsWith("csv"    )) ?  CSV_RESPONSE_HEADER
         :  (file_name.endsWith("doc"    )) ?  DOC_RESPONSE_HEADER
         :  (file_name.endsWith("docx"   )) ?  DOC_RESPONSE_HEADER
         :  (file_name.endsWith("ico"    )) ?  ICO_RESPONSE_HEADER
         :  (file_name.endsWith("jpg"    )) ?  JPG_RESPONSE_HEADER
-        :  (file_name.endsWith("js"     )) ?   JS_RESPONSE_HEADER
-        :  (file_name.endsWith("json"   )) ? JSON_RESPONSE_HEADER
         :  (file_name.endsWith("pdf"    )) ?  PDF_RESPONSE_HEADER
         :  (file_name.endsWith("png"    )) ?  PNG_RESPONSE_HEADER
         :  (file_name.endsWith("svg"    )) ?  SVG_RESPONSE_HEADER
         :  (file_name.endsWith("gif"    )) ?  GIF_RESPONSE_HEADER
         :  (file_name.endsWith("ppt"    )) ?  PPT_RESPONSE_HEADER
         :  (file_name.endsWith("sh"     )) ?   SH_RESPONSE_HEADER
-        :  (file_name.endsWith("md"     )) ?   MD_RESPONSE_HEADER
         :  (file_name.endsWith("ini"    )) ?  INI_RESPONSE_HEADER
         :  (file_name.endsWith("lnk"    )) ?  LNK_RESPONSE_HEADER
-        :  (file_name.endsWith("vim"    )) ?  VIM_RESPONSE_HEADER
         :  (file_name.endsWith("bat"    )) ?  BAT_RESPONSE_HEADER
-        :  (file_name.endsWith("lua"    )) ?  LUA_RESPONSE_HEADER
         :  (file_name.endsWith("xls"    )) ?  XLS_RESPONSE_HEADER
 
         :  (file_name.endsWith("xlsx"   )) ? XLSX_RESPONSE_HEADER
