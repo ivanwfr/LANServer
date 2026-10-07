@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261006:15h:29)
+//│ server5_content.js                                     _TAG (261007:19h:06)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -74,31 +74,35 @@ let onload = function(args)
 //└────────────────────────────────────────────────────────────────────────────┘
 const FOLD_OPEN = "{{{"; /* eslint-disable-line no-unused-vars */
 const FOLD_CLOSE= "}}}"; /* eslint-disable-line no-unused-vars */
-/*    STYLE_QTEXT {{{*/
-const STYLE_QTEXT = ""
-    + "<link type='text/css' href='/style/notes.css' rel='stylesheet'>"
-    + "<link type='text/css' href='/style/qtext.css' rel='stylesheet'>"
-    ;
-/*}}}*/
-/*    SCRIPT_QTEXT {{{*/
+/*    SCRIPT_QTEXT & STYLE_QTEXT {{{*/
 const SCRIPT_QTEXT = ""
-    + "<meta name='color-scheme' content='light only'>"
-    + "<script type='module' src='/scripts/js_log.js     '></script>\n"
+    + "<meta   name='color-scheme' content='light only'>\n"
+    + "\n"
+    + "<!--base   href='https://ivanwfr.github.io/LANServer' /-->\n"
+    + "\n"
+    + "<script type='module'  src='/scripts/js_log.js'     ></script>\n"
+    + "\n"
+    + "<script type='module'  src='/scripts/js_folds.js'   ></script>\n"
+    + "<script type='module'  src='/scripts/js_store.js'   ></script>\n"
+    + "<script type='module'  src='/scripts/js_xpath.js'   ></script>\n"
+    + "<script type='module'  src='/scripts/js_linkify.js' ></script>\n"
+    + "\n"
+    + "<script type='module'  src='/scripts/js_MODEL.js'   ></script>\n"
+    + "<script type='module'  src='/scripts/js_VIEW.js'    ></script>\n"
+    + "<script type='module'  src='/scripts/js_CNTRL.js'   ></script>\n"
+    + "\n"
+    + "<script type='module'  src='/scripts/js_ticker.js'  ></script>\n"
+    + "<script type='module'  src='/scripts/js_input.js'   ></script>\n"
+    + "<script type='module'  src='/scripts/notes.js'      ></script>\n"
+    + "<script type='module'  src='/scripts/js_details.js' ></script>\n"
+    + "<script type='module'  src='/scripts/js_notes.js'   ></script>\n"
+    + "\n"
+    ;
 
-    + "<script type='module' src='/scripts/js_folds.js   '></script>\n"
-    + "<script type='module' src='/scripts/js_store.js   '></script>\n"
-    + "<script type='module' src='/scripts/js_xpath.js   '></script>\n"
-    + "<script type='module' src='/scripts/js_linkify.js '></script>\n"
-
-    + "<script type='module' src='/scripts/js_MODEL.js   '></script>\n"
-    + "<script type='module' src='/scripts/js_VIEW.js    '></script>\n"
-    + "<script type='module' src='/scripts/js_CNTRL.js   '></script>\n"
-
-    + "<script type='module' src='/scripts/js_ticker.js  '></script>\n"
-    + "<script type='module' src='/scripts/js_input.js   '></script>\n"
-    + "<script type='module' src='/scripts/notes.js      '></script>\n"
-    + "<script type='module' src='/scripts/js_details.js '></script>\n"
-    + "<script type='module' src='/scripts/js_notes.js   '></script>\n"
+const STYLE_QTEXT = ""
+    + "<link type='text/css' href='/style/notes.css' rel='stylesheet'>\n"
+    + "<link type='text/css' href='/style/qtext.css' rel='stylesheet'>\n"
+    + "\n"
     ;
 /*}}}*/
 /*_ details_folding {{{*/
@@ -212,7 +216,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
 
             response.write( header                 );
             response.write( STYLE_QTEXT            );
-            response.write( "<pre>"+ data +"</pre>");
+            response.write( "<pre>"+ data +"</pre>\n");
         }
         else {
             if(net_address && config.DEFAULT_URI_PATH.includes(file_name))

@@ -1,0 +1,716 @@
+
+<!-- saved from url=(0041)https://192.168.1.14:447/pages/sample.txt -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>sample.txt</title>
+<meta name="color-scheme" content="light only">
+
+<!--base   href='https://ivanwfr.github.io/LANServer' /-->
+<base   href='../SERVER/' /-->
+
+<script type="module"  src="scripts/js_log.js"></script>
+
+<script type="module"  src="scripts/js_folds.js"></script>
+<script type="module"  src="scripts/js_store.js"></script>
+<script type="module"  src="scripts/js_xpath.js"></script>
+<script type="module"  src="scripts/js_linkify.js"></script>
+
+<script type="module"  src="scripts/js_MODEL.js"></script>
+<script type="module"  src="scripts/js_VIEW.js"></script>
+<script type="module"  src="scripts/js_CNTRL.js"></script>
+
+<script type="module"  src="scripts/js_ticker.js"></script>
+<script type="module"  src="scripts/js_input.js"></script>
+<script type="module"  src="scripts/notes.js"></script>
+<script type="module"  src="scripts/js_details.js"></script>
+<script type="module"  src="scripts/js_notes.js"></script>
+
+<link type="text/css" href="style/notes.css" rel="stylesheet">
+<link type="text/css" href="style/qtext.css" rel="stylesheet">
+
+</head><body color_num="1" class=""><pre color_num="9">//┌────────────────────────────────────────────────────────────────────────────┐
+//│ Absolutely. Here is the correct next step:
+//│
+//│ ● a complete refactoring contract for the 6 files you listed,
+//│ ● written as an IDL-style specification,
+//│ ● with explicit old → new ownership, signatures,
+//│ ● callers,
+//│ ● callees,
+//│ ● and state transfer rules.
+//│
+//│ This is the kind of contract that makes the migration safe
+//│ in GVim and keeps the app working while you move logic.
+//└────────────────────────────────────────────────────────────────────────────┘
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 1. Refactoring principles
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg1" open=""><summary style="color: rgb(0, 0, 0);">These are the rules that must hold:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>- js_CNTRL.js owns transitions and state
+- js_MODEL.js owns model-facing operations
+- notes.js owns raw note data and persistence
+- js_notes.js owns rendering helpers only
+- js_VIEW.js owns event-to-intent wiring and UI refreshes
+- js_details.js is temporary glue only, not real business logic
+
+No module should silently “borrow” state from another module.
+
+Important invariants:
+
+- The editing index is controller state, not view state
+- The auto-save draft is controller state or transient model state, not js_notes.js state
+- The deleted-note queue is model state and must remain synchronized
+- Any DOM mutation must be in js_VIEW.js or js_notes.js
+- Any server/storage mutation must be in notes.js or js_MODEL.js
+- js_details.js may remain only as a bootstrapping adapter until migration is complete
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 2. Final target architecture
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);">Target responsibility map:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>- js_CNTRL.js
+- currentState
+- transition(action, payload)
+- subscribe(listener)
+- getState()
+- state machine only
+
+- js_MODEL.js
+- façade between controller and notes.js
+- calls domain operations
+- no DOM
+- no UI classes
+- no inline HTML generation
+
+- notes.js
+- persistent note array
+- deleted-note queue
+- storage keys
+- fetch/upload sync
+- note CRUD logic
+- no DOM output
+- no UI state
+
+- js_notes.js
+- render helpers
+- highlight row
+- scroll
+- layout
+- status line styling
+- DOM escaping
+- no editing state
+- no auto-save state
+- no deleted-note queue logic
+
+- js_VIEW.js
+- binds DOM events to transitions
+- subscribes to controller
+- refreshes UI from state
+- no direct note persistence logic
+
+- js_details.js
+- only DOM bootstrap and legacy forwarding
+- temporary compatibility adapter
+- should disappear once migration is complete
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 3. Core data contract
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);">Type definitions:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>- Note
+- checked: boolean
+- text: string
+- timestamp: number
+
+- WastedNote
+- same shape as Note
+
+- State
+- IDLE
+- EDITING
+- SAVING
+- DELETING
+- IMPORTING
+- EXPORTING
+- CHECKING
+- LOADING
+- ERROR
+
+- UIState
+- editingNoteIndex: number
+- inputDirty: boolean
+- autoInsertPrefix: boolean
+- noteSelectedId: number | null
+
+This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_details.js.
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 4. Module-by-module IDL specification
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);">js_CNTRL js_MODEL notes js_notes js_VIEW js_details  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre color_num="6"><details class="close_on_margin_click bg1"><summary style="color: rgb(0, 0, 0);">│ 4.1 js_CNTRL.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 4.1 js_CNTRL.js
+//│ 
+//│ Purpose:
+//│ - finite state machine
+//│ - action routing
+//│ - state notifications
+//│ 
+//│ Public API:
+//│ 
+//│ - subscribe(listener: (state: string, payload?: any) =&gt; void): void
+//│ - transition(action: string, payload?: any): void
+//│ - getState(): string
+//│ 
+//│ State-driven actions:
+//│ - SELECT_NOTE
+//│ - SAVE_NOTE
+//│ - DELETE_NOTE
+//│ - CANCEL
+//│ - CHECK_NOTE
+//│ - IMPORT_NOTES
+//│ - EXPORT_NOTES
+//│ - LOAD_NOTES
+//│ 
+//│ Controller responsibilities:
+//│ - accept only intents from js_VIEW.js
+//│ - call js_MODEL.js methods
+//│ - notify subscribers after state change
+//│ - maintain currentState and emit state updates
+//│ 
+//│ Callers:
+//│ - js_VIEW.js
+//│ 
+//│ Callees:
+//│ - js_MODEL.js
+//│ 
+//│ No direct DOM work.
+//│ 
+//│ Allowed transitions:
+//│ - IDLE → SELECT_NOTE → EDITING
+//│ - IDLE → SAVE_NOTE → SAVING → IDLE
+//│ - IDLE → DELETE_NOTE → DELETING → IDLE
+//│ - EDITING → SAVE_NOTE → SAVING → IDLE
+//│ - EDITING → DELETE_NOTE → DELETING → IDLE
+//│ - EDITING → CANCEL → IDLE
+//└────────────────────────────────────────────────────────────────────────────┘
+ </pre></details>
+<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);">│ 4.2 js_MODEL.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 4.2 js_MODEL.js
+//│ 
+//│ Purpose:
+//│ - façade to notes.js
+//│ - hide model implementation details from controller and UI
+//│ - keep state machine clean
+//│ 
+//│ Public API:
+//│ 
+//│ - save(payload: { content: string, editingIndex?: number }): any
+//│ - edit(noteId: number): void
+//│ - remove(noteId: number): void
+//│ - getEditingNoteIndex(): number
+//│ - load(): void
+//│ - check(noteId: number): any
+//│ - import(buffer: string): { count: number, message: string }
+//│ - export(): { buffer: string, message: string }
+//│ 
+//│ This file should not own DOM.
+//│ It should not know about saved_notes_TABLE.
+//│ It should not know about textarea refs.
+//│ 
+//│ Current file is too skeletal; in the target model, it should proxy:
+//│ 
+//│ - save() → notes.saveNote(...)
+//│ - remove() → notes.deleteNote(...)
+//│ - check() → notes.checkNote(...)
+//│ - import() → notes.importNotes(...)
+//│ - export() → notes.exportNotes(...)
+//│ 
+//│ Callers:
+//│ - js_CNTRL.js
+//│ - maybe legacy js_VIEW.js during migration
+//│ 
+//│ Callees:
+//│ - notes.js
+//└────────────────────────────────────────────────────────────────────────────┘
+ </pre></details>
+<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);">│ 4.3 notes.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 4.3 notes.js
+//│ 
+//│ This is the central model layer and the most important file to keep pure.
+//│ 
+//│ Public API:
+//│ 
+//│ - get_nArray(): Note[]
+//│ - get_checked(index: number): string
+//│ - get_notes_loaded_from(): string | undefined
+//│ - getWastedNotes(): WastedNote[]
+//│ - load_notes(): void
+//│ - load_server_notes(data: any): void
+//│ - load_client_notes(): void
+//│ - saveNote(payload: { content: string, editingIndex?: number }): Note | null
+//│ - deleteNote(noteIndex: number): Note | null
+//│ - checkNote(noteIndex: number): Note | null
+//│ - importNotes(buffer: string): { count: number, message: string }
+//│ - exportNotes(): { buffer: string, message: string }
+//│ - restoreNote(): { buffer: string, message: string }
+//│ - clearWastedNotes(): { count: number }
+//│ - request_server_upload(upload_reason?: string | false): void
+//│ - request_server_upload_pending(): string | false
+//│ - upload_notes_to_server(_caller?: string): void
+//│ - note_1_onclick_save(e?: Event): void
+//│ - note_2_onclick_import(e: Event): void
+//│ - note_3_onclick_export(e: Event): void
+//│ - note_4_onclick_check(e: Event, index: number): void
+//│ - note_6_onclick_delete(e: Event, index: number): void
+//│ - note_7_onclick_wasted(e: Event): void
+//│ - center_input_placeholder(placeholder: string, delay: number): void
+//│ - reset_input_placeholder(): void
+//│ - nArray_wasted_add_deleted_note(deleted_note: Note): void
+//│ - nArray_wasted_del_imported_note(imported_note_args: { text: string }): void
+//│ - nArray_wasted_del_note_index(index: number): void
+//│ 
+//│ Important: these last 3 must stay, because they are part of the deleted-note-sync semantics.
+//│ 
+//│ This is the part your earlier refactor broke:
+//│ - nArray_wasted_del_imported_note
+//│ - nArray_wasted_del_note_index
+//│ 
+//│ Those functions are required to keep:
+//│ - nArray_wasted in sync with actual deleted notes
+//│ - re-imported deleted notes removed from wasted queue
+//│ - button text/title and queue state correct
+//│ 
+//│ Migration rule:
+//│ - Remove DOM mutations from this file completely
+//│ - Keep data manipulation and persistence here
+//│ - If a function currently touches save_note_BUTTON, wasted_note_BUTTON, status_line, or the table, move that logic to js_VIEW.js or js_notes.js
+//└────────────────────────────────────────────────────────────────────────────┘
+ </pre></details>
+<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);">│ 4.4 js_notes.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 4.4 js_notes.js
+//│ 
+//│ Purpose:
+//│ - render, layout, scroll, escape text, and display helper UI
+//│ - no business data logic
+//│ - no direct persistence
+//│ 
+//│ Public API:
+//│ 
+//│ - add_notes_DETAILS(args: { saved_notes_DIV: HTMLElement, saved_notes_TABLE: HTMLElement }): boolean
+//│ - layout_notes(_caller?: string, index?: number): void
+//│ - standout_note_at_index(index: number): void
+//│ - note_scrollIntoView(index?: number): void
+//│ - wider(): void
+//│ - narrower(): void
+//│ - tunesize(e: Event): void
+//│ - show_status(msg: string): void
+//│ - tune_status(e: Event): void
+//│ - tail_status(...args: string[]): void
+//│ - tics_status(count: number): string
+//│ - copy_to_clipboard(buffer: string): void
+//│ - escapeHTML(text: string): string
+//│ - get_input(): HTMLTextAreaElement | null
+//│ - get_status_line(): HTMLElement | null
+//│ - is_last_note_auto_save(): boolean
+//│ - AUTO_SAVE_IDLE_INTERVAL_MS: number
+//│ - AUTO_SAVE_EDIT_INTERVAL_MS: number
+//│ 
+//│ This file must not own:
+//│ - editing index
+//│ - current input value
+//│ - auto-save compare state
+//│ - auto-insert prefix logic
+//│ - save button disabled/enabled state
+//│ - delete-queue state
+//│ 
+//│ These belong to:
+//│ - js_CNTRL.js for state transitions
+//│ - js_VIEW.js for display update orchestration
+//│ - js_details.js temporarily for bootstrapping
+//└────────────────────────────────────────────────────────────────────────────┘
+ </pre></details>
+<details class="close_on_margin_click bg5"><summary style="color: rgb(0, 0, 0);">│ 4.5 js_VIEW.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 4.5 js_VIEW.js
+//│ 
+//│ Purpose:
+//│ - event binding and UI refresh
+//│ - listens to controller state changes
+//│ - invokes controller transitions when user interacts
+//│ - re-renders view based on state
+//│ 
+//│ Public API:
+//│ 
+//│ - init(e?: Event): void
+//│ - bindEvents(): void
+//│ - render(currentState: string, payload?: any): void
+//│ 
+//│ View responsibilities:
+//│ - saveBtn click → js_CNTRL.transition("SAVE_NOTE", payload)
+//│ - row click on delete button → js_CNTRL.transition("DELETE_NOTE", noteId)
+//│ - row click on note → js_CNTRL.transition("SELECT_NOTE", { id, content })
+//│ - listen to state updates and update buttons/textarea/table accordingly
+//│ 
+//│ Callers:
+//│ - DOMContentLoaded
+//│ - js_CNTRL.subscribe
+//│ 
+//│ Callees:
+//│ - js_CNTRL.transition
+//│ - js_MODEL
+//│ - js_notes.js
+//│ - js_input.js if still used at this stage
+//└────────────────────────────────────────────────────────────────────────────┘
+ </pre></details>
+<details class="close_on_margin_click bg6"><summary style="color: rgb(0, 0, 0);">│ 4.6 js_details.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 4.6 js_details.js
+//│ 
+//│ Purpose:
+//│ - bootstrap DOM
+//│ - compatibility adapter
+//│ - transitional glue only
+//│ 
+//│ Public API:
+//│ 
+//│ - onload(): void
+//│ - add_notes_details(): boolean
+//│ - note_5_onclick_edit(e: Event, index: number): void
+//│ - set_editing_note_index(index: number): void
+//│ - get_editing_note_index(): number
+//│ - save_note_auto(e?: Event): void
+//│ - input_focus_listener(): void
+//│ - input_blur_listener(): void
+//│ - is_input_auto_insert_prefix(): boolean
+//│ - get_input_auto_insert_prefix(): string
+//│ 
+//│ This file should gradually lose responsibilities. It is allowed to remain only until the controller/view split is complete.
+//│ 
+//│ It should not own long-term:
+//│ - note persistence
+//│ - data mutation
+//│ - server sync
+//│ - deleted-note queue management
+//│ - render logic
+//└────────────────────────────────────────────────────────────────────────────┘
+ </pre></details>
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 5. Exact migration map: old → new ● This is the important part.
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg5"><summary style="color: rgb(0, 0, 0);"> State,index ● Save-delete-import-export ● wated array ● Render  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre color_num="4">//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 5.1 State and editing index
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg1"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>Current old owners:
+- js_details.js:
+  - get_editing_note_index
+  - set_editing_note_index
+  - save_note_auto
+- js_notes.js:
+  - get_editing_note_index
+  - set_editing_note_index
+  - save_note_auto
+  - is_input_same_as_original
+  - is_input_same_as_last_auto_save
+  - is_last_note_auto_save
+
+New owners:
+- js_CNTRL.js owns:
+  - current editing state
+  - editingNoteIndex
+  - inputDirty
+  - autoSaveDraft
+- js_VIEW.js owns:
+  - button text and disabled state
+  - textarea input rendering
+  - row highlighting
+
+Function migration:
+- set_editing_note_index(index) → controller state + view update
+- get_editing_note_index() → js_CNTRL.getState() / state payload / controller-held store
+- save_note_auto() → state transition logic inside js_CNTRL.js or js_MODEL.js wrapper
+- is_input_same_as_original() → transition guard in controller or model helper
+- is_input_same_as_last_auto_save() → controller guard
+- is_last_note_auto_save() → notes.js helper only if in the data layer, otherwise controller state
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 5.2 Save/delete/import/export
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>Current old owners:
+- notes.js
+  - note_1_onclick_save
+  - note_2_onclick_import
+  - note_3_onclick_export
+  - note_4_onclick_check
+  - note_6_onclick_delete
+  - note_7_onclick_wasted
+
+New owners:
+- js_VIEW.js:
+  - event dispatch to actions
+  - button handlers
+- js_CNTRL.js:
+  - SAVE_NOTE / DELETE_NOTE / CHECK_NOTE / IMPORT_NOTES / EXPORT_NOTES
+- js_MODEL.js:
+  - façade methods for those actions
+- notes.js:
+  - actual note-array mutation and persistence
+
+Function migration:
+- note_1_onclick_save → controller action SAVE_NOTE → js_MODEL.save()
+- note_2_onclick_import → controller action IMPORT_NOTES → js_MODEL.import()
+- note_3_onclick_export → controller action EXPORT_NOTES → js_MODEL.export()
+- note_4_onclick_check → controller action CHECK_NOTE → js_MODEL.check()
+- note_6_onclick_delete → controller action DELETE_NOTE → js_MODEL.remove()
+- note_7_onclick_wasted → view + controller queue orchestration, not model logic
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 5.3 Wasted notes cleanup
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>This is the required contract.
+
+Current required functions to preserve:
+
+- nArray_wasted_add_deleted_note(deleted_note: Note): void
+- nArray_wasted_del_imported_note(imported_note_args: { text: string }): void
+- nArray_wasted_del_note_index(index: number): void
+
+These are not optional. They ensure:
+- deleted notes remain in the queue
+- imported notes are removed from queue when reintroduced
+- deleted-note button state stays in sync
+
+New ownship:
+- notes.js keeps them
+- js_MODEL.js exposes accessors if needed
+- js_VIEW.js uses the count to update the button label
+
+If a refactor removes these, the delete queue becomes stale.
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 5.4 Render functions
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>Current old owners:
+- js_notes.js
+- notes.js
+- js_details.js
+
+New owners:
+- js_notes.js only:
+  - layout_notes
+  - standout_note_at_index
+  - note_scrollIntoView
+  - escapeHTML
+  - show_status
+  - copy_to_clipboard
+  - wider/narrower/tunesize
+
+No data mutation allowed here.
+ </pre></details>
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 6. Explicit IDL-style contracts
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg6"><summary style="color: rgb(0, 0, 0);"> js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre color_num="6"><details class="close_on_margin_click bg1"><summary style="color: rgb(0, 0, 0);">6.1 js_CNTRL.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface js_CNTRL {
+  subscribe(listener: (state: string, payload?: any) =&gt; void): void;
+  transition(action: string, payload?: any): void;
+  getState(): string;
+}
+
+Action semantics:
+- SELECT_NOTE(payload: { id: number, content?: string }): void
+- SAVE_NOTE(payload: { content: string, editingIndex?: number }): void
+- DELETE_NOTE(noteId: number): void
+- CHECK_NOTE(noteId: number): void
+- IMPORT_NOTES(buffer: string): void
+- EXPORT_NOTES(): void
+- CANCEL(): void
+ </pre></details>
+<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);">6.2 js_MODEL.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface js_MODEL {
+  save(payload: { content: string, editingIndex?: number }): any;
+  edit(noteId: number): void;
+  remove(noteId: number): void;
+  getEditingNoteIndex(): number;
+  load(): void;
+  check(noteId: number): any;
+  import(buffer: string): { count: number, message: string };
+  export(): { buffer: string, message: string };
+}
+ </pre></details>
+<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);">6.3 notes.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface notes {
+  get_nArray(): Note[];
+  get_checked(index: number): string;
+  get_notes_loaded_from(): string | undefined;
+  getWastedNotes(): WastedNote[];
+  load_notes(): void;
+  saveNote(payload: { content: string, editingIndex?: number }): Note | null;
+  deleteNote(noteIndex: number): Note | null;
+  checkNote(noteIndex: number): Note | null;
+  importNotes(buffer: string): { count: number, message: string };
+  exportNotes(): { buffer: string, message: string };
+  restoreNote(): { buffer: string, message: string };
+  clearWastedNotes(): { count: number };
+  request_server_upload(upload_reason?: string | false): void;
+  request_server_upload_pending(): string | false;
+  upload_notes_to_server(_caller?: string): void;
+  note_1_onclick_save(e?: Event): void;
+  note_2_onclick_import(e: Event): void;
+  note_3_onclick_export(e: Event): void;
+  note_4_onclick_check(e: Event, index: number): void;
+  note_6_onclick_delete(e: Event, index: number): void;
+  note_7_onclick_wasted(e: Event): void;
+}
+
+Required internal functions to preserve:
+- nArray_wasted_add_deleted_note(deleted_note: Note): void
+- nArray_wasted_del_imported_note(imported_note_args: { text: string }): void
+- nArray_wasted_del_note_index(index: number): void
+ </pre></details>
+<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);">6.4 js_notes.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface js_notes {
+  add_notes_DETAILS(args: { saved_notes_DIV: HTMLElement, saved_notes_TABLE: HTMLElement }): boolean;
+  layout_notes(_caller?: string, index?: number): void;
+  standout_note_at_index(index: number): void;
+  note_scrollIntoView(index?: number): void;
+  wider(): void;
+  narrower(): void;
+  tunesize(e: Event): void;
+  show_status(msg: string): void;
+  tune_status(e: Event): void;
+  tail_status(...args: string[]): void;
+  tics_status(count: number): string;
+  copy_to_clipboard(buffer: string): void;
+  escapeHTML(text: string): string;
+  get_input(): HTMLTextAreaElement | null;
+  get_status_line(): HTMLElement | null;
+  is_last_note_auto_save(): boolean;
+  AUTO_SAVE_IDLE_INTERVAL_MS: number;
+  AUTO_SAVE_EDIT_INTERVAL_MS: number;
+}
+ </pre></details>
+<details class="close_on_margin_click bg5"><summary style="color: rgb(0, 0, 0);">6.5 js_VIEW.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface js_VIEW {
+  init(e?: Event): void;
+  bindEvents(): void;
+  render(currentState: string, payload?: any): void;
+}
+ </pre></details>
+<details class="close_on_margin_click bg6"><summary style="color: rgb(0, 0, 0);">6.6 js_details.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface js_details {
+  onload(): void;
+  add_notes_details(): boolean;
+  note_5_onclick_edit(e: Event, index: number): void;
+  set_editing_note_index(index: number): void;
+  get_editing_note_index(): number;
+  save_note_auto(e?: Event): void;
+  input_focus_listener(): void;
+  input_blur_listener(): void;
+  is_input_auto_insert_prefix(): boolean;
+  get_input_auto_insert_prefix(): string;
+}
+ </pre></details>
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 7. Required API-preserving migration strategy
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg7"><summary style="color: rgb(0, 0, 0);"> js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>This is the key point.
+
+When moving from the current code to the clean architecture,
+preserve the public behavior, not the exact function names, while
+keeping the same semantics.
+
+Recommended migration template:
+
+- js_details.js
+  - keep only bootstrapping and compatibility
+  - call js_VIEW.init()
+  - call js_MODEL.load()
+  - pass DOM refs to js_VIEW
+
+- js_VIEW.js
+  - each click becomes a controller intent
+  - no model calls directly
+  - no direct array mutation
+
+- js_CNTRL.js
+  - owns the transition table
+  - calls js_MODEL
+  - handles state change events
+
+- js_MODEL.js
+  - delegates to notes.js
+  - no DOM, no render logic
+
+- notes.js
+  - becomes the pure note-domain model
+  - no UI logic
+  - preserves deleted queue functions
+
+- js_notes.js
+  - becomes render helper only
+  - no state machine logic
+  - no deleted-note queue logic
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 8. Final recommendation
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg8"><summary style="color: rgb(0, 0, 0);"> semantics state ownership adapter API  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>The safest refactor is not “copy/paste split by file with partial removal.”
+It is:
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ - keep current semantics
+//│ - identify all state-bearing functions
+//│ - transfer ownership explicitly
+//│ - preserve all deleted-note cleanup functions
+//│ - keep js_details.js as adapter until the transition is complete
+//│ - do not delete API surface before the controller/view split is complete
+//└────────────────────────────────────────────────────────────────────────────┘
+
+This is exactly the kind of migration that can be done
+in a disciplined GVim workflow without losing traceability.
+The critical mapping to keep from breaking the app:
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ - editing state → js_CNTRL.js
+//│ - data state → notes.js
+//│ - DOM rendering → js_notes.js + js_VIEW.js
+//│ - bootstrap glue → js_details.js
+//│ - deleted-note queue cleanup → notes.js
+//└────────────────────────────────────────────────────────────────────────────┘
+ </pre></details>
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 9. Credits cap
+//└────────────────────────────────────────────────────────────────────────────┘
+<details class="close_on_margin_click bg9"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>At this point, no practical credits issue is likely to block
+the migration spec itself.
+
+The design and migration guide is large,
+but it is still comfortably within
+the normal working budget for this environment.
+
+If you want, the next useful step is this:
+I can give you a final “state ownership matrix”
+with every function mapped exactly to:
+" ┌────────────────────────────────────────────────────────────────────────────┐
+" │ - owner
+" │ - caller
+" │ - callee
+" │ - stateful or stateless
+" │ - retain/transfer/delete
+" └────────────────────────────────────────────────────────────────────────────┘
+
+This would be your exact implementation checklist for the migration.
+⯀
+ </pre></details>
+
+
+
+</pre>
+<details id="note_DETAILS" class="empty bg1" open="">
+<summary style="color: rgb(0, 0, 0);">sample_txt (0 note) …nothing yet for this file<em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<div>
+    <button id="narr_button" onclick="js_notes.narrower             (event);"></button>
+    <button id="tune_button" onclick="js_notes.tunesize             (event);"></button>
+    <button id="wide_button" onclick="js_notes.wider                (event);"></button>
+    <br>
+    <textarea id="note_input_TEXTAREA" placeholder="Type your note here..." data-content="" style="width: 646px; height: 106px;"></textarea>
+    <button id="save_note_BUTTON" xxclick="  notes.note_1_onclick_save  (event)" disabled="" bullet_ecc_num="1">Add Note #1</button>
+    <button id="wasted_note_BUTTON" onclick="  notes.note_7_onclick_wasted(event)" title="▲ Import Deleted Notes" disabled="">No Deleted Notes</button>
+    <button class="cb_BUTTON" onclick="  notes.note_3_onclick_export(event)" title="Export Notes
+to Clipboard">Export → 📝</button>
+    <button class="cb_BUTTON" onclick="  notes.note_2_onclick_import(event)" title="Import Notes
+pasted in Input
+▲ above">↓ Import ↑</button>
+    <div id="saved_notes_DIV" style="width: 651px; height: 146px;">
+     <table id="saved_notes_TABLE"><tbody><tr><td class="no_notes_yet_TD" colspan="6">No notes yet</td></tr></tbody></table>
+    </div>
+    <div id="status_line" onclick="js_notes.tune_status  (event);" title="Click: brighter — bigger — dimmer"></div>
+</div>
+</details></body></html>
