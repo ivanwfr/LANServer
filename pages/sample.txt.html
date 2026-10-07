@@ -1,12 +1,14 @@
+<!DOCTYPE html>
 
 <!-- saved from url=(0041)https://192.168.1.14:447/pages/sample.txt -->
 <html>
  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>sample.txt</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="color-scheme" content="light only">
 
 <!--base   href='https://ivanwfr.github.io/LANServer' /-->
-<base   href="../" />
+<base   href="../">
 
 <script type="module"  src="./SERVER/scripts/js_log.js"></script>
 
@@ -30,22 +32,25 @@
 
 </head>
 <body color_num="1" class=""><pre color_num="9">
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ Absolutely. Here is the correct next step:
-//│
-//│ ● a complete refactoring contract for the 6 files you listed,
-//│ ● written as an IDL-style specification,
-//│ ● with explicit old → new ownership, signatures,
-//│ ● callers,
-//│ ● callees,
-//│ ● and state transfer rules.
-//│
-//│ This is the kind of contract that makes the migration safe
-//│ in GVim and keeps the app working while you move logic.
-//└────────────────────────────────────────────────────────────────────────────┘
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 1. Refactoring principles
-//└────────────────────────────────────────────────────────────────────────────┘
+
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ Absolutely. Here is the correct next step:                                  </boxm>
+<boxm>│                                                                             </boxm>
+<boxm>│ ● a complete refactoring contract for the 6 files you listed,               </boxm>
+<boxm>│ ● written as an IDL-style specification,                                    </boxm>
+<boxm>│ ● with explicit old → new ownership, signatures,                            </boxm>
+<boxm>│ ● callers,                                                                  </boxm>
+<boxm>│ ● callees,                                                                  </boxm>
+<boxm>│ ● and state transfer rules.                                                 </boxm>
+<boxm>│                                                                             </boxm>
+<boxm>│ This is the kind of contract that makes the migration safe                  </boxm>
+<boxm>│ in GVim and keeps the app working while you move logic.                     </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
+
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ 1. Refactoring principles                                                   </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
+
 <details class="close_on_margin_click bg1" open="">
 <summary style="color: rgb(0, 0, 0);">These are the rules that must hold:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
 <pre>- js_CNTRL.js owns transitions and state
@@ -67,10 +72,11 @@ Important invariants:
 - js_details.js may remain only as a bootstrapping adapter until migration is complete
  </pre>
 </details>
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 2. Final target architecture
-//└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);">Target responsibility map:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>- js_CNTRL.js
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ 2. Final target architecture                                                </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
+<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);">Target responsibility map:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>- js_CNTRL.js
 - currentState
 - transition(action, payload)
 - subscribe(listener)
@@ -115,10 +121,11 @@ Important invariants:
 - temporary compatibility adapter
 - should disappear once migration is complete
  </pre></details>
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 3. Core data contract
-//└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);">Type definitions:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>- Note
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ 3. Core data contract                                                       </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
+<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);">Type definitions:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>- Note
 - checked: boolean
 - text: string
 - timestamp: number
@@ -145,10 +152,11 @@ Important invariants:
 
 This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_details.js.
  </pre></details>
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 4. Module-by-module IDL specification
-//└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);">js_CNTRL js_MODEL notes js_notes js_VIEW js_details  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre color_num="6"><details class="close_on_margin_click bg1"><summary style="color: rgb(0, 0, 0);">│ 4.1 js_CNTRL.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ 4. Module-by-module IDL specification                                       </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
+<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);">js_CNTRL js_MODEL notes js_notes js_VIEW js_details  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre color_num="6"><details class="close_on_margin_click bg1"><summary style="color: rgb(0, 0, 0);">│ 4.1 js_CNTRL.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>//┌────────────────────────────────────────────────────────────────────────────┐
 //│ 4.1 js_CNTRL.js
 //│ 
 //│ Purpose:
@@ -195,7 +203,8 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 //│ - EDITING → CANCEL → IDLE
 //└────────────────────────────────────────────────────────────────────────────┘
  </pre></details>
-<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);">│ 4.2 js_MODEL.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);">│ 4.2 js_MODEL.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>//┌────────────────────────────────────────────────────────────────────────────┐
 //│ 4.2 js_MODEL.js
 //│ 
 //│ Purpose:
@@ -234,7 +243,8 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 //│ - notes.js
 //└────────────────────────────────────────────────────────────────────────────┘
  </pre></details>
-<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);">│ 4.3 notes.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);">│ 4.3 notes.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>//┌────────────────────────────────────────────────────────────────────────────┐
 //│ 4.3 notes.js
 //│ 
 //│ This is the central model layer and the most important file to keep pure.
@@ -287,7 +297,8 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 //│ - If a function currently touches save_note_BUTTON, wasted_note_BUTTON, status_line, or the table, move that logic to js_VIEW.js or js_notes.js
 //└────────────────────────────────────────────────────────────────────────────┘
  </pre></details>
-<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);">│ 4.4 js_notes.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);">│ 4.4 js_notes.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>//┌────────────────────────────────────────────────────────────────────────────┐
 //│ 4.4 js_notes.js
 //│ 
 //│ Purpose:
@@ -330,7 +341,8 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 //│ - js_details.js temporarily for bootstrapping
 //└────────────────────────────────────────────────────────────────────────────┘
  </pre></details>
-<details class="close_on_margin_click bg5"><summary style="color: rgb(0, 0, 0);">│ 4.5 js_VIEW.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+<details class="close_on_margin_click bg5"><summary style="color: rgb(0, 0, 0);">│ 4.5 js_VIEW.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>//┌────────────────────────────────────────────────────────────────────────────┐
 //│ 4.5 js_VIEW.js
 //│ 
 //│ Purpose:
@@ -362,7 +374,8 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 //│ - js_input.js if still used at this stage
 //└────────────────────────────────────────────────────────────────────────────┘
  </pre></details>
-<details class="close_on_margin_click bg6"><summary style="color: rgb(0, 0, 0);">│ 4.6 js_details.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>//┌────────────────────────────────────────────────────────────────────────────┐
+<details class="close_on_margin_click bg6"><summary style="color: rgb(0, 0, 0);">│ 4.6 js_details.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>//┌────────────────────────────────────────────────────────────────────────────┐
 //│ 4.6 js_details.js
 //│ 
 //│ Purpose:
@@ -394,13 +407,14 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 //└────────────────────────────────────────────────────────────────────────────┘
  </pre></details>
  </pre></details>
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 5. Exact migration map: old → new ● This is the important part.
-//└────────────────────────────────────────────────────────────────────────────┘
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ 5. Exact migration map: old → new ● This is the important part.             </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
 <details class="close_on_margin_click bg5"><summary style="color: rgb(0, 0, 0);"> State,index ● Save-delete-import-export ● wated array ● Render  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre color_num="4">//┌────────────────────────────────────────────────────────────────────────────┐
 //│ 5.1 State and editing index
 //└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg1"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>Current old owners:
+<details class="close_on_margin_click bg1"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>Current old owners:
 - js_details.js:
   - get_editing_note_index
   - set_editing_note_index
@@ -435,7 +449,8 @@ Function migration:
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 5.2 Save/delete/import/export
 //└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>Current old owners:
+<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>Current old owners:
 - notes.js
   - note_1_onclick_save
   - note_2_onclick_import
@@ -466,7 +481,8 @@ Function migration:
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 5.3 Wasted notes cleanup
 //└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>This is the required contract.
+<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>This is the required contract.
 
 Current required functions to preserve:
 
@@ -489,7 +505,8 @@ If a refactor removes these, the delete queue becomes stale.
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 5.4 Render functions
 //└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>Current old owners:
+<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>Current old owners:
 - js_notes.js
 - notes.js
 - js_details.js
@@ -507,10 +524,11 @@ New owners:
 No data mutation allowed here.
  </pre></details>
  </pre></details>
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 6. Explicit IDL-style contracts
-//└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg6"><summary style="color: rgb(0, 0, 0);"> js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre color_num="6"><details class="close_on_margin_click bg1"><summary style="color: rgb(0, 0, 0);">6.1 js_CNTRL.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface js_CNTRL {
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ 6. Explicit IDL-style contracts                                             </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
+<details class="close_on_margin_click bg6"><summary style="color: rgb(0, 0, 0);"> js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre color_num="6"><details class="close_on_margin_click bg1"><summary style="color: rgb(0, 0, 0);">6.1 js_CNTRL.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>interface js_CNTRL {
   subscribe(listener: (state: string, payload?: any) =&gt; void): void;
   transition(action: string, payload?: any): void;
   getState(): string;
@@ -525,7 +543,8 @@ Action semantics:
 - EXPORT_NOTES(): void
 - CANCEL(): void
  </pre></details>
-<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);">6.2 js_MODEL.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface js_MODEL {
+<details class="close_on_margin_click bg2"><summary style="color: rgb(0, 0, 0);">6.2 js_MODEL.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>interface js_MODEL {
   save(payload: { content: string, editingIndex?: number }): any;
   edit(noteId: number): void;
   remove(noteId: number): void;
@@ -536,7 +555,8 @@ Action semantics:
   export(): { buffer: string, message: string };
 }
  </pre></details>
-<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);">6.3 notes.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface notes {
+<details class="close_on_margin_click bg3"><summary style="color: rgb(0, 0, 0);">6.3 notes.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>interface notes {
   get_nArray(): Note[];
   get_checked(index: number): string;
   get_notes_loaded_from(): string | undefined;
@@ -565,7 +585,8 @@ Required internal functions to preserve:
 - nArray_wasted_del_imported_note(imported_note_args: { text: string }): void
 - nArray_wasted_del_note_index(index: number): void
  </pre></details>
-<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);">6.4 js_notes.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface js_notes {
+<details class="close_on_margin_click bg4"><summary style="color: rgb(0, 0, 0);">6.4 js_notes.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>interface js_notes {
   add_notes_DETAILS(args: { saved_notes_DIV: HTMLElement, saved_notes_TABLE: HTMLElement }): boolean;
   layout_notes(_caller?: string, index?: number): void;
   standout_note_at_index(index: number): void;
@@ -586,13 +607,15 @@ Required internal functions to preserve:
   AUTO_SAVE_EDIT_INTERVAL_MS: number;
 }
  </pre></details>
-<details class="close_on_margin_click bg5"><summary style="color: rgb(0, 0, 0);">6.5 js_VIEW.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface js_VIEW {
+<details class="close_on_margin_click bg5"><summary style="color: rgb(0, 0, 0);">6.5 js_VIEW.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>interface js_VIEW {
   init(e?: Event): void;
   bindEvents(): void;
   render(currentState: string, payload?: any): void;
 }
  </pre></details>
-<details class="close_on_margin_click bg6"><summary style="color: rgb(0, 0, 0);">6.6 js_details.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>interface js_details {
+<details class="close_on_margin_click bg6"><summary style="color: rgb(0, 0, 0);">6.6 js_details.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>interface js_details {
   onload(): void;
   add_notes_details(): boolean;
   note_5_onclick_edit(e: Event, index: number): void;
@@ -606,10 +629,11 @@ Required internal functions to preserve:
 }
  </pre></details>
  </pre></details>
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 7. Required API-preserving migration strategy
-//└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg7"><summary style="color: rgb(0, 0, 0);"> js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>This is the key point.
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ 7. Required API-preserving migration strategy                               </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
+<details class="close_on_margin_click bg7"><summary style="color: rgb(0, 0, 0);"> js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>This is the key point.
 
 When moving from the current code to the clean architecture,
 preserve the public behavior, not the exact function names, while
@@ -647,10 +671,11 @@ Recommended migration template:
   - no state machine logic
   - no deleted-note queue logic
  </pre></details>
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 8. Final recommendation
-//└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg8"><summary style="color: rgb(0, 0, 0);"> semantics state ownership adapter API  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>The safest refactor is not “copy/paste split by file with partial removal.”
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ 8. Final recommendation                                                     </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
+<details class="close_on_margin_click bg8"><summary style="color: rgb(0, 0, 0);"> semantics state ownership adapter API  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>The safest refactor is not “copy/paste split by file with partial removal.”
 It is:
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ - keep current semantics
@@ -672,10 +697,11 @@ The critical mapping to keep from breaking the app:
 //│ - deleted-note queue cleanup → notes.js
 //└────────────────────────────────────────────────────────────────────────────┘
  </pre></details>
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ 9. Credits cap
-//└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg9"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>At this point, no practical credits issue is likely to block
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ 9. Credits cap                                                              </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
+<details class="close_on_margin_click bg9"><summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>At this point, no practical credits issue is likely to block
 the migration spec itself.
 
 The design and migration guide is large,
@@ -700,3 +726,5 @@ This would be your exact implementation checklist for the migration.
 
 
 </pre>
+</body>
+</html>
