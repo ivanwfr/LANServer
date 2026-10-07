@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261002:03h:58) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261007:21h:16) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //│                                                                            │
@@ -136,7 +136,8 @@ if(log_this) console.log( JSON.parse( body ) );
               , body })
     .then ((response) =>    response.json() )
     .then ((    data) => {  if(tag_this) console.log  ("Notes upload status:", data); request_server_upload( false ); })
-    .catch((     err) => {  console.error("Notes upload failed:",  err); });
+    .catch((     err) => {/*console.error("Notes upload failed:",  err);*/}) /* eslint-disable-line handle-callback-err, no-unused-vars */
+    ;
 
 if(tag_this) console.log("%c ● UPLOADED: ["+ new Date( Date.now() ) +"]", "color: green");
 };
