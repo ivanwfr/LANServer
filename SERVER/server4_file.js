@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server4_file.js                                        _TAG (261001:00h:30)
+//│ server4_file.js                                        _TAG (261006:19h:10)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -309,7 +309,7 @@ let caller = "fs_readDir";
     let port            =  request.socket.encrypted ? config.PORT_HTTPS  : config.PORT_HTTP;
 
     let dir_path        =  file_path.substring( server_top_folder.length ).replace(/^[\/\\]|[\/\\]$/g,"");
-    let dir_list        =   dir_path.replace(/\\/g," ").split(" ");
+    let dir_list        =   dir_path.replace(/\\/g,"_bs_").split("_bs_");
 
     let net_address     = server1_network.get_net_address();
 
@@ -317,19 +317,19 @@ let caller = "fs_readDir";
     let href            =  href_root;
 
     let url_list        =  [];
-    dir_list.map((name) => { href += "/"+name; url_list.push({ name, href }); });
+    dir_list.map((name) => { href += "/"+encodeURI( name ); url_list.push({ name, href }); });
 
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ [folder_title] ● [top_list]         ● [dir_list <a href>dir_name</a>   │
     //└────────────────────────────────────────────────────────────────────────┘
     //{{{
-    let top_title       = ""; top_list.map((a) => { top_title += " ⚫ <b>"+                   a.name +"</b>"; });
+    let top_title       = ""; top_list.map((a) => { top_title += " ⚫ <b>"+                    a.name          +"</b>"; });
 
     if( url_list[0].name && (url_list[0].name != "Root"))
         url_list.unshift({ name: "Root", href: href_root });
 
-    let link_list       = ""; url_list.map((a) => { link_list += " 🟣 <a href='"+a.href+"'>"+ (a.name||"Root") +"</a>"; });
+    let link_list       = ""; url_list.map((a) => { link_list += " 🟣 <a href='"+ a.href +"'>"+ (a.name||"Root") +"</a>"; });
 
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -360,8 +360,8 @@ let caller = "fs_readDir";
 let get_dirEntry_link = function(reqPath, name)
 {
     return "<li>"
-        +   "<a href="+ path.join(reqPath, name ) +">"
-        +   "<"+         get_dirEntry_tag( name ) +"/>"+ name
+        +   "<a href="+ path.join(encodeURI(reqPath), encodeURI(name) ) +">"
+        +   "<"+        get_dirEntry_tag(  name ) +"/>"+ name
         +   "</a>"
         +  "</li>";
 };

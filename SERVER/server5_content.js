@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261005:17h:36)
+//│ server5_content.js                                     _TAG (261006:15h:29)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -179,75 +179,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
               && !file_name.match(/\.htm/)
               ) {
 
-                data = String(data);
-
-                // PRE-CHAR FILTER {{{
-                // html entities
-                data =         data.replace(                   /</gm, "&lt;"            )
-                    .               replace(                   />/gm, "&gt;"            )
-                ;
-                //}}}
-                // LINE FILTER {{{
-let   data_out = "";
-const    lines = data.split("\n");
-for(let i = 0; i < lines.length; ++i)
-{
-    let l = lines[i];
-// BOX BORDERS
-    l =         l.  replace(             / *\/[\/\\*] *(┌.*$)/g,            "<BOXU>$1</BOXU>"  ); // PRE-LINE
-
-    l =         l.  replace(             / *\/[\/\\*] *(│.*$)/g, "<BOXM>$1</BOXM>");
-
-    l =         l.  replace(             / *\/[\/\\*] *(└.*$)/g, "<BOXD>$1</BOXD>"             ); // PRE-LINE
-
-// BOX SEPARATORS
-    l =         l.  replace(             / *\/[\/\\*] *(├.*$)/g, "<BOXM>$1</BOXM>");
-    l =         l.  replace(             / *\/[\/\\*] *(┼.*$)/g, "<BOXM>$1</BOXM>");
-    l =         l.  replace(             / *\/[\/\\*] *(┤.*$)/g, "<BOXM>$1</BOXM>");
-// BOX PARSE-DONE
-if( l.includes("BOX") )
-    l =         l.  replace(             /[└┘┌┐│─├┼┤]+/g       , ""               );
-
-// FOLD-OPEN-CLOSE .. ANY LINE
-    l =         l.  replace(     /(.*)\{\{\{(.*)/, "<details><summary>$1 $2</summary><pre>" );
-    l =         l.  replace(     /(.*)\}\}\}(.*)/,                   "$1 $2</pre></details>");
-
-// remove COMMENT EN
-    l =         l.  replace(                        / *\/\* */, ""               ); // 👉  /*   👈
-    l =         l.  replace(                        / *\*\/ */, ""               ); // 👉  */   👈
-// remove COMMENT Copilot
-    l =         l.  replace(                     / *\[\.+\] */, ""               ); // 👉 [...] 👈
-
-
-// add a newline
-//{{{
-//    let s = l.trim();
-//    if(     s.length
-//       &&  !s.endsWith("<pre>"     )
-//     &&  !s.endsWith("</boxd>"   )
-//     &&  !s.endsWith("</details>")
-//      )
-          l += "\n";
-//}}}
-
-    data_out += l;
-}
-data = data_out;
-                //}}}
-                // POST-CHAR FILTER {{{
-                data =         data
-                // remove utf-8 boxing (or not)
-//                  .               replace(        /[└┘┌┐│─├┼┤]+/gm , "&nbsp;"         )
-                // embedded LF
-                    .               replace(                 /\\n/gm , "\u21B2"         ) // ↲
-                // remove vim fold markers
-                  //.               replace(         / *;* *\{\{\{/gm, " "               )
-                  //.               replace(         / *;* *\}\}\}/gm, " "               )
-                ;
-                //}}}
-                // MARKDOWN TABLES TO HTML
-                data = md_to_html.convert( data );
-
+                data = details_folding_to_HTML( String(data) );
             }
             //}}}
             // !qtext {{{
@@ -298,6 +230,79 @@ data = data_out;
         response.end();
      }
 /*}}}*/
+};
+/*}}}*/
+/*_ details_folding_to_HTML {{{*/
+let details_folding_to_HTML = function(data)
+{
+    // PRE-CHAR FILTER {{{
+    // html entities
+    data =         data.replace(                   /</gm, "&lt;"            )
+        .               replace(                   />/gm, "&gt;"            )
+    ;
+    //}}}
+    // LINE FILTER {{{
+    let   data_out = "";
+    const    lines = data.split("\n");
+    for(let i = 0; i < lines.length; ++i)
+    {
+        let l = lines[i];
+    // BOX BORDERS
+        l =         l.  replace(             / *\/[\/\\*] *(┌.*$)/g,            "<BOXU>$1</BOXU>"  ); // PRE-LINE
+
+        l =         l.  replace(             / *\/[\/\\*] *(│.*$)/g, "<BOXM>$1</BOXM>");
+
+        l =         l.  replace(             / *\/[\/\\*] *(└.*$)/g, "<BOXD>$1</BOXD>"             ); // PRE-LINE
+
+    // BOX SEPARATORS
+        l =         l.  replace(             / *\/[\/\\*] *(├.*$)/g, "<BOXM>$1</BOXM>");
+        l =         l.  replace(             / *\/[\/\\*] *(┼.*$)/g, "<BOXM>$1</BOXM>");
+        l =         l.  replace(             / *\/[\/\\*] *(┤.*$)/g, "<BOXM>$1</BOXM>");
+    // BOX PARSE-DONE
+    if( l.includes("BOX") )
+        l =         l.  replace(             /[└┘┌┐│─├┼┤]+/g       , ""               );
+
+    // FOLD-OPEN-CLOSE .. ANY LINE
+        l =         l.  replace(     /(.*)\{\{\{(.*)/, "<details><summary>$1 $2</summary><pre>" );
+        l =         l.  replace(     /(.*)\}\}\}(.*)/,                   "$1 $2</pre></details>");
+
+    // remove COMMENT EN
+        l =         l.  replace(                        / *\/\* */, ""               ); // 👉  /*   👈
+        l =         l.  replace(                        / *\*\/ */, ""               ); // 👉  */   👈
+    // remove COMMENT Copilot
+        l =         l.  replace(                     / *\[\.+\] */, ""               ); // 👉 [...] 👈
+
+
+    // add a newline
+    //{{{
+    //    let s = l.trim();
+    //    if(     s.length
+    //       &&  !s.endsWith("<pre>"     )
+    //     &&  !s.endsWith("</boxd>"   )
+    //     &&  !s.endsWith("</details>")
+    //      )
+              l += "\n";
+    //}}}
+
+        data_out += l;
+    }
+    data = data_out;
+    //}}}
+    // POST-CHAR FILTER {{{
+    data =         data
+    // remove utf-8 boxing (or not)
+//                  .               replace(        /[└┘┌┐│─├┼┤]+/gm , "&nbsp;"         )
+    // embedded LF
+        .               replace(                 /\\n/gm , "\u21B2"         ) // ↲
+    // remove vim fold markers
+      //.               replace(         / *;* *\{\{\{/gm, " "               )
+      //.               replace(         / *;* *\}\}\}/gm, " "               )
+    ;
+    //}}}
+    // MARKDOWN TABLES TO HTML
+    data = md_to_html.convert( data );
+
+    return data;
 };
 /*}}}*/
 

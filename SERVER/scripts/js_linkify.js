@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261005:18h:48) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261007:01h:45) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -230,20 +230,40 @@ let copy_container_text = function(e)
     //}}}
 };
 /*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ REBASE FULLY QUALIFIED HREF
+//└────────────────────────────────────────────────────────────────────────────┘
+/* USE-CASE {{{
+
+ | CURRENT FOLDER PATH    | https://192.168.1.14:447/SERVER/scripts/js_linkify.js
+ | ---------------------- | ----------------------------------------------------- |
+ | LOCATION / FILE_PATH   | OVERLAPPING SUB-FOLDERS PARSING                       |
+ |                        |                                                       |
+ | ● *CURRENT FOLDER PATH | https://192.168.1.14:447/SERVER/scripts               |
+ |                        |                                                       |
+ | + *RELATIVE FILE PATH* |                          SERVER/scripts/js_linkify.js |
+ |                        |                                                       |
+ | =                    ➔ | https://192.168.1.14:447/SERVER/scripts/js_linkify.js |
+
+ 🖐 URI may contain SPACES to encode:
+ "https://192.168.1.14:447/Z_LOCAL/W10/Users/ivan/Documents/Elder Scrolls Online"
+
+}}}*/
 /*_ linkify_file_pathes {{{*/
 let linkify_file_pathes = function()
 {
-    // location ● href ● folders {{{
 // log {{{
 //  let href          = "https://192.168.1.14:447/LAN/AHK/HIDCONTROL/AHK/HID/DEV_VID_PID_AXIS.ahk";
-//}}}
+
     let href          = document.location.href;
     let root          = href  .replace(/^(.*\/\/[^\/]*)\/.*/, "$1");    // up to first /
     let file          = href  .replace(/^.*\/(.*)$/           , "$1");  // after last  /
     let folder        = href  .substr(root.length);                     // after first /
         folder        = folder.substr(0, folder.length -file.length);   // before file
     let folders       = folder.split("/").filter(Boolean);              // remove falsy items
-// log href root file folder {{{
+
+// log {{{
 //console.log("➔ href   = ["+href+"]");
 //console.log("➔ root   = ["+root+"]");
 //console.log("➔ file   = ["+file+"]");
@@ -252,46 +272,98 @@ let linkify_file_pathes = function()
 //console.log("🟤🔴🟠🟡🟢🔵🟣⚫⚪️");
 //}}}
     //}}}
-    // CONTENT PATH ➔ ANCHOR ELEMENT {{{
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ [FILE OR FILDER PATH] TO [HTML ANCHOR]
+    //└────────────────────────────────────────────────────────────────────────┘
     let innerHTML = "";
     let       pre = document.querySelector("PRE");
     let     lines = pre.innerHTML.split("\n");
     lines.forEach((line) => {
+        // 1/2. http (no href) ➔ MAKE A *<a href='url'>url</a>* {{{
+        if(line.includes("http") && !line.includes("href"))
+        {
+            // URL IN A markdown table ● requires some syntax sanitation {{{
+            //.........................(111111)(222222)(33333333)
+            let matches = line.match(/^( *<td>)(http.*)(<\/td> *)$/);  // @see /SERVER/server5_content.js markdown table to html
+            if( matches ) {
+                let url = matches[2];
+                let   a = "<a href='"+ encodeURI(url) +"'>"+url+"</a>";
+                line    = matches[1]+ a + matches[3]+"\n";
+            }
+            //}}}
+            // well recognized URL {{{
+            else {
+                //┌────────────────────────────────────────────────────────────┐
+                //│ When there is a BLANK or EOL at the end of an http URL
+                //│ ●
+                //│ matches[000000000000000000000000000000000000000]
+                //│ matches[11][222222222222222222222][33333333][44]
+                //│ ..... head  SCHEME_____URL_______  ___bound  tail
+                //│ .....   ▼▼  ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  ▼▼▼▼▼▼▼▼  ▼▼
+                //│ ....(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)
+                //│ ●
+                //└────────────────────────────────────────────────────────────┘
+                matches = line.match(/^(.*["'`])(https?:\/\/[^>|<]+)(["'`].*)/)
+                ||        line.match(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)/)
+                ;
+                if( matches ) {
+                    let  head  = matches[1];
+                    let   url  = matches[2];
+                    let bound  = matches[3];
+                    let tail   = matches[4] || "";
 
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ REBASE FULLY QUALIFIED HREF
-//└────────────────────────────────────────────────────────────────────────────┘
-/* merging {{{
-
-CURRENT FOLDER PATH:       https://192.168.1.14:447/SERVER/scripts/js_linkify.js
-
-| location / file_path   | overlapping sub-folders parsing                       |
-| - -------- - --------- | ----------------------------------------------------- |
-| ● *CURRENT FOLDER PATH | https://192.168.1.14:447/SERVER/scripts               |
-| + *RELATIVE FILE PATH* |                          SERVER/scripts/js_linkify.js |
-| =                    ➔ | https://192.168.1.14:447/SERVER/scripts/js_linkify.js |
-
-}}}*/
-        // 1. RE-BASE FILES: ahk, md, css, js {{{
-        if(   line.match(/\/\w+\.ahk/)
-           || line.match(/\/\w+\.md/ )
-           || line.match(/\/\w+\.css/)
-           || line.match(/\/\w+\.js/ )
+                    line       = head
+                        +       "<a href='"+ encodeURI(url) +"'>"
+                        +        url
+                        +       "</a>"
+                        +        bound
+                        +        tail
+                        +       "\n";
+                }
+            }
+            //}}}
+        }
+        //}}}
+        // 2/2 - FILE WITH SUPPORTED EXTENSION FILES: ahk, css, js, md... {{{
+        else if(   line.match(/\/\w+\.ahk/)
+                || line.match(/\/\w+\.asp/)
+                || line.match(/\/\w+\.awk/)
+                || line.match(/\/\w+\.css/)
+                || line.match(/\/\w+\.js/ )
+                || line.match(/\/\w+\.lua/)
+                || line.match(/\/\w+\.md/ )
+                || line.match(/\/\w+\.tmc/)
+                || line.match(/\/\w+\.vim/)
+                || line.match(/\/\w+\.log/)
           ) {
-            let path     = line
-                .replace(/^.*\s(\S+\.(ahk|md|css|js)).*$/g, "$1")
-                .replace(                          /.*\"/ ,   "") // i.e. [require("./server0_log.js]
-                .replace(                       /<\/?td>/g,   "") // i.e. [require("./server0_log.js]
-            ;
-
-            // ROOTED FILE NAME {{{
+            /* [path] {{{*/
+            // PICK:
+            // - FROM AFTER A MANDATORY ( SPACE       )
+            // - ...................ALL [ NON-SPACES  ]
+            // - .................UP TO [ MIME-SUFFIX ]
+            let path
+                = line
+            //..................[111111111111111111111111111111111111]
+            //........................[22222222222222222222222222222]
+                . replace(/^.*\s(\S+\.(ahk|asp|awk|css|js|log|lua|md|tmc|vim)).*$/g, "$1")
+                . replace(                                      /.*[\"'`]/ ,   "")
+                . replace(                                       /<\/?td>/g,   "")
+                ;
+            /*}}}*/
+            //┌────────────────────────────────────────────────────────────────┐
+            //│ 1/2 [path] A ROOTED NAME
+            //└────────────────────────────────────────────────────────────────┘
+            //{{{
             let a_href;
             if( path.startsWith("/") )
             {
                 a_href = root + path;
             }
             //}}}
-            // ... OR PARSE SUB FOLDER {{{
+            //┌────────────────────────────────────────────────────────────────┐
+            //│ 2/2 [path] SUB FOLDERS TO PARSE
+            //└────────────────────────────────────────────────────────────────┘
+            //{{{
             else {
                 let parents  = path.split("/").filter(Boolean);  // remove falsy items
 
@@ -313,7 +385,7 @@ CURRENT FOLDER PATH:       https://192.168.1.14:447/SERVER/scripts/js_linkify.js
                         up_count  += 1;
                     }
                     //}}}
-                    // ...going deeper {{{
+                    // going deeper... {{{
                     else if(folders[f] != parents[p])
                     {
                         up_count  += 1;
@@ -321,6 +393,7 @@ CURRENT FOLDER PATH:       https://192.168.1.14:447/SERVER/scripts/js_linkify.js
                     }
                     //}}}
                 }
+
                 a_href      = root +"/";
 
                 for(     f  = 0; f < (folders.length - up_count); ++f)
@@ -329,39 +402,18 @@ CURRENT FOLDER PATH:       https://192.168.1.14:447/SERVER/scripts/js_linkify.js
                 a_href     += sub_fold + fileName;
             }
             //}}}
-
-            let a = "<a href='"+ a_href +"'>"+path+"</a>";
-            innerHTML += line.replace(path, a) +"\n";
-        }
-        //}}}
-        // 2. A HREF {{{
-        else if(line.includes("http") && !line.includes("href"))
-        {
-            // URL IN A markdown table {{{
-            //.........................(111111)(222222)(33333333)
-            let matches = line.match(/^( *<td>)(http.*)(<\/td> *)$/);  // @see /SERVER/server5_content.js markdown table to html
-            if( matches ) {
-                let url = matches[2];
-                let   a = "<a href='"+url+"'>"+url+"</a>";
-                innerHTML += matches[1]+ a + matches[3]+"\n";
-            }
+            //┌────────────────────────────────────────────────────────────────┐
+            //│ [a_href] ... encodeURI
+            //└────────────────────────────────────────────────────────────────┘
+            //{{{
+            let a = "<a href='"+ encodeURI(a_href) +"'>"+path+"</a>";
+            line  = line.replace(path, a) +"\n";
             //}}}
-            // or we have a blank or EOL at end of http url {{{
-            else {
-                innerHTML += line.replace(/(https?:\/\/[^>|<|\s]+)(>|<|\s|$)/, "<a href='$1'>$1</a>$2") +"\n";
-                //.......................................................................▲▲..▲▲....▲▲
-                ///////////////////////////(SCHEME_____URL_______)(BOUNDARY)....<aaaaaaaaaaaaaaaaa>BOUNDARY
-            }
         }
         //}}}
-        // 3. ALL OTHER LINES {{{
-        else {
-            innerHTML += line +"\n";
-        }
-        //}}}
+        innerHTML  += line +"\n";
     });
     pre.innerHTML = innerHTML;
-    //}}}
 };
 /*}}}*/
 
