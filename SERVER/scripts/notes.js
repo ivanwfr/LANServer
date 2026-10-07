@@ -2,6 +2,8 @@
 //│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261002:03h:58) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
+//│                                                                            │
+//│                                                                            │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -13,11 +15,11 @@
 //port { js_CNTRL   } from "./js_CNTRL.js"
 //port { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
+import { js_details } from "./js_details.js"
 //port { js_folds   } from "./js_folds.js"
 import { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
 //port { js_log     } from "./js_log.js"
-import { js_details } from "./js_details.js"
 import { js_notes   } from "./js_notes.js"
 import { js_store   } from "./js_store.js"
 //port { js_ticker  } from "./js_ticker.js"
@@ -429,7 +431,7 @@ if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
 /*_ note_2_onclick_import_push_note {{{*/
 let note_2_onclick_import_push_note = function(note_args)
 {
-    // ADD A NEW NOTE
+    // ADD A NEW NOTE ● RESTORING FROM ONE OF THE DELETED NOTE
     nArray.push( note_args );
 
     // WHEN RESTORING A DELETED NOTE, REMOVE IT FROM THE DELETED NOTES ARRAY
@@ -813,6 +815,13 @@ if(tag_this) console.log("🟣%c scroll_TR_intoView_handler: %c"+js_notes.ellips
 
     scroll_TR_intoView_timeout = null;
 /*}}}*/
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ Do not scroll when notes dialog is closed
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
+    if(!note_DETAILS || !note_DETAILS.open)
+        return;
+    //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ Get the nearest scrollable ancestor (vertical only, predictable DOM)   │
     //└────────────────────────────────────────────────────────────────────────┘
