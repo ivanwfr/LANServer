@@ -3,9 +3,11 @@
 ## Read your Windows hard-drive files from a tablet using a web browser on a personal Wi-Fi network.
 
 ```md
-- *WIP early stage readme_tag (260916:15h:21)*
+- *WIP early stage readme_tag (261007:21h:25)*
 - comments, ideas are welcome ➔ ivanwfr@gmail.com
 ```
+
+ [@see GitHub Pages](./pages/sample.txt.html)
 
 ### RUN FROM REPOSITORY FOLDER:
 * The `server_loop.sh` script will run in a Restart loop when it fails in a terminal.
