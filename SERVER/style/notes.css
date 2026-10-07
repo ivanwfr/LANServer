@@ -1,7 +1,17 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ ● SERVER/style/notes.css  ● $APROJECTS/LANServer  ● _TAG (261001:23h:42) │*/
+/*│ ● SERVER/style/notes.css  ● $APROJECTS/LANServer  ● _TAG (261007:16h:43) │*/
 /*│ ● SERVER/style/qtext.css                                                 │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
+/* BODY onload fadeIn {{{*/
+body              {      opacity: 0; animation: fadeIn 250ms ease 2000ms forwards; }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* ONLOAD BODY OPACITY TRANSITION {{{
+BODY { visibility: hidden; }
+BODY { transition: opacity 250ms ease-out; opacity: 0; }
+
+}}}*/
+/*}}}*/
 /* margin ● DETAILS SUMMARY TABLE {{{*/
 #note_DETAILS:open    { background: initial; }
 #note_DETAILS:open    { cursor    :    auto; }

@@ -59,6 +59,10 @@ if(tag_this) console.log("⚫ %c js_folds.onload:", lbB+lb1);
     setTimeout(details_update_click_listeners,  250);
     setTimeout(load_details_open_state       , 1500);
     setTimeout(load_containers_scrollTop     , 2000);
+/*{{{
+    setTimeout(() => document.body.style.visibility="visible", 2500);
+    setTimeout(() => document.body.style.opacity="1.0", 2500);
+}}}*/
 
     window.addEventListener("pagehide", save_containers_scrollTop_handler);
     window.addEventListener("pagehide", save_details_open_state_handler  );
