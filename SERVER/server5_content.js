@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261007:19h:06)
+//│ server5_content.js                                     _TAG (261007:21h:43)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -267,8 +267,8 @@ let details_folding_to_HTML = function(data)
         l =         l.  replace(             /[└┘┌┐│─├┼┤]+/g       , ""               );
 
     // FOLD-OPEN-CLOSE .. ANY LINE
-        l =         l.  replace(     /(.*)\{\{\{(.*)/, "<details><summary>$1 $2</summary><pre>" );
-        l =         l.  replace(     /(.*)\}\}\}(.*)/,                   "$1 $2</pre></details>");
+        l =         l.  replace(     /(.*)\{\{\{(.*)/, "<details>\n<summary>$1 $2</summary>\n<pre>" );
+        l =         l.  replace(     /(.*)\}\}\}(.*)/,                     "$1 $2</pre>\n</details>\n");
 
     // remove COMMENT EN
         l =         l.  replace(                        / *\/\* */, ""               ); // 👉  /*   👈

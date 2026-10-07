@@ -1,32 +1,36 @@
 
 <!-- saved from url=(0041)https://192.168.1.14:447/pages/sample.txt -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>sample.txt</title>
-<meta name="color-scheme" content="light only">
+<html>
+ <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>sample.txt</title>
+  <meta name="color-scheme" content="light only">
 
 <!--base   href='https://ivanwfr.github.io/LANServer' /-->
-<base   href='../SERVER/' /-->
+<base   href="../" />
 
-<script type="module"  src="scripts/js_log.js"></script>
+<script type="module"  src="./SERVER/scripts/js_log.js"></script>
 
-<script type="module"  src="scripts/js_folds.js"></script>
-<script type="module"  src="scripts/js_store.js"></script>
-<script type="module"  src="scripts/js_xpath.js"></script>
-<script type="module"  src="scripts/js_linkify.js"></script>
+<script type="module"  src="./SERVER/scripts/js_folds.js"></script>
+<script type="module"  src="./SERVER/scripts/js_store.js"></script>
+<script type="module"  src="./SERVER/scripts/js_xpath.js"></script>
+<script type="module"  src="./SERVER/scripts/js_linkify.js"></script>
 
-<script type="module"  src="scripts/js_MODEL.js"></script>
-<script type="module"  src="scripts/js_VIEW.js"></script>
-<script type="module"  src="scripts/js_CNTRL.js"></script>
+<script type="module"  src="./SERVER/scripts/js_MODEL.js"></script>
+<script type="module"  src="./SERVER/scripts/js_VIEW.js"></script>
+<script type="module"  src="./SERVER/scripts/js_CNTRL.js"></script>
 
-<script type="module"  src="scripts/js_ticker.js"></script>
-<script type="module"  src="scripts/js_input.js"></script>
-<script type="module"  src="scripts/notes.js"></script>
-<script type="module"  src="scripts/js_details.js"></script>
-<script type="module"  src="scripts/js_notes.js"></script>
+<script type="module"  src="./SERVER/scripts/js_ticker.js"></script>
+<script type="module"  src="./SERVER/scripts/js_input.js"></script>
+<script type="module"  src="./SERVER/scripts/notes.js"></script>
+<script type="module"  src="./SERVER/scripts/js_details.js"></script>
+<script type="module"  src="./SERVER/scripts/js_notes.js"></script>
 
-<link type="text/css" href="style/notes.css" rel="stylesheet">
-<link type="text/css" href="style/qtext.css" rel="stylesheet">
+<link type="text/css" href="./SERVER/style/notes.css" rel="stylesheet">
+<link type="text/css" href="./SERVER/style/qtext.css" rel="stylesheet">
 
-</head><body color_num="1" class=""><pre color_num="9">//┌────────────────────────────────────────────────────────────────────────────┐
+</head>
+<body color_num="1" class=""><pre color_num="9">
+//┌────────────────────────────────────────────────────────────────────────────┐
 //│ Absolutely. Here is the correct next step:
 //│
 //│ ● a complete refactoring contract for the 6 files you listed,
@@ -42,7 +46,9 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 1. Refactoring principles
 //└────────────────────────────────────────────────────────────────────────────┘
-<details class="close_on_margin_click bg1" open=""><summary style="color: rgb(0, 0, 0);">These are the rules that must hold:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary><pre>- js_CNTRL.js owns transitions and state
+<details class="close_on_margin_click bg1" open="">
+<summary style="color: rgb(0, 0, 0);">These are the rules that must hold:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<pre>- js_CNTRL.js owns transitions and state
 - js_MODEL.js owns model-facing operations
 - notes.js owns raw note data and persistence
 - js_notes.js owns rendering helpers only
@@ -59,7 +65,8 @@ Important invariants:
 - Any DOM mutation must be in js_VIEW.js or js_notes.js
 - Any server/storage mutation must be in notes.js or js_MODEL.js
 - js_details.js may remain only as a bootstrapping adapter until migration is complete
- </pre></details>
+ </pre>
+</details>
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 2. Final target architecture
 //└────────────────────────────────────────────────────────────────────────────┘

@@ -1,43 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
+<!--{{{-->
  <title>LANServer</title>
  <!--meta http-equiv="refresh" content="0;url=./pages/sample.txt.html"-->
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta   name="color-scheme"     content="light only">
+
+<base   href="./" />
+
+<script type="module"  src="./SERVER/scripts/js_log.js"></script>
+
+<script type="module"  src="./SERVER/scripts/js_folds.js"></script>
+<script type="module"  src="./SERVER/scripts/js_store.js"></script>
+<script type="module"  src="./SERVER/scripts/js_xpath.js"></script>
+<script type="module"  src="./SERVER/scripts/js_linkify.js"></script>
+
+<script type="module"  src="./SERVER/scripts/js_MODEL.js"></script>
+<script type="module"  src="./SERVER/scripts/js_VIEW.js"></script>
+<script type="module"  src="./SERVER/scripts/js_CNTRL.js"></script>
+
+<script type="module"  src="./SERVER/scripts/js_ticker.js"></script>
+<script type="module"  src="./SERVER/scripts/js_input.js"></script>
+<script type="module"  src="./SERVER/scripts/notes.js"></script>
+<script type="module"  src="./SERVER/scripts/js_details.js"></script>
+<script type="module"  src="./SERVER/scripts/js_notes.js"></script>
+
+<link type="text/css" href="./SERVER/style/notes.css" rel="stylesheet">
+<link type="text/css" href="./SERVER/style/qtext.css" rel="stylesheet">
+
+<!--}}}-->
 </head>
 <body>
-    <!--{{{ <p>Redirecting to <a href="./pages/sample.txt.html">sample</a>...</p> }}}-->
+ <!--{{{ <p>Redirecting to <a href="./pages/sample.txt.html">sample</a>...</p> }}}-->
+ <h1>Welcome to the LANServer wiki!</h1>
  <pre>
-
-    Welcome to the LANServer wiki!
-
-    Here is an example of what are this project goals:
-
-    To be as close as possible to the topic at hand,
-    which is about using a personal note taking app,
-    I am using a conversation with <em>*Copilot*</em>
-    about my current working process with this LANServer project:
-
-    I started the intergration of a Model-View-Controle<or-whatever> architecture.
-
-    The current step is all about how to separate data, presentation and user interaction.
-
-    This is the last reply I got from the AI.
-    It is formatted and scripted with the current running
-    version undergoing this refactoring.
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│   Here is an example of what are this project goals:                        </boxm>
+<boxm>│                                                                             </boxm>
+<boxm>│   To be as close as possible to the topic at hand,                          </boxm>
+<boxm>│   which is about using a personal note taking app,                          </boxm>
+<boxm>│   I am using a conversation with <em>*Copilot*</em>                         </boxm>
+<boxm>│   about my current working process with this LANServer project:             </boxm>
+<boxm>│                                                                             </boxm>
+<boxm>│   I started the intergration of a **Model-View-Controler/<whatever>**       </boxm>
+<boxm>│   architecture.                                                             </boxm>
+<boxm>│                                                                             </boxm>
+<boxm>│   The current step is all about how to separate data, presentation and      </boxm>
+<boxm>│   user interaction.                                                         </boxm>
+<boxm>│                                                                             </boxm>
+<boxm>│   This is the last reply I got from the AI.                                 </boxm>
+<boxm>│   It is formatted and scripted with the current running                     </boxm>
+<boxm>│   version undergoing this refactoring.                                      </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
 
     ● <a href="./pages/sample.txt.html">sample.txt.html</a>
 
-    What's working:
-    The GVim folds rendered as HTML Details>SUMMARY
-    - can be opend-closes
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│   What's working:                                                           </boxm>
+<boxm>│   The GVim folds rendered as HTML Details>SUMMARY                           </boxm>
+<boxm>│   - can be recursively opened and closed                                    </boxm>
+<boxm>│                                                                             </boxm>
+<boxm>│   What is kind-of-working on GitHub Pages:                                  </boxm>
+<boxm>│   - The client-server notes taking CRUD* process:                           </boxm>
+<boxm>│     in the last DETAILS, its buttons and Textarea.                          </boxm>
+<boxm>│     ...it rely only on saving notes on *localStorage*                       </boxm>
+<boxm>│     which is meant to be a storage fallback ressource.                      </boxm>
+<boxm>│                                                                             </boxm>
+<boxm>│   What's not working from GitHub Pages:                                     </boxm>
+<boxm>│   ...the LAN server storage notes-fetching and uploading                    </boxm>
+<boxm>│   which is the primary notes storage ressource.                             </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
 
-    What's not working from GitHub Pages:
-    - The client-server notes taking CRUD* process:
-      (the last DETAILS, its buttons and Textarea)
-
- *CRUD*
-     (Create, Read, Update, and Delete)
-     ● https://en.wikipedia.org/wiki/Create,_read,_update_and_delete
+<boxu>┌────────────────────────────────────────────────────────────────────────────┐</boxu>
+<boxm>│ *CRUD*                                                                      </boxm>
+<boxm>│   <b>C</b>reate,< b>R</b>ead, <b>U</b>pdate and <b>D</b>elete               </boxm>
+<boxm>│    That's what we use do with a pen, a notebook and an eraser.              </boxm>
+<boxm>│    ● https://en.wikipedia.org/wiki/Create,_read,_update_and_delete          </boxm>
+<boxd>└────────────────────────────────────────────────────────────────────────────┘</boxd>
 
  </pre>
 </body>
