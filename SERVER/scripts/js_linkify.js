@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261007:14h:14) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261008:23h:25) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -12,6 +12,7 @@
 //port { js_CNTRL   } from "./js_CNTRL.js"
 //port { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
+//port { js_boxing  } from "./js_boxing.js"
 import { js_folds   } from "./js_folds.js"
 import { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
@@ -116,10 +117,10 @@ let colorize_details = function()
 /*_ format_summary_comments {{{*/
 let format_summary_comments = function()
 {
-    for(let el of document.querySelectorAll("summary")) {
+    for(let summary of document.querySelectorAll("summary")) {
         // TRIM: / and * {{{
-        el.textContent
-            = el.textContent
+        summary.textContent
+            = summary.textContent
                 .replace(/\/\//, "")
                 .replace(/\/\*/, "")
                 .replace(/\*\//, "")
@@ -127,9 +128,8 @@ let format_summary_comments = function()
 
         //}}}
         // BUTTONS: cb_copy & fold_close_open_toggle {{{
-//      if( el.innerHTML.trim() ) // FOLD_OPEN comments with no text may have DETAILS children
-            el.innerHTML
-                = el.innerHTML
+//      if( summary.innerHTML.trim() ) // FOLD_OPEN comments with no text may have DETAILS children
+            summary.innerHTML += ""
                 + "<em "
                 + "   style = 'float:right; margin-left: 2em;'"
                 + " onclick = 'js_linkify.fold_close_open_toggle(event, 2);'"

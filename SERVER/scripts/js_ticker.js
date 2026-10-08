@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_ticker.js    ● $APROJECTS/LANServer/SERVER       ● _TAG (260929:21h:57) │
+//│ js_ticker.js    ● $APROJECTS/LANServer/SERVER       ● _TAG (261008:22h:05) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -9,6 +9,7 @@
 //port { js_CNTRL   } from "./js_CNTRL.js"
 //port { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
+//port { js_boxing  } from "./js_boxing.js"
 //port { js_folds   } from "./js_folds.js"
 //port { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
@@ -207,7 +208,12 @@ if(is_logging()) console.log(b_4 +`loop @ ${new Date().toISOString()} [${interva
         try {
             handler_fnc();
         } catch(ex) {
-            console.warn(b_2 +" handler_fnc "+handler_fnc.name+" Exception:\n"+ ex);
+            if(handler_fnc) {
+                console.warn(b_2 +" handler_fnc "+handler_fnc.name+" Exception:\n"+ ex);
+                stop();
+                handler_fnc = null;
+                console.warn(b_2 +" handler_fnc nullified");
+            }
         }
 
         // next tick re-arm

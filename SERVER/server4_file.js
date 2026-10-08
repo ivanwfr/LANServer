@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server4_file.js                                        _TAG (261006:19h:10)
+//│ server4_file.js                                        _TAG (261008:01h:37)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -125,12 +125,12 @@ let caller = "fs_read_file_or_folder";
                 fs.readFile(  file_path
                             , function(read_err, data) {
                                 server5_content
-                                .details_folding( request
-                                                       , file_path
-                                                       , uri.query
-                                                       , response
-                                                       , read_err
-                                                       , data);
+                                .send_file_content( request
+                                                  , file_path
+                                                  , uri.query
+                                                  , response
+                                                  , read_err
+                                                  , data);
                             });
             }
             /*}}}*/

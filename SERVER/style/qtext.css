@@ -1,5 +1,5 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261005:15h:59) │*/
+/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261008:16h:26) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 /* BOX {{{*/
 /* BOX ● padding {{{*/
@@ -130,6 +130,7 @@ BODY                        { background-color:  #111; }
 DETAILS:not([open])>SUMMARY { background-color: #22B; }
 DETAILS:not([open])>SUMMARY { background-color: #22B; }  /* overridden by js_linkify */
 DETAILS:open                { background-color: #F006;    }
+DETAILS:open                { white-space-collapse: collapse;    }
 /*
 
 DETAILS:open       >SUMMARY { background-color: #333 !important; }
@@ -166,68 +167,70 @@ DETAILS:open>SUMMARY { color: white !important; }
 /*}}}*/
 /* BOX              ● border {{{*/
 
-BOXU,
-BOXM,
-BOXD { border-style: solid; }
+BOXU, BOXM, BOXD { border-style: solid; }
 
-BOXU { border-width: 3px 0   0   16px; }
-BOXM { border-width: 0   0   0   16px; }
-BOXD { border-width: 0   0   3px 16px; }
+            BOXU { border-width: 3px 0   0   16px; }
+            BOXM { border-width: 0   0   0   16px; }
+            BOXD { border-width: 0   0   3px 16px; }
 
 
 BOXU, BOXM, BOXD { border-collapse : collapse; }
 
-BOXU             { border-radius   : 0.5em 0.5em 0     0    ; }
-BOXD             { border-radius   : 0     0     0.5em 0.5em; }
 
 /*}}}*/
 /* DETAILS          ● border {{{*/
-DETAILS.bg0:open            { box-shadow        : -3px 0px 0px 1px #10101080; }
-DETAILS.bg1:open            { box-shadow        : -3px 0px 0px 1px #964B0080; }
-DETAILS.bg2:open            { box-shadow        : -3px 0px 0px 1px #FF000080; }
-DETAILS.bg3:open            { box-shadow        : -3px 0px 0px 1px #FFA50080; }
-DETAILS.bg4:open            { box-shadow        : -3px 0px 0px 1px #FFFF0080; }
-DETAILS.bg5:open            { box-shadow        : -3px 0px 0px 1px #9ACD3280; }
-DETAILS.bg6:open            { box-shadow        : -3px 0px 0px 1px #6495ED80; }
-DETAILS.bg7:open            { box-shadow        : -3px 0px 0px 1px #EE82EE80; }
-DETAILS.bg8:open            { box-shadow        : -3px 0px 0px 1px #A0A0A080; }
-DETAILS.bg9:open            { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
-DETAILS:open                { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
 
-DETAILS                     { border-radius     : 0em 1em 1em 0em; }
-DETAILS:not(open)  >SUMMARY { border-radius     : 0.2em 1em 1em 0.2em; }
-DETAILS:open                { border-radius     : 0.5em;             }
-DETAILS:open       >SUMMARY { border-radius     : 0.5em 0.5em 0em 0em; }
-DETAILS:open        PRE     { border-radius     : 0em 0em 0.5em 0.5em; }
+DETAILS.bg0:open { box-shadow        : -3px 0px 0px 1px #10101080; }
+DETAILS.bg1:open { box-shadow        : -3px 0px 0px 1px #964B0080; }
+DETAILS.bg2:open { box-shadow        : -3px 0px 0px 1px #FF000080; }
+DETAILS.bg3:open { box-shadow        : -3px 0px 0px 1px #FFA50080; }
+DETAILS.bg4:open { box-shadow        : -3px 0px 0px 1px #FFFF0080; }
+DETAILS.bg5:open { box-shadow        : -3px 0px 0px 1px #9ACD3280; }
+DETAILS.bg6:open { box-shadow        : -3px 0px 0px 1px #6495ED80; }
+DETAILS.bg7:open { box-shadow        : -3px 0px 0px 1px #EE82EE80; }
+DETAILS.bg8:open { box-shadow        : -3px 0px 0px 1px #A0A0A080; }
+DETAILS.bg9:open { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
+DETAILS:open     { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
 
-DETAILS>SUMMARY             { border-left       : 0.5em solid #0004; }
-DETAILS:open       >SUMMARY { border-left       : 0;               }
+      DETAILS:open       >SUMMARY { border-left       : 0;                       }  /* opened left-shift */
+
+ BOXU                             { border-radius     : 0.5em 0.5em 0     0    ; }
+ BOXD                             { border-radius     : 0     0     0.5em 0.0em; }
+ BOXD+DETAILS:not(open)           { border-radius     : 0     0     0.5em 0.5em; }  /* top  corners squared */
+ BOXD+DETAILS:not(open)  >SUMMARY { border-radius     : 0     0     0.5em 0.5em; }  /* top  corners squared */
+
+      DETAILS:not(open)           { border-radius     : 0     0.5em 0.5em 0    ; }  /* left corners squared */
+      DETAILS:not(open)  >SUMMARY { border-radius     : 0     0.5em 0.5em 0    ; }
+
+      DETAILS:open                { border-radius     : 0.5em 0.5em 0.5em 0.5em; }
+      DETAILS:open       >SUMMARY { border-radius     : 0.5em 0.5em 0.0em 0.0em; }
+      DETAILS:open        PRE     { border-radius     : 0.0em 0.0em 0.5em 0.0em; }
+
 /*}}}*/
 /*}}}*/
 /* margin   ● padding {{{*/
 
 BODY      {    margin-bottom:  50%; }
 
-.markdown_table          TH {                            padding: 0.5em;      }
-.markdown_table          TD {                            padding: 0.5em;      }
+.markdown_table          TH {                                   padding: 0.5em;      }
+.markdown_table          TD {                                   padding: 0.5em;      }
 
-                       BOXU { margin: 0.5em 1em   0   0;                      }
-                       BOXM { margin: 0     1em   0   0;                      }
-                       BOXD { margin: 0     1em 0.5em 0;                      }
+                       BOXU { margin: 0.5em 1.0em   0     0  ;                       }
+                       BOXM { margin: 0     1.0em   0     0  ;                       }
+                       BOXD { margin: 0     1.0em   0.0em 0  ;                       }
 
-DETAILS:open                { margin: 2.0em 1.0em;       padding-left: 2.0em; }
-DETAILS:not(open)           { margin: 0.2em 0.5em;       padding-left: 0    ; }
-
-                        PRE {                            padding:      0.5em; }
-DETAILS:not(open)  >    PRE { margin-left:    0em;       padding-left: 0.5em; }
-DETAILS:open       >    PRE { margin-top :    2px;                            }
-                                            
-DETAILS:open       >SUMMARY { margin-left:   -2em;       padding-left: 0.5em; }
-DETAILS:not(open)  >SUMMARY { margin-left:    0em;       padding-left: 0.5em; }
-                                            
-                    SUMMARY {                            padding:      0.5em; }
-                                            
-.cb_copy                    { margin-left:    2em; }
+DETAILS:open                { margin: 1.0em       1.0em      ;  padding-left: 2.0em; }
+DETAILS:not(open)           { margin: 0     0     0.5em   1px;  padding-left: 0    ; }
+                        PRE {                                   padding:      0.5em; }
+DETAILS:not(open)  >    PRE { margin-left:    0em            ;  padding-left: 0.5em; }
+DETAILS:open       >    PRE { margin-top :    0              ;                       }
+                                                                
+DETAILS:open       >SUMMARY { margin-left:   -2em            ;  padding-left: 0.5em; }
+DETAILS:not(open)  >SUMMARY { margin-left:    0em            ;  padding-left: 0.5em; }
+                                                                
+                    SUMMARY {                                   padding:      0.5em; }
+                                                                          
+.cb_copy                    { margin-left:    2em            ; }
 
 /*}}}*/
 /* font {{{*/
@@ -238,8 +241,8 @@ DETAILS:open       >SUMMARY { font-weight: 900 !important; } /*//FIXME*/
 .cb_copy::after             { font-weight     : 900; }
 /*}}}*/
 /* transition {{{*/
-DETAILS                     { transition  :           margin 300ms ease-out; }
-SUMMARY                     { transition  : background-color 300ms ease-in ; }
+DETAILS                     { transition  :           margin 200ms ease-out; }
+SUMMARY                     { transition  : background-color 200ms ease-in ; }
 /* filter {{{
 .unfold_cooldown DETAILS:open >SUMMARY {
     filter: brightness(0.5);
@@ -270,6 +273,7 @@ SUMMARY                     { transition  : background-color 300ms ease-in ; }
 /* width    ● white-space {{{*/
            DETAILS { width: fit-content;                }
   BOXU, BOXM, BOXD { width: 98%; min-width: 50%;        }
+
              .wrap { width: 50%; white-space: pre-line; } /* @see js_linkify.toggle_wrap */
 .markdown_table TD {             white-space: pre;      }
 

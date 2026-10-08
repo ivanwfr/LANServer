@@ -14,6 +14,7 @@
 //port { js_CNTRL   } from "./js_CNTRL.js"
 //port { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
+//port { js_boxing  } from "./js_boxing.js"
 //port { js_folds   } from "./js_folds.js"
 //port { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
