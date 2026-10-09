@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server4_file.js                                        _TAG (261008:01h:37)
+//│ server4_file.js                                        _TAG (261009:18h:06)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -12,6 +12,7 @@ let server4_file = (function() {
 //└────────────────────────────────────────────────────────────────────────────┘
 //● Node.js Modules     ● fs path os.networkInterfaces {{{
 let   fs                        = require("fs"   );
+//nst fs                        = require("fs/promises");
 let   path                      = require("path" );
 let { networkInterfaces }       = require("os"   ); /* eslint-disable-line no-unused-vars */
 //}}}
@@ -196,7 +197,7 @@ const STYLE_DIR = `
     ${ CUSTOM_HTML_TAG_FOLDER}::before { content: '📂'; color: #FF0; }
     ${ CUSTOM_HTML_TAG_JS    }::before { content: '💻'; color: #FF0; }
     ${ CUSTOM_HTML_TAG_IMG   }::before { content: '📷'; color: #0AF; }
-    ${ CUSTOM_HTML_TAG_FILE  }::before { content:  '…'; color: #F00; }
+    ${ CUSTOM_HTML_TAG_FILE  }::before { content: '📄'; color: #F00; }
 
 /*}}}*/
 /* style body input div_copy li {{{*/
@@ -337,10 +338,15 @@ let caller = "fs_readDir";
     //└────────────────────────────────────────────────────────────────────────┘
     //{{{
     fs.readdir(file_path, (read_err, files) => {
+
+        // INSERT PARENT FOLDER
         files.unshift("..");
+
+        // DIR ENTRIES
         let dir_items
-            = files.map((name) => ""+get_dirEntry_link(reqPath, name)+"\n")
+            = files.map((dir_item_name) => ""+get_dirEntry_link(reqPath, file_path, dir_item_name)+"\n")
             . join("");
+
         server0_log.writeHead(response, caller, 200, { "Content-Type": "text/html" });
 
         response.end( STYLE_DIR.replace("{file_path}", file_path)
@@ -357,33 +363,55 @@ let caller = "fs_readDir";
 //│ private
 //└────────────────────────────────────────────────────────────────────────────┘
 /*_ get_dirEntry_link {{{*/
-let get_dirEntry_link = function(reqPath, name)
+let get_dirEntry_link = function(reqPath, file_path, dir_item_name)
 {
+    let  tag = get_dirEntry_tag(   file_path, dir_item_name);
+
+    let href = path.join(encodeURI( reqPath ), encodeURI(dir_item_name));
+  //let href2= encodeURI( path.join(reqPath, dir_item_name) );
+
+    if( dir_item_name == "..")
+        dir_item_name  = "[parent directory]";
+
     return "<li>"
-        +   "<a href="+ path.join(encodeURI(reqPath), encodeURI(name) ) +">"
-        +   "<"+        get_dirEntry_tag(  name ) +"/>"+ name
-        +   "</a>"
+        +   "<a href="+ href +"><"+tag+"/>"+dir_item_name +"</a>"
         +  "</li>";
 };
 /*}}}*/
 /*_ get_dirEntry_tag {{{*/
-let get_dirEntry_tag = function(name)
+let get_dirEntry_tag = function(file_path, dir_item_name)
 {
-    let dirEntry_tag;
+    // DIRECTORY
+    let              dir_item_path = path.join(file_path, dir_item_name);
+    if( isDirectory( dir_item_path ) )
+        return CUSTOM_HTML_TAG_FOLDER;
 
-    let matches = name.match(/\.(\w+)$/);
+    // FILE
+    let dirEntry_tag;
+    let matches = dir_item_name.match(/\.(\w+)$/);
     let     ext = matches ? matches[1] : "";
     switch( ext ) {
     case   "jpg":
     case   "gif":
-    case   "png": dirEntry_tag              = CUSTOM_HTML_TAG_IMG ; break;
-    case   "js" : dirEntry_tag              = CUSTOM_HTML_TAG_JS  ; break;
+    case   "png": dirEntry_tag                     = CUSTOM_HTML_TAG_IMG ; break;
+    case   "js" : dirEntry_tag                     = CUSTOM_HTML_TAG_JS  ; break;
     default     : dirEntry_tag
-                = name.match(/^[A-Z_]+$/)   ? CUSTOM_HTML_TAG_FOLDER    // all caps //FIXME
-                                            : CUSTOM_HTML_TAG_FILE;
+                = dir_item_name.match(/^[A-Z_]+$/) ? CUSTOM_HTML_TAG_FOLDER    // all caps //FIXME
+                                                   : CUSTOM_HTML_TAG_FILE;
     }
-
     return dirEntry_tag;
+};
+/*}}}*/
+/*_ isDirectory {{{*/
+let isDirectory = function(file_path)
+{
+    try {
+        return fs.statSync(file_path).isDirectory();
+    }
+    catch (err) /* eslint-disable-line no-unused-vars */
+    {
+        return false;
+    }
 };
 /*}}}*/
 
