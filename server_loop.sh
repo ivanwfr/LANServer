@@ -9,7 +9,8 @@ RESTART_DELAY=1
 
 while true; do
   tput clear
-  node --trace-deprecation ./SERVER/server.js &
+#......--inspect[=[host:]port] => 127.0.0.1:9229
+  node --inspect --trace-deprecation ./SERVER/server.js &
   wait
   echo "RELOADING..."
   sleep $RESTART_DELAY
