@@ -1,8 +1,8 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261008:18h:32)
+//│ server5_content.js                                     _TAG (261009:23h:53)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
-let js_boxing        = require("./scripts/js_boxing.js");
+//t js_boxing        = require("./scripts/js_boxing.js");
 
 /*}}}*/
 let server5_content = (function() {
@@ -75,8 +75,8 @@ let onload = function(args)
 //└────────────────────────────────────────────────────────────────────────────┘
 const FOLD_OPEN = "{{{"; /* eslint-disable-line no-unused-vars */
 const FOLD_CLOSE= "}}}"; /* eslint-disable-line no-unused-vars */
-/*    SCRIPT_QTEXT & STYLE_QTEXT {{{*/
-const SCRIPT_QTEXT = ""
+/*    PAGE_HEAD & PAGE_STYLE {{{*/
+const PAGE_HEAD = ""
     + "<meta   name='color-scheme' content='light only'>\n"
     + "\n"
     + "<!--base   href='https://ivanwfr.github.io/LANServer' /-->\n"
@@ -97,14 +97,12 @@ const SCRIPT_QTEXT = ""
     + "<script type='module'  src='/scripts/js_input.js'   ></script>\n"
     + "<script type='module'  src='/scripts/notes.js'      ></script>\n"
     + "<script type='module'  src='/scripts/js_details.js' ></script>\n"
-    + "<script type='module'  src='/scripts/js_notes.js'   ></script>\n"
-    + "\n"
+    + "<script type='module'  src='/scripts/js_notes.js'   ></script>"
     ;
 
-const STYLE_QTEXT = ""
+const PAGE_STYLE = ""
     + "<link type='text/css' href='/style/notes.css' rel='stylesheet'>\n"
-    + "<link type='text/css' href='/style/qtext.css' rel='stylesheet'>\n"
-    + "\n"
+    + "<link type='text/css' href='/style/qtext.css' rel='stylesheet'>"
     ;
 /*}}}*/
 /*_ send_file_content {{{*/
@@ -159,7 +157,7 @@ log_R(  err );
 
         let response_200_header
             = server3_header.get_response_200_header(file_path,query);
-if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type"]+"]");//FIXME
+if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type"]+"]");
 
         if( response.content_disposition )
             response_200_header["Content-Disposition"]
@@ -182,7 +180,7 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
               && !file_path.match(/\.htm/)
               ) {
 
-              //data = js_boxing.format_data( String(data) );
+              //data = js_boxing.format_data( String(data) );   // is now client-side
             }
             // 2/ PREPEND LOG HEADER
             else if( is_logging()) {
@@ -193,13 +191,21 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
         /* 1/2 SEND PRETTY PRINT [data] {{{*/
         if( server0_log.html_format_requested(file_path,query) )
         {
-            let header
-                = "<title>"+file_path.replace(/.*[\\\/]/,"")+"</title>\n"
-                +  SCRIPT_QTEXT;
+            let title = file_path.replace(/.*[\\\/]/,"");
+            let html  = `<html lang='en'>
+<head>
+<title>${ title      }</title>
+${        PAGE_HEAD  }
+${        PAGE_STYLE }
+</head>
+<body>
+<pre>${   escapeHTML(data) }</pre>
+</body>
+</html>
+`;
 
-            response.write( header                   );
-            response.write( STYLE_QTEXT              );
-            response.write( "<pre>"+ data +"</pre>\n");
+//console.log("html=["+html+"]");
+            response.write( html );
         }
         /*}}}*/
         /* 2/2 SEND [data] .. replacing (127.0.0.1|\blocalhost\b) with [net_address] {{{*/
@@ -222,6 +228,19 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
         response.end();
      }
 /*}}}*/
+};
+/*}}}*/
+/*● escapeHTML ● Sanitize text for HTML {{{*/
+let escapeHTML = function(text)
+{
+    if(!text) return "";
+
+    return String(text)
+        .replace(/&/gm, "&amp;" )
+        .replace(/</gm, "&lt;"  )
+        .replace(/>/gm, "&gt;"  )
+        .replace(/"/gm, "&quot;")
+        .replace(/'/gm, "&#039;");
 };
 /*}}}*/
 

@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261008:21h:52)
+//│ js_boxing.js                                           _TAG (261010:00h:18)
 /* Convert text content and  Markdown table into HTML {{{
 Handles:
 - Header row and separator row (|---|---|)
@@ -15,7 +15,8 @@ const DATA_ATTR_JS_BOXING = "data-js_boxing";
 
 let box_in = function(e) /* eslint-disable-line no-unused-vars */
 {
-console.log("js_boxing.box_in:");
+//console.log("js_boxing.box_in:");
+//console.log("✔ document.readyState=["+document.readyState+"]");
 
     // ALREADY  FORMATTED {{{
     let value = document.body.getAttribute( DATA_ATTR_JS_BOXING );
@@ -25,8 +26,13 @@ console.log("js_boxing.box_in:");
         return;
     }
     //}}}
+//console.log("document.body.innerHTML=["+document.body.innerHTML+"]");
+//nsole.log("document.body.textContent=["+document.body.textContent+"]");
+//nsole.log("document.body.innerText=["+document.body.innerText+"]");
 
     document.body.innerHTML = format_data( document.body.textContent );
+  //document.body.innerHTML = format_data( document.body.innerText   );
+//console.log("document.body.innerHTML=["+document.body.innerHTML+"]");
 
     document.body.setAttribute(DATA_ATTR_JS_BOXING, "client-side");
 };
@@ -45,23 +51,25 @@ console.log("js_boxing.box_out:");
     document.body.style.whiteSpace = "pre";
 };
 /*}}}*/
+
 /*_ format_data {{{*/
 // const {{{
 /* eslint-disable no-unused-vars */
 let HTML_NBSP = "&nbsp;";
 let HEX_21B2  = "\u21B2";
-let HEX_2BCO  = "\u2BC0";
+let HEX_2BCO  = "\u2BC0"; // ⯀
+let HEX_25A0  = "\u25A0"; // ■
 /* eslint-enable  no-unused-vars */
 //}}}
 let format_data = function(data_in)
 {
-//console.log("js_boxing.format_data");
     // LINE FILTER {{{
     let   data_out = "";
     const    lines = data_in.split("\n");
     for(let i = 0; i < lines.length; ++i)
     {
         let l = lines[i];
+
         l =         l.  replace(                               /</g, "&lt;"           ); // html entities
         l =         l.  replace(                               />/g, "&gt;"           ); // html entities
         //┌────────────────────────────────────────────────────────────────────┐
@@ -78,6 +86,7 @@ let format_data = function(data_in)
         //┌────────────────────────────────────────────────────────────────────┐
         //│ BOX DONE
         //└────────────────────────────────────────────────────────────────────┘
+        l =         l.  replace(   /\{\{\{(.*)\}\}\}/, "{{ {$1} }}"                   ); // FOLD GOTCHA (open and close on the same line)
         l =         l.  replace(     /(.*)\{\{\{(.*)/, "<details>\n<summary>$1 $2</summary>\n<pre>" ); // FOLD-OPEN-CLOSE
         l =         l.  replace(     /(.*)\}\}\}(.*)/,                     "$1 $2</pre>\n</details>");
 // FOLD_CLOSE {{{
@@ -92,9 +101,9 @@ let format_data = function(data_in)
         //┌────────────────────────────────────────────────────────────────────┐
         //│ SYMBOLS
         //└────────────────────────────────────────────────────────────────────┘
-        l =         l.  replace(                             /\\n/g,      HEX_21B2    ); // [inline LF] TO  [↲] .. (i.e. \n\n)
-//      l =         l.  replace(                           />\/\//g, ">"+ HEX_2BCO    ); //       [>//] TO [>⯀]
-//      l =         l.  replace(                      /\> *\/\/ */g, ">"+ HEX_2BCO    ); //       [>//] TO [>⯀]
+        l =         l.  replace(                             /\\n/g,      HEX_21B2    ); // inline [LF]  TO [↲] .. (i.e. \n\n)
+        l =         l.  replace(                      /\> *\/\/ */g, ">"              ); //       [>// ] TO []
+        l =         l.  replace(                        / *\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
         //┌────────────────────────────────────────────────────────────────────┐
         //│ OPTIONAL
         //└────────────────────────────────────────────────────────────────────┘
@@ -119,17 +128,19 @@ let format_data = function(data_in)
 //}}}
         }
         //}}}
-        data_out += l;
+        data_out +=             l  ;
     }
     //}}}
     // MARKDOWN TABLES TO HTML {{{
     data_out = convert( data_out );
 
     //}}}
-           data_out = data_out.replace(/>\s*\/\/\s */gm, ">"+ HEX_2BCO); // [>//] TO [>⯀]
-    return data_out;
+//  data_out = data_out.replace(/>\s*\/\/\s */gm, "> "+ HEX_25A0); // [>//] TO [> ■]
+
+    return "<pre>"+ data_out +"</pre>";
 };
 /*}}}*/
+
 /*● convert {{{*/
 const TABLE_DELIM_1 = "- | -";
 const TABLE_DELIM_2 =  "-|-";
@@ -232,6 +243,7 @@ let parseRow = function(line)
 
 };
 /*}}}*/
+
     // return {{{
     return { name: "js_boxing"
         ,    format_data
@@ -240,8 +252,8 @@ let parseRow = function(line)
     };
     //}}}
 })();
-//    module.exports {{{
-try { module.exports = js_boxing; } catch(ex) { console.log(ex.message); console.trace(); }
-//}}}
-globalThis.js_boxing = js_boxing; //DEBUG ONLY
-if(typeof document  != "undefined") js_boxing.box_in(); // CLIENT-SIDE ONLY
+try { module.exports = js_boxing; } catch(ex) { /*console.log(ex.message);*/ /*console.trace();*/ } /* eslint-disable-line no-unused-vars */
+  globalThis.js_boxing = js_boxing; //DEBUG ONLY
+  if(typeof document  != "undefined") js_boxing.box_in(); // CLIENT-SIDE ONLY//FIXME
+//if(typeof document  != "undefined") document.addEventListener("DOMContentLoaded", js_boxing.box_in);
+//console.log("%c❌❌❌ js_boxing.box_in() NOT CALLED", "font-size: 200%");
