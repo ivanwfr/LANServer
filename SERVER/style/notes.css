@@ -160,7 +160,7 @@ min-height          : 8em;
     padding         : 1rem;
 }
 
-#note_DETAILS.empty>SUMMARY>EM {
+#note_DETAILS.empty>SUMMARY>.em_copy {
     opacity         : 0.2 !important;
 /*{{{
     rotate          : -45deg;
