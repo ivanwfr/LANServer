@@ -405,6 +405,9 @@ let get_dirEntry_tag = function(file_path, dir_item_name)
 /*_ isDirectory {{{*/
 let isDirectory = function(file_path)
 {
+    //┌────────────────────────────────────────────────────┐
+    //│ TODO: @see also stats.isSymbolicLink and stats.size
+    //└────────────────────────────────────────────────────┘
     try {
         return fs.statSync(file_path).isDirectory();
     }
