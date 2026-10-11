@@ -1,5 +1,5 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ ● SERVER/style/notes.css  ● $APROJECTS/LANServer  ● _TAG (261007:16h:43) │*/
+/*│ ● SERVER/style/notes.css  ● $APROJECTS/LANServer  ● _TAG (261012:01h:33) │*/
 /*│ ● SERVER/style/qtext.css                                                 │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 /* BODY onload fadeIn {{{*/
@@ -13,6 +13,8 @@ BODY { transition: opacity 250ms ease-out; opacity: 0; }
 }}}*/
 /*}}}*/
 /* margin ● DETAILS SUMMARY TABLE {{{*/
+#note_DETAILS         { white-space-collapse: normal;   }
+
 #note_DETAILS:open    { background: initial; }
 #note_DETAILS:open    { cursor    :    auto; }
 #note_DETAILS:open    { margin    : initial; }
