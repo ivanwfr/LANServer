@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261005:00h:31)
+//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261010:15h:55)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵 View Helper: Renders, layouts, and scrolls notes in the DOM
 //│    State Management ➔ js_CNTRL (via js_MODEL, js_VIEW)
@@ -269,8 +269,8 @@ let layout_get_TD_delete   = function()
 /*_ layout_get_note_class {{{*/
 let layout_get_note_class = function(note)
 {
-    return "note_row "
-        +   note.checked
+    return "note_row"
+        +  (note.checked                        ? " checked"  :"")+"'"
         +  (note.text.includes( AUTO_SAVE_TAG ) ? " auto_save":"")+"'";
 };
 /*}}}*/
