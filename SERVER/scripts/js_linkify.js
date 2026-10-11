@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261008:23h:25) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261010:16h:59) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -49,7 +49,7 @@ let onload  = function()
 //, "#fffF"
 //];
 //}}}
-/* FG 000 {{{*/
+/* FG 000 @see SERVER/style/qtext.css {{{*/
 const FG = [
   "#BBBF"
 , "#000F"
@@ -110,11 +110,27 @@ let colorize_details = function()
         el.classList.add(                     "bg"+color_num);
 
         // STYLE
-        el.firstElementChild.style.          color = FG[color_num]; //FG[depth+1];
+//      el.firstElementChild.style.          color = FG[color_num]; //FG[depth+1];
     }
 };
 /*}}}*/
 /*_ format_summary_comments {{{*/
+const STYLE_EM_WRAP = `
+ border           : 0px solid yellow;
+ position         : absolute;
+ color            : white;
+ text-shadow      : 1px 1px 1px black;
+ padding          : 0.5em;
+ display          : inline-block;
+ font-weight      : 900;
+ font-size        : 16px;
+ border-radius    : 1em;
+ border           : 1px solid #F0FA;
+ background-color :           #202F;
+ line-height      : 0.8em;
+ transition       : all 200ms ease-out;
+ margin-top       : -0.5em;
+`;
 let format_summary_comments = function()
 {
     for(let summary of document.querySelectorAll("summary")) {
@@ -127,40 +143,26 @@ let format_summary_comments = function()
               ;
 
         //}}}
-        // BUTTONS: cb_copy & fold_close_open_toggle {{{
+        // BUTTONS: em_copy & fold_close_open_toggle {{{
+        // @see SERVER/style/notes.css
 //      if( summary.innerHTML.trim() ) // FOLD_OPEN comments with no text may have DETAILS children
             summary.innerHTML += ""
-                + "<em "
-                + "   style = 'float:right; margin-left: 2em;'"
-                + " onclick = 'js_linkify.fold_close_open_toggle(event, 2);'"
-                + ">▶◀</em>"
-                + "&nbsp;"
+                + "<em onclick='js_linkify.fold_close_open_toggle(event, 2);'"
+                + "      class='em_fold'"
+                + "      style='float:right; margin-left: 2em;'"
+                + ">▶◀</em>&nbsp;"
 
-                + "<em class='cb_copy'"
-                + "   style = 'float:right; margin-left: 2em;'"
-                + " onclick = 'js_linkify.copy_container_text(event); return false;'" // i.e. cancelBubble
-                + ">⬜</em>"
-                + "&nbsp;"
+                + "<em onclick='js_linkify.copy_container_text(event); return false;'" // i.e. cancelBubble
+                + "      title='● copy to clipboard\n&\n● copy to note-input below'"
+                + "      class='em_copy'"
+                + "      style='float:right; margin-left: 2em;'"
+                + ">⬜</em>&nbsp;"
 
-                + "<em "
-                + "   style = 'border       : 0px solid yellow;"
-                + "            position     : absolute;"
-                + "            color        : white;"
-                + "            text-shadow  : 1px 1px 1px black;"
-                + "            padding      : 0.5em;"
-                + "            display      : inline-block;"
-                + "            font-weight  : 900;"
-                + "            font-size    : 16px;"
-                + "            border-radius: 1em;"
-                + "            border       : 1px solid #F0FA;"
-                + "         background-color:           #202F;"
-                + "            line-height  : 0.8em;"
-                + "            transition   : all 200ms ease-out;"
-                + "            margin-top: -0.5em;"
-                + "            '"
-                + " onclick = 'js_linkify.toggle_wrap(event); return false;'"
-                + ">↷</em>"
-                + "&nbsp;"
+                + "<em onclick='js_linkify.toggle_wrap(event); return false;'"
+                + "      title='▶◀\nnarrow\ncols-\wrap'"
+                + "    class='em_wrap'"
+                + "    style='"+ STYLE_EM_WRAP +"'"
+                + ">↷</em>&nbsp;"
             ;
         //}}}
     }

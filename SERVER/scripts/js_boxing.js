@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261010:00h:18)
+//│ js_boxing.js                                           _TAG (261011:22h:18)
 /* Convert text content and  Markdown table into HTML {{{
 Handles:
 - Header row and separator row (|---|---|)
@@ -40,7 +40,7 @@ let box_in = function(e) /* eslint-disable-line no-unused-vars */
 /*_ box_out {{{*/
 let box_out = function(e) /* eslint-disable-line no-unused-vars */
 {
-console.log("js_boxing.box_out:");
+//console.log("js_boxing.box_out:");
 
     document.body.innerHTML = ""
       //+ "<button onclick='js_boxing.box_in()'>js_boxing.box_in()</button>\n"
@@ -55,20 +55,21 @@ console.log("js_boxing.box_out:");
 /*_ format_data {{{*/
 // const {{{
 /* eslint-disable no-unused-vars */
-let HTML_NBSP = "&nbsp;";
-let HEX_21B2  = "\u21B2";
-let HEX_2BCO  = "\u2BC0"; // ⯀
-let HEX_25A0  = "\u25A0"; // ■
+const HTML_NBSP = "&nbsp;";
+const HEX_21B2  = "\u21B2";
+const HEX_2BCO  = "\u2BC0"; // ⯀
+const HEX_25A0  = "\u25A0"; // ■
 /* eslint-enable  no-unused-vars */
 //}}}
 let format_data = function(data_in)
 {
     // LINE FILTER {{{
-    let   data_out = "";
-    const    lines = data_in.split("\n");
+    let data_out = "";
+    let    lines = data_in.split("\n");
     for(let i = 0; i < lines.length; ++i)
     {
         let l = lines[i];
+//console.log("%c"+l, "background-color: #008;");//FIXME
 
         l =         l.  replace(                               /</g, "&lt;"           ); // html entities
         l =         l.  replace(                               />/g, "&gt;"           ); // html entities
@@ -87,8 +88,8 @@ let format_data = function(data_in)
         //│ BOX DONE
         //└────────────────────────────────────────────────────────────────────┘
         l =         l.  replace(   /\{\{\{(.*)\}\}\}/, "{{ {$1} }}"                   ); // FOLD GOTCHA (open and close on the same line)
-        l =         l.  replace(     /(.*)\{\{\{(.*)/, "<details>\n<summary>$1 $2</summary>\n<pre>" ); // FOLD-OPEN-CLOSE
-        l =         l.  replace(     /(.*)\}\}\}(.*)/,                     "$1 $2</pre>\n</details>");
+        l =         l.  replace(     /(.*)\{\{\{(.*)/, "<details>\n<summary>$1 $2</summary>\n<pre>"   ); // FOLD-OPEN
+        l =         l.  replace(     /(.*)\}\}\}(.*)/,                     "$1 $2\n</pre>\n</details>"); // FOLD-CLOSE (pre gets a stale LF prefix to help per-line-markdown-parsing)
 // FOLD_CLOSE {{{
 //      l =         l.  replace(     /(.*)\}\}\}(.*)/,                     "$1 $2</pre>\n</details><!--FOLD_CLOSE-->");
 //}}}
@@ -103,7 +104,9 @@ let format_data = function(data_in)
         //└────────────────────────────────────────────────────────────────────┘
         l =         l.  replace(                             /\\n/g,      HEX_21B2    ); // inline [LF]  TO [↲] .. (i.e. \n\n)
         l =         l.  replace(                      /\> *\/\/ */g, ">"              ); //       [>// ] TO []
-        l =         l.  replace(                        / *\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
+//      l =         l.  replace(                        / *\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
+//      l =         l.  replace(                  /\> *[^:]\/\/ */g, ">"              ); //       [>// ] TO []
+        l =         l.  replace(                    / *[^:]\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
         //┌────────────────────────────────────────────────────────────────────┐
         //│ OPTIONAL
         //└────────────────────────────────────────────────────────────────────┘
@@ -128,52 +131,62 @@ let format_data = function(data_in)
 //}}}
         }
         //}}}
+//console.log("%c"+l, "border: 1px solid #FF0;");//FIXME
         data_out +=             l  ;
     }
     //}}}
     // MARKDOWN TABLES TO HTML {{{
-    data_out = convert( data_out );
+    data_out = format_markdown( data_out );
 
     //}}}
 //  data_out = data_out.replace(/>\s*\/\/\s */gm, "> "+ HEX_25A0); // [>//] TO [> ■]
-
+//console.log(data_out);
     return "<pre>"+ data_out +"</pre>";
 };
 /*}}}*/
 
-/*● convert {{{*/
-const TABLE_DELIM_1 = "- | -";
-const TABLE_DELIM_2 =  "-|-";
+/*● format_markdown {{{*/
+const MD_TABLE_DELIM_1 = "- | -";
+const MD_TABLE_DELIM_2 =  "-|-";
 
-let convert = function(data_in)
+let format_markdown = function(data_in)
 {
-//console.log("js_boxing.convert");
+//console.log("js_boxing.format_markdown");
     let data_out = "";
 
-  //const lines = data_in.split("\n").map((l) => l.trim())                ; // keep empty lines
-    const lines = data_in.split("\n")                                     ; // keep indentation
+  //let lines = data_in.split("\n").map((l) => l.trim()) ; // keep empty lines
+    let lines = data_in.split("\n")                      ; // keep indentation
 
     for(let i = 0; i < lines.length; ++i)
     {
         let reached_md_table
             =   (i < lines.length -1)
              && (    lines[i+1].trim().startsWith("|")  )
-             && (    lines[i+1].includes( TABLE_DELIM_1 )
-                 ||  lines[i+1].includes( TABLE_DELIM_2 ));
+             && (    lines[i+1].includes( MD_TABLE_DELIM_1 )
+                 ||  lines[i+1].includes( MD_TABLE_DELIM_2 ));
 
         if( reached_md_table )
         {
-            let table_rows = lines[i] + "\n";
+//console.log("%c"+           lines[i], "background-color: #400;");
+            let matches = lines[i].match(/(^[^\|]*)(\|.*)/);
+            if( matches ) {
+                data_out +=   matches[1];
+                lines[i]  =   matches[2];
+//console.log("%c matches[1]=["+ matches[1] +"]", "color: #F00;");
+//console.log("%c matches[2]=["+ matches[2] +"]", "color: #0FF;");
+            }
+            let table_rows = "";
             while(i < lines.length && lines[i].includes("|"))
             {
-                let row =    lines[i].trim();
+                let row = lines[i].replace(/^[^|]*/, "").trim();
                 if( row ) table_rows += row + "\n";
                 i += 1;
             }
 
             if( table_rows ) {
-                data_out   += convert_table_to_html( table_rows.trim() );
+                data_out   += format_markdown_table_to_html( table_rows.trim() );
             }
+//console.log("%c"+           lines[i], "background-color: #400;");
             data_out     += lines[i] + "\n";
         }
         else {
@@ -184,39 +197,65 @@ let convert = function(data_in)
     return data_out;
 };
 /*}}}*/
-/*_ convert_table_to_html {{{*/
-let convert_table_to_html = function( md_table )
+/*_ format_markdown_table_to_html {{{*/
+let format_markdown_table_to_html = function( table_rows )
 {
     // Split into lines, ignore empty lines
-    const lines = md_table.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
+    let lines
+        = table_rows.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
 
     if (lines.length < 2) return "";
 
     // Parse header
-    const headerCells = parseRow(lines[0].replace(/\\/g,"_backslash_")) ;
-    // Skip separator line (lines[1])
-    // Parse data rows
-    const dataRows = [];
+    let headerCells = parseRow(lines[0].replace(/\\/g,"_backslash_")) ;
+
+    // Parse data rows, skipping separator line (lines[1])
+    let dataRows = [];
     for (let i = 2; i < lines.length; i++) {
         dataRows.push(  parseRow(lines[i].replace(/\\/g,"_backslash_")));
     }
 
-    // Build HTML
-    let html = "<table class='markdown_table'>\n<thead>\n<tr>\n";
-    for (const cell of headerCells) {
+    // OPEN TABLE
+    let html = ""
+        + "<table class='markdown_table'>\n"
+    ;
+
+    // TABLE THEAD {{{
+    html += ""
+        +  " <thead>\n"
+        +  "  <tr>\n"
+    ;
+    for (let cell of headerCells) {
         let     text = cell.trim().replace(/_backslash_/g,"\\");
-        html        += `  <th>${text}</th>\n`;
+        html        += `   <th>${text}</th>\n`;
     }
-    html += "</tr>\n</thead>\n<tbody>\n";
-    for (const row of dataRows) {
-        html += "<tr>\n";
-        for (const cell of row) {
+    html += ""
+        +  "  </tr>\n"
+        +  " </thead>\n"
+    ;
+    //}}}
+
+    // TBODY {{{
+    html += " <tbody>\n";
+
+    for(let row of dataRows)
+    {
+        html += "  <tr>\n";
+        for(let cell of row) {
             let text = cell.trim().replace(/_backslash_/g,"\\");
-            html    += `  <td>${text}</td>\n`;
+//console.log("%c["+text+"]", "background-color: #800;");
+            html    += `   <td>${text}</td>\n`;
         }
-        html += "</tr>\n";
+        html += "  </tr>\n";
     }
-    html += "</tbody>\n</table>";
+
+    html += " </tbody>\n";
+    //}}}
+
+    // CLOSE TABLE
+    html += "</table>\n";
+
+//console.log("%c"+html, "background-color: #040; border: yellow;");
     return html;
 };
 /*}}}*/
@@ -225,21 +264,20 @@ let parseRow = function(line)
 {
     //┌────────────────────────────────────────────────────────────────────────────┐
     //│ Parse a markdown table row into an array of cell strings.
-    //│ Handles escaped pipes (\\|) and surrounding pipes.
+    //│ Handles inlined <br>, escaped pipes (\\|) and surrounding pipes.
     //└────────────────────────────────────────────────────────────────────────────┘
+    let trimmed = line.trim().replace(/ *&lt;br&gt;/g,"<br>");
 
-  // Remove leading/trailing pipe and whitespace
-  let trimmed = line.trim();
-  if (trimmed.startsWith("|")) trimmed = trimmed.slice(1);
-  if (trimmed.endsWith  ("|")) trimmed = trimmed.slice(0, -1);
+    if (trimmed.startsWith("|")) trimmed = trimmed.slice(1);
+    if (trimmed.endsWith  ("|")) trimmed = trimmed.slice(0, -1);
 
-  // Split on unescaped pipes
+    // Split on unescaped pipes
 
-// 1. ADDS EMPTY CELLS
-  return trimmed.split(/\|(?=([^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : ""))                            ; // leaves empty cells
+    // 1. ADDS EMPTY CELLS
+    return trimmed.split(/\|(?=([^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : ""))                            ; // leaves empty cells
 
-// 2. EMPTY CELLS MAY SHIFT COLUMNS TO THE LEFT
-//return trimmed.split(/\|(?=([^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : "")).filter((e) => e.length > 0); // left-shift on missing columns
+    // 2. EMPTY CELLS MAY SHIFT COLUMNS TO THE LEFT
+    //return trimmed.split(/\|(?=([^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : "")).filter((e) => e.length > 0); // left-shift on missing columns
 
 };
 /*}}}*/
