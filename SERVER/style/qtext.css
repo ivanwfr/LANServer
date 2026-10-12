@@ -1,10 +1,11 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
 /*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261012:21h:39) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
-DETAILS.wrap            { width      : 50%                 ; }
-DETAILS.wrap            { white-space: pre-line            ; }
-DETAILS.wrap>SUMMARY>EM { transform  : rotate(90deg)       ; }
-DETAILS.wrap>SUMMARY>EM { box-shadow : 2px 0px 0px 1px #F00; }
+DETAILS.wrap                 { width      : 50%                 ; }
+DETAILS.wrap, DETAILS.wrap * { white-space: pre-line            ; }
+DETAILS.wrap  SUMMARY        { white-space: pre                 ; }
+DETAILS.wrap>SUMMARY>EM      { box-shadow : 2px 0px 0px 1px #F00; }
+DETAILS.wrap>SUMMARY>EM      { transform  : rotate(90deg)       ; }
 
 /* background {{{*/
 .code            { background: linear-gradient(to right, #000 10%, #0001); }
