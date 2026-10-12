@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261010:16h:59) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261012:03h:15) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -29,8 +29,16 @@ let js_linkify  = (function() {
 let onload  = function()
 {
                 linkify_file_pathes();
-    setTimeout( colorize_details        ,  500);
-    setTimeout( format_summary_comments ,  500);
+
+    // DETAILS COLORIZE
+    let     el = document.querySelector("DETAILS");
+    if(     el.parentElement
+        && !el.parentElement.getAttribute("color_num"))
+        setTimeout( colorize_details        ,  500);
+
+    // SUMMARY TOOLING
+    if( !document.querySelector("SUMMARY>.em_fold") )
+        setTimeout( format_summary_comments ,  500);
 };
 /*}}}*/
 /*_ colorize_details {{{*/
@@ -50,18 +58,18 @@ let onload  = function()
 //];
 //}}}
 /* FG 000 @see SERVER/style/qtext.css {{{*/
-const FG = [
-  "#BBBF"
-, "#000F"
-, "#000F"
-, "#000F"
-, "#000F"
-, "#000F"
-, "#000F"
-, "#000F"
-, "#000F"
-, "#000F"
-];
+//const FG = [
+//  "#BBBF"
+//, "#000F"
+//, "#000F"
+//, "#000F"
+//, "#000F"
+//, "#000F"
+//, "#000F"
+//, "#000F"
+//, "#000F"
+//, "#000F"
+//];
 /*}}}*/
 // BG rgba {{{
 //const BG = [
@@ -259,11 +267,11 @@ let linkify_file_pathes = function()
 //  let href          = "https://192.168.1.14:447/LAN/AHK/HIDCONTROL/AHK/HID/DEV_VID_PID_AXIS.ahk";
 
     let href          = document.location.href;
-    let root          = href  .replace(/^(.*\/\/[^\/]*)\/.*/, "$1");    // up to first /
-    let file          = href  .replace(/^.*\/(.*)$/           , "$1");  // after last  /
-    let folder        = href  .substr(root.length);                     // after first /
-        folder        = folder.substr(0, folder.length -file.length);   // before file
-    let folders       = folder.split("/").filter(Boolean);              // remove falsy items
+    let root          = href  .replace(/^(.*\/\/[^\/]*)\/.*/, "$1");  // up to first '/'
+    let file          = href  .replace(/^.*\/(.*)$/         , "$1");  // after last  '/'
+    let folder        = href  .substr(root.length);                   // after first '/'
+        folder        = folder.substr(0, folder.length -file.length); // before file
+    let folders       = folder.split("/").filter(Boolean);            // remove falsy items
 
 // log {{{
 //console.log("➔ href   = ["+href+"]");
@@ -275,7 +283,7 @@ let linkify_file_pathes = function()
 //}}}
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ [FILE OR FILDER PATH] TO [HTML ANCHOR]
+    //│ PRE CONTAINING [BARE FILE OR FOLDER PATH] TO [HTML ANCHOR]
     //└────────────────────────────────────────────────────────────────────────┘
     let innerHTML = "";
     let       pre = document.querySelector("PRE");
