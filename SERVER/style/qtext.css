@@ -1,7 +1,20 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261011:19h:52) │*/
+/*│ style/qtext.css ● $APROJECTS/LANServer            ● _TAG (261012:21h:39) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
+DETAILS.wrap            { width      : 50%                 ; }
+DETAILS.wrap            { white-space: pre-line            ; }
+DETAILS.wrap>SUMMARY>EM { transform  : rotate(90deg)       ; }
+DETAILS.wrap>SUMMARY>EM { box-shadow : 2px 0px 0px 1px #F00; }
+
 /* background {{{*/
+.code            { background: linear-gradient(to right, #000 10%, #0001); }
+/* code             ● border {{{*/
+.code.css           { border: 1px solid #00F; background-color: #00F1; }
+.code.html          { border: 1px solid #FF0; background-color: #FF01; }
+.code.javascript    { border: 1px solid #FA0; background-color: #FA01; }
+.code.js            { border: 1px solid #FA0; background-color: #FA01; }
+.code.text          { border: 1px solid #FFF; background-color: #FFF1; }
+/*}}}*/
 
 /* ECC bg background {{{*/
   .bg0>SUMMARY { background: linear-gradient(to bottom, #101010 2%, #10101040 3%, #000); background-color: #000 !important; }
@@ -109,19 +122,19 @@ DETAILS:open>SUMMARY { color: white !important; }
 /*}}}*/
 /* border {{{*/
 /* markdown_table   ● border {{{*/
-.markdown_table  { border-collapse : collapse; }
+.markdown_table     { border-collapse : collapse; }
 
 /*}}}*/
 /* BOX              ● border {{{*/
 
-BOXU, BOXM, BOXD { border-style: solid; }
+BOXU, BOXM, BOXD    { border-style: solid; }
 
-            BOXU { border-width: 3px 0   0   16px; }
-            BOXM { border-width: 0   0   0   16px; }
-            BOXD { border-width: 0   0   3px 16px; }
+            BOXU    { border-width: 3px 0   0   16px; }
+            BOXM    { border-width: 0   0   0   16px; }
+            BOXD    { border-width: 0   0   3px 16px; }
 
 
-BOXU, BOXM, BOXD { border-collapse : collapse; }
+BOXU, BOXM, BOXD    { border-collapse : collapse; }
 
 
 /*}}}*/
@@ -158,6 +171,8 @@ DETAILS:open     { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
 /* margin   ● padding {{{*/
 
 BODY      {    margin-bottom:  50%; }
+
+.code                       { margin: 0.5em 0       0.5em 1em;  padding: 0.5em;      border: 1px solid #440; }
 
 .markdown_table          TH {                                   padding: 0.5em;      }
 .markdown_table          TD {                                   padding: 0.5em;      }
@@ -207,8 +222,10 @@ DETAILS                     { width: fit-content;                      }
 DETAILS:not([open])>SUMMARY { width: min-content; white-space: normal; }
 }}}*/
 
+.code                       {             white-space: pre;            }
+
 DETAILS:open                { white-space-collapse: preserve-breaks;   }
-             .wrap          { width: 50%; white-space: pre-line;       } /* @see js_linkify.toggle_wrap */
+
 .markdown_table TD          {             white-space: pre;            }
 
 /*}}}*/

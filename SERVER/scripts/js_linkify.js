@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261012:03h:15) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261012:21h:31) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -186,12 +186,15 @@ let format_summary_comments = function()
 /*_ toggle_wrap {{{*/
 let toggle_wrap = function(e)
 {
-    let container         = e.target.closest("SUMMARY").nextElementSibling;
+    // CASCADE DETAILS WRAPPING TO ALL DESCENDANTS
+    let  details = e.target.closest("DETAILS");
+    let wrapping = details.classList.toggle("wrap");
 
-    let wrapping          = container.classList.toggle("wrap");
+    details.querySelectorAll("DETAILS")
+        .forEach((el) => el.classList.toggle("wrap", wrapping));
 
-    e.target.style.rotate = wrapping ? "90deg" : "";
-    e.target.style.boxShadow = wrapping ? "2px 0px 0px 1px #F00" : "";
+    // SHOW WRAPPING STATE
+    e.target               .classList.toggle("wrap", wrapping);
 
     e.cancelBubble        = true;
     e.stopPropagation         ();

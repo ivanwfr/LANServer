@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261011:22h:18)
+//│ js_boxing.js                                           _TAG (261012:21h:44)
 /* Convert text content and  Markdown table into HTML {{{
 Handles:
 - Header row and separator row (|---|---|)
@@ -52,7 +52,10 @@ let box_out = function(e) /* eslint-disable-line no-unused-vars */
 };
 /*}}}*/
 
-/*_ format_data {{{*/
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ DOCUMENT BODY
+//└────────────────────────────────────────────────────────────────────────────┘
+/*● format_data {{{*/
 // const {{{
 /* eslint-disable no-unused-vars */
 const HTML_NBSP = "&nbsp;";
@@ -63,6 +66,8 @@ const HEX_25A0  = "\u25A0"; // ■
 //}}}
 let format_data = function(data_in)
 {
+    let in_code;
+
     // LINE FILTER {{{
     let data_out = "";
     let    lines = data_in.split("\n");
@@ -76,6 +81,10 @@ let format_data = function(data_in)
         //┌────────────────────────────────────────────────────────────────────┐
         //│ BOX START
         //└────────────────────────────────────────────────────────────────────┘
+    if(in_code) {
+        l =         l.  replace(             /\/\/[└┘┌┐│─├┼┤]+/g, "");
+    }
+    else {
         l =         l.  replace(             / *\/[\/\\*] *(┌.*$)/g, "<BOXU>$1</BOXU>"); // BOX UP
         l =         l.  replace(             / *\/[\/\\*] *(│.*$)/g, "<BOXM>$1</BOXM>"); // BOX MIDDLE
         l =         l.  replace(             / *\/[\/\\*] *(├.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
@@ -84,15 +93,18 @@ let format_data = function(data_in)
         l =         l.  replace(             / *\/[\/\\*] *(└.*$)/g, "<BOXD>$1</BOXD>"); // BOX DOWN
     if( l.includes("BOX") )
         l =         l.  replace(                    /[└┘┌┐│─├┼┤]+/g, "" /*HTML_NBSP*/ ); // remove utf-8 boxing (or not)
+    }
         //┌────────────────────────────────────────────────────────────────────┐
-        //│ BOX DONE
+        //│ VIM FOLD DETAILS
         //└────────────────────────────────────────────────────────────────────┘
-        l =         l.  replace(   /\{\{\{(.*)\}\}\}/, "{{ {$1} }}"                   ); // FOLD GOTCHA (open and close on the same line)
-        l =         l.  replace(     /(.*)\{\{\{(.*)/, "<details>\n<summary>$1 $2</summary>\n<pre>"   ); // FOLD-OPEN
-        l =         l.  replace(     /(.*)\}\}\}(.*)/,                     "$1 $2\n</pre>\n</details>"); // FOLD-CLOSE (pre gets a stale LF prefix to help per-line-markdown-parsing)
-// FOLD_CLOSE {{{
-//      l =         l.  replace(     /(.*)\}\}\}(.*)/,                     "$1 $2</pre>\n</details><!--FOLD_CLOSE-->");
-//}}}
+        if( RGX_VOPEN_OR__VCLOSE_LINE.exec(l) ) {
+            data_out += md_format_head_line(""); // CLOSE ALL PENDING DETAILS
+            l = vim_fold_line( l );
+        }
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ MARKDOWN DETAILS
+        //└────────────────────────────────────────────────────────────────────┘
+        if( l.match(/^ *#/) ) l = md_format_head_line( l );
         //┌────────────────────────────────────────────────────────────────────┐
         //│ COMMENT
         //└────────────────────────────────────────────────────────────────────┘
@@ -106,52 +118,161 @@ let format_data = function(data_in)
         l =         l.  replace(                      /\> *\/\/ */g, ">"              ); //       [>// ] TO []
 //      l =         l.  replace(                        / *\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
 //      l =         l.  replace(                  /\> *[^:]\/\/ */g, ">"              ); //       [>// ] TO []
+    if(!in_code)
         l =         l.  replace(                    / *[^:]\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
         //┌────────────────────────────────────────────────────────────────────┐
         //│ OPTIONAL
         //└────────────────────────────────────────────────────────────────────┘
       //l =         l.  replace(                    / *;* *\{\{\{/g, " "              ); // remove vim fold markers
       //l =         l.  replace(                    / *;* *\}\}\}/g, " "              );
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ ENTERING .. LEAVING CODE SECTION
+        //└────────────────────────────────────────────────────────────────────┘
+        let       s = l.trim();
+        let matches = RGX_CODE.exec( s );
+        if( matches ) {
+            in_code = matches[1]; // IN=[```code_type$] .. OUT=[```$]
+//console.log("...in_code=["+in_code+"] \t"+ l);
+        }
         // Add Linefeed {{{
-        let    s = l.trim();
-        if(    s.length
+        if( in_code )
+        {
+            l += "\n";
+        }
+        else if(    s.length
            && !s.endsWith("<pre>"     )
            && !s.endsWith("</boxd>"   )
            && !s.endsWith("</details>")
-          )
+          ) {
             l += "\n";
-        //}}}
-        // Del Linefeed {{{
-        if(   l.includes("</pre>")
-           && data_out.endsWith("\n")
-        ) {
-            data_out  = data_out.slice(0,-1);
-// log {{{
-//l = "<!-- Del Linefeed -->" + l;
-//}}}
         }
         //}}}
+//        // Del Linefeed {{{
+//        if(   l.includes("</pre>")
+//           && data_out.endsWith("\n")
+//        ) {
+//            data_out  = data_out.slice(0,-1);
+//        }
+//        //}}}
 //console.log("%c"+l, "border: 1px solid #FF0;");//FIXME
         data_out +=             l  ;
     }
     //}}}
-    // MARKDOWN TABLES TO HTML {{{
-    data_out = format_markdown( data_out );
+    data_out += md_format_head_line( ""       ); // CLOSE DANGLING DETAILS
+    data_out  = md_format_table    ( data_out );
+    data_out  = add_spacing_lines  ( data_out );
 
-    //}}}
-//  data_out = data_out.replace(/>\s*\/\/\s */gm, "> "+ HEX_25A0); // [>//] TO [> ■]
-//console.log(data_out);
     return "<pre>"+ data_out +"</pre>";
 };
 /*}}}*/
+/*_ add_spacing_lines ● @see SERVER/style/qtext.css {{{*/
+let add_spacing_lines = function( data_in )
+{
+    let data_out
+        = data_in
+        . replace(/(\n *\*+ *\d)/g  , "\n$1"                        ) // ##1 numbered lines
+        . replace(/(```(\w+).*)\n/g , "\n<div class='code $2'>$1\n" ) // DIR ```javascript
+        . replace(/(```)\n/g        , "$1\n</div>\n"                ) // DIR ```
+    ;
+    return data_out;
+};
+/*}}}*/
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ VIM FOLDS
+//└────────────────────────────────────────────────────────────────────────────┘
+/*● vim_fold_line {{{*/
+// VIM REGEX {{{
 
-/*● format_markdown {{{*/
+//... PATTERN
+const PAT_VOPEN                 = "\\{\\{\\{";
+const PAT_VCLOSE                = "\\}\\}\\}";
+const PAT_BLOC                  = "(.*)"     ; // CAPTURING BLOC
+
+//... REGEX
+const RGX_CODE                  = new RegExp("```(.*)");
+const RGX_VOPEN_AND_VCLOSE_LINE = new RegExp(PAT_VOPEN + PAT_BLOC   + PAT_VCLOSE); // line contains both  vim folds .. remove both
+const RGX_VOPEN_OR__VCLOSE_LINE = new RegExp(PAT_VOPEN +   "|"      + PAT_VCLOSE); // line contains     a vim fold  .. call filter
+const RGX_VOPEN_LINE            = new RegExp(PAT_BLOC  + PAT_VOPEN  + PAT_BLOC  ); // line contains open  vim fold  .. remove open  fold
+const RGX_VCLOSE_LINE           = new RegExp(PAT_BLOC  + PAT_VCLOSE + PAT_BLOC  ); // line contains close vim fold  .. remove close fold
+
+//... REPLACEMENT
+const RPL_VOPEN_AND_VCLOSE_LINE =                   "{{ {$1} }}"                 ; // remove both surrounding folds
+const RPL_VOPEN_LINE            = "<details>\n<summary>$1 $2</summary>\n<pre>"   ; // vim open  => CLOSE details
+const RPL_VCLOSE_LINE           =                     "$1 $2\n</pre>\n</details>"; // vim close => OPEN  details+summary
+
+
+//}}}
+let vim_fold_line = function(l)
+{
+
+    l = l.replace(RGX_VOPEN_AND_VCLOSE_LINE , RPL_VOPEN_AND_VCLOSE_LINE); // BOTH FIRST
+    l = l.replace(RGX_VOPEN_LINE            , RPL_VOPEN_LINE           );
+    l = l.replace(RGX_VCLOSE_LINE           , RPL_VCLOSE_LINE          );
+
+    return l;
+};
+/*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ MARKDOWN
+//└────────────────────────────────────────────────────────────────────────────┘
+/*● md_format_head_line {{{*/
+let md_head_level = 0;
+let md_format_head_line  = function(l_in)
+{
+    let l_out = "";
+    // CLOSE ALL OPENED HEADERs {{{
+    if(!l_in)
+    {
+        while(md_head_level)
+        {
+            l_out += "md_head_level=["+md_head_level+"]"+
+                     "\n</pre>\n</details>";
+            md_head_level -= 1;
+        }
+        return l_out;
+    }
+    //}}}
+    // COUNT POUND SIGNS (1..6) {{{
+    let count = 1+ l_in.lastIndexOf("#");
+    if(!count)
+        return l_in;
+
+    //}}}
+//    // DETAILS LEVEL END ALL WITH LEVEL ABOVE THIS ONE {{{
+//    while(count <= md_head_level )
+//    {
+//        l_out +=  "\n</pre>\n</details>";
+//        md_head_level -= 1;
+//    }
+
+//    //}}}
+    // CLOSE ALL markdown folds - single level for any # of # {{{
+    while( md_head_level )
+    {
+        l_out +=  "\n</pre>\n</details>";
+        md_head_level -= 1;
+    }
+
+    //}}}
+    // DETAILS LEVEL START .. [LEVEL > 0] {{{
+    if(count > 0) {
+        l_out += l_in.replace(/(^ *#+.*)/, "<details>\n<summary>$1</summary>\n<pre>");
+      //l_out += l_in.replace(/^ *#+(.*)/, "<details>\n<summary>$1</summary>\n<pre>");
+
+        md_head_level += 1;
+    }
+    //}}}
+    return l_out;
+};
+/*}}}*/
+/*● md_format_table {{{*/
 const MD_TABLE_DELIM_1 = "- | -";
 const MD_TABLE_DELIM_2 =  "-|-";
 
-let format_markdown = function(data_in)
+let md_format_table = function(data_in)
 {
-//console.log("js_boxing.format_markdown");
+//console.log("js_boxing.md_format_table");
     let data_out = "";
 
   //let lines = data_in.split("\n").map((l) => l.trim()) ; // keep empty lines
@@ -184,7 +305,7 @@ let format_markdown = function(data_in)
             }
 
             if( table_rows ) {
-                data_out   += format_markdown_table_to_html( table_rows.trim() );
+                data_out   += md_format_table_to_html( table_rows.trim() );
             }
 //console.log("%c"+           lines[i], "background-color: #400;");
             data_out     += lines[i] + "\n";
@@ -197,8 +318,8 @@ let format_markdown = function(data_in)
     return data_out;
 };
 /*}}}*/
-/*_ format_markdown_table_to_html {{{*/
-let format_markdown_table_to_html = function( table_rows )
+/*_ md_format_table_to_html {{{*/
+let md_format_table_to_html = function( table_rows )
 {
     // Split into lines, ignore empty lines
     let lines
@@ -207,12 +328,12 @@ let format_markdown_table_to_html = function( table_rows )
     if (lines.length < 2) return "";
 
     // Parse header
-    let headerCells = parseRow(lines[0].replace(/\\/g,"_backslash_")) ;
+    let headerCells = md_format_table_row(lines[0].replace(/\\/g,"_backslash_")) ;
 
     // Parse data rows, skipping separator line (lines[1])
     let dataRows = [];
     for (let i = 2; i < lines.length; i++) {
-        dataRows.push(  parseRow(lines[i].replace(/\\/g,"_backslash_")));
+        dataRows.push(  md_format_table_row(lines[i].replace(/\\/g,"_backslash_")));
     }
 
     // OPEN TABLE
@@ -259,8 +380,8 @@ let format_markdown_table_to_html = function( table_rows )
     return html;
 };
 /*}}}*/
-/*_ parseRow {{{*/
-let parseRow = function(line)
+/*_ md_format_table_row {{{*/
+let md_format_table_row = function(line)
 {
     //┌────────────────────────────────────────────────────────────────────────────┐
     //│ Parse a markdown table row into an array of cell strings.
