@@ -18,29 +18,29 @@ DETAILS.wrap>SUMMARY>EM      { transform  : rotate(90deg)       ; }
 /*}}}*/
 
 /* ECC bg background {{{*/
-  .bg0>SUMMARY { background: linear-gradient(to bottom, #101010 2%, #10101040 3%, #000); background-color: #000 !important; }
-  .bg1>SUMMARY { background: linear-gradient(to bottom, #964B00 2%, #964B0040 3%, #000); background-color: #000 !important; }
-  .bg2>SUMMARY { background: linear-gradient(to bottom, #FF0000 2%, #FF000040 3%, #000); background-color: #000 !important; }
-  .bg3>SUMMARY { background: linear-gradient(to bottom, #FFA500 2%, #FFA50040 3%, #000); background-color: #000 !important; }
-  .bg4>SUMMARY { background: linear-gradient(to bottom, #FFFF00 2%, #FFFF0040 3%, #000); background-color: #000 !important; }
-  .bg5>SUMMARY { background: linear-gradient(to bottom, #9ACD32 2%, #9ACD3240 3%, #000); background-color: #000 !important; }
-  .bg6>SUMMARY { background: linear-gradient(to bottom, #6495ED 2%, #6495ED40 3%, #000); background-color: #000 !important; }
-  .bg7>SUMMARY { background: linear-gradient(to bottom, #EE82EE 2%, #EE82EE40 3%, #000); background-color: #000 !important; }
-  .bg8>SUMMARY { background: linear-gradient(to bottom, #A0A0A0 2%, #A0A0A040 3%, #000); background-color: #000 !important; }
-  .bg9>SUMMARY { background: linear-gradient(to bottom, #FFFFFF 2%, #FFFFFF40 3%, #000); background-color: #000 !important; }
+  .bg0>SUMMARY { background: linear-gradient(to bottom, #10101040 2%, #10101010 30%, #000); background-color: #000 !important; }
+  .bg1>SUMMARY { background: linear-gradient(to bottom, #964B0040 2%, #964B0010 30%, #000); background-color: #000 !important; }
+  .bg2>SUMMARY { background: linear-gradient(to bottom, #FF000040 2%, #FF000010 30%, #000); background-color: #000 !important; }
+  .bg3>SUMMARY { background: linear-gradient(to bottom, #FFA50040 2%, #FFA50010 30%, #000); background-color: #000 !important; }
+  .bg4>SUMMARY { background: linear-gradient(to bottom, #FFFF0040 2%, #FFFF0010 30%, #000); background-color: #000 !important; }
+  .bg5>SUMMARY { background: linear-gradient(to bottom, #9ACD3240 2%, #9ACD3210 30%, #000); background-color: #000 !important; }
+  .bg6>SUMMARY { background: linear-gradient(to bottom, #6495ED40 2%, #6495ED10 30%, #000); background-color: #000 !important; }
+  .bg7>SUMMARY { background: linear-gradient(to bottom, #EE82EE40 2%, #EE82EE10 30%, #000); background-color: #000 !important; }
+  .bg8>SUMMARY { background: linear-gradient(to bottom, #A0A0A040 2%, #A0A0A010 30%, #000); background-color: #000 !important; }
+  .bg9>SUMMARY { background: linear-gradient(to bottom, #FFFFFF40 2%, #FFFFFF10 30%, #000); background-color: #000 !important; }
 /*}}}*/
 
 /* BOX ● COLORS {{{*/
-BOXU:nth-of-type( 1), BOXU:nth-of-type( 1) ~ BOXM, BOXU:nth-of-type( 1) ~ BOXD { background-color: #964B0010; border-color: #964B0040; }
-BOXU:nth-of-type( 2), BOXU:nth-of-type( 2) ~ BOXM, BOXU:nth-of-type( 2) ~ BOXD { background-color: #FF000010; border-color: #FF000040; }
-BOXU:nth-of-type( 3), BOXU:nth-of-type( 3) ~ BOXM, BOXU:nth-of-type( 3) ~ BOXD { background-color: #FFA50010; border-color: #FFA50040; }
-BOXU:nth-of-type( 4), BOXU:nth-of-type( 4) ~ BOXM, BOXU:nth-of-type( 4) ~ BOXD { background-color: #FFFF0010; border-color: #FFFF0040; }
-BOXU:nth-of-type( 5), BOXU:nth-of-type( 5) ~ BOXM, BOXU:nth-of-type( 5) ~ BOXD { background-color: #9ACD3210; border-color: #9ACD3240; }
-BOXU:nth-of-type( 6), BOXU:nth-of-type( 6) ~ BOXM, BOXU:nth-of-type( 6) ~ BOXD { background-color: #6495ED10; border-color: #6495ED40; }
-BOXU:nth-of-type( 7), BOXU:nth-of-type( 7) ~ BOXM, BOXU:nth-of-type( 7) ~ BOXD { background-color: #EE82EE10; border-color: #EE82EE40; }
-BOXU:nth-of-type( 8), BOXU:nth-of-type( 8) ~ BOXM, BOXU:nth-of-type( 8) ~ BOXD { background-color: #A0A0A010; border-color: #A0A0A040; }
-BOXU:nth-of-type( 9), BOXU:nth-of-type( 9) ~ BOXM, BOXU:nth-of-type( 9) ~ BOXD { background-color: #FFFFFF10; border-color: #FFFFFF40; }
-BOXU:nth-of-type(10), BOXU:nth-of-type(10) ~ BOXM, BOXU:nth-of-type(10) ~ BOXD { background-color: #10104010; border-color: #10104040; box-shadow: 0 0 1px 0px #FFF; }
+BOXU:nth-of-type( 1), BOXU:nth-of-type( 1) ~ BOXM, BOXU:nth-of-type( 1) ~ BOXD { background-color: #964B0010; border-color: #964B0020; }
+BOXU:nth-of-type( 2), BOXU:nth-of-type( 2) ~ BOXM, BOXU:nth-of-type( 2) ~ BOXD { background-color: #FF000010; border-color: #FF000020; }
+BOXU:nth-of-type( 3), BOXU:nth-of-type( 3) ~ BOXM, BOXU:nth-of-type( 3) ~ BOXD { background-color: #FFA50010; border-color: #FFA50020; }
+BOXU:nth-of-type( 4), BOXU:nth-of-type( 4) ~ BOXM, BOXU:nth-of-type( 4) ~ BOXD { background-color: #FFFF0010; border-color: #FFFF0020; }
+BOXU:nth-of-type( 5), BOXU:nth-of-type( 5) ~ BOXM, BOXU:nth-of-type( 5) ~ BOXD { background-color: #9ACD3210; border-color: #9ACD3220; }
+BOXU:nth-of-type( 6), BOXU:nth-of-type( 6) ~ BOXM, BOXU:nth-of-type( 6) ~ BOXD { background-color: #6495ED10; border-color: #6495ED20; }
+BOXU:nth-of-type( 7), BOXU:nth-of-type( 7) ~ BOXM, BOXU:nth-of-type( 7) ~ BOXD { background-color: #EE82EE10; border-color: #EE82EE20; }
+BOXU:nth-of-type( 8), BOXU:nth-of-type( 8) ~ BOXM, BOXU:nth-of-type( 8) ~ BOXD { background-color: #A0A0A010; border-color: #A0A0A020; }
+BOXU:nth-of-type( 9), BOXU:nth-of-type( 9) ~ BOXM, BOXU:nth-of-type( 9) ~ BOXD { background-color: #FFFFFF10; border-color: #FFFFFF20; }
+BOXU:nth-of-type(10), BOXU:nth-of-type(10) ~ BOXM, BOXU:nth-of-type(10) ~ BOXD { background-color: #10104010; border-color: #10104020; box-shadow: 0 0 1px 0px #FFF; }
 /*}}}*/
 
 /* markdown_table ● background {{{*/
@@ -98,16 +98,16 @@ DIV+DIV:has(+BOXU) {                  border: 2px dashed #0FF;   }
 /*}}}*/
 /*}}}*/
 /* outline  ● ECC ● SUMMARY ● PRE {{{*/
-.bg0>SUMMARY, .bg0>PRE  {          outline: 1px solid #80808080; }
-.bg1>SUMMARY, .bg1>PRE  {          outline: 1px solid #964B0080; }
-.bg2>SUMMARY, .bg2>PRE  {          outline: 1px solid #FF000080; }
-.bg3>SUMMARY, .bg3>PRE  {          outline: 1px solid #FFA50080; }
-.bg4>SUMMARY, .bg4>PRE  {          outline: 1px solid #FFFF0080; }
-.bg5>SUMMARY, .bg5>PRE  {          outline: 1px solid #9ACD3280; }
-.bg6>SUMMARY, .bg6>PRE  {          outline: 1px solid #6495ED80; }
-.bg7>SUMMARY, .bg7>PRE  {          outline: 1px solid #EE82EE80; }
-.bg8>SUMMARY, .bg8>PRE  {          outline: 1px solid #A0A0A080; }
-.bg9>SUMMARY, .bg9>PRE  {          outline: 1px solid #FFFFFF80; }
+.bg0>SUMMARY, .bg0>PRE  {          outline: 1px solid #80808040; }
+.bg1>SUMMARY, .bg1>PRE  {          outline: 1px solid #964B0040; }
+.bg2>SUMMARY, .bg2>PRE  {          outline: 1px solid #FF000040; }
+.bg3>SUMMARY, .bg3>PRE  {          outline: 1px solid #FFA50040; }
+.bg4>SUMMARY, .bg4>PRE  {          outline: 1px solid #FFFF0040; }
+.bg5>SUMMARY, .bg5>PRE  {          outline: 1px solid #9ACD3240; }
+.bg6>SUMMARY, .bg6>PRE  {          outline: 1px solid #6495ED40; }
+.bg7>SUMMARY, .bg7>PRE  {          outline: 1px solid #EE82EE40; }
+.bg8>SUMMARY, .bg8>PRE  {          outline: 1px solid #A0A0A040; }
+.bg9>SUMMARY, .bg9>PRE  {          outline: 1px solid #FFFFFF40; }
 
                   TABLE {          outline: 2px solid #FFF4    ; }
 /*}}}*/
@@ -185,7 +185,7 @@ BODY      {    margin-bottom:  50%; }
                       TABLE { margin: 10px;                                          }
 
 DETAILS:open                { margin: 1.0em       1.0em      ;  padding-left: 2.0em; }
-DETAILS:not(open)           { margin: 0     0     0.5em   1px;  padding-left: 0    ; }
+DETAILS:not(open)           { margin: 0     0     2.0em   1px;  padding-left: 0    ; }
                         PRE {                                   padding:      0.5em; }
 DETAILS:not(open)  >    PRE { margin-left:    0em            ;  padding-left: 0.5em; }
 /*{{{
@@ -218,6 +218,7 @@ DETAILS:open       >SUMMARY { font-weight:  900 !important; }
 /* width    ● white-space {{{*/
   BOXU, BOXM, BOXD          { width: 98%; min-width: 50%;              }
 
+        SUMMARY             { min-width: 30em;                         }
 DETAILS                     { width: fit-content;                      }
 /*{{{
 DETAILS:not([open])>SUMMARY { width: min-content; white-space: normal; }
