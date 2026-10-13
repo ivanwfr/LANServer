@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261010:15h:55)
+//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261013:15h:49)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵 View Helper: Renders, layouts, and scrolls notes in the DOM
 //│    State Management ➔ js_CNTRL (via js_MODEL, js_VIEW)
@@ -344,26 +344,27 @@ if(tag_this) console.log("🔵 note_scrollIntoView: "+ index);
     if( tr )
         tr.classList.add("standout");
 
-    scroll_TR_intoView(tr);
+    note_row_scrollIntoView(tr);
 };
 /*}}}*/
-/*_ scroll_TR_intoView ● Debounced scroll handler {{{*/
-/* debounce timeout {{{*/
-let SCROLL_TR_INTOVIEW_DELAY = 500;
-let scroll_TR_intoView_timeout;
-let scroll_TR_intoView = function(tr)
-{
-if(tag_this) console.log("🔵 scroll_TR_intoView: debounce set");
+/*_ note_row_scrollIntoView {{{*/
+let NOTE_ROW_SCROLLINTOVIEW_DELAY = 500;
+let note_row_scrollIntoView_timeout;
 
-    if(scroll_TR_intoView_timeout) clearTimeout( scroll_TR_intoView_timeout );
-       scroll_TR_intoView_timeout =  setTimeout( scroll_TR_intoView_handler , SCROLL_TR_INTOVIEW_DELAY, tr);
+let note_row_scrollIntoView = function(tr)
+{
+if(tag_this) console.log("🔵 note_row_scrollIntoView: debounce set");
+
+    if(note_row_scrollIntoView_timeout) clearTimeout( note_row_scrollIntoView_timeout );
+       note_row_scrollIntoView_timeout =  setTimeout( note_row_scrollIntoView_handler , NOTE_ROW_SCROLLINTOVIEW_DELAY, tr);
 };
 /*}}}*/
-let scroll_TR_intoView_handler = function(tr)
+/*_ note_row_scrollIntoView_handler {{{*/
+let note_row_scrollIntoView_handler = function(tr)
 {
-if(tag_this) console.log("🔵 scroll_TR_intoView_handler: %c"+ellipsis(tr.innerText.trim(),50), "color: magenta");
+if(tag_this) console.log("🔵 note_row_scrollIntoView_handler: %c"+ellipsis(tr.innerText.trim(),50), "color: magenta");
 
-    scroll_TR_intoView_timeout = null;
+    note_row_scrollIntoView_timeout = null;
 
     //┌──────────────────────────────────────────────────────────────[...]
     //│ Get the nearest scrollable ancestor (vertical only)
@@ -412,7 +413,7 @@ let getClosestScrollableAncestor = function(el)
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ SIZING & LAYOUT CONTROLS    🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢
 //└─────────────────────────────────────────────────────────────────[...]
-// winder narrower tunesize {{{
+// wider narrower tunesize {{{
 /*_ wider ● Increase textarea width {{{*/
 let wider = function()
 {

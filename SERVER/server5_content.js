@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261009:23h:53)
+//│ server5_content.js                                     _TAG (261013:16h:52)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 //t js_boxing        = require("./scripts/js_boxing.js");
@@ -75,8 +75,8 @@ let onload = function(args)
 //└────────────────────────────────────────────────────────────────────────────┘
 const FOLD_OPEN = "{{{"; /* eslint-disable-line no-unused-vars */
 const FOLD_CLOSE= "}}}"; /* eslint-disable-line no-unused-vars */
-/*    PAGE_HEAD & PAGE_STYLE {{{*/
-const PAGE_HEAD = ""
+/*    PAGE_HEAD_INNER_HTML & PAGE_STYLE_LINKS {{{*/
+const PAGE_HEAD_INNER_HTML = ""
     + "<meta   name='color-scheme' content='light only'>\n"
     + "\n"
     + "<!--base   href='https://ivanwfr.github.io/LANServer' /-->\n"
@@ -97,12 +97,12 @@ const PAGE_HEAD = ""
     + "<script type='module'  src='/scripts/js_input.js'   ></script>\n"
     + "<script type='module'  src='/scripts/notes.js'      ></script>\n"
     + "<script type='module'  src='/scripts/js_details.js' ></script>\n"
-    + "<script type='module'  src='/scripts/js_notes.js'   ></script>"
+    + "<script type='module'  src='/scripts/js_notes.js'   ></script>\n"
     ;
 
-const PAGE_STYLE = ""
+const PAGE_STYLE_LINKS = ""
     + "<link type='text/css' href='/style/notes.css' rel='stylesheet'>\n"
-    + "<link type='text/css' href='/style/qtext.css' rel='stylesheet'>"
+    + "<link type='text/css' href='/style/qtext.css' rel='stylesheet'>\n"
     ;
 /*}}}*/
 /*_ send_file_content {{{*/
@@ -192,11 +192,11 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
         if( server0_log.html_format_requested(file_path,query) )
         {
             let title = file_path.replace(/.*[\\\/]/,"");
-            let html  = `<html lang='en'>
-<head>
+            let html  = `<html lang='en'>\n
+<head>\n
 <title>${ title      }</title>
-${        PAGE_HEAD  }
-${        PAGE_STYLE }
+${        PAGE_HEAD_INNER_HTML  }
+${        PAGE_STYLE_LINKS }
 </head>
 <body>
 <pre>${   escapeHTML(data) }</pre>

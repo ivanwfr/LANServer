@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261002:02h:17) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261014:01h:16) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -59,14 +59,16 @@ if(tag_this) console.log("⚫ %c js_folds.onload:", lbB+lb1);
 
     setTimeout(details_update_click_listeners,  250);
     setTimeout(load_details_open_state       , 1500);
+    setTimeout(load_details_checked_state    , 1500);
     setTimeout(load_containers_scrollTop     , 2000);
 /*{{{
     setTimeout(() => document.body.style.visibility="visible", 2500);
     setTimeout(() => document.body.style.opacity="1.0", 2500);
 }}}*/
 
-    window.addEventListener("pagehide", save_containers_scrollTop_handler);
-    window.addEventListener("pagehide", save_details_open_state_handler  );
+    window.addEventListener("pagehide", save_containers_scrollTop_handler );
+    window.addEventListener("pagehide", save_details_open_state_handler   );
+    window.addEventListener("pagehide", save_details_checked_state_handler);
 };
 /*}}}*/
 
@@ -161,6 +163,80 @@ if(tag_this) console.log(" 🟠 %c"+item.xpath, "background-color:black");
         document.querySelectorAll("DETAILS:not([id])") // DETAILS having no #id
             .forEach((el) => {
                 if( !el_open_array.includes(el) ) el.open = false;
+            });
+    }, 0);
+
+};
+/*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🔴 DETAILS CHECK STATE          ● SAVED WHEN TOGGLED ● LOADED BACK ON LOAD │
+//└────────────────────────────────────────────────────────────────────────────┘
+/*○ save_details_checked_state {{{*/
+let SAVE_DETAILS_CHECK_STATE_DELAY = 500;
+let save_details_checked_state_timeout;
+
+let save_details_checked_state = function()
+{
+    if(save_details_checked_state_timeout) clearTimeout( save_details_checked_state_timeout );
+       save_details_checked_state_timeout =  setTimeout( save_details_checked_state_handler , SAVE_DETAILS_CHECK_STATE_DELAY);
+};
+let save_details_checked_state_handler = function()
+{
+/*{{{*/
+if(tag_this) console.log("⚫ %c js_folds.save_details_checked_state_handler:", lbB+lb3);
+
+    save_details_checked_state_timeout = null;
+/*}}}*/
+    /* Build an array of details XPath {{{*/
+    let val_array = [];
+    document.querySelectorAll("DETAILS.checked").forEach((el) => {
+        let xpath = js_xpath.get_nodeXPath( el );
+        val_array.push({ xpath , checked: el.checked });
+
+if(tag_this) console.log(" 🟠 %c"+xpath, "background-color:black");
+if(log_this) console.dir(el);
+    });
+    /*}}}*/
+    /* set localStorage {{{*/
+    let key = "xpath_details_checked_array";
+    if(     val_array.length )
+    {
+        let val = JSON.stringify( val_array );
+        js_store.localStorage_setItem( key, val);
+    }
+    else {
+        js_store.localStorage_delItem( key );
+    }
+    /*}}}*/
+};
+/*}}}*/
+/*○ load_details_checked_state {{{*/
+let load_details_checked_state = function()
+{
+if(tag_this) console.log("⚫ %c js_folds.load_details_checked_state:", lbB+lb3);
+
+    //┌───────────────────────────────────────────────────────────────────────┐
+    //│ RESTORE             ● store details checked state from [localStorage] │
+    //└───────────────────────────────────────────────────────────────────────┘
+    let el_checked_array = [];
+    let arr = js_store.localStorage_getArray("xpath_details_checked_array");
+    /**/arr.forEach((item) => {
+        let el = js_xpath.get_nodeXPath_target( item.xpath );
+        if( el ) {
+            el.classList.add("checked", item.checked);
+            el_checked_array.push( el );
+if(tag_this) console.log(" 🟠 %c"+item.xpath, "background-color:black");
+        }
+    });
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ Close parents DETAILS that were not checked, once initial layout done
+    //└────────────────────────────────────────────────────────────────────────┘
+    setTimeout(() => {
+        document.querySelectorAll("DETAILS:not([id])") // DETAILS having no #id
+            .forEach((el) => {
+                if( !el_checked_array.includes(el) ) el.checked = false;
             });
     }, 0);
 
@@ -512,6 +588,8 @@ return { name : "js_folds"
     // DEBUG
     , load_details_open_state
     , save_details_open_state
+    , load_details_checked_state
+    , save_details_checked_state
     , get_ancestors_with_tag
     , save_containers_scrollTop
     , load_containers_scrollTop

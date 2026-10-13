@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261012:21h:31) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261013:20h:22) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary                                            │
 //│ 🟤 linkify relative source-file-path in comments                           │
@@ -123,22 +123,6 @@ let colorize_details = function()
 };
 /*}}}*/
 /*_ format_summary_comments {{{*/
-const STYLE_EM_WRAP = `
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-`;
 let format_summary_comments = function()
 {
     for(let summary of document.querySelectorAll("summary")) {
@@ -166,11 +150,18 @@ let format_summary_comments = function()
                 + "      style='float:right; margin-left: 2em;'"
                 + ">⬜</em>&nbsp;"
 
+                + "<em onclick='js_linkify.toggle_check(event); return false;'"
+                + "      title='✓\n check\n section'"
+                + "      style='float:left; margin-left: 1em;'"
+                + "    class='em_check'"
+                + ">✓</em>&nbsp;"
+
                 + "<em onclick='js_linkify.toggle_wrap(event); return false;'"
                 + "      title='▶◀\nnarrow\ncols-\wrap'"
+                + "      style='float:left; margin-left: 3em;'"
                 + "    class='em_wrap'"
-                + "    style='"+ STYLE_EM_WRAP +"'"
                 + ">↷</em>&nbsp;"
+
             ;
         //}}}
     }
@@ -195,6 +186,25 @@ let toggle_wrap = function(e)
 
     // SHOW WRAPPING STATE
     e.target               .classList.toggle("wrap", wrapping);
+
+    e.cancelBubble        = true;
+    e.stopPropagation         ();
+    e.stopImmediatePropagation();
+    e.preventDefault          ();
+};
+/*}}}*/
+/*_ toggle_check {{{*/
+let toggle_check = function(e)
+{
+    // CASCADE DETAILS WRAPPING TO ALL DESCENDANTS
+    let  details = e.target.closest("DETAILS");
+    let checking = details.classList.toggle("checked");
+
+    details.querySelectorAll("DETAILS")
+        .forEach((el) => el.classList.toggle("checked", checking));
+
+    // SHOW WRAPPING STATE
+    e.target               .classList.toggle("checked", checking);
 
     e.cancelBubble        = true;
     e.stopPropagation         ();
@@ -472,6 +482,7 @@ let fold_close_open_toggle = function(e,state)
     return { onload
         ,    copy_container_text    // exposed to onclick
         ,    fold_close_open_toggle // exposed to onclick
+        ,    toggle_check           // exposed to onclick
         ,    toggle_wrap            // exposed to onclick
     };
 

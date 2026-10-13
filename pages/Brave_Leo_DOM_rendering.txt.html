@@ -27,6 +27,7 @@
 
 <link type="text/css" href="./SERVER/style/notes.css" rel="stylesheet">
 <link type="text/css" href="./SERVER/style/qtext.css" rel="stylesheet">
+
 </head>
 
 <body data-js_boxing="client-side" color_num="1">
@@ -44,24 +45,11 @@
 <details class="close_on_margin_click bg1">
 <summary>Brave Leo AI     ● The rendering pipeline  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="8"><boxu></boxu>
 <boxm> Let's search for current best practices and technical</boxm>
 <boxm> details about `requestAnimationFrame` and the rendering pipeline.</boxm>
@@ -73,24 +61,11 @@ cols-wrap" class="em_wrap" style="
 <details class="close_on_margin_click bg1">
 <summary>## The rendering pipeline (simplified)  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>Each frame the browser runs through these stages:
 <table class="markdown_table">
  <thead>
@@ -129,68 +104,44 @@ cols-wrap" class="em_wrap" style="
  </tbody>
 </table>
 At 60 Hz, you have roughly **16.7 ms** per frame for all of
-this. At 120 Hz it's ~8.3 ms. 
+this. At 120 Hz it's ~8.3 ms.
+ 
 </pre>
 </details><details class="close_on_margin_click bg2">
 <summary>## Where `requestAnimationFrame` fits  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
-<pre>  `requestAnimationFrame` schedules a callback to run **after
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre> `requestAnimationFrame` schedules a callback to run **after
  pending JavaScript tasks but before style calculation and layout**
  <a href="https://stackoverflow.com/questions/58027598/does-requestanimationframe-interfere-css-transitions.">https://stackoverflow.com/questions/58027598/does-requestanimationframe-interfere-css-transitions.</a>
 
-  This is the key timing insight:
-  - Your rAF callback is the **last point** your JavaScript can
+ This is the key timing insight:
+ - Your rAF callback is the **last point** your JavaScript can
  touch the DOM before the browser starts computing the next
  frame <a href="https://stackoverflow.com/questions/58027598/does-requestanimationframe-interfere-css-transitions">https://stackoverflow.com/questions/58027598/does-requestanimationframe-interfere-css-transitions</a>
 
-   - The browser **batches** all DOM/style changes made during
+ - The browser **batches** all DOM/style changes made during
  your rAF callback and processes them together during the
  style/layout phase
  - This is fundamentally different from `setTimeout(fn, 16)`
  or `setInterval`, which fire at arbitrary times that may land
  mid-frame, causing wasted renders, screen tearing, or double-layouts
- <a href="https://www.grizzlypeaksoftware.com/library/css-animation-techniques-with-javascript-triggers-s5kflz0m">https://www.grizzlypeaksoftware.com/library/css-animation-techniques-with-javascript-triggers-s5kflz0m</a> 
+ <a href="https://www.grizzlypeaksoftware.com/library/css-animation-techniques-with-javascript-triggers-s5kflz0m">https://www.grizzlypeaksoftware.com/library/css-animation-techniques-with-javascript-triggers-s5kflz0m</a>
 
+ 
 </pre>
 </details><details class="close_on_margin_click bg3">
 <summary>## What control you get (and don't get)  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><table class="markdown_table">
  <thead>
   <tr>
@@ -224,44 +175,34 @@ cols-wrap" class="em_wrap" style="
 </table>
 *  <a href="https://www.benedikt-sperl.de/blog/2026-01-13-animations-on-the-web">https://www.benedikt-sperl.de/blog/2026-01-13-animations-on-the-web</a>
 
-** <a href="https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/CSS_JavaScript_animation_performance">https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/CSS_JavaScript_animation_performance</a> 
+** <a href="https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/CSS_JavaScript_animation_performance">https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/CSS_JavaScript_animation_performance</a>
 
+ 
 </pre>
 </details><details class="close_on_margin_click bg4">
 <summary>## The practical implication for style changes  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
-<pre> <boxu></boxu>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre><boxu></boxu>
 <boxm> When you change an element's style inside an rAF callback:</boxm>
 <boxm> </boxm>
-<boxm> ```js</boxm>
-<boxm> function animate(time) {</boxm>
-<boxm>     const delta = time - lastTime;</boxm>
-<boxm>     lastTime = time;</boxm>
-<boxm>     </boxm>
-<boxm>     element.style.transform = `translateX(${position}px)`;</boxm>
-<boxm>... more style changes ...</boxm>
-<boxm>     </boxm>
-<boxm>     requestAnimationFrame(animate);</boxm>
-<boxm> }</boxm>
-<boxm> ```</boxm>
+<boxm> 
+<div class="code js">```js
+ function animate(time) {
+     const delta = time - lastTime;
+     lastTime = time;
+     
+     element.style.transform = `translateX(${position}px)`;
+... more style changes ...
+     
+     requestAnimationFrame(animate);
+ }
+ ```
+</div>
 <boxd></boxd>
 <boxu></boxu>
 <boxm> Here's what happens in sequence:</boxm>
@@ -285,29 +226,17 @@ cols-wrap" class="em_wrap" style="
 <boxm> It might batch your change with the</boxm>
 <boxm> next frame's pipeline, or it might paint immediately</boxm>
 <boxm> — you don't control that cadence.</boxm>
-<boxd></boxd> 
-</pre>
+<boxd></boxd>
+ 
+</boxm></pre>
 </details><details class="close_on_margin_click bg5">
 <summary>## rAF's real advantage: alignment, not speed  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>rAF doesn't make the browser faster.
 In fact, CSS transitions and rAF-based JS animations
 perform nearly identically when both run on the main UI thread (*1)
@@ -342,29 +271,17 @@ perform nearly identically when both run on the main UI thread (*1)
 
 <boxm> (*5) <a href="https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/CSS_JavaScript_animation_performance">https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/CSS_JavaScript_animation_performance</a></boxm>
 
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg6">
 <summary>## When rAF is the right tool  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><table class="markdown_table">
  <thead>
   <tr>
@@ -396,68 +313,46 @@ cols-wrap" class="em_wrap" style="
   </tr>
  </tbody>
 </table>
-* <a href="https://www.benedikt-sperl.de/blog/2026-01-13-animations-on-the-web">https://www.benedikt-sperl.de/blog/2026-01-13-animations-on-the-web</a> 
+* <a href="https://www.benedikt-sperl.de/blog/2026-01-13-animations-on-the-web">https://www.benedikt-sperl.de/blog/2026-01-13-animations-on-the-web</a>
 
+ 
 </pre>
 </details><details class="close_on_margin_click bg7">
 <summary>## A common pitfall: layout thrashing  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
-<pre>  If you read and write styles in a tight loop, the browser is
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre> If you read and write styles in a tight loop, the browser is
  forced to flush layout synchronously between each read/write:
- <boxu></boxu>
-<boxm> ```js</boxm>
-<boxm>BAD — triggers forced synchronous layout</boxm>
-<boxm>   for (let i = 0; i &lt; items.length; i++) {</boxm>
-<boxm>   items[i].style.width = items[i].offsetWidth + 10 + 'px';</boxm>
-<boxm> </boxm>
-<boxm>write</boxm>
-<boxm>   const width = items[i].offsetWidth;■ read — forces layout</boxm>
-<boxm>   flush</boxm>
-<boxm> }</boxm>
-<boxm> ```</boxm>
+<boxu></boxu>
+<boxm> 
+<div class="code js">```js
+   // BAD — triggers forced synchronous layout
+   for (let i = 0; i &lt; items.length; i++) {
+   items[i].style.width = items[i].offsetWidth + 10 + 'px';
+ 
+   // write
+   const width = items[i].offsetWidth;  // read — forces layout
+   flush
+ }
+ ```
+</div>
 <boxd></boxd>
  rAF doesn't prevent this — you just need to **read first, then
- write**, or batch reads and writes separately. 
-</pre>
+ write**, or batch reads and writes separately.
+ 
+</boxm></pre>
 </details><details class="close_on_margin_click bg8">
 <summary>## Bottom line  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> `requestAnimationFrame` gives you **a window into the rendering</boxm>
 <boxm> pipeline**, not control over it.</boxm>
@@ -477,100 +372,44 @@ cols-wrap" class="em_wrap" style="
 <boxm> prefer CSS since it can run off the main thread.</boxm>
 <boxm> </boxm>
 <boxm> Reach for rAF when you need per-frame JavaScript logic.</boxm>
-<boxd></boxd>// 
+<boxd></boxd>
+// 
 </pre>
 </details> 
 </pre>
 </details><details class="close_on_margin_click bg2">
 <summary>PROMPT           ● The Airport metaphor  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>You: Can you use a metaphor example where the DOM would be
 the cargo delivered by a fleet of planes landing at an airport
-where the browser would use a ground crue to handle the rendering? 
+where the browser would use a ground crue to handle the rendering?
+ 
 </pre>
 </details><details class="close_on_margin_click bg3">
 <summary>Brave Leo AI     ● ...building the metaphor  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
-<pre color_num="1">Great metaphor — let's build it out.
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre color_num="8">Great metaphor — let's build it out.
 <details class="close_on_margin_click bg1">
-<summary>## The Airport: Browser Rendering Pipeline  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>## The Airport: Browser Rendering Pipeline  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
-<pre color_num="8"><details class="close_on_margin_click bg1">
-<summary>**The DOM is the cargo manifest**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
-&amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
-narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
+<boxm> **The DOM is the cargo manifest**</boxm>
+<boxm> </boxm>
 <boxm> Each element on your page is a crate on a pallet,</boxm>
 <boxm> tagged with its dimensions, weight, and</boxm>
 <boxm> destination gate (its position in the layout tree).</boxm>
@@ -578,29 +417,17 @@ cols-wrap" class="em_wrap" style="
 <boxm> Some crates are simple (a single `&lt;p&gt;` tag), others are nested inside other</boxm>
 <boxm> crates (child elements), and some are marked "fragile" or "heavy"</boxm>
 <boxm> (complex components, images, iframes).</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg2">
 <summary>**The fleet of planes is your JavaScript and network activity**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> Each plane delivers new or updated crates to the airport.</boxm>
 <boxm> </boxm>
@@ -613,109 +440,60 @@ cols-wrap" class="em_wrap" style="
 <boxm> A `style.transform = 'translateX(10px)'` change?</boxm>
 <boxm> That's a crate being physically moved to a different spot on</boxm>
 <boxm> the apron.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg3">
 <summary>**The ground crew is the browser's rendering pipeline**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> They work in shifts, and each shift has a strict deadline before</boxm>
 <boxm> the next one starts.</boxm>
 <boxm> Their job is to take all the crates currently sitting at gates</boxm>
 <boxm> and assemble them into a final, visible display</boxm>
 <boxm> — the painted frame that gets shown to the passenger (the user).</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg4">
 <summary>### The ground crew's workflow per shift  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="4">Each shift (frame) follows a rigid sequence:
 <details class="close_on_margin_click bg1">
 <summary>1. **Manifest review (Style recalculation)**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> — The crew walks every gate and checks: "What does this crate actually look</boxm>
 <boxm> like right now?" A crate might have been re-tagged multiple</boxm>
 <boxm> times since the last shift (CSS cascade, inline styles, class</boxm>
 <boxm> changes). They reconcile everything into one final spec sheet</boxm>
 <boxm> per crate.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg2">
 <summary>2. **Gate arrangement (Layout / Reflow)**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> — Now they figure out where each crate physically sits on the tarmac.</boxm>
 <boxm></boxm>
@@ -724,154 +502,97 @@ cols-wrap" class="em_wrap" style="
 <boxm></boxm>
 <boxm> This is the most expensive step</boxm>
 <boxm> — moving one heavy crate can force rearranging dozens of others.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg3">
 <summary>3. **Wrapping and labeling (Paint)**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> — The crates get wrapped in their final visual appearance:</boxm>
 <boxm> colors, borders, shadows, text glyphs, background images.</boxm>
 <boxm> </boxm>
 <boxm> Nothing moves anymore; this is purely cosmetic.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg4">
 <summary>4. **Loading onto the departure shuttle (Composite)**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> — All finished, wrapped crates are loaded onto a shuttle bus that</boxm>
 <boxm>   drives them to the terminal window where passengers watch.</boxm>
 <boxm> </boxm>
 <boxm> This is the actual pixels hitting the screen.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details> 
 </pre>
 </details><details class="close_on_margin_click bg5">
 <summary>### Where `requestAnimationFrame` fits  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="2"><details class="close_on_margin_click bg1">
 <summary>Now here's the key part.  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> The ground crew works on a **fixed shift schedule**.</boxm>
 <boxm> At 60 Hz displays, a new shift starts every ~16.7 milliseconds.</boxm>
 <boxm> </boxm>
 <boxm> Between shifts, the crew is resting, and the tarmac is frozen.</boxm>
-<boxm> </boxm>
+<boxd></boxd>
+<boxu></boxu>
 <boxm> You're a warehouse manager who wants to move crates around.</boxm>
-<boxm> </boxm>
 <boxm> You could run out onto the tarmac at any random moment — shouting</boxm>
 <boxm> instructions while the crew is mid-shift.</boxm>
-<boxm> </boxm>
+<boxd></boxd>
+<boxu></boxu>
 <boxm> Sometimes you'll</boxm>
 <boxm> arrive just as they're finishing up, and your changes get included.</boxm>
-<boxm> </boxm>
+<boxd></boxd>
+<boxu></boxu>
 <boxm> Other times you'll arrive mid-arrangement, forcing them to</boxm>
 <boxm> stop what they're doing, re-check the manifest, redo the gate</boxm>
 <boxm> arrangement, and start wrapping again.</boxm>
-<boxm> </boxm>
+<boxd></boxd>
+<boxu></boxu>
 <boxm> This causes **jank** — the crew looks frantic, the shuttle leaves late,</boxm>
 <boxm> and passengers see stuttering.</boxm>
-<boxm> </boxm>
+<boxd></boxd>
+<boxu></boxu>
 <boxm> That's what happens when you mutate the DOM in a `setTimeout`</boxm>
 <boxm> or a click handler without thinking about timing.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg2">
 <summary>**`requestAnimationFrame` is a radio channel to the shift supervisor**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>Instead of running onto the tarmac whenever you feel like it,
 You pick up the radio and say:
 <boxu></boxu>
@@ -895,32 +616,20 @@ Then the supervisor says: *"Copy all. Crew, go."*
 <boxm> - No interruptions.</boxm>
 <boxm> - No rework.</boxm>
 <boxm> - One batch.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details> 
 </pre>
 </details><details class="close_on_margin_click bg6">
 <summary>### What the radio *doesn't* give you  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
-<pre color_num="4"> <boxu></boxu>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre color_num="4"><boxu></boxu>
 <boxm> This is the crucial limitation.</boxm>
 <boxm> The radio lets you **talk to the crew before they start**,</boxm>
 <boxm> but it doesn't let you:</boxm>
@@ -928,52 +637,27 @@ cols-wrap" class="em_wrap" style="
 <details class="close_on_margin_click bg1">
 <summary> - **Watch the crew work**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> Once they hang up and start their shift, you're blind.</boxm>
 <boxm> </boxm>
 <boxm> You can't observe how long layout takes,</boxm>
 <boxm> whether paint is slow, or whether composite is bottlenecked.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg2">
 <summary> - **Tell them how to work**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> You can say "move crate 42,"</boxm>
 <boxm> but not "use the hydraulic lift instead of dragging it."</boxm>
@@ -981,55 +665,31 @@ cols-wrap" class="em_wrap" style="
 <boxm> You can't control whether the browser uses</boxm>
 <boxm> the GPU compositor thread</boxm>
 <boxm> or forces a main-thread repaint.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg3">
 <summary> - **Skip a shift**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> You can cancel your radio request (`cancelAnimationFrame`),</boxm>
 <boxm> but you can't pause the crew's shift schedule.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg4">
 <summary> - **Extend the shift**  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> If your crate-moving instructions are</boxm>
 <boxm> so complex that the crew runs out of time before the shuttle</boxm>
@@ -1038,31 +698,19 @@ cols-wrap" class="em_wrap" style="
 <boxm> That's a dropped frame.</boxm>
 <boxm> </boxm>
 <boxm> The crew will catch up next shift, but the passenger saw a hitch.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details> 
 </pre>
 </details><details class="close_on_margin_click bg7">
 <summary>### When CSS transitions skip the ground crew entirely  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre> Here's where the metaphor extends beautifully.
 <boxu></boxu>
 <boxm> For certain crate types</boxm>
@@ -1088,29 +736,17 @@ cols-wrap" class="em_wrap" style="
 <boxm> This is why animating `left`, `width`, or `margin`</boxm>
 <boxm> (which require full manifest review + gate rearrangement every shift)</boxm>
 <boxm> is dramatically slower than animating `transform` and `opacity`.</boxm>
-<boxd></boxd> 
+<boxd></boxd>
+ 
 </pre>
 </details><details class="close_on_margin_click bg8">
 <summary>### Summary table  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
-cols-wrap" class="em_wrap" style="
- border           : 0px solid yellow;
- position         : absolute;
- color            : white;
- text-shadow      : 1px 1px 1px black;
- padding          : 0.5em;
- display          : inline-block;
- font-weight      : 900;
- font-size        : 16px;
- border-radius    : 1em;
- border           : 1px solid #F0FA;
- background-color :           #202F;
- line-height      : 0.8em;
- transition       : all 200ms ease-out;
- margin-top       : -0.5em;
-">↷</em>&nbsp;</summary>
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><table class="markdown_table">
  <thead>
   <tr>
@@ -1182,6 +818,7 @@ cols-wrap" class="em_wrap" style="
   </tr>
  </tbody>
 </table>
+  
 </pre>
 </details><boxu></boxu>
 <boxm> So rAF gives you **one phone call per shift, at exactly the</boxm>
