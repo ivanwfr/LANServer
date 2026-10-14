@@ -29,13 +29,16 @@
 <link type="text/css" href="./SERVER/style/qtext.css" rel="stylesheet">
 
 </head>
-<body data-js_boxing="client-side" color_num="1" class="">
-<pre color_num="0"><details class="close_on_margin_click bg1">
+<body data-js_boxing="client-side" color_num="1">
+<pre color_num="0"><boxu></boxu>
+<boxm> sample.txt     ● Copilot conversation: MVC refactoring _TAG (261014:17h:07)</boxm>
+<boxd></boxd>
+<details class="close_on_margin_click bg1">
 <summary>PROMPT   ● notes_refactored.js 261007  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
@@ -66,12 +69,12 @@ in GVim and keeps the app working while you move logic.
 <boxu></boxu>
 <boxm> 1. Refactoring principles</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg2 checked">
+<details class="close_on_margin_click bg2 checked undefined">
 <summary>These are the rules that must hold:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check checked">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
@@ -100,12 +103,12 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 </details><boxu></boxu>
 <boxm> 2. Final target architecture</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg3 checked">
+<details class="close_on_margin_click bg3 checked undefined">
 <summary>Target responsibility map:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check checked">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
@@ -170,12 +173,12 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 </details><boxu></boxu>
 <boxm> 3. Core data contract</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg4" open="">
+<details class="close_on_margin_click bg4 checked undefined">
 <summary>Type definitions:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
@@ -218,7 +221,7 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="6"><details class="close_on_margin_click bg1">
@@ -226,7 +229,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
@@ -282,7 +285,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
@@ -330,7 +333,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
@@ -403,7 +406,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
@@ -460,7 +463,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
@@ -501,7 +504,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
@@ -546,7 +549,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="4"><boxu></boxu>
@@ -557,7 +560,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>Current old owners:
@@ -609,7 +612,7 @@ Function migration:
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>Current old owners:
@@ -656,7 +659,7 @@ Function migration:
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>This is the required contract.
@@ -689,7 +692,7 @@ If a refactor removes these, the delete queue becomes stale.
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>Current old owners:
@@ -722,7 +725,7 @@ No data mutation allowed here.
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="6"><details class="close_on_margin_click bg1">
@@ -730,7 +733,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>interface js_CNTRL:
@@ -756,7 +759,7 @@ Action semantics:
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>interface js_MODEL:
@@ -783,7 +786,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>interface notes:
@@ -829,7 +832,7 @@ Required internal functions to preserve:
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>interface js_notes:
@@ -866,7 +869,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>interface js_VIEW:
@@ -882,7 +885,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>interface js_details:
@@ -914,7 +917,7 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>This is the key point.
@@ -968,7 +971,7 @@ Recommended migration template:
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>The safest refactor is not “copy/paste split by file with partial removal.”
@@ -1001,7 +1004,7 @@ The critical mapping to keep from breaking the app:
 &amp;
 ● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
- section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+ this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
