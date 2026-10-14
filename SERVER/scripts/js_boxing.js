@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261013:16h:29)
+//│ js_boxing.js                                           _TAG (261014:15h:04)
 /* Convert text content and  Markdown table into HTML {{{
 Handles:
 - Header row and separator row (|---|---|)
@@ -166,7 +166,7 @@ let format_data = function(data_in)
     data_out  = md_format_table    ( data_out );
     data_out  = add_spacing_lines  ( data_out );
 
-    return "<pre>"+ data_out +"</pre>";
+    return "\n<pre>"+ data_out +"</pre>\n";
 };
 /*}}}*/
 /*_ add_spacing_lines ● @see SERVER/style/qtext.css {{{*/
