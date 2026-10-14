@@ -1,8 +1,10 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER       ● _TAG (261013:20h:22) │
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261014:16h:57)
 //├────────────────────────────────────────────────────────────────────────────┤
-//│ 🟤 ecc colorize details>summary                                            │
-//│ 🟤 linkify relative source-file-path in comments                           │
+//│ 🟤 ecc colorize details>summary
+//│ 🟤 linkify relative source-file-path in comments
+//│ @see SERVER/style/qtext.css
+//│ @see SERVER/style/notes.css
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -41,66 +43,8 @@ let onload  = function()
         setTimeout( format_summary_comments ,  500);
 };
 /*}}}*/
+
 /*_ colorize_details {{{*/
-// BG FG {{{
-/* FG FFF {{{*/
-//const FG = [
-//  "#FFF6"
-//, "#fffF"
-//, "#fffF"
-//, "#fffF"
-//, "#fffF"
-//, "#fffF"
-//, "#fffF"
-//, "#fffF"
-//, "#fffF"
-//, "#fffF"
-//];
-//}}}
-/* FG 000 @see SERVER/style/qtext.css {{{*/
-//const FG = [
-//  "#BBBF"
-//, "#000F"
-//, "#000F"
-//, "#000F"
-//, "#000F"
-//, "#000F"
-//, "#000F"
-//, "#000F"
-//, "#000F"
-//, "#000F"
-//];
-/*}}}*/
-// BG rgba {{{
-//const BG = [
-//  "rgba( 32,  32,  32, .4)"
-//, "rgba(150,  75,   0, .4)"
-//, "rgba(255,   0,   0, .4)"
-//, "rgba(255, 165,   0, .4)"
-//, "rgba(255, 255,   0, .4)"
-//, "rgba(154, 205,  50, .4)"
-//, "rgba(100, 149, 237, .4)"
-//, "rgba(238, 130, 238, .4)"
-//, "rgba(160, 160, 160, .4)"
-//, "rgba(255, 255, 255, .4)"
-//];
-//}}}
-// BG hex {{{
-//const BG = [
-//  "#00000080"
-//, "#964B00A0"
-//, "#FF0000A0"
-//, "#FFA500A0"
-//, "#FFFF00A0"
-//, "#9ACD32A0"
-//, "#6495EDA0"
-//, "#EE82EEA0"
-//, "#A0A0A0A0"
-//, "#FFFFFFA0"
-//, "#F0F0F0F0"
-//];
-//}}}
-//}}}
 let colorize_details = function()
 {
     for(let el of document.querySelectorAll("details"))
@@ -116,12 +60,10 @@ let colorize_details = function()
         // PARENT ATTRIBUTE FOR NEXT CHILD [color_num]
         el.parentElement.setAttribute("color_num", color_num);      // update parent next attr
         el.classList.add(                     "bg"+color_num);
-
-        // STYLE
-//      el.firstElementChild.style.          color = FG[color_num]; //FG[depth+1];
     }
 };
 /*}}}*/
+
 /*_ format_summary_comments {{{*/
 let format_summary_comments = function()
 {
@@ -136,7 +78,6 @@ let format_summary_comments = function()
 
         //}}}
         // BUTTONS: em_copy & fold_close_open_toggle {{{
-        // @see SERVER/style/notes.css
 //      if( summary.innerHTML.trim() ) // FOLD_OPEN comments with no text may have DETAILS children
             summary.innerHTML += ""
                 + "<em onclick='js_linkify.fold_close_open_toggle(event, 2);'"
@@ -151,7 +92,7 @@ let format_summary_comments = function()
                 + ">⬜</em>&nbsp;"
 
                 + "<em onclick='js_linkify.toggle_check(event); return false;'"
-                + "      title='✓\n check\n section'"
+                + "      title='✓\n check\n this section'"
                 + "      style='float:left; margin-left: 1em;'"
                 + "    class='em_check'"
                 + ">✓</em>&nbsp;"
@@ -174,44 +115,59 @@ let format_summary_comments = function()
     //}}}
 };
 /*}}}*/
+
 /*_ toggle_wrap {{{*/
 let toggle_wrap = function(e)
 {
-    // CASCADE DETAILS WRAPPING TO ALL DESCENDANTS
-    let  details = e.target.closest("DETAILS");
-    let wrapping = details.classList.toggle("wrap");
+    // TOGGLE [wrap] AND CASCADE TO ALL DESCENDANTS {{{
+    let  details    = e.target.closest("DETAILS");
+    let wrapping    = details.classList.toggle("wrap");
 
     details.querySelectorAll("DETAILS")
         .forEach((el) => el.classList.toggle("wrap", wrapping));
 
-    // SHOW WRAPPING STATE
-    e.target               .classList.toggle("wrap", wrapping);
-
+    //}}}
+    // cancel container event delegation {{{
     e.cancelBubble        = true;
     e.stopPropagation         ();
     e.stopImmediatePropagation();
     e.preventDefault          ();
+    //}}}
 };
 /*}}}*/
 /*_ toggle_check {{{*/
 let toggle_check = function(e)
 {
-    // CASCADE DETAILS WRAPPING TO ALL DESCENDANTS
-    let  details = e.target.closest("DETAILS");
-    let checking = details.classList.toggle("checked");
+    // TOGGLE [checked] AND CASCADE TO ALL DESCENDANTS {{{
+    let  details    = e.target.closest("DETAILS");
+    let checking    = details.classList.toggle("checked");
 
     details.querySelectorAll("DETAILS")
         .forEach((el) => el.classList.toggle("checked", checking));
 
-    // SHOW WRAPPING STATE
-    e.target               .classList.toggle("checked", checking);
+    //}}}
+    // CHECK PARENT WHEN ALL CHILDREN ARE CHECKED {{{
+    let d_parent    =      details.parentElement.closest("DETAILS"        );
+    if( d_parent )
+    {
+        // CHILDREN
+        let children         = d_parent.querySelectorAll("DETAILS"        );
+        let children_checked = d_parent.querySelectorAll("DETAILS.checked");
 
+        // ALL CHECKED
+        let d_parent_checked = (children.length == children_checked.length);
+        /**/d_parent.classList.toggle("checked", d_parent_checked);
+    }
+    //}}}
+    // cancel container event delegation {{{
     e.cancelBubble        = true;
     e.stopPropagation         ();
     e.stopImmediatePropagation();
     e.preventDefault          ();
+    //}}}
 };
 /*}}}*/
+
 /*➔ copy_container_text {{{*/
 let note_input_TEXTAREA;
 let copy_container_text = function(e)
