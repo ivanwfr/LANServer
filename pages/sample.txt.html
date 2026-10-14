@@ -27,11 +27,32 @@
 
 <link type="text/css" href="./SERVER/style/notes.css" rel="stylesheet">
 <link type="text/css" href="./SERVER/style/qtext.css" rel="stylesheet">
-</head>
 
-<body data-js_boxing="client-side" color_num="0" class="">
-<boxu></boxu>
-<boxm> Absolutely. Here is the correct next step:</boxm>
+</head>
+<body data-js_boxing="client-side" color_num="1" class="">
+<pre color_num="0"><details class="close_on_margin_click bg1">
+<summary>PROMPT   ● notes_refactored.js 261007  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre><boxu></boxu>
+<boxm> I would like a refactoring proposal based on these files:</boxm>
+<boxm> 1. js_MODEL.js</boxm>
+<boxm> 2. js_VIEW.js</boxm>
+<boxm> 3. js_CNTRL.js</boxm>
+<boxm> 4. notes.js</boxm>
+<boxm> 5. js_notes.js</boxm>
+<boxm> 6. js_details.js</boxm>
+<boxm> </boxm>
+<boxm> Tell me if a credits cap is likely get in the way at this stage.</boxm>
+<boxd></boxd>
+ 
+</pre>
+</details><boxu></boxu>
+<boxm> Copilot Reply: Here is the correct next step:</boxm>
 <boxm></boxm>
 <boxm> ● a complete refactoring contract for the 6 files you listed,</boxm>
 <boxm> ● written as an IDL-style specification,</boxm>
@@ -39,108 +60,175 @@
 <boxm> ● callers,</boxm>
 <boxm> ● callees,</boxm>
 <boxm> ● and state transfer rules.</boxm>
-<boxm></boxm>
-<boxm> This is the kind of contract that makes the migration safe</boxm>
-<boxm> in GVim and keeps the app working while you move logic.</boxm>
 <boxd></boxd>
+This is the kind of contract that makes the migration safe
+in GVim and keeps the app working while you move logic.
 <boxu></boxu>
 <boxm> 1. Refactoring principles</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg1" open="">
-<summary style="color: rgb(0, 0, 0);">These are the rules that must hold:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>- js_CNTRL.js owns transitions and state
-- js_MODEL.js owns model-facing operations
-- notes.js owns raw note data and persistence
-- js_notes.js owns rendering helpers only
-- js_VIEW.js owns event-to-intent wiring and UI refreshes
-- js_details.js is temporary glue only, not real business logic
-No module should silently “borrow” state from another module.
-Important invariants:
-- The editing index is controller state, not view state
-- The auto-save draft is controller state or transient model state, not js_notes.js state
-- The deleted-note queue is model state and must remain synchronized
-- Any DOM mutation must be in js_VIEW.js or js_notes.js
-- Any server/storage mutation must be in notes.js or js_MODEL.js
-- js_details.js may remain only as a bootstrapping adapter until migration is complete 
+<details class="close_on_margin_click bg2 checked">
+<summary>These are the rules that must hold:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check checked">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre><boxu></boxu>
+<boxm> - js_CNTRL.js owns transitions and state</boxm>
+<boxm> - js_MODEL.js owns model-facing operations</boxm>
+<boxm> - notes.js owns raw note data and persistence</boxm>
+<boxm> - js_notes.js owns rendering helpers only</boxm>
+<boxm> - js_VIEW.js owns event-to-intent wiring and UI refreshes</boxm>
+<boxm> - js_details.js is temporary glue only, not real business logic</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> No module should silently “borrow” state from another module.</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> Important invariants:</boxm>
+<boxm> </boxm>
+<boxm> - The editing index is controller state, not view state</boxm>
+<boxm> - The auto-save draft is controller state or transient model state, not js_notes.js state</boxm>
+<boxm> - The deleted-note queue is model state and must remain synchronized</boxm>
+<boxm> - Any DOM mutation must be in js_VIEW.js or js_notes.js</boxm>
+<boxm> - Any server/storage mutation must be in notes.js or js_MODEL.js</boxm>
+<boxm> - js_details.js may remain only as a bootstrapping adapter until migration is complete</boxm>
+<boxd></boxd>
+ 
 </pre>
 </details><boxu></boxu>
 <boxm> 2. Final target architecture</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg2">
-<summary style="color: rgb(0, 0, 0);">Target responsibility map:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>- js_CNTRL.js
-- currentState
-- transition(action, payload)
-- subscribe(listener)
-- getState()
-- state machine only
-- js_MODEL.js
-- façade between controller and notes.js
-- calls domain operations
-- no DOM
-- no UI classes
-- no inline HTML generation
-- notes.js
-- persistent note array
-- deleted-note queue
-- storage keys
-- fetch/upload sync
-- note CRUD logic
-- no DOM output
-- no UI state
-- js_notes.js
-- render helpers
-- highlight row
-- scroll
-- layout
-- status line styling
-- DOM escaping
-- no editing state
-- no auto-save state
-- no deleted-note queue logic
-- js_VIEW.js
-- binds DOM events to transitions
-- subscribes to controller
-- refreshes UI from state
-- no direct note persistence logic
-- js_details.js
-- only DOM bootstrap and legacy forwarding
-- temporary compatibility adapter
-- should disappear once migration is complete </pre>
+<details class="close_on_margin_click bg3 checked">
+<summary>Target responsibility map:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check checked">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre><boxu></boxu>
+<boxm> js_CNTRL.js</boxm>
+<boxm> </boxm>
+<boxm> - currentState</boxm>
+<boxm> - transition(action, payload)</boxm>
+<boxm> - subscribe(listener)</boxm>
+<boxm> - getState()</boxm>
+<boxm> - state machine only</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> js_MODEL.js</boxm>
+<boxm> </boxm>
+<boxm> - façade between controller and notes.js</boxm>
+<boxm> - calls domain operations</boxm>
+<boxm> - no DOM</boxm>
+<boxm> - no UI classes</boxm>
+<boxm> - no inline HTML generation</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> notes.js</boxm>
+<boxm> </boxm>
+<boxm> - persistent note array</boxm>
+<boxm> - deleted-note queue</boxm>
+<boxm> - storage keys</boxm>
+<boxm> - fetch/upload sync</boxm>
+<boxm> - note CRUD logic</boxm>
+<boxm> - no DOM output</boxm>
+<boxm> - no UI state</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> js_notes.js</boxm>
+<boxm> </boxm>
+<boxm> - render helpers</boxm>
+<boxm> - highlight row</boxm>
+<boxm> - scroll</boxm>
+<boxm> - layout</boxm>
+<boxm> - status line styling</boxm>
+<boxm> - DOM escaping</boxm>
+<boxm> - no editing state</boxm>
+<boxm> - no auto-save state</boxm>
+<boxm> - no deleted-note queue logic</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> js_VIEW.js</boxm>
+<boxm> </boxm>
+<boxm> - binds DOM events to transitions</boxm>
+<boxm> - subscribes to controller</boxm>
+<boxm> - refreshes UI from state</boxm>
+<boxm> - no direct note persistence logic</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> js_details.js</boxm>
+<boxm> </boxm>
+<boxm> - only DOM bootstrap and legacy forwarding</boxm>
+<boxm> - temporary compatibility adapter</boxm>
+<boxm> - should disappear once migration is complete</boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><boxu></boxu>
 <boxm> 3. Core data contract</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg3">
-<summary style="color: rgb(0, 0, 0);">Type definitions:  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>- Note
-- checked: boolean
-- text: string
-- timestamp: number
-- WastedNote
-- same shape as Note
-- State
-- IDLE
-- EDITING
-- SAVING
-- DELETING
-- IMPORTING
-- EXPORTING
-- CHECKING
-- LOADING
-- ERROR
-- UIState
-- editingNoteIndex: number
-- inputDirty: boolean
-- autoInsertPrefix: boolean
-- noteSelectedId: number | null
-This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_details.js. </pre>
+<details class="close_on_margin_click bg4" open="">
+<summary>Type definitions:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre><boxu></boxu>
+<boxm> Note</boxm>
+<boxm> - checked: boolean</boxm>
+<boxm> - text: string</boxm>
+<boxm> - timestamp: number</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> WastedNote</boxm>
+<boxm> - same shape as Note</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> State</boxm>
+<boxm> - IDLE</boxm>
+<boxm> - EDITING</boxm>
+<boxm> - SAVING</boxm>
+<boxm> - DELETING</boxm>
+<boxm> - IMPORTING</boxm>
+<boxm> - EXPORTING</boxm>
+<boxm> - CHECKING</boxm>
+<boxm> - LOADING</boxm>
+<boxm> - ERROR</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> UIState</boxm>
+<boxm> - editingNoteIndex: number</boxm>
+<boxm> - inputDirty: boolean</boxm>
+<boxm> - autoInsertPrefix: boolean</boxm>
+<boxm> - noteSelectedId: number | null</boxm>
+<boxd></boxd>
+This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_details.js.
+ 
+</pre>
 </details><boxu></boxu>
 <boxm> 4. Module-by-module IDL specification</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg4">
-<summary style="color: rgb(0, 0, 0);">js_CNTRL js_MODEL notes js_notes js_VIEW js_details  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<details class="close_on_margin_click bg5">
+<summary>js_CNTRL js_MODEL notes js_notes js_VIEW js_details  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="6"><details class="close_on_margin_click bg1">
-<summary style="color: rgb(0, 0, 0);"> 4.1 js_CNTRL.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<summary> 4.1 js_CNTRL.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> 4.1 js_CNTRL.js</boxm>
 <boxm> </boxm>
@@ -186,9 +274,17 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> - EDITING → SAVE_NOTE → SAVING → IDLE</boxm>
 <boxm> - EDITING → DELETE_NOTE → DELETING → IDLE</boxm>
 <boxm> - EDITING → CANCEL → IDLE</boxm>
-<boxd></boxd> </pre>
+<boxd></boxd>
+ 
+</pre>
 </details><details class="close_on_margin_click bg2">
-<summary style="color: rgb(0, 0, 0);"> 4.2 js_MODEL.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<summary> 4.2 js_MODEL.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> 4.2 js_MODEL.js</boxm>
 <boxm> </boxm>
@@ -226,9 +322,17 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> </boxm>
 <boxm> Callees:</boxm>
 <boxm> - notes.js</boxm>
-<boxd></boxd> </pre>
+<boxd></boxd>
+ 
+</pre>
 </details><details class="close_on_margin_click bg3">
-<summary style="color: rgb(0, 0, 0);"> 4.3 notes.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<summary> 4.3 notes.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> 4.3 notes.js</boxm>
 <boxm> </boxm>
@@ -240,32 +344,41 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> - get_checked(index: number): string</boxm>
 <boxm> - get_notes_loaded_from(): string | undefined</boxm>
 <boxm> - getWastedNotes(): WastedNote[]</boxm>
+<boxm> </boxm>
 <boxm> - load_notes(): void</boxm>
 <boxm> - load_server_notes(data: any): void</boxm>
 <boxm> - load_client_notes(): void</boxm>
+<boxm> </boxm>
 <boxm> - saveNote(payload: { content: string, editingIndex?: number }): Note | null</boxm>
 <boxm> - deleteNote(noteIndex: number): Note | null</boxm>
+<boxm> </boxm>
 <boxm> - checkNote(noteIndex: number): Note | null</boxm>
+<boxm> </boxm>
 <boxm> - importNotes(buffer: string): { count: number, message: string }</boxm>
 <boxm> - exportNotes(): { buffer: string, message: string }</boxm>
 <boxm> - restoreNote(): { buffer: string, message: string }</boxm>
 <boxm> - clearWastedNotes(): { count: number }</boxm>
+<boxm> </boxm>
 <boxm> - request_server_upload(upload_reason?: string | false): void</boxm>
 <boxm> - request_server_upload_pending(): string | false</boxm>
 <boxm> - upload_notes_to_server(_caller?: string): void</boxm>
+<boxm> </boxm>
 <boxm> - note_1_onclick_save(e?: Event): void</boxm>
 <boxm> - note_2_onclick_import(e: Event): void</boxm>
 <boxm> - note_3_onclick_export(e: Event): void</boxm>
 <boxm> - note_4_onclick_check(e: Event, index: number): void</boxm>
 <boxm> - note_6_onclick_delete(e: Event, index: number): void</boxm>
 <boxm> - note_7_onclick_wasted(e: Event): void</boxm>
+<boxm> </boxm>
 <boxm> - center_input_placeholder(placeholder: string, delay: number): void</boxm>
 <boxm> - reset_input_placeholder(): void</boxm>
+<boxm> </boxm>
 <boxm> - nArray_wasted_add_deleted_note(deleted_note: Note): void</boxm>
 <boxm> - nArray_wasted_del_imported_note(imported_note_args: { text: string }): void</boxm>
 <boxm> - nArray_wasted_del_note_index(index: number): void</boxm>
 <boxm> </boxm>
-<boxm> Important: these last 3 must stay, because they are part of the deleted-note-sync semantics.</boxm>
+<boxm> Important: these last 3 must stay, because they are part of</boxm>
+<boxm> the deleted-note-sync semantics.</boxm>
 <boxm> </boxm>
 <boxm> This is the part your earlier refactor broke:</boxm>
 <boxm> - nArray_wasted_del_imported_note</boxm>
@@ -279,10 +392,20 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> Migration rule:</boxm>
 <boxm> - Remove DOM mutations from this file completely</boxm>
 <boxm> - Keep data manipulation and persistence here</boxm>
-<boxm> - If a function currently touches save_note_BUTTON, wasted_note_BUTTON, status_line, or the table, move that logic to js_VIEW.js or js_notes.js</boxm>
-<boxd></boxd> </pre>
+<boxm> - If a function currently touches</boxm>
+<boxm>   save_note_BUTTON, wasted_note_BUTTON, status_line, or the table,</boxm>
+<boxm>   move that logic to js_VIEW.js or js_notes.js</boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><details class="close_on_margin_click bg4">
-<summary style="color: rgb(0, 0, 0);"> 4.4 js_notes.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<summary> 4.4 js_notes.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> 4.4 js_notes.js</boxm>
 <boxm> </boxm>
@@ -292,20 +415,24 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> - no direct persistence</boxm>
 <boxm> </boxm>
 <boxm> Public API:</boxm>
-<boxm> </boxm>
 <boxm> - add_notes_DETAILS(args: { saved_notes_DIV: HTMLElement, saved_notes_TABLE: HTMLElement }): boolean</boxm>
 <boxm> - layout_notes(_caller?: string, index?: number): void</boxm>
 <boxm> - standout_note_at_index(index: number): void</boxm>
 <boxm> - note_scrollIntoView(index?: number): void</boxm>
+<boxm> </boxm>
 <boxm> - wider(): void</boxm>
 <boxm> - narrower(): void</boxm>
 <boxm> - tunesize(e: Event): void</boxm>
+<boxm> </boxm>
 <boxm> - show_status(msg: string): void</boxm>
 <boxm> - tune_status(e: Event): void</boxm>
 <boxm> - tail_status(...args: string[]): void</boxm>
 <boxm> - tics_status(count: number): string</boxm>
+<boxm> </boxm>
 <boxm> - copy_to_clipboard(buffer: string): void</boxm>
+<boxm> </boxm>
 <boxm> - escapeHTML(text: string): string</boxm>
+<boxm> </boxm>
 <boxm> - get_input(): HTMLTextAreaElement | null</boxm>
 <boxm> - get_status_line(): HTMLElement | null</boxm>
 <boxm> - is_last_note_auto_save(): boolean</boxm>
@@ -324,9 +451,18 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> - js_CNTRL.js for state transitions</boxm>
 <boxm> - js_VIEW.js for display update orchestration</boxm>
 <boxm> - js_details.js temporarily for bootstrapping</boxm>
-<boxd></boxd> </pre>
+<boxm> </boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><details class="close_on_margin_click bg5">
-<summary style="color: rgb(0, 0, 0);"> 4.5 js_VIEW.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<summary> 4.5 js_VIEW.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> 4.5 js_VIEW.js</boxm>
 <boxm> </boxm>
@@ -337,7 +473,6 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> - re-renders view based on state</boxm>
 <boxm> </boxm>
 <boxm> Public API:</boxm>
-<boxm> </boxm>
 <boxm> - init(e?: Event): void</boxm>
 <boxm> - bindEvents(): void</boxm>
 <boxm> - render(currentState: string, payload?: any): void</boxm>
@@ -357,9 +492,18 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> - js_MODEL</boxm>
 <boxm> - js_notes.js</boxm>
 <boxm> - js_input.js if still used at this stage</boxm>
-<boxd></boxd> </pre>
+<boxm> </boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><details class="close_on_margin_click bg6">
-<summary style="color: rgb(0, 0, 0);"> 4.6 js_details.js  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<summary> 4.6 js_details.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre><boxu></boxu>
 <boxm> 4.6 js_details.js</boxm>
 <boxm> </boxm>
@@ -369,7 +513,6 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> - transitional glue only</boxm>
 <boxm> </boxm>
 <boxm> Public API:</boxm>
-<boxm> </boxm>
 <boxm> - onload(): void</boxm>
 <boxm> - add_notes_details(): boolean</boxm>
 <boxm> - note_5_onclick_edit(e: Event, index: number): void</boxm>
@@ -389,260 +532,445 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> - server sync</boxm>
 <boxm> - deleted-note queue management</boxm>
 <boxm> - render logic</boxm>
-<boxd></boxd> </pre>
-</details> </pre>
+<boxm> </boxm>
+<boxd></boxd>
+ 
+</pre>
+</details> 
+</pre>
 </details><boxu></boxu>
 <boxm> 5. Exact migration map: old → new ● This is the important part.</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg5">
-<summary style="color: rgb(0, 0, 0);"> State,index ● Save-delete-import-export ● wated array ● Render  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<details class="close_on_margin_click bg6">
+<summary> State,index ● Save-delete-import-export ● wated array ● Render  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="4"><boxu></boxu>
 <boxm> 5.1 State and editing index</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg1">
-<summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>Current old owners:
-- js_details.js:
-  - get_editing_note_index
-  - set_editing_note_index
-  - save_note_auto
-- js_notes.js:
-  - get_editing_note_index
-  - set_editing_note_index
-  - save_note_auto
-  - is_input_same_as_original
-  - is_input_same_as_last_auto_save
-  - is_last_note_auto_save
+<boxu></boxu>
+<boxm> js_details.js:</boxm>
+<boxm> - get_editing_note_index</boxm>
+<boxm> - set_editing_note_index</boxm>
+<boxm> - save_note_auto</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> js_notes.js:</boxm>
+<boxm> - get_editing_note_index</boxm>
+<boxm> - set_editing_note_index</boxm>
+<boxm> - save_note_auto</boxm>
+<boxm> - is_input_same_as_original</boxm>
+<boxm> - is_input_same_as_last_auto_save</boxm>
+<boxm> - is_last_note_auto_save</boxm>
+<boxd></boxd>
 New owners:
-- js_CNTRL.js owns:
-  - current editing state
-  - editingNoteIndex
-  - inputDirty
-  - autoSaveDraft
-- js_VIEW.js owns:
-  - button text and disabled state
-  - textarea input rendering
-  - row highlighting
+<boxu></boxu>
+<boxm> js_CNTRL.js owns:</boxm>
+<boxm> - current editing state</boxm>
+<boxm> - editingNoteIndex</boxm>
+<boxm> - inputDirty</boxm>
+<boxm> - autoSaveDraft</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> js_VIEW.js owns:</boxm>
+<boxm> - button text and disabled state</boxm>
+<boxm> - textarea input rendering</boxm>
+<boxm> - row highlighting</boxm>
+<boxd></boxd>
 Function migration:
-- set_editing_note_index(index) → controller state + view update
-- get_editing_note_index() → js_CNTRL.getState() / state payload / controller-held store
-- save_note_auto() → state transition logic inside js_CNTRL.js or js_MODEL.js wrapper
-- is_input_same_as_original() → transition guard in controller or model helper
-- is_input_same_as_last_auto_save() → controller guard
-- is_last_note_auto_save() → notes.js helper only if in the data layer, otherwise controller state </pre>
+<boxu></boxu>
+<boxm> - set_editing_note_index(index) → controller state + view update</boxm>
+<boxm> - get_editing_note_index() → js_CNTRL.getState() / state payload / controller-held store</boxm>
+<boxm> - save_note_auto() → state transition logic inside js_CNTRL.js or js_MODEL.js wrapper</boxm>
+<boxm> - is_input_same_as_original() → transition guard in controller or model helper</boxm>
+<boxm> - is_input_same_as_last_auto_save() → controller guard</boxm>
+<boxm> - is_last_note_auto_save() → notes.js helper only if in the data layer, otherwise controller state</boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><boxu></boxu>
 <boxm> 5.2 Save/delete/import/export</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg2">
-<summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>Current old owners:
-- notes.js
-  - note_1_onclick_save
-  - note_2_onclick_import
-  - note_3_onclick_export
-  - note_4_onclick_check
-  - note_6_onclick_delete
-  - note_7_onclick_wasted
+<boxu></boxu>
+<boxm> notes.js</boxm>
+<boxm> - note_1_onclick_save</boxm>
+<boxm> - note_2_onclick_import</boxm>
+<boxm> - note_3_onclick_export</boxm>
+<boxm> - note_4_onclick_check</boxm>
+<boxm> - note_6_onclick_delete</boxm>
+<boxm> - note_7_onclick_wasted</boxm>
+<boxd></boxd>
 New owners:
-- js_VIEW.js:
-  - event dispatch to actions
-  - button handlers
-- js_CNTRL.js:
-  - SAVE_NOTE / DELETE_NOTE / CHECK_NOTE / IMPORT_NOTES / EXPORT_NOTES
-- js_MODEL.js:
-  - façade methods for those actions
-- notes.js:
-  - actual note-array mutation and persistence
+<boxu></boxu>
+<boxm> js_VIEW.js:</boxm>
+<boxm> - event dispatch to actions</boxm>
+<boxm> - button handlers</boxm>
+<boxm> </boxm>
+<boxm> js_CNTRL.js:</boxm>
+<boxm> - SAVE_NOTE / DELETE_NOTE / CHECK_NOTE / IMPORT_NOTES / EXPORT_NOTES</boxm>
+<boxm> </boxm>
+<boxm> js_MODEL.js:</boxm>
+<boxm> - façade methods for those actions</boxm>
+<boxm> </boxm>
+<boxm> notes.js:</boxm>
+<boxm> - actual note-array mutation and persistence</boxm>
+<boxd></boxd>
 Function migration:
-- note_1_onclick_save → controller action SAVE_NOTE → js_MODEL.save()
-- note_2_onclick_import → controller action IMPORT_NOTES → js_MODEL.import()
-- note_3_onclick_export → controller action EXPORT_NOTES → js_MODEL.export()
-- note_4_onclick_check → controller action CHECK_NOTE → js_MODEL.check()
-- note_6_onclick_delete → controller action DELETE_NOTE → js_MODEL.remove()
-- note_7_onclick_wasted → view + controller queue orchestration, not model logic </pre>
+<boxu></boxu>
+<boxm> - note_1_onclick_save → controller action SAVE_NOTE → js_MODEL.save()</boxm>
+<boxm> - note_2_onclick_import → controller action IMPORT_NOTES → js_MODEL.import()</boxm>
+<boxm> - note_3_onclick_export → controller action EXPORT_NOTES → js_MODEL.export()</boxm>
+<boxm> - note_4_onclick_check → controller action CHECK_NOTE → js_MODEL.check()</boxm>
+<boxm> - note_6_onclick_delete → controller action DELETE_NOTE → js_MODEL.remove()</boxm>
+<boxm> - note_7_onclick_wasted → view + controller queue orchestration, not model logic</boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><boxu></boxu>
 <boxm> 5.3 Wasted notes cleanup</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg3">
-<summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>This is the required contract.
 Current required functions to preserve:
-- nArray_wasted_add_deleted_note(deleted_note: Note): void
-- nArray_wasted_del_imported_note(imported_note_args: { text: string }): void
-- nArray_wasted_del_note_index(index: number): void
+<boxu></boxu>
+<boxm> - nArray_wasted_add_deleted_note(deleted_note: Note): void</boxm>
+<boxm> - nArray_wasted_del_imported_note(imported_note_args: { text: string }): void</boxm>
+<boxm> - nArray_wasted_del_note_index(index: number): void</boxm>
+<boxd></boxd>
 These are not optional. They ensure:
-- deleted notes remain in the queue
-- imported notes are removed from queue when reintroduced
-- deleted-note button state stays in sync
+<boxu></boxu>
+<boxm> - deleted notes remain in the queue</boxm>
+<boxm> - imported notes are removed from queue when reintroduced</boxm>
+<boxm> - deleted-note button state stays in sync</boxm>
+<boxd></boxd>
 New ownship:
-- notes.js keeps them
-- js_MODEL.js exposes accessors if needed
-- js_VIEW.js uses the count to update the button label
-If a refactor removes these, the delete queue becomes stale. </pre>
+<boxu></boxu>
+<boxm> - notes.js keeps them</boxm>
+<boxm> - js_MODEL.js exposes accessors if needed</boxm>
+<boxm> - js_VIEW.js uses the count to update the button label</boxm>
+<boxd></boxd>
+If a refactor removes these, the delete queue becomes stale.
+ 
+</pre>
 </details><boxu></boxu>
 <boxm> 5.4 Render functions</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg4">
-<summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>Current old owners:
-- js_notes.js
-- notes.js
-- js_details.js
+<boxu></boxu>
+<boxm> ● js_notes.js</boxm>
+<boxm> ● notes.js</boxm>
+<boxm> ● js_details.js</boxm>
+<boxd></boxd>
 New owners:
-- js_notes.js only:
-  - layout_notes
-  - standout_note_at_index
-  - note_scrollIntoView
-  - escapeHTML
-  - show_status
-  - copy_to_clipboard
-  - wider/narrower/tunesize
-No data mutation allowed here. </pre>
-</details> </pre>
+<boxu></boxu>
+<boxm> ● js_notes.js only:</boxm>
+<boxm>   - layout_notes</boxm>
+<boxm>   - standout_note_at_index</boxm>
+<boxm>   - note_scrollIntoView</boxm>
+<boxm>   - escapeHTML</boxm>
+<boxm>   - show_status</boxm>
+<boxm>   - copy_to_clipboard</boxm>
+<boxm>   - wider/narrower/tunesize</boxm>
+<boxd></boxd>
+No data mutation allowed here.
+ 
+</pre>
+</details> 
+</pre>
 </details><boxu></boxu>
 <boxm> 6. Explicit IDL-style contracts</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg6">
-<summary style="color: rgb(0, 0, 0);">⯀js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em style="float:right; margin-left: 2em;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<details class="close_on_margin_click bg7">
+<summary>js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="6"><details class="close_on_margin_click bg1">
-<summary style="color: rgb(0, 0, 0);">6.1 js_CNTRL.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>interface js_CNTRL {
-  subscribe(listener: (state: string, payload?: any) =&gt; void): void;
-  transition(action: string, payload?: any): void;
-  getState(): string;
-}
+<summary>6.1 js_CNTRL.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre>interface js_CNTRL:
+<boxu></boxu>
+<boxm> subscribe(listener: (state: string, payload?: any) =&gt; void): void;</boxm>
+<boxm> transition(action: string, payload?: any): void;</boxm>
+<boxm> getState(): string;</boxm>
+<boxd></boxd>
 Action semantics:
-- SELECT_NOTE(payload: { id: number, content?: string }): void
-- SAVE_NOTE(payload: { content: string, editingIndex?: number }): void
-- DELETE_NOTE(noteId: number): void
-- CHECK_NOTE(noteId: number): void
-- IMPORT_NOTES(buffer: string): void
-- EXPORT_NOTES(): void
-- CANCEL(): void </pre>
+<boxu></boxu>
+<boxm> - SELECT_NOTE(payload: { id: number, content?: string }): void</boxm>
+<boxm> - SAVE_NOTE(payload: { content: string, editingIndex?: number }): void</boxm>
+<boxm> - DELETE_NOTE(noteId: number): void</boxm>
+<boxm> - CHECK_NOTE(noteId: number): void</boxm>
+<boxm> - IMPORT_NOTES(buffer: string): void</boxm>
+<boxm> - EXPORT_NOTES(): void</boxm>
+<boxm> - CANCEL(): void</boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><details class="close_on_margin_click bg2">
-<summary style="color: rgb(0, 0, 0);">6.2 js_MODEL.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>interface js_MODEL {
-  save(payload: { content: string, editingIndex?: number }): any;
-  edit(noteId: number): void;
-  remove(noteId: number): void;
-  getEditingNoteIndex(): number;
-  load(): void;
-  check(noteId: number): any;
-  import(buffer: string): { count: number, message: string };
-  export(): { buffer: string, message: string };
-} </pre>
+<summary>6.2 js_MODEL.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre>interface js_MODEL:
+<boxu></boxu>
+<boxm> save(payload: { content: string, editingIndex?: number }): any;</boxm>
+<boxm> </boxm>
+<boxm> edit(noteId: number): void;</boxm>
+<boxm> </boxm>
+<boxm> remove(noteId: number): void;</boxm>
+<boxm> </boxm>
+<boxm> getEditingNoteIndex(): number;</boxm>
+<boxm> </boxm>
+<boxm> load(): void;</boxm>
+<boxm> </boxm>
+<boxm> check(noteId: number): any;</boxm>
+<boxm> </boxm>
+<boxm> import(buffer: string): { count: number, message: string };</boxm>
+<boxm> export(): { buffer: string, message: string };</boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><details class="close_on_margin_click bg3">
-<summary style="color: rgb(0, 0, 0);">6.3 notes.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>interface notes {
-  get_nArray(): Note[];
-  get_checked(index: number): string;
-  get_notes_loaded_from(): string | undefined;
-  getWastedNotes(): WastedNote[];
-  load_notes(): void;
-  saveNote(payload: { content: string, editingIndex?: number }): Note | null;
-  deleteNote(noteIndex: number): Note | null;
-  checkNote(noteIndex: number): Note | null;
-  importNotes(buffer: string): { count: number, message: string };
-  exportNotes(): { buffer: string, message: string };
-  restoreNote(): { buffer: string, message: string };
-  clearWastedNotes(): { count: number };
-  request_server_upload(upload_reason?: string | false): void;
-  request_server_upload_pending(): string | false;
-  upload_notes_to_server(_caller?: string): void;
-  note_1_onclick_save(e?: Event): void;
-  note_2_onclick_import(e: Event): void;
-  note_3_onclick_export(e: Event): void;
-  note_4_onclick_check(e: Event, index: number): void;
-  note_6_onclick_delete(e: Event, index: number): void;
-  note_7_onclick_wasted(e: Event): void;
-}
+<summary>6.3 notes.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre>interface notes:
+<boxu></boxu>
+<boxm> get_nArray(): Note[];</boxm>
+<boxm> get_checked(index: number): string;</boxm>
+<boxm> get_notes_loaded_from(): string | undefined;</boxm>
+<boxm> getWastedNotes(): WastedNote[];</boxm>
+<boxm> </boxm>
+<boxm> load_notes(): void;</boxm>
+<boxm> </boxm>
+<boxm> saveNote(payload: { content: string, editingIndex?: number }): Note | null;</boxm>
+<boxm> deleteNote(noteIndex: number): Note | null;</boxm>
+<boxm> restoreNote(): { buffer: string, message: string };</boxm>
+<boxm> checkNote(noteIndex: number): Note | null;</boxm>
+<boxm> clearWastedNotes(): { count: number };</boxm>
+<boxm> </boxm>
+<boxm> importNotes(buffer: string): { count: number, message: string };</boxm>
+<boxm> exportNotes(): { buffer: string, message: string };</boxm>
+<boxm> </boxm>
+<boxm> request_server_upload(upload_reason?: string | false): void;</boxm>
+<boxm> request_server_upload_pending(): string | false;</boxm>
+<boxm> upload_notes_to_server(_caller?: string): void;</boxm>
+<boxm> </boxm>
+<boxm> note_1_onclick_save(e?: Event): void;</boxm>
+<boxm> note_2_onclick_import(e: Event): void;</boxm>
+<boxm> note_3_onclick_export(e: Event): void;</boxm>
+<boxm> note_4_onclick_check(e: Event, index: number): void;</boxm>
+<boxm> note_6_onclick_delete(e: Event, index: number): void;</boxm>
+<boxm> note_7_onclick_wasted(e: Event): void;</boxm>
+<boxm> </boxm>
+<boxd></boxd>
 Required internal functions to preserve:
-- nArray_wasted_add_deleted_note(deleted_note: Note): void
-- nArray_wasted_del_imported_note(imported_note_args: { text: string }): void
-- nArray_wasted_del_note_index(index: number): void </pre>
+<boxu></boxu>
+<boxm> - nArray_wasted_add_deleted_note(deleted_note: Note): void</boxm>
+<boxm> - nArray_wasted_del_imported_note(imported_note_args: { text: string }): void</boxm>
+<boxm> - nArray_wasted_del_note_index(index: number): void</boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><details class="close_on_margin_click bg4">
-<summary style="color: rgb(0, 0, 0);">6.4 js_notes.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>interface js_notes {
-  add_notes_DETAILS(args: { saved_notes_DIV: HTMLElement, saved_notes_TABLE: HTMLElement }): boolean;
-  layout_notes(_caller?: string, index?: number): void;
-  standout_note_at_index(index: number): void;
-  note_scrollIntoView(index?: number): void;
-  wider(): void;
-  narrower(): void;
-  tunesize(e: Event): void;
-  show_status(msg: string): void;
-  tune_status(e: Event): void;
-  tail_status(...args: string[]): void;
-  tics_status(count: number): string;
-  copy_to_clipboard(buffer: string): void;
-  escapeHTML(text: string): string;
-  get_input(): HTMLTextAreaElement | null;
-  get_status_line(): HTMLElement | null;
-  is_last_note_auto_save(): boolean;
-  AUTO_SAVE_IDLE_INTERVAL_MS: number;
-  AUTO_SAVE_EDIT_INTERVAL_MS: number;
-} </pre>
+<summary>6.4 js_notes.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre>interface js_notes:
+<boxu></boxu>
+<boxm> add_notes_DETAILS(args: { saved_notes_DIV: HTMLElement, saved_notes_TABLE: HTMLElement }): boolean;</boxm>
+<boxm>  </boxm>
+<boxm> layout_notes(_caller?: string, index?: number): void;</boxm>
+<boxm> standout_note_at_index(index: number): void;</boxm>
+<boxm> note_scrollIntoView(index?: number): void;</boxm>
+<boxm>  </boxm>
+<boxm> get_input(): HTMLTextAreaElement | null;</boxm>
+<boxm> is_last_note_auto_save(): boolean;</boxm>
+<boxm> AUTO_SAVE_IDLE_INTERVAL_MS: number;</boxm>
+<boxm> AUTO_SAVE_EDIT_INTERVAL_MS: number;</boxm>
+<boxm>  </boxm>
+<boxm> copy_to_clipboard(buffer: string): void;</boxm>
+<boxm> </boxm>
+<boxm> wider(): void;</boxm>
+<boxm> narrower(): void;</boxm>
+<boxm> tunesize(e: Event): void;</boxm>
+<boxm>  </boxm>
+<boxm> show_status(msg: string): void;</boxm>
+<boxm> tune_status(e: Event): void;</boxm>
+<boxm> tail_status(...args: string[]): void;</boxm>
+<boxm> tics_status(count: number): string;</boxm>
+<boxm> get_status_line(): HTMLElement | null;</boxm>
+<boxm>  </boxm>
+<boxm> escapeHTML(text: string): string;</boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><details class="close_on_margin_click bg5">
-<summary style="color: rgb(0, 0, 0);">6.5 js_VIEW.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>interface js_VIEW {
-  init(e?: Event): void;
-  bindEvents(): void;
-  render(currentState: string, payload?: any): void;
-} </pre>
+<summary>6.5 js_VIEW.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre>interface js_VIEW:
+<boxu></boxu>
+<boxm> init(e?: Event): void;</boxm>
+<boxm> bindEvents(): void;</boxm>
+<boxm> render(currentState: string, payload?: any): void;</boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><details class="close_on_margin_click bg6">
-<summary style="color: rgb(0, 0, 0);">6.6 js_details.js contract  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>interface js_details {
-  onload(): void;
-  add_notes_details(): boolean;
-  note_5_onclick_edit(e: Event, index: number): void;
-  set_editing_note_index(index: number): void;
-  get_editing_note_index(): number;
-  save_note_auto(e?: Event): void;
-  input_focus_listener(): void;
-  input_blur_listener(): void;
-  is_input_auto_insert_prefix(): boolean;
-  get_input_auto_insert_prefix(): string;
-} </pre>
-</details> </pre>
+<summary>6.6 js_details.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre>interface js_details:
+<boxu></boxu>
+<boxm> onload(): void;</boxm>
+<boxm> </boxm>
+<boxm> add_notes_details(): boolean;</boxm>
+<boxm> </boxm>
+<boxm> input_focus_listener(): void;</boxm>
+<boxm> input_blur_listener(): void;</boxm>
+<boxm> </boxm>
+<boxm> note_5_onclick_edit(e: Event, index: number): void;</boxm>
+<boxm> set_editing_note_index(index: number): void;</boxm>
+<boxm> get_editing_note_index(): number;</boxm>
+<boxm> </boxm>
+<boxm> save_note_auto(e?: Event): void;</boxm>
+<boxm> is_input_auto_insert_prefix(): boolean;</boxm>
+<boxm> get_input_auto_insert_prefix(): string;</boxm>
+<boxd></boxd>
+ 
+</pre>
+</details> 
+</pre>
 </details><boxu></boxu>
 <boxm> 7. Required API-preserving migration strategy</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg7">
-<summary style="color: rgb(0, 0, 0);">⯀js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<details class="close_on_margin_click bg8">
+<summary>js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>This is the key point.
 When moving from the current code to the clean architecture,
 preserve the public behavior, not the exact function names, while
 keeping the same semantics.
 Recommended migration template:
-- js_details.js
-  - keep only bootstrapping and compatibility
-  - call js_VIEW.init()
-  - call js_MODEL.load()
-  - pass DOM refs to js_VIEW
-- js_VIEW.js
-  - each click becomes a controller intent
-  - no model calls directly
-  - no direct array mutation
-- js_CNTRL.js
-  - owns the transition table
-  - calls js_MODEL
-  - handles state change events
-- js_MODEL.js
-  - delegates to notes.js
-  - no DOM, no render logic
-- notes.js
-  - becomes the pure note-domain model
-  - no UI logic
-  - preserves deleted queue functions
-- js_notes.js
-  - becomes render helper only
-  - no state machine logic
-  - no deleted-note queue logic </pre>
+<boxu></boxu>
+<boxm> js_details.js</boxm>
+<boxm> - keep only bootstrapping and compatibility</boxm>
+<boxm> - call js_VIEW.init()</boxm>
+<boxm> - call js_MODEL.load()</boxm>
+<boxm> - pass DOM refs to js_VIEW</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> js_VIEW.js</boxm>
+<boxm> - each click becomes a controller intent</boxm>
+<boxm> - no model calls directly</boxm>
+<boxm> - no direct array mutation</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> js_CNTRL.js</boxm>
+<boxm> - owns the transition table</boxm>
+<boxm> - calls js_MODEL</boxm>
+<boxm> - handles state change events</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> js_MODEL.js</boxm>
+<boxm> - delegates to notes.js</boxm>
+<boxm> - no DOM, no render logic</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> notes.js</boxm>
+<boxm> - becomes the pure note-domain model</boxm>
+<boxm> - no UI logic</boxm>
+<boxm> - preserves deleted queue functions</boxm>
+<boxd></boxd>
+<boxu></boxu>
+<boxm> js_notes.js</boxm>
+<boxm> - becomes render helper only</boxm>
+<boxm> - no state machine logic</boxm>
+<boxm> - no deleted-note queue logic</boxm>
+<boxd></boxd>
+ 
+</pre>
 </details><boxu></boxu>
 <boxm> 8. Final recommendation</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg8">
-<summary style="color: rgb(0, 0, 0);"> semantics state ownership adapter API  <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
+<details class="close_on_margin_click bg9">
+<summary> semantics state ownership adapter API  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre>The safest refactor is not “copy/paste split by file with partial removal.”
 It is:
 <boxu></boxu>
@@ -662,29 +990,44 @@ The critical mapping to keep from breaking the app:
 <boxm> - DOM rendering → js_notes.js + js_VIEW.js</boxm>
 <boxm> - bootstrap glue → js_details.js</boxm>
 <boxm> - deleted-note queue cleanup → notes.js</boxm>
-<boxd></boxd> </pre>
+<boxd></boxd>
+ 
+</pre>
 </details><boxu></boxu>
 <boxm> 9. Credits cap</boxm>
 <boxd></boxd>
-<details class="close_on_margin_click bg9">
-<summary style="color: rgb(0, 0, 0);"> <em style="float: right; margin-left: 2em; visibility: hidden;" onclick="js_linkify.fold_close_open_toggle(event, 2);">▶◀</em>&nbsp;<em class="cb_copy" style="float:right; margin-left: 2em;" onclick="js_linkify.copy_container_text(event); return false;">⬜</em>&nbsp;<em style="border       : 0px solid yellow;            position     : absolute;            color        : white;            text-shadow  : 1px 1px 1px black;            padding      : 0.5em;            display      : inline-block;            font-weight  : 900;            font-size    : 16px;            border-radius: 1em;            border       : 1px solid #F0FA;         background-color:           #202F;            line-height  : 0.8em;            transition   : all 200ms ease-out;            margin-top: -0.5em;            " onclick="js_linkify.toggle_wrap(event); return false;">↷</em>&nbsp;</summary>
-<pre>At this point, no practical credits issue is likely to block
-the migration spec itself.
-The design and migration guide is large,
-but it is still comfortably within
-the normal working budget for this environment.
+<details class="close_on_margin_click bg0">
+<summary>✅  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+&amp;
+● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+ check
+ section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
+narrow
+cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
+<pre><boxu></boxu>
+<boxm> At this point, no practical credits issue is likely to block</boxm>
+<boxm> the migration spec itself.</boxm>
+<boxm> </boxm>
+<boxm> The design and migration guide is large,</boxm>
+<boxm> but it is still comfortably within</boxm>
+<boxm> the normal working budget for this environment.</boxm>
+<boxd></boxd>
 If you want, the next useful step is this:
 I can give you a final “state ownership matrix”
 with every function mapped exactly to:
-" ┌────────────────────────────────────────────────────────────────────────────┐
-" │ - owner
-" │ - caller
-" │ - callee
-" │ - stateful or stateless
-" │ - retain/transfer/delete
-" └────────────────────────────────────────────────────────────────────────────┘
+<boxu></boxu>
+<boxm> - owner</boxm>
+<boxm> - caller</boxm>
+<boxm> - callee</boxm>
+<boxm> - stateful or stateless</boxm>
+<boxm> - retain/transfer/delete</boxm>
+<boxd></boxd>
 This would be your exact implementation checklist for the migration.
-⯀ </pre>
+⯀
+ 
+</pre>
 </details>
+
+</pre>
 </body>
 </html>
