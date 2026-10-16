@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-/*│ server2_listener.js                                   _TAG (261001:00h:30)
+/*│ server2_listener.js                                   _TAG (261016:19h:34)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -133,8 +133,8 @@ log_X(G+"● REQUEST #"+ response.request_count+" "+ request.method +" "+ uri.pa
     let  consumed_by = "";
     if( !consumed_by) consumed_by = reply_server_STATUS ( args );
     //}}}
-    // handle_FETCH_POST {{{
-    if( !consumed_by) consumed_by = handle_FETCH_POST( args );
+    // dispatch_FETCH_AND_POST {{{
+    if( !consumed_by) consumed_by = dispatch_FETCH_AND_POST( args );
     //}}}
     /* fs.readFile {{{*/
     if(!consumed_by && uri.path)
@@ -147,7 +147,7 @@ if(is_logging()   ) log_X(N+"dispatch: consumed_by=["+consumed_by+"]");
 //}}}
 };
 /*}}}*/
-/*_ handle_FETCH_POST {{{*/
+/*_ dispatch_FETCH_AND_POST {{{*/
 /*    REQUEST_URL_ARRAY {{{*/
 const REQUEST_URL_ARRAY
     = [   "/fetch_notes"
@@ -155,10 +155,10 @@ const REQUEST_URL_ARRAY
     ];
 
 /*}}}*/
-let handle_FETCH_POST = function(args)
+let dispatch_FETCH_AND_POST = function(args)
 {
 //{{{
-if(is_logging()) log_Y("...handle_FETCH_POST");
+if(is_logging()) log_Y("...dispatch_FETCH_AND_POST");
 //}}}
     let {      request, response } = args;
     let consumed_by;
@@ -207,7 +207,7 @@ if(is_logging()) log_X(C+"1 request [data] ● body:\n"+ body);
 
     request.on("end", () => {
 
-        server6_notes.handle_request(request, response, body);
+        server6_notes.handle_FETCH_AND_POST(request, response, body);
     });
 };
 /*}}}*/
@@ -218,7 +218,7 @@ if(is_logging()) log_X("handle_GET");
 
     let body =     decodeURIComponent( request.url );
 
-    server6_notes.handle_request(request, response, body);
+    server6_notes.handle_FETCH_AND_POST(request, response, body);
 };
 /*}}}*/
 

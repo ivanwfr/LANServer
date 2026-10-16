@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server0_log.js ● termio ● ANSII-TERMINAL                _TAG (261008:21h:14)
+//│ server0_log.js ● termio ● ANSII-TERMINAL                _TAG (261016:19h:39)
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 // eslint-disable no-warning-comments */
@@ -190,4 +190,5 @@ if(is_logging()) log_X(Y+"● writeHead "+_caller);
 })();
 //    module.exports {{{
 try { module.exports = server0_log;                      } catch(ex) { console.log(ex.message); console.trace(); }
+globalThis.server0_log = server0_log; //DEBUG ONLY
 //}}}

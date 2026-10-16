@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261014:16h:57)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261014:18h:00)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -86,7 +86,7 @@ let format_summary_comments = function()
                 + ">▶◀</em>&nbsp;"
 
                 + "<em onclick='js_linkify.copy_container_text(event); return false;'" // i.e. cancelBubble
-                + "      title='● copy to clipboard\n&\n● copy to note-input below'"
+                + "      title='● copy TITLE into NOTE INPUT below\n&\n● copy TEXT to CLIPBOARD'"
                 + "      class='em_copy'"
                 + "      style='float:right; margin-left: 2em;'"
                 + ">⬜</em>&nbsp;"
@@ -178,7 +178,8 @@ let copy_container_text = function(e)
     //}}}
     // COPY-SOURCE {{{
     let details = e.target.closest("DETAILS");
-    let pre     = details.querySelector(":scope > PRE");
+    let summary = details.querySelector(":scope > SUMMARY");
+    let pre     = details.querySelector(":scope > PRE"    ); // :scope pseudo-class to get a direct descendant
 
     //}}}
     // COPY-DESTINATION {{{
@@ -189,18 +190,19 @@ let copy_container_text = function(e)
     let text
         =  (details.id == "note_DETAILS")
         &&  note_input_TEXTAREA
-        ?   note_input_TEXTAREA.value   // [NOTE TEXT TO CLIPBOARD]
-        :   pre    .textContent;        // [PRE  TEXT TO CLIPBOARD]
-
+        ?   note_input_TEXTAREA.value                     // [NOTE TEXT TO CLIPBOARD]
+        :   pre                .textContent
+    ;
     //}}}
     // COPY TO RELEVANT TEXT AREA {{{
  // let ta = note_input_TEXTAREA || details.querySelector("TEXTAREA");
     let ta = js_input;
 
     //}}}
-    // APPEND TEXT TO TEXTAREA {{{
+    // APPEND TITLE TO TEXTAREA ● USER MAY PASTE CLIPBOARD CONTENT {{{
     if( ta && (details.id != "note_DETAILS"))
-        ta.value += (ta.value ? "\n":"") + text;
+        ta.value += (ta.value ? "\n":"")
+            +       summary.firstChild.textContent.trim() +"\n";
 
     //}}}
     // COPY TO CLIPBOARD {{{

@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261014:15h:32)
+//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261016:22h:12)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵
 //│
@@ -69,6 +69,7 @@ const STATUS_LINE_TITLE   = "Click: brighter — bigger — dimmer";
 let onload = function()
 {
 if(tag_this) console.log("onload");
+
     document.addEventListener("visibilitychange", function(e) {
         if( document.hidden )
         {

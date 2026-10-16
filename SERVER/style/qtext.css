@@ -78,6 +78,16 @@ BOXU:nth-of-type( 7), BOXU:nth-of-type( 7) ~ BOXM, BOXU:nth-of-type( 7) ~ BOXD {
 BOXU:nth-of-type( 8), BOXU:nth-of-type( 8) ~ BOXM, BOXU:nth-of-type( 8) ~ BOXD { background: linear-gradient(to right, #A0A0A0, #A0A0A010 1%, #A0A0A010 99%, #000); }
 BOXU:nth-of-type( 9), BOXU:nth-of-type( 9) ~ BOXM, BOXU:nth-of-type( 9) ~ BOXD { background: linear-gradient(to right, #FFFFFF, #FFFFFF10 1%, #FFFFFF10 99%, #000); }
 BOXU:nth-of-type(10), BOXU:nth-of-type(10) ~ BOXM, BOXU:nth-of-type(10) ~ BOXD { background: linear-gradient(to right, #101010, #10101010 1%, #10101010 99%, #000); box-shadow: 0 0 1px 0px #FFF; }
+BOXU:nth-of-type(11), BOXU:nth-of-type(11) ~ BOXM, BOXU:nth-of-type(11) ~ BOXD { background: linear-gradient(to right, #964B00, #964B0010 1%, #964B0010 99%, #000); }
+BOXU:nth-of-type(12), BOXU:nth-of-type(12) ~ BOXM, BOXU:nth-of-type(12) ~ BOXD { background: linear-gradient(to right, #FF0000, #FF000010 1%, #FF000010 99%, #000); }
+BOXU:nth-of-type(13), BOXU:nth-of-type(13) ~ BOXM, BOXU:nth-of-type(13) ~ BOXD { background: linear-gradient(to right, #FFA500, #FFA50010 1%, #FFA50010 99%, #000); }
+BOXU:nth-of-type(14), BOXU:nth-of-type(14) ~ BOXM, BOXU:nth-of-type(14) ~ BOXD { background: linear-gradient(to right, #FFFF00, #FFFF0010 1%, #FFFF0010 99%, #000); }
+BOXU:nth-of-type(15), BOXU:nth-of-type(15) ~ BOXM, BOXU:nth-of-type(15) ~ BOXD { background: linear-gradient(to right, #9ACD32, #9ACD3210 1%, #9ACD3210 99%, #000); }
+BOXU:nth-of-type(16), BOXU:nth-of-type(16) ~ BOXM, BOXU:nth-of-type(16) ~ BOXD { background: linear-gradient(to right, #6495ED, #6495ED10 1%, #6495ED10 99%, #000); }
+BOXU:nth-of-type(17), BOXU:nth-of-type(17) ~ BOXM, BOXU:nth-of-type(17) ~ BOXD { background: linear-gradient(to right, #EE82EE, #EE82EE10 1%, #EE82EE10 99%, #000); }
+BOXU:nth-of-type(18), BOXU:nth-of-type(18) ~ BOXM, BOXU:nth-of-type(18) ~ BOXD { background: linear-gradient(to right, #A0A0A0, #A0A0A010 1%, #A0A0A010 99%, #000); }
+BOXU:nth-of-type(19), BOXU:nth-of-type(19) ~ BOXM, BOXU:nth-of-type(19) ~ BOXD { background: linear-gradient(to right, #FFFFFF, #FFFFFF10 1%, #FFFFFF10 99%, #000); }
+BOXU:nth-of-type(20), BOXU:nth-of-type(20) ~ BOXM, BOXU:nth-of-type(20) ~ BOXD { background: linear-gradient(to right, #101010, #10101010 1%, #10101010 99%, #000); box-shadow: 0 0 1px 0px #FFF; }
 /*}}}*/
 
 /* markdown_table ● background {{{*/

@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261014:15h:04)
+//│ js_boxing.js                                           _TAG (261016:13h:56)
 /* Convert text content and  Markdown table into HTML {{{
 Handles:
 - Header row and separator row (|---|---|)
@@ -230,8 +230,9 @@ let md_format_head_line  = function(l_in)
     {
         while(md_head_level)
         {
-            l_out += "md_head_level=["+md_head_level+"]"+
-                     "\n</pre>\n</details>";
+            l_out += ""
+              //+    "md_head_level=["+md_head_level+"]\n" // DEBUG
+                +    "</pre>\n</details>";
             md_head_level -= 1;
         }
         return l_out;
@@ -387,17 +388,29 @@ let md_format_table_to_html = function( table_rows )
 /*_ md_format_table_row {{{*/
 let md_format_table_row = function(line)
 {
-    //┌────────────────────────────────────────────────────────────────────────────┐
+    //┌────────────────────────────────────────────────────────────────────────┐
     //│ Parse a markdown table row into an array of cell strings.
     //│ Handles inlined <br>, escaped pipes (\\|) and surrounding pipes.
-    //└────────────────────────────────────────────────────────────────────────────┘
+    //└────────────────────────────────────────────────────────────────────────┘
     let trimmed = line.trim().replace(/ *&lt;br&gt;/g,"<br>");
 
     if (trimmed.startsWith("|")) trimmed = trimmed.slice(1);
     if (trimmed.endsWith  ("|")) trimmed = trimmed.slice(0, -1);
 
-    // Split on unescaped pipes
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ decorations
+    //└────────────────────────────────────────────────────────────────────────┘
 
+    trimmed = trimmed.replace(          /null/g, "🖕"        ); // NUL
+    trimmed = trimmed.replace(         /false/g,"👎"         ); // false
+    trimmed = trimmed.replace(          /true/g,"👍"         ); // true
+    trimmed = trimmed.replace(           / *▼/g, "<br>"      ); // LF
+    trimmed = trimmed.replace(           / *➔/g, "\t"        ); // TAB
+    trimmed = trimmed.replace(  / *● *([^●]*●)/ ,"<br>👉 $1" ); // or
+    trimmed = trimmed.replace(           / *● */g,"<br>or "  ); // or
+    trimmed = trimmed.replace(         /^<br> */g,""         ); // ...delete leading <br>
+
+    // Split on unescaped pipes
     // 1. ADDS EMPTY CELLS
     return trimmed.split(/\|(?=([^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : ""))                            ; // leaves empty cells
 

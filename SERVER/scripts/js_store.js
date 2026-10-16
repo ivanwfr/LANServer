@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (260929:21h:56) │
+//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261016:21h:08) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 /*}}}*/
@@ -69,16 +69,18 @@ if(log_this) console.log("◯ get_page_storage_key");
 
     let matches
         = location.href
-        .  match(/(^.*\/\/[^\/]*)\/(.*)\/(.*)/ ,  "");
+        .  match(/(^.*\/\/[^\/]*)\/(.*)\/([^\?]*)(.*)/ ,  "");
     //┌───────────▲────────────────▲─────▲─────────────────────────────────────┐
-    //│           |                |     |                                     │
+    //│          [1]              [2]   [3]     [4]                            │
+    //│           |                |     |     (path_fragment)                 │
     //│           |                |     (js_notes.js)                         │
     //│           |                (APROJECTS_USR_SERVER_scripts/js_notes.js   │
-    //│           (https://192.168.1.14:447)                                   │
+    //│           (https://192.168.1.14:447)=[1]                               │
     //└────────────────────────────────────────────────────────────────────────┘
     let baseName         = matches[1].replace(/\W+/g, "_");
     let pathName         = matches[2].replace(/\W+/g, "_");
     let fileName         = matches[3].replace(/\W+/g, "_");
+    let path_fragment    = matches[4];
     let page_storage_key = (pathName+"__"+fileName);
 
 /*{{{*/
@@ -86,6 +88,7 @@ if(log_this) {
     console.log("◯ baseName         \t\t["+ baseName          +"]\n"
                +"◯ pathName         \t\t["+ pathName          +"]\n"
                +"◯ fileName         \t\t["+ fileName          +"]\n"
+               +"◯ path_fragment    \t\t["+ path_fragment     +"]\n"
                +"◯ page_storage_key \t\t["+ page_storage_key  +"]\n");
 }
 /*}}}*/

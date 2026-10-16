@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server6_notes     ● $APROJECTS/LANServer/SERVER         _TAG (260930:23h:48)
+//│ server6_notes     ● $APROJECTS/LANServer/SERVER         _TAG (261016:19h:36)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -68,11 +68,11 @@ let { log
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ NOTES ● GET ● POST
 //└────────────────────────────────────────────────────────────────────────────┘
-/*● handle_request {{{*/
-let handle_request = function(request, response, body) // eslint-disable-line complexity
+/*● handle_FETCH_AND_POST {{{*/
+let handle_FETCH_AND_POST = function(request, response, body) // eslint-disable-line complexity
 {
 /* log {{{*/
-let caller = "handle_request";
+let caller = "handle_FETCH_AND_POST";
 if(is_logging()) log_X(C+caller+"("+request.url+")");
 /*}}}*/
     /* upload_notes {{{*/
@@ -144,7 +144,7 @@ log_C(recap);
         /*}}}*/
     }
     /*}}}*/
-if(is_logging()) log_Y("handle_request: consumed_by=["+consumed_by+"]");
+if(is_logging()) log_Y("handle_FETCH_AND_POST: consumed_by=["+consumed_by+"]");
 };
 /*}}}*/
 /*_ handle_GET {{{*/
@@ -247,9 +247,9 @@ let get_notes_file_path = function( notes_storage_key )
 };
 /*}}}*/
 
-    /* return handle_request {{{*/
+    /* return handle_FETCH_AND_POST {{{*/
     return { name: "server6_notes"
-        ,           handle_request
+        ,           handle_FETCH_AND_POST
     };
     /*}}}*/
 })();
