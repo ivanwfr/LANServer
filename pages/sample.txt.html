@@ -25,18 +25,18 @@
 <script type="module"  src="./SERVER/scripts/js_details.js"></script>
 <script type="module"  src="./SERVER/scripts/js_notes.js"></script>
 
-<link type="text/css" href="./SERVER/style/notes.css" rel="stylesheet">
-<link type="text/css" href="./SERVER/style/qtext.css" rel="stylesheet">
+<link type="text/css" href="https://192.168.1.14:447/style/notes.css" rel="stylesheet">
+<link type="text/css" href="https://192.168.1.14:447/style/qtext.css" rel="stylesheet">
 
 </head>
 <body data-js_boxing="client-side" color_num="1">
 <pre color_num="0"><boxu></boxu>
-<boxm> sample.txt     ● Copilot conversation: MVC refactoring _TAG (261014:17h:07)</boxm>
+<boxm> sample.txt     ● Copilot conversation: MVC refactoring _TAG (261016 22h04)</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg1">
-<summary>PROMPT   ● notes_refactored.js 261007  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>PROMPT   ● notes_refactored.js 261007  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -70,9 +70,9 @@ in GVim and keeps the app working while you move logic.
 <boxm> 1. Refactoring principles</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg2 checked undefined">
-<summary>These are the rules that must hold:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>These are the rules that must hold:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -104,9 +104,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 <boxm> 2. Final target architecture</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg3 checked undefined">
-<summary>Target responsibility map:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>Target responsibility map:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -174,9 +174,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 <boxm> 3. Core data contract</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg4 checked undefined">
-<summary>Type definitions:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>Type definitions:  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -217,17 +217,17 @@ This UIState must eventually belong to js_CNTRL.js, not to js_notes.js nor js_de
 <boxm> 4. Module-by-module IDL specification</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg5">
-<summary>js_CNTRL js_MODEL notes js_notes js_VIEW js_details  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>js_CNTRL js_MODEL notes js_notes js_VIEW js_details  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="6"><details class="close_on_margin_click bg1">
-<summary> 4.1 js_CNTRL.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> 4.1 js_CNTRL.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -281,9 +281,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
  
 </pre>
 </details><details class="close_on_margin_click bg2">
-<summary> 4.2 js_MODEL.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> 4.2 js_MODEL.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -329,9 +329,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
  
 </pre>
 </details><details class="close_on_margin_click bg3">
-<summary> 4.3 notes.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> 4.3 notes.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -402,9 +402,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
  
 </pre>
 </details><details class="close_on_margin_click bg4">
-<summary> 4.4 js_notes.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> 4.4 js_notes.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -459,9 +459,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
  
 </pre>
 </details><details class="close_on_margin_click bg5">
-<summary> 4.5 js_VIEW.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> 4.5 js_VIEW.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -500,9 +500,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
  
 </pre>
 </details><details class="close_on_margin_click bg6">
-<summary> 4.6 js_details.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> 4.6 js_details.js  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -545,9 +545,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 <boxm> 5. Exact migration map: old → new ● This is the important part.</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg6">
-<summary> State,index ● Save-delete-import-export ● wated array ● Render  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> State,index ● Save-delete-import-export ● wated array ● Render  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -556,9 +556,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 <boxm> 5.1 State and editing index</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg1">
-<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -608,9 +608,9 @@ Function migration:
 <boxm> 5.2 Save/delete/import/export</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg2">
-<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -655,9 +655,9 @@ Function migration:
 <boxm> 5.3 Wasted notes cleanup</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg3">
-<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -688,9 +688,9 @@ If a refactor removes these, the delete queue becomes stale.
 <boxm> 5.4 Render functions</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg4">
-<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -721,17 +721,17 @@ No data mutation allowed here.
 <boxm> 6. Explicit IDL-style contracts</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg7">
-<summary>js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float:right; margin-left: 2em;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
 cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;</summary>
 <pre color_num="6"><details class="close_on_margin_click bg1">
-<summary>6.1 js_CNTRL.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>6.1 js_CNTRL.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -755,9 +755,9 @@ Action semantics:
  
 </pre>
 </details><details class="close_on_margin_click bg2">
-<summary>6.2 js_MODEL.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>6.2 js_MODEL.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -782,9 +782,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
  
 </pre>
 </details><details class="close_on_margin_click bg3">
-<summary>6.3 notes.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>6.3 notes.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -828,9 +828,9 @@ Required internal functions to preserve:
  
 </pre>
 </details><details class="close_on_margin_click bg4">
-<summary>6.4 js_notes.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>6.4 js_notes.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -865,9 +865,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
  
 </pre>
 </details><details class="close_on_margin_click bg5">
-<summary>6.5 js_VIEW.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>6.5 js_VIEW.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -881,9 +881,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
  
 </pre>
 </details><details class="close_on_margin_click bg6">
-<summary>6.6 js_details.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>6.6 js_details.js contract  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -913,9 +913,9 @@ cols-wrap" style="float:left; margin-left: 3em;" class="em_wrap">↷</em>&nbsp;<
 <boxm> 7. Required API-preserving migration strategy</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg8">
-<summary>js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>js_CNTRL js_MODEL notes js_notes js_details js_VIEW  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -967,9 +967,9 @@ Recommended migration template:
 <boxm> 8. Final recommendation</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg9">
-<summary> semantics state ownership adapter API  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary> semantics state ownership adapter API  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
@@ -1000,9 +1000,9 @@ The critical mapping to keep from breaking the app:
 <boxm> 9. Credits cap</boxm>
 <boxd></boxd>
 <details class="close_on_margin_click bg0">
-<summary>✅  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy to clipboard
+<summary>✅  <em onclick="js_linkify.fold_close_open_toggle(event, 2);" class="em_fold" style="float: right; margin-left: 2em; visibility: hidden;">▶◀</em>&nbsp;<em onclick="js_linkify.copy_container_text(event); return false;" title="● copy TITLE into NOTE INPUT below
 &amp;
-● copy to note-input below" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
+● copy TEXT to CLIPBOARD" class="em_copy" style="float:right; margin-left: 2em;">⬜</em>&nbsp;<em onclick="js_linkify.toggle_check(event); return false;" title="✓
  check
  this section" style="float:left; margin-left: 1em;" class="em_check">✓</em>&nbsp;<em onclick="js_linkify.toggle_wrap(event); return false;" title="▶◀
 narrow
