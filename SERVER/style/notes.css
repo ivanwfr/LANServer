@@ -1,6 +1,6 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
 /*│ ● SERVER/style/notes.css  ● $APROJECTS/LANServer  ● _TAG (261012:01h:33) │*/
-/*│ ● SERVER/style/qtext.css                                                 │*/
+/*│ ● SERVER/style/to_html.css                                                 │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 /* BODY onload fadeIn {{{*/
 body              {      opacity: 0; animation: fadeIn 250ms ease 2000ms forwards; }

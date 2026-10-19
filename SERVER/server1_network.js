@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-/*│ server1_network.js           */ const SERVER_NETWORK_TAG = "(261001:00h:30)";
+/*│ server1_network.js           */ const SERVER_NETWORK_TAG = "(261017:17h:26)";
 //└────────────────────────────────────────────────────────────────────────────┘
 
 let server1_network = (function() {
@@ -11,7 +11,7 @@ let server1_network = (function() {
 //● Node.js             ● os {{{
 let { networkInterfaces }       = require("os"   );
 //}}}
-//● Server  Modules:    ● log header listener network notes qtext {{{
+//● Server  Modules:    ● log header listener network notes to_html {{{
 let server0_log      = require("./server0_log.js");
 //...{{{
 /* eslint-disable no-unused-vars */
@@ -75,6 +75,14 @@ let onload = function(args)
     https_server        = args.https_server;
     http__server        = args.http__server;
     modules             = args.modules;
+};
+/*}}}*/
+/*● get_net_href_root {{{*/
+let get_net_href_root = function(request)
+{
+    let scheme    =  request.socket.encrypted ?            "https" : "http";
+    let port      =  request.socket.encrypted ? config.PORT_HTTPS  : config.PORT_HTTP;
+    return           scheme +"://"+ net_address +":"+ port;
 };
 /*}}}*/
 
@@ -246,6 +254,7 @@ console.table( results );
         ,    log_net_info
         ,    log_STATUS
         ,    get_net_address : () => net_address
+        ,    get_net_href_root
     };
     //}}}
 })();

@@ -11,7 +11,7 @@ let server3_header = (function() {
 //│ REQUIRE
 //└────────────────────────────────────────────────────────────────────────────┘
 //            ● Node.js Modules:    ● ...
-//● Server Modules:     ● log header listener network notes qtext {{{
+//● Server Modules:     ● log header listener network notes to_html {{{
 let server0_log      = require("./server0_log.js");
 //...{{{
 /* eslint-disable no-unused-vars */
@@ -134,7 +134,7 @@ log_B(                    file_name.replace(/.*[\\\/]/,"")    );
     //│ PRETTY PRINT HTML EMBEDING
     //└────────────────────────────────────────────────────────────────────────────┘
     /* ahk asp awk css js lua md tmc txt vim {{{*/
-    if( server0_log.html_format_requested(_file_name,query) )
+    if( server0_log.to_html_requested(_file_name,query) )
     {
         if (file_name.endsWith("ahk"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("asp"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };

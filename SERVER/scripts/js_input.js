@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (261002:03h:59) │
+//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (261018:21h:22) │
 //├────────────────────────────────────────────────────────────────────────────┤
 /* IMPORT {{{*/
 
@@ -98,7 +98,7 @@ if(tag_this) console.log( "input_value changed:\n"
             js_details.save_note_auto( e );
         }
         // SERVER/style/notes.css
-        // SERVER/style/qtext.css
+        // SERVER/style/to_html.css
         //}}}
         // USER MAY HAVE REMOVED ITS CHANGES ● (...back to auto prefix) {{{
         if(  !input.value

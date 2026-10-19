@@ -1,8 +1,9 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261013:16h:52)
+//│ server5_content.js                                     _TAG (261018:22h:53)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 //t js_boxing        = require("./scripts/js_boxing.js");
+let url_to_href      = require("./url_to_href.js");
 
 /*}}}*/
 let server5_content = (function() {
@@ -12,7 +13,7 @@ let server5_content = (function() {
 //│ REQUIRE
 //└────────────────────────────────────────────────────────────────────────────┘
 //            ● Node.js Modules:    ● ...
-//  ● Server Modules:     ● log header ● listener ● network ● notes ● qtext {{{
+//  ● Server Modules:     ● log header ● listener ● network ● notes ● to_html {{{
 let server0_log      = require("./server0_log.js");
 // log inlining {{{
 /* eslint-disable no-unused-vars */
@@ -82,6 +83,7 @@ const PAGE_HEAD_INNER_HTML = ""
     + "<!--base   href='https://ivanwfr.github.io/LANServer' /-->\n"
     + "\n"
     + "<script type='module'  src='/scripts/js_log.js'     ></script>\n"
+    + "<script type='module'  src='/scripts/url_to_href.js'></script>\n"
     + "\n"
     + "<script type='module'  src='/scripts/js_boxing.js'  ></script>\n"
     + "<script type='module'  src='/scripts/js_folds.js'   ></script>\n"
@@ -101,8 +103,8 @@ const PAGE_HEAD_INNER_HTML = ""
     ;
 
 const PAGE_STYLE_LINKS = ""
-    + "<link type='text/css' href='/style/notes.css' rel='stylesheet'>\n"
-    + "<link type='text/css' href='/style/qtext.css' rel='stylesheet'>\n"
+    + "<link type='text/css' href='/style/notes.css'   rel='stylesheet'>\n"
+    + "<link type='text/css' href='/style/to_html.css' rel='stylesheet'>\n"
     ;
 /*}}}*/
 /*_ send_file_content {{{*/
@@ -129,7 +131,7 @@ if(is_logging())
     /* FILE         ● err {{{*/
     if( err ) {
 log_R(  err );
-        if( server0_log.html_format_requested(file_path,query) )
+        if( server0_log.to_html_requested(file_path,query) )
         {
             server0_log.writeHead(  response, caller+"", 404, server3_header.get_HTML_RESPONSE_HEADER());
 
@@ -151,7 +153,7 @@ log_R(  err );
         response.end();
     }
 /*}}}*/
-    /* HTML_PRETTY_PRINT    ● data ● qtext {{{*/
+    /* HTML_PRETTY_PRINT    ● data ● to_html {{{*/
     else {
         /* RESPONSE HEADER {{{*/
 
@@ -172,24 +174,37 @@ if(is_logging()) log_X("response_200_header=["+response_200_header["Content-Type
 
         }
         /*}}}*/
-        /* HTML_PRETTY_PRINT VIM FOLDS ● @see /SERVER/style/qtext.css {{{*/
+        /* HTML_PRETTY_PRINT VIM FOLDS ● @see /SERVER/style/to_html.css {{{*/
         if(data.includes( FOLD_OPEN ))
         {
             // 1/2 PRETTY PRINT
-            if(   server0_log.html_format_requested(file_path,query)
+            if(   server0_log.to_html_requested(file_path,query)
               && !file_path.match(/\.htm/)
               ) {
 
-              //data = js_boxing.format_data( String(data) );   // is now client-side
+                //data = js_boxing.text_to_HTML( String(data) );   // is now client-side
+                data = "{{{ Recently visited:\n"
+                    +       add_recently_visited( request )
+                    +  "}}}\n"
+                    +  data;
             }
+
             // 2/ PREPEND LOG HEADER
-            else if( is_logging()) {
-                data = get_request_log(request, file_path) + data;
+            if(  !server0_log.to_html_requested(file_path,query)
+               && is_logging()
+              ) {
+                data = get_request_log   (request, file_path) + data;
             }
+            // ADD a [to_html] link
+            if(  !server0_log.to_html_requested(file_path,query) )
+            {
+                data = add_to_html_header(request, file_path) + data;
+            }
+
         }
         /*}}}*/
         /* 1/2 SEND PRETTY PRINT [data] {{{*/
-        if( server0_log.html_format_requested(file_path,query) )
+        if( server0_log.to_html_requested(file_path,query) )
         {
             let title = file_path.replace(/.*[\\\/]/,"");
             let html  = `<html lang='en'>\n
@@ -230,6 +245,90 @@ ${        PAGE_STYLE_LINKS }
 /*}}}*/
 };
 /*}}}*/
+/*_ add_to_html_header {{{*/
+let add_to_html_header_timeout;
+let add_to_html_header = function(request, file_path)
+{
+    if(   add_to_html_header_timeout // only if this is this-bunch-first-request
+       || file_path.match(/\.htm/    )
+       || file_path.match(/\?to_html/)
+      )
+        return "";
+
+    if(!add_to_html_header_timeout)
+        add_to_html_header_timeout
+            = setTimeout(() => add_to_html_header_timeout = null, 1000);
+
+    let href_root = server1_network.get_net_href_root( request );
+    let href      = server1_network.get_net_href_root( request ) + request.url +"?to_html";
+
+    return `
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ THIS FILE CONTAINS VIM FOLD MARKERS                                        │
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ 🟤 request.url.:\t${ request.url }
+//│ 🔴 file_path...:\t${ file_path   }
+//│ 🟠 href_root...:\t${ href_root   }
+//│ 🎄 HTML URL....:\t${ href        }
+//└────────────────────────────────────────────────────────────────────────────┘
+
+`;
+
+};
+/*}}}*/
+/*_ add_recently_visited {{{*/
+let     url_array = [];
+let add_recently_visited = function(request, is_dir)
+{
+    let request_url
+        = request.url.replace(/\?.*/,"");
+
+    if( is_dir ) {
+        if(!request_url.endsWith("/"))
+            request_url += "/";
+    }
+    else {
+        request_url += "?to_html";
+    }
+
+    if(!url_array.includes( request_url ))
+        url_array.push    ( request_url );
+
+    let href      = server1_network.get_net_href_root( request ) + request.url +"?to_html";
+    let box_lines = "";
+    url_array
+        .forEach((url) => {
+
+          //let current
+          //    =  url.endsWith("/")
+          //    ? (url        == request_url )
+          //    :  url.includes( request_url );
+            let current
+                = (url        == request_url );
+
+            let check_mark
+                = current ? "√" : "";
+
+
+          //let dir_item
+          //    = is_dir
+          //    ?  "<a href='"+ url +"'>"+url+"</a>"
+          //    :  url;
+          //let dir_item = url_to_href.line_url_to_href(url, href);
+            let dir_item
+                = is_dir
+                ?  url_to_href.line_url_to_href(url, href)
+                :  url;
+
+            box_lines    += check_mark + "\t" + dir_item  +"\n";
+        });
+
+    return is_dir
+        ? "<pre>"+box_lines+"</pre>"
+        :         box_lines
+    ;
+};
+/*}}}*/
 /*● escapeHTML ● Sanitize text for HTML {{{*/
 let escapeHTML = function(text)
 {
@@ -256,13 +355,13 @@ let get_request_log = function(request, file_path)
     let  scheme = request.socket.encrypted ? "https" : "http";
     let reqPath = decodeURIComponent(request.url.split("?")[0]);
     return ""
-        + "● file_path:\n\t"+ file_path     +"\n"
-        + "● scheme:   \n\t"+ scheme        +"\n"
-        + "● host:     \n\t"+ host          +"\n"
-        + "● reqPath:  \n\t"+ reqPath       +"\n"
+        + "// ● file_path:\n\t"+ file_path     +"\n"
+        + "// ● scheme:   \n\t"+ scheme        +"\n"
+        + "// ● host:     \n\t"+ host          +"\n"
+        + "// ● reqPath:  \n\t"+ reqPath       +"\n"
+        + "// \n"
+        + "// \t➔ "+ scheme +"://"+ host +"/"+ reqPath +"?to_html\n"
         + "\n"
-        + "\t➔ "+ scheme +"://"+ host +"/"+ reqPath +"?qtext\n"
-        + "<hr>\n"
     ;
 };
 /*}}}*/
@@ -274,6 +373,7 @@ let get_request_log = function(request, file_path)
     return { name: "server5_content"
         ,    onload
         ,    send_file_content
+        ,    add_recently_visited
     };
     //}}}
 })();

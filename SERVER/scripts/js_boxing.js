@@ -1,13 +1,18 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261016:13h:56)
-/* Convert text content and  Markdown table into HTML {{{
-Handles:
-- Header row and separator row (|---|---|)
-- Multiple data rows
-- Inline pipes in cells (escaped as \|||)
-- Leading/trailing whitespace
-}}}*/
+//│ js_boxing.js                                           _TAG (261017:19h:03)
 //└────────────────────────────────────────────────────────────────────────────┘
+// doc {{{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ BOXING text content and  Markdown table into HTML Handles:
+//│ - Header row and separator row (|---|---|)
+//│ - Multiple data rows
+//│ - Inline pipes in cells (escaped as \|||)
+//│ - Leading and trailing whitespace
+//│ - table content decoration symbols
+//│
+//│ ● @see SERVER/style/to_html.css
+//└────────────────────────────────────────────────────────────────────────────┘
+//}}}
 let js_boxing = (function() {
 "use strict";
 /*● box_in {{{*/
@@ -18,23 +23,27 @@ let box_in = function(e) /* eslint-disable-line no-unused-vars */
 //console.log("js_boxing.box_in:");
 //console.log("✔ document.readyState=["+document.readyState+"]");
 
-    // ALREADY  FORMATTED {{{
+    // GUARD CHECK: ALREADY  FORMATTED {{{
     let value = document.body.getAttribute( DATA_ATTR_JS_BOXING );
-    if( value )
-    {
+    if( value ) {
         console.log("ALREADY FORMATTED:  "+DATA_ATTR_JS_BOXING+"=["+value+"]");
         return;
     }
     //}}}
-//console.log("document.body.innerHTML=["+document.body.innerHTML+"]");
-//nsole.log("document.body.textContent=["+document.body.textContent+"]");
-//nsole.log("document.body.innerText=["+document.body.innerText+"]");
 
-    document.body.innerHTML = format_data( document.body.textContent );
-  //document.body.innerHTML = format_data( document.body.innerText   );
-//console.log("document.body.innerHTML=["+document.body.innerHTML+"]");
+    document.body.innerHTML = text_to_HTML( document.body.textContent );
 
     document.body.setAttribute(DATA_ATTR_JS_BOXING, "client-side");
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ RELOAD AN HTML EMBEDDED CONTENT
+    //└────────────────────────────────────────────────────────────────────────┘
+    let url = new URL(window.location.href);
+    if(!url.searchParams.has("to_html"))
+    {
+      url.searchParams.set  ("to_html", ""     );
+      history.replaceState  (     null, "", url); // no reload, just updates address bar
+    }
 };
 /*}}}*/
 /*_ box_out {{{*/
@@ -53,10 +62,10 @@ let box_out = function(e) /* eslint-disable-line no-unused-vars */
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ DOCUMENT BODY
+//│ DOCUMENT BODY TEXT HTML EMBEDDING
 //└────────────────────────────────────────────────────────────────────────────┘
-/*● format_data {{{*/
-// const {{{
+/*● text_to_HTML {{{*/
+// UTF-8 symbols {{{
 /* eslint-disable no-unused-vars */
 const HTML_NBSP = "&nbsp;";
 const HEX_21B2  = "\u21B2";
@@ -64,7 +73,7 @@ const HEX_2BCO  = "\u2BC0"; // ⯀
 const HEX_25A0  = "\u25A0"; // ■
 /* eslint-enable  no-unused-vars */
 //}}}
-let format_data = function(data_in)
+let text_to_HTML = function(data_in)
 {
     let in_code;
 
@@ -164,21 +173,43 @@ let format_data = function(data_in)
     //}}}
     data_out += md_format_head_line( ""       ); // CLOSE DANGLING DETAILS
     data_out  = md_format_table    ( data_out );
-    data_out  = add_spacing_lines  ( data_out );
+    data_out  = box_insert_LF  ( data_out );
+    data_out  = box_insert_DIV ( data_out );
 
     return "\n<pre>"+ data_out +"</pre>\n";
 };
 /*}}}*/
-/*_ add_spacing_lines ● @see SERVER/style/qtext.css {{{*/
-let add_spacing_lines = function( data_in )
+/*_ box_insert_LF {{{*/
+let box_insert_LF = function( data_in )
 {
-    let data_out
-        = data_in
-        . replace(/(\n *\*+ *\d)/g  , "\n$1"                        ) // ##1 numbered lines
-        . replace(/(```(\w+).*)\n/g , "\n<div class='code $2'>$1\n" ) // DIR ```javascript
-        . replace(/(```)\n/g        , "$1\n</div>\n"                ) // DIR ```
+    //┌─────────────┐
+    //│ *** NUMBER  │
+    //│ ↓↓↓↓↓↓↓↓↓↓  │
+    //│ LF          │
+    //│ *** NUMBER  │
+    //└─────────────┘
+    return data_in
+        . replace(/(\n *\*+ *\d)/g  , "\n$1"                        )
+        . replace(/(```(\w+).*)\n/g , "\n<div class='code $2'>$1\n" )
+        . replace(/(```)\n/g        , "$1\n</div>\n"                )
     ;
-    return data_out;
+};
+/*}}}*/
+/*_ box_insert_DIV {{{*/
+let box_insert_DIV = function( data_in )
+{
+    //┌─────────────────────┐
+    //│ ```www              │
+    //│ ```                 │
+    //│ ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓  │
+    //│ <div class='code'>  │
+    //│ </div>              │
+    //└─────────────────────┘
+    return data_in
+        . replace(/(\n *\*+ *\d)/g  , "\n$1"                        )
+        . replace(/(```(\w+).*)\n/g , "\n<div class='code $2'>$1\n" )
+        . replace(/(```)\n/g        , "$1\n</div>\n"                )
+    ;
 };
 /*}}}*/
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -422,9 +453,10 @@ let md_format_table_row = function(line)
 
     // return {{{
     return { name: "js_boxing"
-        ,    format_data
         ,    box_in
         ,    box_out
+        // DEBUG ONLY
+        ,    text_to_HTML
     };
     //}}}
 })();

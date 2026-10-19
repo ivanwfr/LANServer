@@ -1,7 +1,7 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_MODEL.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261002:04h:01) │
+//│ js_MODEL.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261019:03h:03) │
 //├────────────────────────────────────────────────────────────────────────────┤
-//| SKELTON FOR SERVER/scripts/notes.js
+//| SKELETON FOR SERVER/scripts/notes.js
 //└────────────────────────────────────────────────────────────────────────────┘
 // IMPORT {{{
 
@@ -72,7 +72,7 @@ const js_MODEL   = (function () {
             log("%c"+caller                                             , lb1     );
             log("%c● payload.....:\t%c["+ JSON.stringify(payload) +"]"  , lf1, lb7);
         }
-        log("%c● SM CALLING notes.note_1_onclick_save"    , lb1+lbB);
+        log("%c● SM ☎ CALLING notes.note_1_onclick_save"    , lbB+lf1);
         //}}}
                             notes.note_1_onclick_save({},payload   );
     };
@@ -87,7 +87,7 @@ const js_MODEL   = (function () {
             log("%c"+caller                                             , lb1     );
             log("%c● noteId......:\t%c["+ noteId                        , lf1, lb7);
         }
-        log("%c● SM CALLING js_details.note_5_onclick_edit"  , lb1+lbB);
+        log("%c● SM ☎ CALLING js_details.note_5_onclick_edit"  , lbB+lf1);
         //}}}
                             js_details.note_5_onclick_edit({}, parseInt(noteId) );
     };
@@ -102,7 +102,7 @@ const js_MODEL   = (function () {
             log("%c"+caller                                             , lb1     );
             log("%c● noteId......:\t%c["+ noteId                        , lf1, lb7);
         }
-        log("%c● SM CALLING notes.note_6_onclick_delete"  , lb1+lbB);
+        log("%c● SM ☎ CALLING notes.note_6_onclick_delete"  , lbB+lf1);
         //}}}
                             notes.note_6_onclick_delete({}, noteId );
     };

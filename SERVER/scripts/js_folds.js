@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261014:01h:16) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261018:21h:24) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -553,7 +553,7 @@ let toggle_unfold_cooldown = function()
 
     if( unfold_cooldown ) clearTimeout(     unfold_cooldown );
 
-    document        .body.classList.add   ("unfold_cooldown"); // see %:h/../style/qtext.css
+    document.body.classList.add("unfold_cooldown"); // see %:h/../style/to_html.css
 
     /**/unfold_cooldown
         =  setTimeout( () => {

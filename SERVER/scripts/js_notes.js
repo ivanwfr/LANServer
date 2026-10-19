@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261013:15h:49)
+//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261018:21h:23)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵 View Helper: Renders, layouts, and scrolls notes in the DOM
 //│    State Management ➔ js_CNTRL (via js_MODEL, js_VIEW)

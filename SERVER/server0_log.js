@@ -109,12 +109,12 @@ let get_query_arg = function(query, arg)
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ PRETTY PRINT REQUESTED ➔ GET same url within a few seconds
 //└────────────────────────────────────────────────────────────────────────────┘
-/*● html_format_requested {{{*/
+/*● to_html_requested {{{*/
 /*{{{*/
 let prev_file_name;
 let cooldown_timer;
 /*}}}*/
-let html_format_requested = function(file_name,query)
+let to_html_requested = function(file_name,query)
 {
     if( !cooldown_timer )
     {
@@ -125,10 +125,11 @@ let html_format_requested = function(file_name,query)
         }, 500); //............................................ // while processsing the same request
     }
     let state =  (file_name == prev_file_name           )
-        ||       (    query && query.startsWith("qtext"))
+        ||       (    query && query.startsWith("to_html"))
     ;
 
-if(is_logging()) log_X("html_format_requested("+ file_name +") ...return "+!!state+"");
+if(is_logging()) log_X("to_html_requested("+ file_name +") ...return "+!!state+"");
+//if(file_name.includes("js_notes")) log_X((state ? Y:R)+"...["+ file_name +"]\t... query=["+ prev_file_name +"]")
     return state;
 };
 /*}}}*/
@@ -183,7 +184,7 @@ if(is_logging()) log_X(Y+"● writeHead "+_caller);
         ,    TRACE_CLOSE
 
         , writeHead
-        , html_format_requested
+        , to_html_requested
         , get_query_arg
     };
     //}}}

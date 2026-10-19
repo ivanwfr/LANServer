@@ -1,9 +1,14 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server4_file.js                                        _TAG (261009:18h:06)
+//│ server4_file.js                                        _TAG (261017:20h:04)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
 /*}}}*/
+
+
+
+
+
 let server4_file = (function() {
 "use strict";
 
@@ -16,7 +21,7 @@ let   fs                        = require("fs"   );
 let   path                      = require("path" );
 let { networkInterfaces }       = require("os"   ); /* eslint-disable-line no-unused-vars */
 //}}}
-//● Server Modules:     ● log header listener folder network notes qtext {{{
+//● Server Modules:     ● log header listener folder network notes to_html {{{
 let server0_log      = require("./server0_log.js");
 //...{{{
 /* eslint-disable no-unused-vars */
@@ -96,7 +101,7 @@ let caller = "fs_read_file_or_folder";
 //console.dir("file_path   \t["+ file_path   +"]")
 //}}}
         if( file_path == "query")
-            file_path  = uri.query.match(/qtext=([^\?]+)/)[1];
+            file_path  = uri.query.match(/to_html=([^\?]+)/)[1];
 // log {{{
 //log_G("  ┌────────────────────────────────────────────────────────────────────────────┐\n"
 //     +"● │ READFILE:\n"
@@ -277,6 +282,7 @@ A:visited {            color: #F0F; }
       </div>
   <br>      <b    style='margin-left:4em;'                  > {top_title} </b>
   <br>      <b    style='margin-left:4em;'                  > {link_list} </b>
+  <div>{recent_div}</div>
   <ul>
    {dir_items}
   </ul>
@@ -349,10 +355,11 @@ let caller = "fs_readDir";
 
         server0_log.writeHead(response, caller, 200, { "Content-Type": "text/html" });
 
-        response.end( STYLE_DIR.replace("{file_path}", file_path)
-                      .         replace("{top_title}", top_title)
-                      .         replace("{link_list}", link_list)
-                      .         replace("{dir_items}", dir_items)
+        response.end( STYLE_DIR.replace("{file_path}" , file_path)
+                      .         replace("{top_title}" , top_title)
+                      .         replace("{link_list}" , link_list)
+                      .         replace("{recent_div}", server5_content.add_recently_visited(request, true)) // is_dir
+                      .         replace("{dir_items}" , dir_items)
                     );
     });
     //}}}

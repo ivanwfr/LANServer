@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-/*│ server.js                 */ const SERVER_JS_TAG = "server (261001:02h:35)";
+/*│ server.js                 */ const SERVER_JS_TAG = "server (261018:22h:52)";
 //└────────────────────────────────────────────────────────────────────────────┘
 
 let server = (function() {
@@ -13,7 +13,7 @@ let   fs                        = require("fs"   );
 let   http                      = require("http" );
 let   https                     = require("https");
 //}}}
-//● Server  Modules:    ● log header listener network notes qtext {{{
+//● Server  Modules:    ● log header listener network notes to_html {{{
 let server0_log      = require("./server0_log.js");
 let server1_network  = require("./server1_network.js");
 let server2_listener = require("./server2_listener.js");
@@ -21,6 +21,7 @@ let server3_header   = require("./server3_header.js");
 let server4_file     = require("./server4_file.js");
 let server5_content  = require("./server5_content.js");
 let server6_notes    = require("./server6_notes.js");
+let url_to_href      = require("./url_to_href.js");
 //}}}
 //● Server   Config:    ● HTTPS_CERT PORT LAN_FOLDER {{{
 // default values {{{
@@ -164,6 +165,7 @@ let createServer = function()
         ,   server4_file
         ,   server5_content
         ,   server6_notes
+        ,   url_to_href
         ];
 
     server4_file   .onload({ config });
