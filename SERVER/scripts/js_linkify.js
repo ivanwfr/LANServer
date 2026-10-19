@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261019:19h:44)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261020:01h:09)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -283,9 +283,7 @@ let linkify_file_pathes = function()
 //│ url_to_href.js                                       ● _TAG (261019:19h:43)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
-let log_this = false;//true;
-let basename;
-// RGX_EXT_ARRAY RGX_EXT {{{
+// RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
 const RGX_EXT_ARRAY
     = [ "ahk"
       , "asp"
@@ -301,6 +299,8 @@ const RGX_EXT_ARRAY
       , "vim"
     ];
 let   RGX_EXT;
+let   basename;
+let   a_href_to_html_array = [];
 //}}}
 /*_ line_url_to_href {{{*/
 let line_url_to_href = function(line, href_arg)
@@ -336,108 +336,117 @@ let line_url_to_href = function(line, href_arg)
     //}}}
 
     // set or clear basename
-    let matches = line.replace(/<[^>]+>/g,"").match(/basename *= *(\S*)/);
-    if( matches ) basename = matches[1];
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ .......................11...............22222222..33...................
+    //└────────────────────────▼▼───────────────▼▼▼▼▼▼▼▼──▼▼───────────────────┘
+    let matches = line.match(/(.*)basename *= *([^\s<>]*)(.*)/);
+    if( matches ) {
+//console.log("\n"+line);
+//console.log("matches[1]=["+matches[1]+"]");
+//console.log("matches[2]=["+matches[2]+"]");
+//console.log("matches[3]=["+matches[3]+"]");
+        basename = matches[2];
 
-        let l_trim = line  .trim();
-            l_trim = l_trim.replace(  /<[^>]*>/g,"").trim();
-            l_trim = l_trim.replace(/\?to_html/ ,"").trim();
+        let ttl = "URL basename: "+ (basename ? "Folder ["+basename+"]"  : "Cleared");
+        let tag =                   (basename ?       "🟢 in "+basename : "⚫"     );
+        return matches[1]
+            +  "<span class='basename' title='"+ttl+"'>"+tag+"</span>"
+            +  matches[3]
+        ;
+    }
+
+    let l_trim = line  .trim();
+        l_trim = l_trim.replace(  /<[^>]*>/g,"").trim();
+        l_trim = l_trim.replace(/\?to_html/ ,"").trim();
 //console.log("l_trim=["+l_trim+"]");//FIXME
 
-        //┌────────────────────────────────────────────────────────────────────────────┐
-        //│ 1/2. http (no href) ➔ MAKE A *<a href='url'>url</a>*
-        //└────────────────────────────────────────────────────────────────────────────┘
-        let matched;
-        if(line.includes("http") && !line.includes("href"))
+    //┌────────────────────────────────────────────────────────────────────────────┐
+    //│ 1/2. http (no href) ➔ MAKE A *<a href='url'>url</a>*
+    //└────────────────────────────────────────────────────────────────────────────┘
+    let matched;
+    if(line.includes("http") && !line.includes("href"))
+    {
+        line = line_a_from_http_no_href( line );
+    }
+    //┌────────────────────────────────────────────────────────────────────────────┐
+    //│ 2/2 - FILE WITH SUPPORTED EXTENSION FILES: ahk, css, js, md...
+    //└────────────────────────────────────────────────────────────────────────────┘
+    else if(matched = line_match_supported_extension( l_trim ))
+    {
+//console.log("\n%c"+ line, "background-color: #400");
+
+        //┌────────────────────────────────────────────────────────────────┐
+        //│ PATH:
+        //│ ● FROM: AFTER A MANDATORY ( SPACE          )
+        //│ ● ALL.................... [ NON-SPACES     ]
+        //│ ● UP TO (INCLUDED)....... [ MIME-EXTENSION ]
+        //└────────────────────────────────────────────────────────────────┘
+        //{{{
+        let path
+            = matched
+            .replace(/\s.*/ ,"").trim() // inner space
+            .replace(/[\*\"'`](.*)[\*\"'`]*/ ,"$1").trim() // inner space
+        ;
+        /*}}}*/
+//console.log("%c● path=["+path+"]", "color: #0F0");
+
+        //┌────────────────────────────────────────────────────────────────┐
+        //│ 1/2  [ SLASH ] TO [ROOTED_NAME]
+        //│ i.e. [/SERVER] TO [http:192.168.1.114:447/SERVER]
+        //└────────────────────────────────────────────────────────────────┘
+        //{{{
+        let a_href;
+        if( path.startsWith("/") )
         {
-            line = line_a_from_http_no_href( line );
+            a_href = root + path;
+//console.log("%c● a_href=["+a_href+"]", "color: #F06");
         }
-        //┌────────────────────────────────────────────────────────────────────────────┐
-        //│ 2/2 - FILE WITH SUPPORTED EXTENSION FILES: ahk, css, js, md...
-        //└────────────────────────────────────────────────────────────────────────────┘
-        else if(matched = line_match_supported_extension( l_trim ))
-        {
-if(log_this) console.log("\n%c"+ line, "background-color: #400");
+        //}}}
 
-            //┌────────────────────────────────────────────────────────────────┐
-            //│ PATH:
-            //│ ● FROM: AFTER A MANDATORY ( SPACE          )
-            //│ ● ALL.................... [ NON-SPACES     ]
-            //│ ● UP TO (INCLUDED)....... [ MIME-EXTENSION ]
-            //└────────────────────────────────────────────────────────────────┘
-            //{{{
-            let path
-                = matched
-                .replace(/\s.*/ ,"").trim() // inner space
-                .replace(/[\*\"'`](.*)[\*\"'`]*/ ,"$1").trim() // inner space
-            ;
-
-            //  = l_trim
-            //  . replace( RGX_EXT                                                 , "$1")
-            //  . replace(                                             /\?to_html/ ,   "") // CLEAR: query
-            //  . replace(                                              /.*[\"'`]/ ,   "") // CLEAR: quotes
-            //  . replace(                                              /<\/?\w+>/g,   "") // CLEAR: <td> </td>
-            //  . trim()
-            //  ;
-            /*}}}*/
-if(log_this)
-console.log("%c● path=["+path+"]", "color: #0F0");
-
-            //┌────────────────────────────────────────────────────────────────┐
-            //│ 1/2  [ SLASH ] TO [ROOTED_NAME]
-            //│ i.e. [/SERVER] TO [http:192.168.1.114:447/SERVER]
-            //└────────────────────────────────────────────────────────────────┘
-            //{{{
-            let a_href;
-            if( path.startsWith("/") )
-            {
-                a_href = root + path;
-if(log_this) console.log("%c● a_href=["+a_href+"]", "color: #F06");
-            }
-            //}}}
-            //┌────────────────────────────────────────────────────────────────┐
-            //│ 2/2 [path] SUB FOLDERS TO PARSE
-            //└────────────────────────────────────────────────────────────────┘
-            //{{{
-            else {
+        //┌────────────────────────────────────────────────────────────────┐
+        //│ 2/2 [path] SUB FOLDERS TO PARSE
+        //└────────────────────────────────────────────────────────────────┘
+        //{{{
+        else {
 //console.log(  "\nline=["+line+"]");
 //console.log(    "path=["+path+"]");
 //console.log(    "basename=["+basename+"]");
-                if( basename ) {
-                    let p
-                        = (path.startsWith("./") ? path.substr(2) : path);
+            if( basename ) {
+                let p
+                    = (path.startsWith("./") ? path.substr(2) : path);
 //console.log("p=["+p+"]");//FIXME
-                    a_href = parse_sub_folders(href, root, basename, p);
-                }
-                else {
-                    a_href = parse_sub_folders(href, root, folder, path);
-                }
-// if(log_this)
-
-//console.log("%c● a_href=["+a_href+"]", "color: #F06");
+                a_href = parse_sub_folders(href, root, basename, p);
             }
-            //}}}
+            else {
+                a_href = parse_sub_folders(href, root, folder, path);
+            }
+//console.log("%c● a_href=["+a_href+"]", "color: #F06");
+        }
+        //}}}
 
-            //┌────────────────────────────────────────────────────────────────┐
-            //│ [a_href] ... encodeURI
-            //└────────────────────────────────────────────────────────────────┘
-            //{{{
-            let  q = line.includes("?to_html") ? "?to_html":"";
+        //┌────────────────────────────────────────────────────────────────┐
+        //│ [a_href] ... encodeURI
+        //└────────────────────────────────────────────────────────────────┘
+        //{{{
+        let  q = (line.includes("?to_html") || a_href_to_html_array.includes( a_href )) ? "?to_html":"";
 
-            let  a = "<a href='"+ encodeURI(a_href) + q +"'>"+path+"</a>";
-if(log_this) console.log("- a=["+a+"]");
+        if(  q && !a_href_to_html_array.includes( a_href ))
+                   a_href_to_html_array.push    ( a_href );
 
-            let  p = path.includes(q) ? path : (path + q);
-if(log_this) console.log("- p=["+p+"]");
+        let  a = "<a href='"+ encodeURI(a_href) + q +"'>"+path+"</a>";
+//console.log("- a=["+a+"]");
 
-            line   = line.replace(p, a);
+        let  p = line.includes(q) ? (path + q) : path;
+//console.log("- p=["+p+"]");
+
+        line   = line.replace(p, a);
 //console.log(  "...p=["+p+"]");
 //console.log(  "line=["+line+"]\n@@@\n");
 //console.log("%c"+ a_href, "background-color: #040");
 //console.log("%c"+ line  , "background-color: #040");
 //console.log("%c"+ line  , "background-color: #822");
-            //}}}
-        }
+        //}}}
+    }
     return line;
 };
 /*}}}*/
@@ -450,7 +459,7 @@ let parse_sub_folders = function(href, root, folder, path)
     let parents  = path.split("/").filter(Boolean);  // remove falsy items
 
     let fileName = parents.pop();
-if(log_this) console.log("%c● fileName=["+fileName+"]", "background-color: #066");
+//console.log("%c● fileName=["+fileName+"]", "background-color: #066");
 
     let up_count =  0;
     let sub_fold = "";
@@ -476,7 +485,7 @@ if(log_this) console.log("%c● fileName=["+fileName+"]", "background-color: #06
         }
         //}}}
     }
-if(log_this) console.log("%c● sub_fold\=["+sub_fold+"]", "background-color: #660");
+//console.log("%c● sub_fold\=["+sub_fold+"]", "background-color: #660");
 
     let a_href  = root +"/";
     for(     f  = 0; f < (folders.length - up_count); ++f)
