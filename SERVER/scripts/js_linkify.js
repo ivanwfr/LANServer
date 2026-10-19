@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261019:03h:52)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261019:19h:44)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -253,6 +253,9 @@ let fold_close_open_toggle = function(e,state)
 /*_ linkify_file_pathes {{{*/
 let linkify_file_pathes = function()
 {
+    //FIXME COMMENT
+    url_to_href.basename_clear();
+
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PRE CONTAINING [BARE FILE OR FOLDER PATH] TO [HTML ANCHOR]
     //└────────────────────────────────────────────────────────────────────────┘
@@ -272,15 +275,16 @@ let linkify_file_pathes = function()
 //│ EMBED SERVER/url_to_href.js
 //└────────────────────────────────────────────────────────────────────────────┘
 /*
-}:r !grep -v 'module.exports' SERVER/url_to_href.js
+}:r !grep -v 'module.exports' %:h/../url_to_href.js
 */
 //{{{
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261019:03h:42)
+//│ url_to_href.js                                       ● _TAG (261019:19h:43)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 let log_this = false;//true;
+let basename;
 // RGX_EXT_ARRAY RGX_EXT {{{
 const RGX_EXT_ARRAY
     = [ "ahk"
@@ -326,10 +330,14 @@ let line_url_to_href = function(line, href_arg)
         let s = "";
         RGX_EXT_ARRAY.forEach((ext) => s += "|"+ext);
         s = s.substr(1);
-        RGX_EXT = new RegExp("(\\S+\\.("+s+")).*$","g");
+        RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9]+\\.("+s+"))","g");
 //console.log("RGX_EXT:", RGX_EXT);
     }
     //}}}
+
+    // set or clear basename
+    let matches = line.replace(/<[^>]+>/g,"").match(/basename *= *(\S*)/);
+    if( matches ) basename = matches[1];
 
         let l_trim = line  .trim();
             l_trim = l_trim.replace(  /<[^>]*>/g,"").trim();
@@ -392,8 +400,21 @@ if(log_this) console.log("%c● a_href=["+a_href+"]", "color: #F06");
             //└────────────────────────────────────────────────────────────────┘
             //{{{
             else {
-                a_href = parse_sub_folders(href, root, folder, path);
-if(log_this) console.log("%c● a_href=["+a_href+"]", "color: #606");
+//console.log(  "\nline=["+line+"]");
+//console.log(    "path=["+path+"]");
+//console.log(    "basename=["+basename+"]");
+                if( basename ) {
+                    let p
+                        = (path.startsWith("./") ? path.substr(2) : path);
+//console.log("p=["+p+"]");//FIXME
+                    a_href = parse_sub_folders(href, root, basename, p);
+                }
+                else {
+                    a_href = parse_sub_folders(href, root, folder, path);
+                }
+// if(log_this)
+
+//console.log("%c● a_href=["+a_href+"]", "color: #F06");
             }
             //}}}
 
@@ -410,6 +431,8 @@ if(log_this) console.log("- a=["+a+"]");
 if(log_this) console.log("- p=["+p+"]");
 
             line   = line.replace(p, a);
+//console.log(  "...p=["+p+"]");
+//console.log(  "line=["+line+"]\n@@@\n");
 //console.log("%c"+ a_href, "background-color: #040");
 //console.log("%c"+ line  , "background-color: #040");
 //console.log("%c"+ line  , "background-color: #822");
@@ -468,7 +491,7 @@ let line_a_from_http_no_href = function( line_in )
 {
     let line_out;
             // URL IN A markdown table ● requires some syntax sanitation {{{
-            //.........................(111111)(222222)(33333333)
+            //............................(111111)(222222)(33333333)
             let matches = line_in.match(/^( *<td>)(http.*)(<\/td> *)$/);  // @see /SERVER/server5_content.js markdown table to html
             if( matches ) {
                 let url = matches[2];
@@ -483,7 +506,7 @@ let line_a_from_http_no_href = function( line_in )
                 //│ ●
                 //│ matches[000000000000000000000000000000000000000]
                 //│ matches[11][222222222222222222222][33333333][44]
-                //│ ..... head  SCHEME_____URL_______  ___bound  tail
+                //│ ..... head  SCHEME_____URL_______  boundary  tail
                 //│ .....   ▼▼  ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  ▼▼▼▼▼▼▼▼  ▼▼
                 //│ ....(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)
                 //│ ●
@@ -542,8 +565,10 @@ let line_match_supported_extension = function(l_trim)
     //    //}}}
 };
 /*}}}*/
+
     return { name: "url_to_href"
         ,    line_url_to_href
+        ,    basename_clear: () => basename = ""
     };
 })();
 globalThis.url_to_href  = url_to_href;
