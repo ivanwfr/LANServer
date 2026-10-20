@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261018:21h:23) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261020:02h:09) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //│                                                                            │
@@ -36,7 +36,7 @@ let tag_this = false || log_this;
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ DATA                                                                      🔴
 //├────────────────────────────────────────────────────────────────────────────┤
-// 🖥 🟤🟤🟤🟤🟤 UI PLACEHOLDER
+// 🖥 🔵🔵🔵 UI PLACEHOLDER
 /* ●  INPUT PLACEHOLDER {{{*/
 
 const PLACEHOLDER_CREATE_PROMPT = "Type your note here...";
@@ -45,19 +45,19 @@ const PLACEHOLDER_EXPORT_REPORT = "\n" + "{count}Notes\n" + "have been exported\
 const PLACEHOLDER_IMPORT_REPORT = "\n" + "{count}Notes\n" + "have been imported\n" + "from the clipboard";
 
 /*}}}*/
-// 🖥 🟤🟤🟤🟤🟤 UI saved_notes_TABLE
+// 🖥 🔵🔵🔵 UI saved_notes_TABLE
 // ●  AUTO_SAVE_TAG {{{
 const AUTO_SAVE_TAG         = "(auto_save)\n";
 
 //}}}
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴🔴🔴 STORAGE
+// 📖 🔴🔴🔴 STORAGE
 let get_notes_storage_key = function() { return "notes__"+ js_store.get_page_storage_key(); };
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 GUI (js_notes)  GUI LEAK ● DATA ➔ VIEW                               🖥 │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 🖥 🟤🟤🟤 UI BUTTONS
+// 🖥 🔵🔵🔵 UI BUTTONS
 /*_ add_notes_GUI {{{*/
 /*{{{*/
 let input;
@@ -81,7 +81,7 @@ let add_notes_GUI = function(args)
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 STORAGE                                                             🡮🡮  │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴🔴🔴 nArray nArray_wasted
+// 📖 🔴🔴🔴 nArray nArray_wasted
 /*{{{*/
 //{{{
 let nArray          = [];
@@ -281,7 +281,7 @@ if(tag_this) console.log("%c load_client_notes", "color: #F00");
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 SAVE   ● note_1_onclick_save                                         🡮  │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴🔴🔴 nArray
+// 📖 🔴🔴🔴 nArray
 //● note_1_onclick_save {{{
 let note_1_onclick_save = function(e={})
 {
@@ -290,11 +290,12 @@ if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
     if( !input ) return;
 
     if( js_details.is_input_auto_insert_prefix() ) return;
-
+//DATA text
     /* input text {{{*/
     let  text = input.value.trim();
 
     //}}}
+//VIEW auto_save
     // if js_details.save_note_auto ...return {{{
     if(e.type == "auto_save")
     {
@@ -303,17 +304,20 @@ if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
         return;
     }
     //}}}
+//DATA auto_save
     // or delete auto_save ... {{{
     else if( js_notes.is_last_note_auto_save()  )
     {
         nArray.splice(nArray.length-1, 1);
     }
     //}}}
+//VIEW !text
     // if input empty ...return {{{
     if( !text )
         return;
 
     //}}}
+//VIEW index → DATA update old ➔ SERVER upload
     // REPLACE NOTE {{{
     let index  = js_details.get_editing_note_index();
     if( index >= 0)
@@ -327,6 +331,7 @@ if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
         request_server_upload("Note #"+(index            )+" EDITED");
     }
     //}}}
+//VIEW index → DATA add new ➔ SERVER upload (schedule)
     // ADD NEW NOTE {{{
     else {
         nArray.push(            { text, timestamp: Date.now() });
@@ -334,18 +339,22 @@ if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
         request_server_upload("Note #"+(nArray.length + 1)+" ADDED");
     }
     //}}}
+//VIEW index → DATA add new ➔ localStorage upload
     // ... 🟢 STORE NOTES IN localStorage {{{
     localStorage.setItem(get_notes_storage_key(), JSON.stringify( nArray ));
 
     //}}}
+//VIEW ➔ SERVER upload (sync)
     // ... 🟢 SYNCHRONOUSLY UPLOAD NOTES TO SERVER {{{
     upload_notes_to_server();
 
     //}}}
+//VIEW clear input
     // ... 🔵 CLEAR USER INPUT ONCE SAVED {{{
     js_input.reset_input("note_1_onclick_save");
 
     //}}}
+//VIEW update notes table
     js_notes.layout_notes("note_1_onclick_save", index);
 };
 //}}}
@@ -353,7 +362,7 @@ if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🔴 IMPORT ● note_2_onclick_import                                     🢀    │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴🔴🔴 nArray
+// 📖 🔴🔴🔴 nArray
 /*● note_2_onclick_import ● onclick ● cb_BUTTON {{{*/
 let note_2_onclick_import = function(e)
 {
@@ -450,7 +459,7 @@ let note_2_onclick_import_push_note = function(note_args)
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟠 EXPORT ● note_3_onclick_export                                       🢂  │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴🔴🔴 nArray
+// 📖 🔴🔴🔴 nArray
 /*● note_3_onclick_export ● onclick ● cb_BUTTON {{{*/
 const FOLD_OPEN = "{{{";
 const FOLD_CLOSE= "}}}"; /* eslint-disable-line no-unused-vars */
@@ -512,7 +521,7 @@ if(tag_this) console.log("⚫ reset_input_placeholder");
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟡 CHECK  ● note_4_onclick_check                                    [ ] ✅ │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴🔴🔴 nArray
+// 📖 🔴🔴🔴 nArray
 //● note_4_onclick_check {{{
 let note_4_onclick_check = function(e,index)
 {
@@ -586,7 +595,7 @@ let get_checked = function(index)
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🔵 DELETE ● note_6_onclick_delete                                       ✕  │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴🔴🔴 nArray nArray_wasted
+// 📖 🔴🔴🔴 nArray nArray_wasted
 //● note_6_onclick_delete {{{
 let note_6_onclick_delete = function(e,index)
 {
@@ -639,7 +648,7 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟠 WASTED ● note_7_onclick_wasted                                     🢀 🗑 │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴🔴🔴 nArray nArray_wasted
+// 📖 🔴🔴🔴 nArray nArray_wasted
 /*● note_7_onclick_wasted ● onclick ● cb_BUTTON {{{*/
 //{{{
 const CLEAR_DELETED_NOTES = "Clear deleted notes";
@@ -755,7 +764,7 @@ let note_7_onclick_wasted_get_buffer = function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟣 STANDOUT                                                             💡 │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 🖥 🟤🟤🟤 UI saved_notes_TABLE note_row
+// 🖥 🔵🔵🔵 UI saved_notes_TABLE note_row
 /*_ standout_note_at_index {{{*/
 /*{{{*/
 let standout_note_index;
@@ -811,7 +820,7 @@ let note_scrollIntoView = function(index=-1)
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ⚫ TR SCROLL INTO VIEW                                                  ▲▼ │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 🖥 🟤🟤🟤 UI saved_notes_TABLE note_row
+// 🖥 🔵🔵🔵 UI saved_notes_TABLE note_row
 /*_ scroll_TR_intoView {{{*/
 /* debounce timeout {{{*/
 let SCROLL_TR_INTOVIEW_DELAY = 500;
@@ -895,7 +904,7 @@ let getClosestScrollableAncestor = function(el)
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ⚪️ SUMMARY                                                                 │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 🖥 🟤🟤🟤 UI note_DETAILS summary
+// 🖥 🔵🔵🔵 UI note_DETAILS summary
 /*_ update_summary {{{*/
 let update_summary = function()
 {
