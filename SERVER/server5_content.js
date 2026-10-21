@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261020:21h:40)
+//│ server5_content.js                                     _TAG (261021:02h:05)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 let url_to_href      = require("./url_to_href.js");
@@ -292,43 +292,25 @@ let add_recently_visited = function(request, is_dir)
         = request.url.replace(/\?.*/,"");
 
     if( is_dir ) {
-        if(!request_url.endsWith("/"))
+        if(!request_url.endsWith("/"))  // normalize folder with ending slash
             request_url += "/";
     }
     else {
-        request_url += "?to_html";
+        request_url += "?to_html";      // next time pretty print
     }
 
+    // add to the visited list
     if(!url_array.includes( request_url ))
         url_array.push    ( request_url );
 
     let href      = server1_network.get_net_href_root( request ) + request.url +"?to_html";
     let box_lines = "";
     url_array
-        .forEach((url) => {
-
-          //let current
-          //    =  url.endsWith("/")
-          //    ? (url        == request_url )
-          //    :  url.includes( request_url );
-            let current
-                = (url        == request_url );
-
-            let check_mark
-                = current ? "√" : "";
-
-
-          //let dir_item
-          //    = is_dir
-          //    ?  "<a href='"+ url +"'>"+url+"</a>"
-          //    :  url;
-          //let dir_item = url_to_href.line_url_to_href(url, href);
-            let dir_item
-                = is_dir
-                ?  url_to_href.line_url_to_href(url, href)
-                :  url;
-
-            box_lines    += check_mark + "\t" + dir_item  +"\n";
+        .forEach((      url) => {
+            let current_url  = (request_url ==  url  );
+            let check_mark   =                               current_url  ? "√" :  "";
+            let dir_item     = is_dir ? url_to_href.line_url_to_href(url, href) : url;
+            box_lines       += check_mark +"\t"+ dir_item +"\n";
         });
 
     return is_dir

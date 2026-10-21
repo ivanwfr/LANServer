@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_md.js                                               _TAG (261020:19h:10)
+//│ js_md.js                                               _TAG (261021:02h:51)
 //└────────────────────────────────────────────────────────────────────────────┘
 let js_md = (function() {
 "use strict";
@@ -145,7 +145,7 @@ let md_format_table_to_html = function( table_rows )
 
         let line
             = lines[i]
-            .  replace(          /\\/g,"_backslash_")
+            .  replace(      / *\\ */g,"_backslash_")
             .  replace(/^ *\/\/ *│ */ ,           "")   // table in a box
         ;
 
@@ -211,15 +211,15 @@ let md_format_table_row = function(line)
     let trimmed
         = line
         .  trim()
-        .  replace(/ *&lt;br&gt;/g,"<br>")
-        .  replace(/\\\|/g,"|")
+        .             replace(  / *&lt;br&gt;/g,"<br>"       )  // unescape <br>
+        .             replace(          /\\\|/g,"|"          )  // escaped pipe
     ;
 
     //┌────────────────────────────────────────────────────────────────────────────┐
     //│ CONSUME PIPE DELIMITERS
     //└────────────────────────────────────────────────────────────────────────────┘
-    if (trimmed.startsWith("|")) trimmed = trimmed.slice(1);
-    if (trimmed.endsWith  ("|")) trimmed = trimmed.slice(0, -1);
+    if (trimmed.startsWith("|")) trimmed = trimmed.slice(1   );
+    if (trimmed.endsWith  ("|")) trimmed = trimmed.slice(0,-1);
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ decorations
@@ -229,9 +229,9 @@ let md_format_table_row = function(line)
     trimmed = trimmed.replace(          /true/g,"👍"         ); // true
     trimmed = trimmed.replace(           / *▼/g, "<br>"      ); // LF
     trimmed = trimmed.replace(           / *➔/g, "\t"        ); // TAB
-    trimmed = trimmed.replace(  / *● *([^●]*●)/ ,"<br>👉 $1" ); // or
-    trimmed = trimmed.replace(           / *● */g,"<br>or "  ); // or
-    trimmed = trimmed.replace(         /^<br> */g,""         ); // ...delete leading <br>
+    trimmed = trimmed.replace( / *● *([^●]*●)/ ,"<br>👉 $1"  ); // or
+    trimmed = trimmed.replace(         / *● */g,"<br>or "    ); // or
+    trimmed = trimmed.replace(       /^<br> */g,""           ); // ...delete leading <br>
 
     // Split on unescaped pipes
     // 1. ADDS EMPTY CELLS

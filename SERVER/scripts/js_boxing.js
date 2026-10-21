@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261020:19h:08)
+//│ js_boxing.js                                           _TAG (261021:02h:34)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -13,8 +13,12 @@
 //│ ● @see SERVER/style/to_html.css
 //└────────────────────────────────────────────────────────────────────────────┘
 //}}}
+/* IMPORT {{{*/
+
 /* globals js_md */
-import { js_md      } from "./js_md.js"
+import {   js_md } from "./js_md.js"
+
+/*}}}*/
 let js_boxing = (function() {
 "use strict";
 /*● box_in {{{*/
@@ -87,28 +91,29 @@ let text_to_HTML = function(data_in)
         let l = lines[i];
 //console.log("%c"+l, "background-color: #008;");//FIXME
 
-        l =         l.  replace(                               /</g, "&lt;"           ); // html entities
-        l =         l.  replace(                               />/g, "&gt;"           ); // html entities
+        l =         l.  replace(                  /</g, "&lt;"           ); // html entities
+        l =         l.  replace(                  />/g, "&gt;"           ); // html entities
         //┌────────────────────────────────────────────────────────────────────┐
         //│ BLANK LINES
         //└────────────────────────────────────────────────────────────────────┘
-        l =         l.  replace(                               /^\s+$/, ""            );
+        l =         l.  replace(              /^\s+$/ , ""               );
         //┌────────────────────────────────────────────────────────────────────┐
         //│ BOX START
         //└────────────────────────────────────────────────────────────────────┘
-    if(in_code) {
-        l =         l.  replace(             /\/\/[└┘┌┐│─├┼┤]+/g, "");
-    }
-    else {
-        l =         l.  replace(             / *\/[\/\\*] *(┌.*$)/g, "<BOXU>$1</BOXU>"); // BOX UP
-        l =         l.  replace(             / *\/[\/\\*] *(│.*$)/g, "<BOXM>$1</BOXM>"); // BOX MIDDLE
-        l =         l.  replace(             / *\/[\/\\*] *(├.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
-        l =         l.  replace(             / *\/[\/\\*] *(┼.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
-        l =         l.  replace(             / *\/[\/\\*] *(┤.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
-        l =         l.  replace(             / *\/[\/\\*] *(└.*$)/g, "<BOXD>$1</BOXD>"); // BOX DOWN
-    if( l.includes("BOX") )
-        l =         l.  replace(                    /[└┘┌┐│─├┼┤]+/g, "" /*HTML_NBSP*/ ); // remove utf-8 boxing (or not)
-    }
+        if(in_code) {
+            l =     l.  replace(   /\/\/[└┘┌┐│─├┼┤]+/g,    ""            );
+        }
+        else {
+            l =     l.  replace(/ *\/[\/\\*] *(┌.*$)/g, "<BOXU>$1</BOXU>"); // BOX UP
+            l =     l.  replace(/ *\/[\/\\*] *(│.*$)/g, "<BOXM>$1</BOXM>"); // BOX MIDDLE
+            l =     l.  replace(/ *\/[\/\\*] *(├.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
+            l =     l.  replace(/ *\/[\/\\*] *(┼.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
+            l =     l.  replace(/ *\/[\/\\*] *(┤.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
+            l =     l.  replace(/ *\/[\/\\*] *(└.*$)/g, "<BOXD>$1</BOXD>"); // BOX DOWN
+            if( l.includes("BOX") )
+                l = l.  replace(       /[└┘┌┐│─├┼┤]+/g, "" /*HTML_NBSP*/ ); // remove utf-8 boxing (or not)
+        }
+
         //┌────────────────────────────────────────────────────────────────────┐
         //│ VIM FOLD DETAILS
         //└────────────────────────────────────────────────────────────────────┘
@@ -116,30 +121,35 @@ let text_to_HTML = function(data_in)
             data_out += js_md.md_format_head_line(""); // CLOSE ALL PENDING DETAILS
             l = vim_fold_line( l );
         }
+
         //┌────────────────────────────────────────────────────────────────────┐
         //│ MARKDOWN DETAILS
         //└────────────────────────────────────────────────────────────────────┘
         if( l.match(/^ *#/) ) l = js_md.md_format_head_line( l );
+
         //┌────────────────────────────────────────────────────────────────────┐
         //│ COMMENT
         //└────────────────────────────────────────────────────────────────────┘
-        l =         l.  replace(                        / *\/\* */g, ""               ); // 👉  /*   👈 // COMMENT START
-        l =         l.  replace(                        / *\*\/ */g, ""               ); // 👉  */   👈 // COMMENT END
-        l =         l.  replace(                     / *\[\.+\] */g, ""               ); // 👉 [...] 👈 Copilot comment
+        l =         l.  replace(           / *\/\* */g, ""               ); // 👉  /*   👈 // COMMENT START
+        l =         l.  replace(           / *\*\/ */g, ""               ); // 👉  */   👈 // COMMENT END
+        l =         l.  replace(        / *\[\.+\] */g, ""               ); // 👉 [...] 👈 Copilot comment
+
         //┌────────────────────────────────────────────────────────────────────┐
         //│ SYMBOLS
         //└────────────────────────────────────────────────────────────────────┘
-        l =         l.  replace(                             /\\n/g,      HEX_21B2    ); // inline [LF]  TO [↲] .. (i.e. \n\n)
-        l =         l.  replace(                      /\> *\/\/ */g, ">"              ); //       [>// ] TO []
-//      l =         l.  replace(                        / *\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
-//      l =         l.  replace(                  /\> *[^:]\/\/ */g, ">"              ); //       [>// ] TO []
+        l =         l.  replace(                /\\n/g,      HEX_21B2    ); // inline [LF]  TO [↲] .. (i.e. \n\n)
+        l =         l.  replace(         /\> *\/\/ */g, ">"              ); //       [>// ] TO []
+//      l =         l.  replace(           / *\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
+//      l =         l.  replace(     /\> *[^:]\/\/ */g, ">"              ); //       [>// ] TO []
     if(!in_code)
-        l =         l.  replace(                    / *[^:]\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
+        l =         l.  replace(       / *[^:]\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
+
         //┌────────────────────────────────────────────────────────────────────┐
         //│ OPTIONAL
         //└────────────────────────────────────────────────────────────────────┘
-      //l =         l.  replace(                    / *;* *\{\{\{/g, " "              ); // remove vim fold markers
-      //l =         l.  replace(                    / *;* *\}\}\}/g, " "              );
+      //l =         l.  replace(       / *;* *\{\{\{/g, " "              ); // remove vim fold markers
+      //l =         l.  replace(       / *;* *\}\}\}/g, " "              );
+
         //┌────────────────────────────────────────────────────────────────────┐
         //│ ENTERING .. LEAVING CODE SECTION
         //└────────────────────────────────────────────────────────────────────┘
@@ -149,26 +159,24 @@ let text_to_HTML = function(data_in)
             in_code = matches[1]; // IN=[```code_type$] .. OUT=[```$]
 //console.log("...in_code=["+in_code+"] \t"+ l);
         }
+
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ ENDING .. SECTION
+        //└────────────────────────────────────────────────────────────────────┘
         // Add Linefeed {{{
         if( in_code )
         {
             l += "\n";
         }
-        else if(    s.length
-           && !s.endsWith("<pre>"     )
-           && !s.endsWith("</boxd>"   )
-           && !s.endsWith("</details>")
+        else if( s.length
+           &&   !s.endsWith("<pre>"     )
+           &&   !s.endsWith("</boxd>"   )
+           &&   !s.endsWith("</details>")
           ) {
             l += "\n";
         }
         //}}}
-//        // Del Linefeed {{{
-//        if(   l.includes("</pre>")
-//           && data_out.endsWith("\n")
-//        ) {
-//            data_out  = data_out.slice(0,-1);
-//        }
-//        //}}}
+
 //console.log("%c"+l, "border: 1px solid #FF0;");//FIXME
         data_out +=             l  ;
     }
@@ -251,7 +259,7 @@ let vim_fold_line = function(l)
 /*}}}*/
 
     // return {{{
-    return { name: "js_md"
+    return { name: "js_boxing"
         ,    box_in
         ,    box_out
         // DEBUG ONLY
