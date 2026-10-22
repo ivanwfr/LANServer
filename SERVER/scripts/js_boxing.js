@@ -277,7 +277,7 @@ const RGX_VCLOSE_LINE           = new RegExp(PAT_BLOC  + PAT_VCLOSE + PAT_BLOC  
 
 //... REPLACEMENT
 const RPL_VOPEN_AND_VCLOSE_LINE =                   "{{ {$1} }}"                              ; // remove both surrounding folds
-const RPL_VOPEN_LINE            = "<details title='_title_'>\n<summary>$1 $2</summary>\n<pre>"; // vim open  => CLOSE details
+const RPL_VOPEN_LINE            = "<details>\n<summary title='_title_'>$1 $2</summary>\n<pre>"; // vim open  => CLOSE details
 const RPL_VCLOSE_LINE           =                     "$1 $2\n</pre>\n</details>"             ; // vim close => OPEN  details+summary
 
 

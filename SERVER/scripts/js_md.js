@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_md.js                                               _TAG (261022:17h:57)
+//│ js_md.js                                               _TAG (261022:18h:22)
 //└────────────────────────────────────────────────────────────────────────────┘
 let js_md = (function() {
 "use strict";
@@ -44,7 +44,7 @@ let md_format_header_line  = function(l_in, l_num)
     //}}}
     // DETAILS LEVEL START .. [LEVEL > 0] {{{
     if(count > 0) {
-        l_out += l_in.replace(/(^ *#+.*)/, "<details title='line number "+l_num+"'>\n<summary>$1</summary>\n<pre>");
+        l_out += l_in.replace(/(^ *#+.*)/, "<details>\n<summary title='line number "+l_num+"'>$1</summary>\n<pre>");
       //l_out += l_in.replace(/^ *#+(.*)/, "<details>\n<summary>$1</summary>\n<pre>");
 
         md_head_level += 1;
