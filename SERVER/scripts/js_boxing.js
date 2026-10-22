@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261021:21h:51)
+//│ js_boxing.js                                           _TAG (261022:18h:08)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -81,7 +81,15 @@ const HEX_25A0  = "\u25A0"; // ■
 //}}}
 let text_to_HTML = function(data_in)
 {
-    let in_code;
+    // TRACK CODE-SECTION LINES ● get page header offset to first file content {{{
+    let in_code = {};
+    let recently_visited_header_lines = 0;
+    let first_closing_vim_fold = data_in.indexOf("\n}}");
+    if( first_closing_vim_fold > 0) {
+        recently_visited_header_lines
+            = data_in.substr(0, first_closing_vim_fold).split("\n").length;
+    }
+    //}}}
 
     // LINE FILTER {{{
     let data_out = "";
@@ -103,18 +111,18 @@ let text_to_HTML = function(data_in)
         //└────────────────────────────────────────────────────────────────────┘
         if( RGX_VOPEN_OR__VCLOSE_LINE.exec(l) ) {
             data_out += js_md.md_format_header_line(""); // CLOSE ALL PENDING DETAILS
-            l = vim_fold_line( l );
+            l = vim_fold_line(l, i-recently_visited_header_lines);
         }
 
         //┌────────────────────────────────────────────────────────────────────┐
         //│ MARKDOWN DETAILS
         //└────────────────────────────────────────────────────────────────────┘
-//      if( l.match(/^ *#/) ) l = js_md.md_format_header_line( l );
+        if( l.match(/^ *#/) ) l = js_md.md_format_header_line(l, i-recently_visited_header_lines);
 
         //┌────────────────────────────────────────────────────────────────────┐
         //│ BOX START
         //└────────────────────────────────────────────────────────────────────┘
-//      if(in_code) {
+//      if(in_code.line) {
 //          l =     l.  replace(   /\/\/[└┘┌┐│─├┼┤]+/g,    ""            );
 //      }
 //      else {
@@ -142,7 +150,7 @@ let text_to_HTML = function(data_in)
         l =         l.  replace(         /\> *\/\/ */g, ">"              ); //       [>// ] TO []
 //      l =         l.  replace(           / *\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
 //      l =         l.  replace(     /\> *[^:]\/\/ */g, ">"              ); //       [>// ] TO []
-    if(!in_code)
+    if(!in_code.line)
         l =         l.  replace(       / *[^:]\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
 
         //┌────────────────────────────────────────────────────────────────────┐
@@ -159,23 +167,30 @@ let text_to_HTML = function(data_in)
         if( matches )
         {
             // CODE END
-            if( in_code ) {
+            if( in_code.line ) {
+if(in_code.line && (i-in_code.line) > 100)
+    console.log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
+               , "background-color: #006"                                                   ,"background-color: #808");
+
                 l  = "```</pre>\n";
-                in_code = false;
+                in_code.line = 0;
             }
             // CODE START
             else {
-                in_code = true;
+                in_code.line = i - recently_visited_header_lines;
+                in_code.code = s;
                 let language = (matches[1] || "");
                 l = "<pre class='code "+ language +"'>\n"
                 +    "```"             + language   +"\n";
             }
         }
-        else if( in_code )
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ COMMENT EVERYTHING IN CODE SECTION
+        //└────────────────────────────────────────────────────────────────────┘
+        else if( in_code.line )
         {
             l = "//"+ l +"\n";
 
-if(in_code) console.log(l);
         }
         //┌────────────────────────────────────────────────────────────────────┐
         //│ ENDING .. SECTION
@@ -190,10 +205,18 @@ if(in_code) console.log(l);
         }
         //}}}
 
-//console.log("%c"+l, "border: 1px solid #FF0;");//FIXME
         data_out +=             l  ;
     }
     //}}}
+if(in_code.line) {
+    let i = lines.length;
+    console.log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
+               , "background-color: #006"                                                  ,"background-color: #A00;");
+
+    console.log( "❌ %c missing a code-end-marker: %c ``` "
+               , "color: red;"                   ,"background-color: red;");
+}
+
 //  data_out  = js_md.md_format_code       ( data_out );
     data_out += js_md.md_format_header_line( ""       ); // CLOSE DANGLING DETAILS
     data_out  = js_md.md_format_table      ( data_out );
@@ -248,23 +271,23 @@ const PAT_BLOC                  = "(.*)"     ; // CAPTURING BLOC
 //... REGEX
 const RGX_CODE                  = new RegExp("```(\\w*)");
 const RGX_VOPEN_AND_VCLOSE_LINE = new RegExp(PAT_VOPEN + PAT_BLOC   + PAT_VCLOSE); // line contains both  vim folds .. remove both
-const RGX_VOPEN_OR__VCLOSE_LINE = new RegExp(PAT_VOPEN +   "|"      + PAT_VCLOSE); // line contains     a vim fold  .. call filter
-const RGX_VOPEN_LINE            = new RegExp(PAT_BLOC  + PAT_VOPEN  + PAT_BLOC  ); // line contains open  vim fold  .. remove open  fold
-const RGX_VCLOSE_LINE           = new RegExp(PAT_BLOC  + PAT_VCLOSE + PAT_BLOC  ); // line contains close vim fold  .. remove close fold
+const RGX_VOPEN_OR__VCLOSE_LINE = new RegExp(PAT_VOPEN +   "|"      + PAT_VCLOSE); // line contains     a vim fold  .. filter
+const RGX_VOPEN_LINE            = new RegExp(PAT_BLOC  + PAT_VOPEN  + PAT_BLOC  ); // line contains open  vim fold  .. replace
+const RGX_VCLOSE_LINE           = new RegExp(PAT_BLOC  + PAT_VCLOSE + PAT_BLOC  ); // line contains close vim fold  .. replace
 
 //... REPLACEMENT
-const RPL_VOPEN_AND_VCLOSE_LINE =                   "{{ {$1} }}"                 ; // remove both surrounding folds
-const RPL_VOPEN_LINE            = "<details>\n<summary>$1 $2</summary>\n<pre>"   ; // vim open  => CLOSE details
-const RPL_VCLOSE_LINE           =                     "$1 $2\n</pre>\n</details>"; // vim close => OPEN  details+summary
+const RPL_VOPEN_AND_VCLOSE_LINE =                   "{{ {$1} }}"                              ; // remove both surrounding folds
+const RPL_VOPEN_LINE            = "<details title='_title_'>\n<summary>$1 $2</summary>\n<pre>"; // vim open  => CLOSE details
+const RPL_VCLOSE_LINE           =                     "$1 $2\n</pre>\n</details>"             ; // vim close => OPEN  details+summary
 
 
 //}}}
-let vim_fold_line = function(l)
+let vim_fold_line = function(l_in, l_num)
 {
 
-    l = l.replace(RGX_VOPEN_AND_VCLOSE_LINE , RPL_VOPEN_AND_VCLOSE_LINE); // BOTH FIRST
-    l = l.replace(RGX_VOPEN_LINE            , RPL_VOPEN_LINE           );
-    l = l.replace(RGX_VCLOSE_LINE           , RPL_VCLOSE_LINE          );
+    let l = l_in.replace(RGX_VOPEN_AND_VCLOSE_LINE, RPL_VOPEN_AND_VCLOSE_LINE); // BOTH FIRST
+    l     = l.replace(RGX_VOPEN_LINE              , RPL_VOPEN_LINE           ).replace(/_title_/, "line number "+l_num);
+    l     = l.replace(RGX_VCLOSE_LINE             , RPL_VCLOSE_LINE          );
 
     return l;
 };

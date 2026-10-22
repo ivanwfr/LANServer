@@ -1,14 +1,14 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_md.js                                               _TAG (261022:02h:54)
+//│ js_md.js                                               _TAG (261022:17h:57)
 //└────────────────────────────────────────────────────────────────────────────┘
 let js_md = (function() {
 "use strict";
 /*● md_format_header_line {{{*/
 let md_head_level = 0;
-let md_format_header_line  = function(l_in)
+let md_format_header_line  = function(l_in, l_num)
 {
     let l_out = "";
-    // CLOSE ALL OPENED HEADERs {{{
+    // CLOSE ANY OPENED HEADER {{{
     if(!l_in)
     {
         while(md_head_level)
@@ -44,7 +44,7 @@ let md_format_header_line  = function(l_in)
     //}}}
     // DETAILS LEVEL START .. [LEVEL > 0] {{{
     if(count > 0) {
-        l_out += l_in.replace(/(^ *#+.*)/, "<details>\n<summary>$1</summary>\n<pre>");
+        l_out += l_in.replace(/(^ *#+.*)/, "<details title='line number "+l_num+"'>\n<summary>$1</summary>\n<pre>");
       //l_out += l_in.replace(/^ *#+(.*)/, "<details>\n<summary>$1</summary>\n<pre>");
 
         md_head_level += 1;
@@ -144,12 +144,15 @@ let md_format_table_to_html = function( table_rows )
 
         let line
             = lines[i]
-            .  replace( /^ *\/\/ *│ */ ,""                     )   // table in a box
-            .  replace(         /\\\|/g,"_backslash_pipe_"     )
-            .  replace(         /\\\\/g,"_backslash_backslash_")
-            .  replace(        /\\(.)/g,"$1"                   )
+            .  replace( /^ *\/\/ *│ */ ,""                     ) // extract table from a box
+            .  replace(         /\\\|/g,"_backslash_pipe_"     ) // mask escaped pipe
+            .  replace(         /\\\\/g,"_backslash_backslash_") // mask escaped backspace
+            .  replace(        /\\(.)/g,"$1"                   ) // mask escaped ...others
         ;
 
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ PARSE ROW LINES
+        //└────────────────────────────────────────────────────────────────────┘
         let row
             = md_format_table_row( line );
 
@@ -166,11 +169,9 @@ let md_format_table_to_html = function( table_rows )
         +  " <thead>\n"
         +  "  <tr>\n"
     ;
-    let h=0;
     for (let cell of headerCells) {
-        if(!(++h % 2)) continue; // skip even extra colums
-        let     text = cell.trim().replace(/_backslash_pipe_/g     ,"|" )
-                                  .replace(/_backslash_backslash_/g,"\\");
+        let     text = cell.trim().replace(/_backslash_pipe_/g     ,"|" )   // unmask escaped pipe
+                                  .replace(/_backslash_backslash_/g,"\\");  // unmask escaped backspace
         html        += `   <th>${text}</th>\n`;
     }
     html += ""
@@ -185,11 +186,9 @@ let md_format_table_to_html = function( table_rows )
     for(let row of dataRows)
     {
         html += "  <tr>\n";
-        let r=0;
         for(let cell of row) {
-            if(!(++r % 2)) continue; // skip even extra colums
-            let text = cell.trim().replace(/_backslash_pipe_/g     ,"|" )
-                                  .replace(/_backslash_backslash_/g,"\\");
+            let text = cell.trim().replace(/_backslash_pipe_/g     ,"|" )   // unmask escaped pipe
+                                  .replace(/_backslash_backslash_/g,"\\");  // unmask escaped backspace
             html    += `   <td>${text}</td>\n`;
         }
         html += "  </tr>\n";
@@ -208,41 +207,32 @@ let md_format_table_to_html = function( table_rows )
 let md_format_table_row = function(line)
 {
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ Parse a markdown table row into an array of cell strings.
-    //│ Filter out:
-    //│ - inlined         <br>
-    //│ - escaped pipes   \\|
-    //└────────────────────────────────────────────────────────────────────────┘
-    let trimmed
-        = line
-        .  trim()
-        .             replace(  / *&lt;br&gt;/g,"<br>"       )  // unescape <br>
-        .             replace(          /\\\|/g,"|"          )  // escaped pipe
-    ;
-
-    //┌────────────────────────────────────────────────────────────────────────┐
     //│ CONSUME PIPE DELIMITERS
     //└────────────────────────────────────────────────────────────────────────┘
-    if (trimmed.startsWith("|")) trimmed = trimmed.slice(1   );
-    if (trimmed.endsWith  ("|")) trimmed = trimmed.slice(0,-1);
+    if (line.startsWith("|")) line = line.slice(1   );
+    if (line.endsWith  ("|")) line = line.slice(0,-1);
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ decorations
     //└────────────────────────────────────────────────────────────────────────┘
-    trimmed = trimmed.replace(          /null/g,"🖕"         ); // NUL
-    trimmed = trimmed.replace(         /false/g,"👎"         ); // false
-    trimmed = trimmed.replace(          /true/g,"👍"         ); // true
-    trimmed = trimmed.replace(           / *▼/g,"_br_"       ); // LF
-    trimmed = trimmed.replace(           / *➔/g,"\t"         ); // TAB
-    trimmed = trimmed.replace( / *● *([^●]*●)/ ,"_br_👉 $1"  ); // or
-    trimmed = trimmed.replace(         / *● */g,"_br_or "    ); // or
-    trimmed = trimmed.replace(      /\|_br_ */g,"|"          ); // ...delete leading <br>
-    trimmed = trimmed.replace(      /<br>_br_/g,"<br>"       ); // ...delete added <br> too many
-    trimmed = trimmed.replace(          /_br_/g,"<br>"       ); // ...commit required <br>
+    line = line
+        .replace(          /null/g,"🖕"         ) // NUL
+        .replace(         /false/g,"👎"         ) // false
+        .replace(          /true/g,"👍"         ) // true
+        .replace(           / *▼/g,"_br_"       ) // LF
+        .replace(           / *➔/g,"\t"         ) // TAB
+        .replace( / *● *([^●]*●)/ ,"_br_👉 $1"  ) // or
+        .replace(         / *● */g,"_br_or "    ) // or
+        .replace(      /\|_br_ */g,"|"          ) // ...delete leading <br>
+        .replace(      /<br>_br_/g,"<br>"       ) // ...delete added <br> too many
+        .replace(          /_br_/g,"<br>"       ) // ...commit required <br>
+    ;
 
-    return trimmed.split(/\|(?=([^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : ""));
-  //return trimmed.split(/\|(?=([^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : "")).filter((e) => e.length > 0); // left-shift on missing columns
+    //......................._▼___(NOBS__+BS2___NoBS)_$_________________(DEFAULT_STRING___)
+    let result = line.split(/\|(?=(?:[^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : ""));
+    //............................(non-capturing-group___)
 
+    return result;
 };
 /*}}}*/
     // return {{{
@@ -252,5 +242,5 @@ let md_format_table_row = function(line)
     };
     //}}}
 })();
-export { js_md }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
-window . js_md = js_md; // exposed to inline onclick handlers
+export { js_md       }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_md = js_md; /* exposed to inline onclick handlers */
