@@ -1,5 +1,5 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/to_html.css ● $APROJECTS/LANServer            ● _TAG (261020:00h:30) │*/
+/*│ style/to_html.css ● $APROJECTS/LANServer            ● _TAG (261021:22h:15) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 /* wrap {{{*/
 DETAILS.wrap                { width      : 50%                 ; }
@@ -69,26 +69,26 @@ DETAILS.checked>SUMMARY>.em_check {
   DETAILS:open>SUMMARY { background: transparent; }
 
 /* BOX ● COLORS {{{*/
-BOXU:nth-of-type( 1), BOXU:nth-of-type( 1) ~ BOXM, BOXU:nth-of-type( 1) ~ BOXD { background: linear-gradient(to right, #964B00, #964B0010 1%, #964B0010 99%, #000); }
-BOXU:nth-of-type( 2), BOXU:nth-of-type( 2) ~ BOXM, BOXU:nth-of-type( 2) ~ BOXD { background: linear-gradient(to right, #FF0000, #FF000010 1%, #FF000010 99%, #000); }
-BOXU:nth-of-type( 3), BOXU:nth-of-type( 3) ~ BOXM, BOXU:nth-of-type( 3) ~ BOXD { background: linear-gradient(to right, #FFA500, #FFA50010 1%, #FFA50010 99%, #000); }
-BOXU:nth-of-type( 4), BOXU:nth-of-type( 4) ~ BOXM, BOXU:nth-of-type( 4) ~ BOXD { background: linear-gradient(to right, #FFFF00, #FFFF0010 1%, #FFFF0010 99%, #000); }
-BOXU:nth-of-type( 5), BOXU:nth-of-type( 5) ~ BOXM, BOXU:nth-of-type( 5) ~ BOXD { background: linear-gradient(to right, #9ACD32, #9ACD3210 1%, #9ACD3210 99%, #000); }
-BOXU:nth-of-type( 6), BOXU:nth-of-type( 6) ~ BOXM, BOXU:nth-of-type( 6) ~ BOXD { background: linear-gradient(to right, #6495ED, #6495ED10 1%, #6495ED10 99%, #000); }
-BOXU:nth-of-type( 7), BOXU:nth-of-type( 7) ~ BOXM, BOXU:nth-of-type( 7) ~ BOXD { background: linear-gradient(to right, #EE82EE, #EE82EE10 1%, #EE82EE10 99%, #000); }
-BOXU:nth-of-type( 8), BOXU:nth-of-type( 8) ~ BOXM, BOXU:nth-of-type( 8) ~ BOXD { background: linear-gradient(to right, #A0A0A0, #A0A0A010 1%, #A0A0A010 99%, #000); }
-BOXU:nth-of-type( 9), BOXU:nth-of-type( 9) ~ BOXM, BOXU:nth-of-type( 9) ~ BOXD { background: linear-gradient(to right, #FFFFFF, #FFFFFF10 1%, #FFFFFF10 99%, #000); }
-BOXU:nth-of-type(10), BOXU:nth-of-type(10) ~ BOXM, BOXU:nth-of-type(10) ~ BOXD { background: linear-gradient(to right, #101010, #10101010 1%, #10101010 99%, #000); box-shadow: 0 0 1px 0px #FFF; }
-BOXU:nth-of-type(11), BOXU:nth-of-type(11) ~ BOXM, BOXU:nth-of-type(11) ~ BOXD { background: linear-gradient(to right, #964B00, #964B0010 1%, #964B0010 99%, #000); }
-BOXU:nth-of-type(12), BOXU:nth-of-type(12) ~ BOXM, BOXU:nth-of-type(12) ~ BOXD { background: linear-gradient(to right, #FF0000, #FF000010 1%, #FF000010 99%, #000); }
-BOXU:nth-of-type(13), BOXU:nth-of-type(13) ~ BOXM, BOXU:nth-of-type(13) ~ BOXD { background: linear-gradient(to right, #FFA500, #FFA50010 1%, #FFA50010 99%, #000); }
-BOXU:nth-of-type(14), BOXU:nth-of-type(14) ~ BOXM, BOXU:nth-of-type(14) ~ BOXD { background: linear-gradient(to right, #FFFF00, #FFFF0010 1%, #FFFF0010 99%, #000); }
-BOXU:nth-of-type(15), BOXU:nth-of-type(15) ~ BOXM, BOXU:nth-of-type(15) ~ BOXD { background: linear-gradient(to right, #9ACD32, #9ACD3210 1%, #9ACD3210 99%, #000); }
-BOXU:nth-of-type(16), BOXU:nth-of-type(16) ~ BOXM, BOXU:nth-of-type(16) ~ BOXD { background: linear-gradient(to right, #6495ED, #6495ED10 1%, #6495ED10 99%, #000); }
-BOXU:nth-of-type(17), BOXU:nth-of-type(17) ~ BOXM, BOXU:nth-of-type(17) ~ BOXD { background: linear-gradient(to right, #EE82EE, #EE82EE10 1%, #EE82EE10 99%, #000); }
-BOXU:nth-of-type(18), BOXU:nth-of-type(18) ~ BOXM, BOXU:nth-of-type(18) ~ BOXD { background: linear-gradient(to right, #A0A0A0, #A0A0A010 1%, #A0A0A010 99%, #000); }
-BOXU:nth-of-type(19), BOXU:nth-of-type(19) ~ BOXM, BOXU:nth-of-type(19) ~ BOXD { background: linear-gradient(to right, #FFFFFF, #FFFFFF10 1%, #FFFFFF10 99%, #000); }
-BOXU:nth-of-type(20), BOXU:nth-of-type(20) ~ BOXM, BOXU:nth-of-type(20) ~ BOXD { background: linear-gradient(to right, #101010, #10101010 1%, #10101010 99%, #000); box-shadow: 0 0 1px 0px #FFF; }
+BOXU:nth-of-type( 1), BOXU:nth-of-type( 1) ~ BOXM, BOXU:nth-of-type( 1) ~ BOXD { background: linear-gradient(to right, #964B00, #964B0010 1%, #964B0010 99%, #000);                               color: hsl(  0deg 100% 90%); }
+BOXU:nth-of-type( 2), BOXU:nth-of-type( 2) ~ BOXM, BOXU:nth-of-type( 2) ~ BOXD { background: linear-gradient(to right, #FF0000, #FF000010 1%, #FF000010 99%, #000);                               color: hsl( 36deg 100% 90%); }
+BOXU:nth-of-type( 3), BOXU:nth-of-type( 3) ~ BOXM, BOXU:nth-of-type( 3) ~ BOXD { background: linear-gradient(to right, #FFA500, #FFA50010 1%, #FFA50010 99%, #000);                               color: hsl( 72deg 100% 90%); }
+BOXU:nth-of-type( 4), BOXU:nth-of-type( 4) ~ BOXM, BOXU:nth-of-type( 4) ~ BOXD { background: linear-gradient(to right, #FFFF00, #FFFF0010 1%, #FFFF0010 99%, #000);                               color: hsl(108deg 100% 90%); }
+BOXU:nth-of-type( 5), BOXU:nth-of-type( 5) ~ BOXM, BOXU:nth-of-type( 5) ~ BOXD { background: linear-gradient(to right, #9ACD32, #9ACD3210 1%, #9ACD3210 99%, #000);                               color: hsl(144deg 100% 90%); }
+BOXU:nth-of-type( 6), BOXU:nth-of-type( 6) ~ BOXM, BOXU:nth-of-type( 6) ~ BOXD { background: linear-gradient(to right, #6495ED, #6495ED10 1%, #6495ED10 99%, #000);                               color: hsl(180deg 100% 90%); }
+BOXU:nth-of-type( 7), BOXU:nth-of-type( 7) ~ BOXM, BOXU:nth-of-type( 7) ~ BOXD { background: linear-gradient(to right, #EE82EE, #EE82EE10 1%, #EE82EE10 99%, #000);                               color: hsl(216deg 100% 90%); }
+BOXU:nth-of-type( 8), BOXU:nth-of-type( 8) ~ BOXM, BOXU:nth-of-type( 8) ~ BOXD { background: linear-gradient(to right, #A0A0A0, #A0A0A010 1%, #A0A0A010 99%, #000);                               color: hsl(252deg 100% 90%); }
+BOXU:nth-of-type( 9), BOXU:nth-of-type( 9) ~ BOXM, BOXU:nth-of-type( 9) ~ BOXD { background: linear-gradient(to right, #FFFFFF, #FFFFFF10 1%, #FFFFFF10 99%, #000);                               color: hsl(288deg 100% 90%); }
+BOXU:nth-of-type(10), BOXU:nth-of-type(10) ~ BOXM, BOXU:nth-of-type(10) ~ BOXD { background: linear-gradient(to right, #101010, #10101010 1%, #10101010 99%, #000); box-shadow: 0 0 1px 0px #FFF; color: hsl(324deg 100% 90%); }
+BOXU:nth-of-type(11), BOXU:nth-of-type(11) ~ BOXM, BOXU:nth-of-type(11) ~ BOXD { background: linear-gradient(to right, #964B00, #964B0010 1%, #964B0010 99%, #000);                               color: hsl(  0deg 100% 90%); }
+BOXU:nth-of-type(12), BOXU:nth-of-type(12) ~ BOXM, BOXU:nth-of-type(12) ~ BOXD { background: linear-gradient(to right, #FF0000, #FF000010 1%, #FF000010 99%, #000);                               color: hsl( 36deg 100% 90%); }
+BOXU:nth-of-type(13), BOXU:nth-of-type(13) ~ BOXM, BOXU:nth-of-type(13) ~ BOXD { background: linear-gradient(to right, #FFA500, #FFA50010 1%, #FFA50010 99%, #000);                               color: hsl( 72deg 100% 90%); }
+BOXU:nth-of-type(14), BOXU:nth-of-type(14) ~ BOXM, BOXU:nth-of-type(14) ~ BOXD { background: linear-gradient(to right, #FFFF00, #FFFF0010 1%, #FFFF0010 99%, #000);                               color: hsl(108deg 100% 90%); }
+BOXU:nth-of-type(15), BOXU:nth-of-type(15) ~ BOXM, BOXU:nth-of-type(15) ~ BOXD { background: linear-gradient(to right, #9ACD32, #9ACD3210 1%, #9ACD3210 99%, #000);                               color: hsl(144deg 100% 90%); }
+BOXU:nth-of-type(16), BOXU:nth-of-type(16) ~ BOXM, BOXU:nth-of-type(16) ~ BOXD { background: linear-gradient(to right, #6495ED, #6495ED10 1%, #6495ED10 99%, #000);                               color: hsl(180deg 100% 90%); }
+BOXU:nth-of-type(17), BOXU:nth-of-type(17) ~ BOXM, BOXU:nth-of-type(17) ~ BOXD { background: linear-gradient(to right, #EE82EE, #EE82EE10 1%, #EE82EE10 99%, #000);                               color: hsl(216deg 100% 90%); }
+BOXU:nth-of-type(18), BOXU:nth-of-type(18) ~ BOXM, BOXU:nth-of-type(18) ~ BOXD { background: linear-gradient(to right, #A0A0A0, #A0A0A010 1%, #A0A0A010 99%, #000);                               color: hsl(252deg 100% 90%); }
+BOXU:nth-of-type(19), BOXU:nth-of-type(19) ~ BOXM, BOXU:nth-of-type(19) ~ BOXD { background: linear-gradient(to right, #FFFFFF, #FFFFFF10 1%, #FFFFFF10 99%, #000);                               color: hsl(288deg 100% 90%); }
+BOXU:nth-of-type(20), BOXU:nth-of-type(20) ~ BOXM, BOXU:nth-of-type(20) ~ BOXD { background: linear-gradient(to right, #101010, #10101010 1%, #10101010 99%, #000); box-shadow: 0 0 1px 0px #FFF; color: hsl(324deg 100% 90%); }
 /*}}}*/
 
 /* markdown_table ● background {{{*/
@@ -216,6 +216,9 @@ DETAILS:open     { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
                        BOXM { margin: 0     1.0em   0     0  ;                          }
                        BOXD { margin: 0     1.0em   0.5em 0  ;                          }
 
+                 BOXD+BOXU  { margin-top   : 0.1em; }
+            BOXD:has(+BOXU) { margin-bottom: 0.1em; }
+
                       TABLE { margin: 10px;                                             }
 
 BODY                        { margin-bottom:  50%;                                      }
@@ -290,6 +293,10 @@ DETAILS:not([open]) .em_check   { display: inline-block !important; }
     content         : "⬜";             /* ⬛⬜ ⧉ ▢ 🖵 📝 */
     translate       : -1.1em -0.3em;
 }
+/*}}}*/
+/* markdown_table ● vertical-align {{{*/
+.markdown_table TH                     { vertical-align: top; }
+.markdown_table TD                     { vertical-align: top; }
 /*}}}*/
 /* filter {{{*/
 /*┌────────────────────────────────────────────────────────────────────────────┐*/

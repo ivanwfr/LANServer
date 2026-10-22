@@ -278,6 +278,16 @@ if(tag_this) console.log("%c load_client_notes", "color: #F00");
 /*}}}*/
 /*}}}*/
 
+
+
+
+
+
+
+
+
+
+
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 SAVE   ● note_1_onclick_save                                         🡮  │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -358,6 +368,23 @@ if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
     js_notes.layout_notes("note_1_onclick_save", index);
 };
 //}}}
+
+
+//{{{
+//let saveNote = function(payload)
+//{
+//};
+//}}}
+
+
+
+
+
+
+
+
+
+
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🔴 IMPORT ● note_2_onclick_import                                     🢀    │

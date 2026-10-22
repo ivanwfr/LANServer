@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261018:21h:23)
+//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261021:17h:15)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵 View Helper: Renders, layouts, and scrolls notes in the DOM
 //│    State Management ➔ js_CNTRL (via js_MODEL, js_VIEW)
@@ -581,7 +581,9 @@ let escapeHTML = function(text)
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/'/g, "&#039;")
+        .replace(/\0x60/g, "&#096;")
+    ;
 };
 /*}}}*/
 /*● copy_to_clipboard ● Copy text to system clipboard {{{*/

@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261021:02h:34)
+//│ js_boxing.js                                           _TAG (261021:21h:51)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -97,13 +97,27 @@ let text_to_HTML = function(data_in)
         //│ BLANK LINES
         //└────────────────────────────────────────────────────────────────────┘
         l =         l.  replace(              /^\s+$/ , ""               );
+
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ VIM FOLD DETAILS
+        //└────────────────────────────────────────────────────────────────────┘
+        if( RGX_VOPEN_OR__VCLOSE_LINE.exec(l) ) {
+            data_out += js_md.md_format_header_line(""); // CLOSE ALL PENDING DETAILS
+            l = vim_fold_line( l );
+        }
+
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ MARKDOWN DETAILS
+        //└────────────────────────────────────────────────────────────────────┘
+//      if( l.match(/^ *#/) ) l = js_md.md_format_header_line( l );
+
         //┌────────────────────────────────────────────────────────────────────┐
         //│ BOX START
         //└────────────────────────────────────────────────────────────────────┘
-        if(in_code) {
-            l =     l.  replace(   /\/\/[└┘┌┐│─├┼┤]+/g,    ""            );
-        }
-        else {
+//      if(in_code) {
+//          l =     l.  replace(   /\/\/[└┘┌┐│─├┼┤]+/g,    ""            );
+//      }
+//      else {
             l =     l.  replace(/ *\/[\/\\*] *(┌.*$)/g, "<BOXU>$1</BOXU>"); // BOX UP
             l =     l.  replace(/ *\/[\/\\*] *(│.*$)/g, "<BOXM>$1</BOXM>"); // BOX MIDDLE
             l =     l.  replace(/ *\/[\/\\*] *(├.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
@@ -112,20 +126,7 @@ let text_to_HTML = function(data_in)
             l =     l.  replace(/ *\/[\/\\*] *(└.*$)/g, "<BOXD>$1</BOXD>"); // BOX DOWN
             if( l.includes("BOX") )
                 l = l.  replace(       /[└┘┌┐│─├┼┤]+/g, "" /*HTML_NBSP*/ ); // remove utf-8 boxing (or not)
-        }
-
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ VIM FOLD DETAILS
-        //└────────────────────────────────────────────────────────────────────┘
-        if( RGX_VOPEN_OR__VCLOSE_LINE.exec(l) ) {
-            data_out += js_md.md_format_head_line(""); // CLOSE ALL PENDING DETAILS
-            l = vim_fold_line( l );
-        }
-
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ MARKDOWN DETAILS
-        //└────────────────────────────────────────────────────────────────────┘
-        if( l.match(/^ *#/) ) l = js_md.md_format_head_line( l );
+//      }
 
         //┌────────────────────────────────────────────────────────────────────┐
         //│ COMMENT
@@ -151,23 +152,35 @@ let text_to_HTML = function(data_in)
       //l =         l.  replace(       / *;* *\}\}\}/g, " "              );
 
         //┌────────────────────────────────────────────────────────────────────┐
-        //│ ENTERING .. LEAVING CODE SECTION
+        //│ ENTERING OR LEAVING CODE SECTION
         //└────────────────────────────────────────────────────────────────────┘
         let       s = l.trim();
         let matches = RGX_CODE.exec( s );
-        if( matches ) {
-            in_code = matches[1]; // IN=[```code_type$] .. OUT=[```$]
-//console.log("...in_code=["+in_code+"] \t"+ l);
+        if( matches )
+        {
+            // CODE END
+            if( in_code ) {
+                l  = "```</pre>\n";
+                in_code = false;
+            }
+            // CODE START
+            else {
+                in_code = true;
+                let language = (matches[1] || "");
+                l = "<pre class='code "+ language +"'>\n"
+                +    "```"             + language   +"\n";
+            }
         }
+        else if( in_code )
+        {
+            l = "//"+ l +"\n";
 
+if(in_code) console.log(l);
+        }
         //┌────────────────────────────────────────────────────────────────────┐
         //│ ENDING .. SECTION
         //└────────────────────────────────────────────────────────────────────┘
         // Add Linefeed {{{
-        if( in_code )
-        {
-            l += "\n";
-        }
         else if( s.length
            &&   !s.endsWith("<pre>"     )
            &&   !s.endsWith("</boxd>"   )
@@ -181,10 +194,11 @@ let text_to_HTML = function(data_in)
         data_out +=             l  ;
     }
     //}}}
-    data_out += js_md.md_format_head_line( ""       ); // CLOSE DANGLING DETAILS
-    data_out  = js_md.md_format_table    ( data_out );
-    data_out  = box_insert_LF  ( data_out );
-    data_out  = box_insert_DIV ( data_out );
+//  data_out  = js_md.md_format_code       ( data_out );
+    data_out += js_md.md_format_header_line( ""       ); // CLOSE DANGLING DETAILS
+    data_out  = js_md.md_format_table      ( data_out );
+    data_out  = box_insert_LF              ( data_out );
+//  data_out  = box_insert_DIV             ( data_out );
 
     return "\n<pre>"+ data_out +"</pre>\n";
 };
@@ -200,27 +214,25 @@ let box_insert_LF = function( data_in )
     //└─────────────┘
     return data_in
         . replace(/(\n *\*+ *\d)/g  , "\n$1"                        )
-        . replace(/(```(\w+).*)\n/g , "\n<div class='code $2'>$1\n" )
-        . replace(/(```)\n/g        , "$1\n</div>\n"                )
     ;
 };
 /*}}}*/
 /*_ box_insert_DIV {{{*/
-let box_insert_DIV = function( data_in )
-{
-    //┌─────────────────────┐
-    //│ ```www              │
-    //│ ```                 │
-    //│ ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓  │
-    //│ <div class='code'>  │
-    //│ </div>              │
-    //└─────────────────────┘
-    return data_in
-        . replace(/(\n *\*+ *\d)/g  , "\n$1"                        )
-        . replace(/(```(\w+).*)\n/g , "\n<div class='code $2'>$1\n" )
-        . replace(/(```)\n/g        , "$1\n</div>\n"                )
-    ;
-};
+//let box_insert_DIV = function( data_in )
+//{
+//    //┌─────────────────────┐
+//    //│ ```www              │
+//    //│ ```                 │
+//    //│ ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓  │
+//    //│ <div class='code'>  │
+//    //│ </div>              │
+//    //└─────────────────────┘
+//    return data_in
+//        . replace(/ *(```(\w+).*)\n/g, "\n<div class='code $2'>_3backticks_$2\n" )
+//        . replace(       / *(```)/g, "$1XXX\n</div>\n"                           )
+//        . replace(/ *_3backticks_/g, "```"                                       )
+//    ;
+//};
 /*}}}*/
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ VIM FOLDS
@@ -234,7 +246,7 @@ const PAT_VCLOSE                = "\\}\\}\\}";
 const PAT_BLOC                  = "(.*)"     ; // CAPTURING BLOC
 
 //... REGEX
-const RGX_CODE                  = new RegExp("```(.*)");
+const RGX_CODE                  = new RegExp("```(\\w*)");
 const RGX_VOPEN_AND_VCLOSE_LINE = new RegExp(PAT_VOPEN + PAT_BLOC   + PAT_VCLOSE); // line contains both  vim folds .. remove both
 const RGX_VOPEN_OR__VCLOSE_LINE = new RegExp(PAT_VOPEN +   "|"      + PAT_VCLOSE); // line contains     a vim fold  .. call filter
 const RGX_VOPEN_LINE            = new RegExp(PAT_BLOC  + PAT_VOPEN  + PAT_BLOC  ); // line contains open  vim fold  .. remove open  fold
