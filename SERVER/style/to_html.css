@@ -217,7 +217,7 @@ DETAILS:open     { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
                        BOXD { margin: 0     1.0em   2.0em 0  ;                          }
 
                  BOXD+BOXU  { margin-top   : 0.1em; }
-            BOXD:has(+BOXU) { margin-bottom: 0.1em; }
+            BOXD:has(+BOXU) { margin-bottom: 0.5em; }
          BOXD.last_of_group { margin-bottom: 2.0em; }
 
                       TABLE { margin: 10px;                                             }
