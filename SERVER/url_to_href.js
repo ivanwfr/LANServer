@@ -268,7 +268,7 @@ let line_match_supported_extension = function(l_trim)
         return l_trim;
 
     let matches
-        =  l_trim.match(/\/\w+\/$/) // FOLDER
+        =  l_trim.match(/\/\w+.*\/$/) // FOLDER
         || l_trim.match( RGX_EXT  );
 
 //if(matches) console.log( l_trim     );

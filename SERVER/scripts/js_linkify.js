@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261020:01h:09)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261023:22h:14)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -549,7 +549,7 @@ let line_match_supported_extension = function(l_trim)
         return l_trim;
 
     let matches
-        =  l_trim.match(/\/\w+\/$/) // FOLDER
+        =  l_trim.match(/\/\w+.*\/$/) // FOLDER
         || l_trim.match( RGX_EXT  );
 
 //if(matches) console.log( l_trim     );
