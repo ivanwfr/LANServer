@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-/*│ server.js                 */ const SERVER_JS_TAG = "server (261018:22h:52)";
+/*│ server.js                 */ const SERVER_JS_TAG = "server (261023:19h:05)";
 //└────────────────────────────────────────────────────────────────────────────┘
 
 let server = (function() {
@@ -118,6 +118,7 @@ let https_server;
 /*}}}*/
 let createServer = function()
 {
+//try {
 
     /* [HTTP ] {{{*/
     try {
@@ -155,6 +156,8 @@ let createServer = function()
     if(https_server) https_server.addListener("request", server2_listener.dispatch);
 
     /*}}}*/
+    http__server.on("error", (err) => { console.log("...err.code=["+ err.code +"]"); process.exit( 128 ); });
+    https_server.on("error", (err) => { console.log("...err.code=["+ err.code +"]"); process.exit( 128 ); });
 
     let modules
         = [ server
@@ -176,6 +179,12 @@ let createServer = function()
     server1_network.log_STATUS();
 
     /*}}}*/
+//} catch(ex) {
+//console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+//    console.log(ex.message);
+//    console.trace();
+//console.log("##############################");
+//}
 };
 /*}}}*/
 
