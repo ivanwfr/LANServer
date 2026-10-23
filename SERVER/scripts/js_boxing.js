@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261022:18h:08)
+//│ js_boxing.js                                           _TAG (261023:01h:47)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -82,6 +82,7 @@ const HEX_25A0  = "\u25A0"; // ■
 let text_to_HTML = function(data_in)
 {
     // TRACK CODE-SECTION LINES ● get page header offset to first file content {{{
+    let last_BOXD_index;
     let in_code = {};
     let recently_visited_header_lines = 0;
     let first_closing_vim_fold = data_in.indexOf("\n}}");
@@ -120,21 +121,35 @@ let text_to_HTML = function(data_in)
         if( l.match(/^ *#/) ) l = js_md.md_format_header_line(l, i-recently_visited_header_lines);
 
         //┌────────────────────────────────────────────────────────────────────┐
-        //│ BOX START
+        //│ BOXING
         //└────────────────────────────────────────────────────────────────────┘
-//      if(in_code.line) {
-//          l =     l.  replace(   /\/\/[└┘┌┐│─├┼┤]+/g,    ""            );
-//      }
-//      else {
             l =     l.  replace(/ *\/[\/\\*] *(┌.*$)/g, "<BOXU>$1</BOXU>"); // BOX UP
             l =     l.  replace(/ *\/[\/\\*] *(│.*$)/g, "<BOXM>$1</BOXM>"); // BOX MIDDLE
             l =     l.  replace(/ *\/[\/\\*] *(├.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
             l =     l.  replace(/ *\/[\/\\*] *(┼.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
             l =     l.  replace(/ *\/[\/\\*] *(┤.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
             l =     l.  replace(/ *\/[\/\\*] *(└.*$)/g, "<BOXD>$1</BOXD>"); // BOX DOWN
+
             if( l.includes("BOX") )
+            {
                 l = l.  replace(       /[└┘┌┐│─├┼┤]+/g, "" /*HTML_NBSP*/ ); // remove utf-8 boxing (or not)
-//      }
+            }
+            // Handle BOXD [last_of_group] not followed by a following BOXU
+            // by altering last buffered line containing a BOXD at index
+            if( l.includes("BOXD") ) {
+                last_BOXD_index = data_out.length; // where it will be added
+            }
+            // ENDING A BOX GROUP
+            else if(!l.includes("BOX") && last_BOXD_index)
+            {
+                let at  = data_out.indexOf("<BOXD>", last_BOXD_index);
+                if( at >= 0) {
+                    data_out = data_out.slice(0, at)
+                             + "<BOXD class='last_of_group'>"
+                             + data_out.slice(at + "<BOXD>".length);
+                }
+                last_BOXD_index = undefined;
+            }
 
         //┌────────────────────────────────────────────────────────────────────┐
         //│ COMMENT
