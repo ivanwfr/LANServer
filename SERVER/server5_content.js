@@ -306,6 +306,7 @@ let add_recently_visited = function(request, is_dir)
     let href      = server1_network.get_net_href_root( request ) + request.url +"?to_html";
     let box_lines = "";
     url_array
+        .sort()
         .forEach((      url) => {
             let current_url  = (request_url ==  url  );
             let check_mark   =                               current_url  ? "√" :  "";
