@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261018:21h:24) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261025:18h:00) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
@@ -378,36 +378,48 @@ if(log_this) console.log("⚫ %c js_folds.details_click_listener:", lbB);
         : (e.target.parentElement.tagName == "DETAILS") ? e.target.parentElement
         :                                                 null;
 
-    // CLICKED IN CONTAINER'S LEFT MARGIN
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ CLICKED IN DETAILS'S LEFT MARGIN (NOT IN A VISIBLE SUMMARY)
+    //└────────────────────────────────────────────────────────────────────────┘
     if( details )
     {
-        let            summary = details.firstElementChild;
-        let      nextContainer = _get_nextContainer( summary );                 // container under DETAILS SUMMARY
-
-        //┌───────────────────────────────────────────────────────────────────────┐
-        //│if(   (e.x < (nextContainer.offsetLeft     ))                        // clicked in container's left margin
-        //│   && (e.x > (nextContainer.offsetLeft - 30))                        // within parent details .. @see STYLE/details.css
-        //│  ) {
-        //│    details.open       = !details.open;
-        //│    if( e.stopPropagation          ) e.stopPropagation         ();   // capturing and bubbling phases
-        //│    if( e.stopImmediatePropagation ) e.stopImmediatePropagation();   // other listeners of the same event
-        //│    if( e.preventDefault           ) e.preventDefault          ();   // browser agent default
-        //│}
-        //└───────────────────────────────────────────────────────────────────────┘
-
-        //┌───────────────────────────────────────────────────────────────────────┐
-        //│ Copilot recommendation
-        //│ ● e.x is viewport-relative, while offsetLeft is relative to the offset
-        //└───────────────────────────────────────────────────────────────────────┘
-        let rect        = nextContainer.getBoundingClientRect();
-        let marginStart = rect.left - 30;
-        if((e.clientX  >= marginStart) && (e.clientX < rect.left))
+        let       summary = details.firstElementChild;
+        let nextContainer = _get_nextContainer( summary );
+        let rect          = nextContainer.getBoundingClientRect();
+        let marginStart   = rect.left - 30;
+        if((e.clientX    >= marginStart) && (e.clientX < rect.left))
         {
-            details.open = !details.open;
+            //┌────────────────────────────────────────────────────────────────┐
+            //│ MOVE DETAILS INTO VIEW FOR A VISIBLE CLOSE ANIMATION
+            //└────────────────────────────────────────────────────────────────┘
+            let details_rect
+                = details.getBoundingClientRect();
+
+            let needs_scrolling
+                = (details_rect.top < 0);
+
+            //┌────────────────────────────────────────────────────────────────┐
+            //│ MARGIN FOR VISIBLE SUMMARY + PART OF PREVIOUS CONTAINER BOTTOM
+            //└────────────────────────────────────────────────────────────────┘
+            let delta;
+            let big_scroll = false;
+            if( needs_scrolling)
+            {
+                let top_margin = 3 * summary.getBoundingClientRect().height;
+                delta          = parseInt(details_rect.top - top_margin);
+                big_scroll     = Math.abs(delta) >= 2 * window.innerHeight;
+
+                window.scrollBy( { top: delta, behavior: "smooth" } );
+            }
+
+            let delay
+                = needs_scrolling ? (big_scroll ? 1500:1000) : 0;
+
+            setTimeout(() => details.open = !details.open, delay);
+
             e.preventDefault ();
             e.stopPropagation();
         }
-
     }
 };
 /*}}}*/
@@ -603,3 +615,6 @@ return { name : "js_folds"
 export { js_folds }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
 window . js_folds = js_folds;
 document.addEventListener("DOMContentLoaded", js_folds.onload);
+/*
+@see    SERVER/style/to_html.css
+*/
