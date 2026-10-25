@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261020:01h:11)
+//│ url_to_href.js                                       ● _TAG (261025:15h:57)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -46,9 +46,9 @@ let line_url_to_href = function(line, href_arg)
     //  RGX_EXT {{{
     if(!RGX_EXT )
     {
-        let s = "";
+        let s   = "";
         RGX_EXT_ARRAY.forEach((ext) => s += "|"+ext);
-        s = s.substr(1);
+        s       = s.substr(1); // trim extra first pipe
         RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9]+\\.("+s+"))","g");
 //console.log("RGX_EXT:", RGX_EXT);
     }

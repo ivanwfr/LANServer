@@ -144,6 +144,7 @@ log_B(                    file_name.replace(/.*[\\\/]/,"")    );
         if (file_name.endsWith("lua"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("log"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("md"     )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("sh"     )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("tmc"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("txt"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("vim"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };

@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_md.js                                               _TAG (261023:23h:17)
+//│ js_md.js                                               _TAG (261025:15h:53)
 //└────────────────────────────────────────────────────────────────────────────┘
 let js_md = (function() {
 "use strict";
@@ -7,6 +7,8 @@ let js_md = (function() {
 let md_head_level = 0;
 let md_format_header_line  = function(l_in, l_num)
 {
+    if( document_contains_hash_comment(document.location.pathname) )
+        return l_in;
     let l_out = "";
     // CLOSE ANY OPENED HEADER {{{
     if(!l_in)
@@ -233,6 +235,40 @@ let md_format_table_row = function(line)
     let result = line.split(/\|(?=(?:[^\\]*\\{2})*[^\\]*$)/).map((c) => (c ? c.trim() : ""));
     //............................(non-capturing-group___)
 
+    return result;
+};
+/*}}}*/
+/*_ document_contains_hash_comment {{{*/
+//{{{
+const RGX_DOC_PATH_NAMES
+    = [  ".bash"
+      ,  ".ksh"
+      ,  ".py"
+      ,  ".pyw"
+      ,  ".sh"
+      ,  ".tcl"
+      ,  ".zsh"
+      ,  "makefile"
+    ];
+let   RGX_DOC_PATH;
+//}}}
+let document_contains_hash_comment = function(pathname)
+{
+    //  RGX_DOC_PATH {{{
+    if(!RGX_DOC_PATH )
+    {
+        let s = "";
+        RGX_DOC_PATH_NAMES.forEach((pattern) => s += "|"+pattern.replace(".","\."));
+        s     = s.substr(1); // trim extra first pipe
+        RGX_DOC_PATH = new RegExp("("+s+")","i");
+console.log("RGX_DOC_PATH:", RGX_DOC_PATH);
+    }
+    //}}}
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│.................server_loop.sh
+    //└────────────────────────────▼(▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼)─────────────────┘
+    let matches = pathname.match( RGX_DOC_PATH );
+    let result  = matches && matches[1];
     return result;
 };
 /*}}}*/
