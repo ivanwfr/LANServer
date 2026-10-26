@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261023:22h:14)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261026:19h:26)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -80,25 +80,31 @@ let format_summary_comments = function()
         // BUTTONS: em_copy & fold_close_open_toggle {{{
 //      if( summary.innerHTML.trim() ) // FOLD_OPEN comments with no text may have DETAILS children
             summary.innerHTML += ""
-                + "<em onclick='js_linkify.fold_close_open_toggle(event, 2);'"
+                + "<em onclick='js_linkify.fold_close_open_toggle    ( event, 2);"
+                + "             js_folds  .clear_DETAILS_last_toggled( event );"
+                + "             return false;'"
+                + "      title='● Open or Close all children\n&\n● Clear open history"
                 + "      class='em_fold'"
                 + "      style='float:right; margin-left: 2em;'"
                 + ">▶◀</em>&nbsp;"
 
-                + "<em onclick='js_linkify.copy_container_text(event); return false;'" // i.e. cancelBubble
-                + "      title='● copy TITLE into NOTE INPUT below\n&\n● copy TEXT to CLIPBOARD'"
+                + "<em onclick='js_linkify.copy_container_text( event );"
+                + "             return false;'" // i.e. cancelBubble
+                + "      title='● Copy TITLE into NOTE INPUT below\n&\n● Copy TEXT to CLIPBOARD'"
                 + "      class='em_copy'"
                 + "      style='float:right; margin-left: 2em;'"
                 + ">⬜</em>&nbsp;"
 
-                + "<em onclick='js_linkify.toggle_check(event); return false;'"
-                + "      title='✓\n check\n this section'"
+                + "<em onclick='js_linkify.toggle_check( event );"
+                + "             return false;'"
+                + "      title='✓\n Check\n this section'"
                 + "      style='float:left; margin-left: 1em;'"
                 + "    class='em_check'"
                 + ">✓</em>&nbsp;"
 
-                + "<em onclick='js_linkify.toggle_wrap(event); return false;'"
-                + "      title='▶◀\nnarrow\ncols-\wrap'"
+                + "<em onclick='js_linkify.toggle_wrap( event );"
+                + "             return false;'"
+                + "      title='▶◀\n Narrow\n Columns width'"
                 + "      style='float:left; margin-left: 3em;'"
                 + "    class='em_wrap'"
                 + ">↷</em>&nbsp;"
@@ -233,6 +239,7 @@ let fold_close_open_toggle = function(e,state)
         //└────────────────────────────────────────────────────────────────────────┘
         if(state==2) state = !el.open;
         el.open            =  state;
+        if(state) js_folds.set_DETAILS_last_toggled( el );
         count += 1;
     }
     if( count ) {

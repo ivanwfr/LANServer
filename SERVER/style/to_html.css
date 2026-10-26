@@ -1,20 +1,38 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/to_html.css ● $APROJECTS/LANServer            ● _TAG (261023:01h:58) │*/
+/*│ style/to_html.css ● $APROJECTS/LANServer            ● _TAG (261026:02h:35) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
-:root { interpolate-size: allow-keywords; }
+/* details open-close smoothing {{{*/
+:root {
+    interpolate-size: allow-keywords;
+}
 
 details::details-content {
-  block-size: 0;
-  overflow: clip;
-  opacity: 0;
-  transition: block-size .28s ease, opacity .2s ease,
-              content-visibility .28s allow-discrete;
+ block-size    :    0;
+ overflow      : clip;
+ opacity       :    0;
+ transition    : block-size          .8s ease
+               , opacity            1.5s  ease
+               , content-visibility 0.5s allow-discrete;
 }
 details[open]::details-content {
-  block-size: auto;          /* interpolated thanks to calc-size */
-  opacity: 1;
+  block-size    : auto; /* interpolated thanks to calc-size */
+  opacity       :    1;
 }
+/*}}}*/
+/* last_toggled<1..0> {{{*/
 
+DETAILS.last_toggled1>SUMMARY { outline-width: 3px; outline-color: #964B00; }
+DETAILS.last_toggled2>SUMMARY { outline-width: 3px; outline-color: #FF0000; }
+DETAILS.last_toggled3>SUMMARY { outline-width: 3px; outline-color: #FFA500; }
+DETAILS.last_toggled4>SUMMARY { outline-width: 3px; outline-color: #FFFF00; }
+DETAILS.last_toggled5>SUMMARY { outline-width: 3px; outline-color: #9ACD32; }
+DETAILS.last_toggled6>SUMMARY { outline-width: 3px; outline-color: #6495ED; }
+DETAILS.last_toggled7>SUMMARY { outline-width: 3px; outline-color: #EE82EE; }
+DETAILS.last_toggled8>SUMMARY { outline-width: 3px; outline-color: #A0A0A0; }
+DETAILS.last_toggled9>SUMMARY { outline-width: 3px; outline-color: #FFFFFF; }
+DETAILS.last_toggled0>SUMMARY { outline-width: 3px; outline-color: #808080; }
+
+/*}}}*/
 /* wrap {{{*/
 DETAILS.wrap                { width      : 50%                 ; }
 DETAILS.wrap,DETAILS.wrap * { white-space: pre-line            ; }

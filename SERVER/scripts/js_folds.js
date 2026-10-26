@@ -1,8 +1,19 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261025:18h:00) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261026:19h:36) │
 //├────────────────────────────────────────────────────────────────────────────┤
+//{{{ SAVE → LOAD ● [DETAILS open state] ● [CONTAINERS scrollTop]
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ ● save and load DETAILS open state                                         │
 //│ ● save and load DETAILS open state                                         │
 //│ ● save and load CONTAINERS scrollTop                                       │
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ ● Note about using DETAILS XPath ID's:                                     │
+//│   The DETAILS toggle listener will call save_details_open_state_handler    │
+//│   that will save all DETAILS open state into localStorage.                 │
+//│   It means that, even when the DOM structure changes between two           │
+//│   sessions, any DETAILS toggle will synchronize stored open states.        │
+//└────────────────────────────────────────────────────────────────────────────┘
+//}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -71,18 +82,6 @@ if(tag_this) console.log("⚫ %c js_folds.onload:", lbB+lb1);
     window.addEventListener("pagehide", save_details_checked_state_handler);
 };
 /*}}}*/
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ NOTE ABOUT USING XPATH AS A UNIQ ELEMENT IDENTIFIER                        │
-//└────────────────────────────────────────────────────────────────────────────┘
-/* ✔ will be synchronized by first DETAILS toggle listener call {{{
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ The DETAILS toggle listener will call this storage updater function        │
-//│ that will save all open state into localStorage.                           │
-//│ This means that, even when the DOM structure changes between two sessions  │
-//│ the next details toggle will synchronize open states.                      │
-//└────────────────────────────────────────────────────────────────────────────┘
-}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🔴 DETAILS OPEN STATE          ● SAVED WHEN TOGGLED ● LOADED BACK ON LOAD  │
@@ -383,6 +382,15 @@ if(log_this) console.log("⚫ %c js_folds.details_click_listener:", lbB);
     //└────────────────────────────────────────────────────────────────────────┘
     if( details )
     {
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ Outline this last opened details
+        //└────────────────────────────────────────────────────────────────────┘
+        if(!details.open )
+            set_DETAILS_last_toggled( details );
+
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ LEFT MARGIN CLICK → Scroll SUMMARY into view
+        //└────────────────────────────────────────────────────────────────────┘
         let       summary = details.firstElementChild;
         let nextContainer = _get_nextContainer( summary );
         let rect          = nextContainer.getBoundingClientRect();
@@ -390,7 +398,7 @@ if(log_this) console.log("⚫ %c js_folds.details_click_listener:", lbB);
         if((e.clientX    >= marginStart) && (e.clientX < rect.left))
         {
             //┌────────────────────────────────────────────────────────────────┐
-            //│ MOVE DETAILS INTO VIEW FOR A VISIBLE CLOSE ANIMATION
+            //│ Move SUMMARY INTO VIEW (for a visible CLOSE ANIMATION)
             //└────────────────────────────────────────────────────────────────┘
             let details_rect
                 = details.getBoundingClientRect();
@@ -399,7 +407,7 @@ if(log_this) console.log("⚫ %c js_folds.details_click_listener:", lbB);
                 = (details_rect.top < 0);
 
             //┌────────────────────────────────────────────────────────────────┐
-            //│ MARGIN FOR VISIBLE SUMMARY + PART OF PREVIOUS CONTAINER BOTTOM
+            //│ VERTICAL MARGIN ➔ SUMMARY and part of previous CONTAINER BOTTOM
             //└────────────────────────────────────────────────────────────────┘
             let delta;
             let big_scroll = false;
@@ -407,19 +415,61 @@ if(log_this) console.log("⚫ %c js_folds.details_click_listener:", lbB);
             {
                 let top_margin = 3 * summary.getBoundingClientRect().height;
                 delta          = parseInt(details_rect.top - top_margin);
-                big_scroll     = Math.abs(delta) >= 2 * window.innerHeight;
+                big_scroll     = Math.abs(delta) >= 1 * window.innerHeight;
 
                 window.scrollBy( { top: delta, behavior: "smooth" } );
             }
 
             let delay
-                = needs_scrolling ? (big_scroll ? 1500:1000) : 0;
+                = needs_scrolling ? (big_scroll ? 2000:1000) : 0;
 
             setTimeout(() => details.open = !details.open, delay);
 
             e.preventDefault ();
             e.stopPropagation();
         }
+    }
+};
+/*}}}*/
+/*_ set_DETAILS_last_toggled {{{*/
+//{{{
+let set_DETAILS_last_toggled_cooldown;
+let set_DETAILS_last_toggled_num = 0;
+//}}}
+let set_DETAILS_last_toggled = function(details)
+{
+    if( details.className.includes("last_toggled") ) return;
+    if( set_DETAILS_last_toggled_cooldown ) clearTimeout( set_DETAILS_last_toggled_cooldown );
+    /**/set_DETAILS_last_toggled_cooldown =   setTimeout( set_DETAILS_last_toggled_handler, 100, details);
+};
+let set_DETAILS_last_toggled_handler = function(details)
+{
+    set_DETAILS_last_toggled_cooldown = null;
+
+    details. classList.add("last_toggled"+(++set_DETAILS_last_toggled_num % 10));
+
+    let     parent_details = details.closest("DETAILS");
+    while(  parent_details ) {
+        if(!parent_details.className.includes("last_toggled") )
+            parent_details.classList.add     ("last_toggled"+(  set_DETAILS_last_toggled_num % 10));
+        /**/parent_details = parent_details.parentElement.closest("DETAILS");
+    }
+};
+/*}}}*/
+/*_ clear_DETAILS_last_toggled {{{*/
+let clear_DETAILS_last_toggled = function(e)
+{
+
+    let details = e.target.closest("DETAILS");
+    if(!details ) return;
+
+    for(let i=0; i<=9; ++i)
+    {
+        let                                   className = "last_toggled"+i;
+        details.querySelectorAll(         "."+className )
+        .forEach((el) => el.classList.remove( className ));
+        // container's
+        details            .classList.remove( className );
     }
 };
 /*}}}*/
@@ -597,6 +647,8 @@ if(log_this) console.log("...arr.length: "+ arr.length);
 return { name : "js_folds"
         , onload
         , set_shiftLatched
+        , clear_DETAILS_last_toggled // exposed to onclick @see format_summary_comments in SERVER/scripts/js_linkify.js
+        , set_DETAILS_last_toggled
     // DEBUG
     , load_details_open_state
     , save_details_open_state
