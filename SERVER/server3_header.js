@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server3_header.js                                      _TAG (261008:21h:15)
+//│ server3_header.js                                      _TAG (261027:16h:11)
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 
@@ -133,13 +133,14 @@ log_B(                    file_name.replace(/.*[\\\/]/,"")    );
     //┌────────────────────────────────────────────────────────────────────────────┐
     //│ PRETTY PRINT HTML EMBEDING
     //└────────────────────────────────────────────────────────────────────────────┘
-    /* ahk asp awk css js lua md tmc txt vim {{{*/
+    /* ahk asp awk css json js lua log md sh tmc txt vim {{{*/
     if( server0_log.to_html_requested(_file_name,query) )
     {
         if (file_name.endsWith("ahk"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("asp"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("awk"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("css"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
+        if (file_name.endsWith("json"   )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("js"     )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("lua"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };
         if (file_name.endsWith("log"    )) return { "Content-Type" : "text/html;  charset=UTF-8" };

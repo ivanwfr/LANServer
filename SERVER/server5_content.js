@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261021:02h:05)
+//│ server5_content.js                                     _TAG (261027:16h:39)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 let url_to_href      = require("./url_to_href.js");
@@ -288,20 +288,39 @@ let add_TO_HTML_BANNER = function(request, file_path)
 let     url_array = [];
 let add_recently_visited = function(request, is_dir)
 {
+    // SKIP QUERY
     let request_url
         = request.url.replace(/\?.*/,"");
 
+    // NORMALIZE FOLDER WITH ENDING SLASH
     if( is_dir ) {
-        if(!request_url.endsWith("/"))  // normalize folder with ending slash
+        if(!request_url.endsWith("/"))
             request_url += "/";
     }
     else {
         request_url += "?to_html";      // next time pretty print
     }
 
-    // add to the visited list
+    // ADD INITAL DEFAULTS
+    if(!url_array.length)
+    {
+        url_array.push    ( "/" );
+    }
+
+    // ADD CONTAINING DIR
+    if(!request_url.endsWith("/"))
+    {
+        let dirPath = request_url.replace(/\/[^\/]*$/, "");
+        if( dirPath ) dirPath += "/";
+        if(!url_array.includes( dirPath ))
+            url_array.push    ( dirPath );
+    }
+
+    // ADD TO THE VISITED LIST
     if(!url_array.includes( request_url ))
+    {
         url_array.push    ( request_url );
+    }
 
     let href      = server1_network.get_net_href_root( request ) + request.url +"?to_html";
     let box_lines = "";

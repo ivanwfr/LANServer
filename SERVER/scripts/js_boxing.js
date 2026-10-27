@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261023:01h:47)
+//│ js_boxing.js                                           _TAG (261027:17h:12)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -116,9 +116,14 @@ let text_to_HTML = function(data_in)
         }
 
         //┌────────────────────────────────────────────────────────────────────┐
-        //│ MARKDOWN DETAILS
+        //│ MARKDOWN # ➔ DETAILS
         //└────────────────────────────────────────────────────────────────────┘
-        if( l.match(/^ *#/) ) l = js_md.md_format_header_line(l, i-recently_visited_header_lines);
+        if( l.match(/^ *#/  ) ) l = js_md.md_format_header_line(l, i-recently_visited_header_lines);
+
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ MARKDOWN * ➔ font-style
+        //└────────────────────────────────────────────────────────────────────┘
+        if( l.match(/\*.*\*/) ) l = js_md.md_format_line_style( l );
 
         //┌────────────────────────────────────────────────────────────────────┐
         //│ BOXING
@@ -183,10 +188,11 @@ let text_to_HTML = function(data_in)
         {
             // CODE END
             if( in_code.line ) {
-if(in_code.line && (i-in_code.line) > 100)
-    console.log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
-               , "background-color: #006"                                                   ,"background-color: #808");
-
+//{{{
+//if(in_code.line && (i-in_code.line) > 100)
+//    console.log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
+//               , "background-color: #006"                                                   ,"background-color: #808");
+//}}}
                 l  = "```</pre>\n";
                 in_code.line = 0;
             }
@@ -232,11 +238,9 @@ if(in_code.line) {
                , "color: red;"                   ,"background-color: red;");
 }
 
-//  data_out  = js_md.md_format_code       ( data_out );
     data_out += js_md.md_format_header_line( ""       ); // CLOSE DANGLING DETAILS
     data_out  = js_md.md_format_table      ( data_out );
     data_out  = box_insert_LF              ( data_out );
-//  data_out  = box_insert_DIV             ( data_out );
 
     return "\n<pre>"+ data_out +"</pre>\n";
 };

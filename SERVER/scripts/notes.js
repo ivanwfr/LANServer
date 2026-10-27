@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261020:02h:09) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261027:22h:49) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //│                                                                            │
@@ -7,13 +7,14 @@
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
+/* globals js_MODEL */
 /* globals js_details */
 /* globals js_notes */
 /* globals js_store */
 /* globals js_input */
 
 //port { js_CNTRL   } from "./js_CNTRL.js"
-//port { js_MODEL   } from "./js_MODEL.js"
+import { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
 //port { js_boxing  } from "./js_boxing.js"
 import { js_details } from "./js_details.js"
@@ -111,7 +112,7 @@ let caller = "upload_notes_to_server";
     {
 if(log_this) console.log("%c "+caller+" ● ["+_caller+"] ● Notes unchanged ["+ change_time +"]", "color: #888");
 
-        return;
+        return null;
     }
 //console.log( JSON.stringify( nArray ) );
     //}}}
@@ -135,7 +136,8 @@ if(tag_this) console.log("%c "+caller                    + ":\n"
 if(log_this) console.log( JSON.parse( body ) );
 
     // SEND NARRAY TO THE SERVER
-    fetch("/upload_notes"
+    let promise
+        = fetch("/upload_notes"
           , {   method  :   "POST"
               , headers : { "Content-Type": "application/json; charset=utf-8" }
               , body })
@@ -145,6 +147,7 @@ if(log_this) console.log( JSON.parse( body ) );
     ;
 
 if(tag_this) console.log("%c ● UPLOADED: ["+ new Date( Date.now() ) +"]", "color: green");
+    return promise;
 };
 /*}}}*/
 /*_ request_server_upload ● ADDED ● EDITED ● false {{{*/
@@ -206,7 +209,7 @@ let load_notes = function()
     let notes_storage_key = get_notes_storage_key();
 if(tag_this) console.log("🟡%c load_notes\t\t  ["+ notes_storage_key +"]", "color: #FF0");
 
-    fetch("/fetch_notes?notes_storage_key="+notes_storage_key)
+    return fetch("/fetch_notes?notes_storage_key="+notes_storage_key)
         .then (( res  ) => res.json())
         .then (( data ) => load_server_notes(data))
         .catch(( err  ) => {
@@ -372,7 +375,7 @@ if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
 
 //FIXME
 //{{{
-//let saveNote = function(payload)
+//let save_note = function(payload)
 //{
 //};
 //}}}
@@ -568,7 +571,7 @@ if(tag_this) console.log("🟡 note_4_onclick_check: "+ e.type);
     if(e.shiftKey)
     {
         e.target.classList.toggle("onShift");
-        return;
+        return null;
     }
     e.target.classList.remove("onShift");
 
@@ -603,8 +606,10 @@ if(tag_this) console.log("🟡 note_4_onclick_check: "+ e.type);
     request_server_upload("Note #"+index+" CHECKED");
 
     // ... 🟢 SYNCHRONOUSLY UPLOAD NOTES TO SERVER
-    upload_notes_to_server();
-
+    let promise = upload_notes_to_server();
+//console.log("🟡 note_4_onclick_check: "+ e.type);
+//console.log("promise:", promise);
+    return promise;
 };
 //}}}
 /*_ get_checked {{{*/
@@ -666,9 +671,9 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
     if( editing_note_index >= 0)
     {
         if(index < editing_note_index)
-            js_details.set_editing_note_index(editing_note_index -1 );
+            js_MODEL.set_editing_note_index(editing_note_index -1 );
         else
-            js_details.set_editing_note_index(editing_note_index    );
+            js_MODEL.set_editing_note_index(editing_note_index    );
     }
 };
 //}}}

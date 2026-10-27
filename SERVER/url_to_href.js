@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261025:15h:57)
+//│ url_to_href.js                                       ● _TAG (261027:15h:56)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -8,8 +8,8 @@ const RGX_EXT_ARRAY
       , "asp"
       , "awk"
       , "css"
-      , "js"
       , "json"
+      , "js"
       , "log"
       , "lua"
       , "md"
@@ -29,7 +29,7 @@ let line_url_to_href = function(line, href_arg)
     let href
         = (typeof document != "undefined")
         ?         document.location.href
-        : href_arg;
+        :                           href_arg;
     let root          = href  .replace(/^(.*\/\/[^\/]*)\/.*/, "$1");  // up to first '/'
     let file          = href  .replace(/^.*\/(.*)$/         , "$1");  // after last  '/'
     let folder        = href  .substr(root.length);                   // after first '/'

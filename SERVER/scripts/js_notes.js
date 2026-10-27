@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261021:17h:15)
+//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261027:22h:17)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵 View Helper: Renders, layouts, and scrolls notes in the DOM
 //│    State Management ➔ js_CNTRL (via js_MODEL, js_VIEW)
@@ -7,14 +7,13 @@
 //└─────────────────────────────────────────────────────────────────[...]
 /* IMPORT {{{*/
 
-// globals js_VIEW   */ // STUB FOR MVC VIEW
+/* globals js_MODEL  */
 /* globals notes     */
-
 
 /* globals js_log    */
 
 //port { js_CNTRL   } from "./js_CNTRL.js"
-//port { js_MODEL   } from "./js_MODEL.js"
+import { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
 //port { js_boxing  } from "./js_boxing.js"
 //port { js_folds   } from "./js_folds.js"
@@ -147,7 +146,11 @@ if(tag_this) console.log("🔵 layout_notes ← "+ _caller);
     let nArray = notes.get_nArray();
     if(!nArray.length && !notes.get_notes_loaded_from())
     {
-        notes.load_notes();
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ MVC MIGRATION: load ● delegates to notes.load_notes
+        //└────────────────────────────────────────────────────────────────────┘
+      //notes.load_notes();
+        js_MODEL.load();
     }
 
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -222,7 +225,7 @@ let layout_get_TD_check    = function(note, index)
     return  "<TD>"
         +   " <button class='check_button'"
         +   "         title='Check note'"
-        +   "       onclick='notes.note_4_onclick_check(event,"+index+")'>"
+        +   "       onclick='js_MODEL.check(event,"+index+")'>"
         +   " </button>"
         +   "</TD>"
     ;

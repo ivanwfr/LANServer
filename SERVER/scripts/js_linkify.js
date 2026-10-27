@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261026:19h:26)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261027:15h:57)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -287,7 +287,7 @@ let linkify_file_pathes = function()
 //{{{
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261019:19h:43)
+//│ url_to_href.js                                       ● _TAG (261027:15h:56)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -296,8 +296,8 @@ const RGX_EXT_ARRAY
       , "asp"
       , "awk"
       , "css"
-      , "js"
       , "json"
+      , "js"
       , "log"
       , "lua"
       , "md"
@@ -334,9 +334,9 @@ let line_url_to_href = function(line, href_arg)
     //  RGX_EXT {{{
     if(!RGX_EXT )
     {
-        let s = "";
+        let s   = "";
         RGX_EXT_ARRAY.forEach((ext) => s += "|"+ext);
-        s = s.substr(1);
+        s       = s.substr(1); // trim extra first pipe
         RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9]+\\.("+s+"))","g");
 //console.log("RGX_EXT:", RGX_EXT);
     }

@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_MODEL.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261019:03h:03) │
+//│ js_MODEL.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261027:22h:16) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //| SKELETON FOR SERVER/scripts/notes.js
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -72,7 +72,7 @@ const js_MODEL   = (function () {
             log("%c"+caller                                             , lb1     );
             log("%c● payload.....:\t%c["+ JSON.stringify(payload) +"]"  , lf1, lb7);
         }
-        log("%c● SM ☎ CALLING notes.note_1_onclick_save"    , lbB+lf1);
+        log("%c● ☎ "+caller+" CALLING notes.note_1_onclick_save"    , lbB+lf1);
         //}}}
                             notes.note_1_onclick_save({},payload   );
     };
@@ -80,14 +80,14 @@ const js_MODEL   = (function () {
     /*  edit    ● note_5_onclick_edit {{{*/
     let edit    = function( noteId )
     {
-        //{{{
+        // log {{{
         let caller = "MODEL\t● edit";
         if( is_logging() )
         {
             log("%c"+caller                                             , lb1     );
             log("%c● noteId......:\t%c["+ noteId                        , lf1, lb7);
         }
-        log("%c● SM ☎ CALLING js_details.note_5_onclick_edit"  , lbB+lf1);
+        log("%c● ☎ "+caller+" CALLING js_details.note_5_onclick_edit"  , lbB+lf1);
         //}}}
                             js_details.note_5_onclick_edit({}, parseInt(noteId) );
     };
@@ -102,20 +102,90 @@ const js_MODEL   = (function () {
             log("%c"+caller                                             , lb1     );
             log("%c● noteId......:\t%c["+ noteId                        , lf1, lb7);
         }
-        log("%c● SM ☎ CALLING notes.note_6_onclick_delete"  , lbB+lf1);
+        log("%c● ☎ "+caller+" CALLING notes.note_6_onclick_delete"  , lbB+lf1);
         //}}}
                             notes.note_6_onclick_delete({}, noteId );
     };
     /*}}}*/
-    // return  ● edit ● save ● remove {{{
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ MVC MIGRATION: load ● delegates to notes.load_notes
+    //└────────────────────────────────────────────────────────────────────────┘
+/*_ load {{{*/
+    let load = function()
+    {
+        // log {{{
+        let caller = "MODEL\t● load";
+        log("%c● ☎ "+caller+" CALLING notes.load_notes()"           , lbB+lf1); // SERVER/scripts/notes.js
+        //}}}
+        let promise = notes.load_notes();
+console.log(promise);
+        return promise;
+    };
+    /*}}}*/
+    /*_ getAll {{{*/
+    let prev_call_notes_length;
+    let getAll = function()
+    {
+        let nArray = notes.get_nArray();
+        // log (debounced) {{{
+        if(nArray.length != prev_call_notes_length)
+        {
+            prev_call_notes_length = nArray.length;
+
+            let caller = "MODEL\t● getAll";
+            log("%c● ☎ "+caller+" CALLING notes.get_nArray() ➔ "+ nArray.length+" notes", lbB+lf1); // SERVER/scripts/notes.js
+        }
+        //}}}
+        return nArray;
+    };
+    /*}}}*/
+/*_ set_editing_note_index {{{*/
+    let set_editing_note_index = function(noteId)
+    {
+        // log {{{
+        let caller = "MODEL\t● set_editing_note_index";
+        log("%c● ☎ "+caller+" CALLING js_details.set_editing_note_index() ➔ #"+ noteId, lbB+lf1); // SERVER/scripts/notes.js
+        //}}}
+        js_details.set_editing_note_index( noteId );
+    };
+    /*}}}*/
+    /*_ get_editing_note_index {{{*/
     let get_editing_note_index = function()
     {
+        // log {{{
+        let caller = "MODEL\t● get_editing_note_index";
+        log("%c● ☎ "+caller+" CALLING notes.get_editing_note_index()", lbB+lf1); // SERVER/scripts/notes.js
+        //}}}
         return js_details.get_editing_note_index();
     };
+    /*}}}*/
+    let check = function(e, noteId)
+    {
+        // log {{{
+        let caller = "MODEL\t● check";
+        log("%c● ☎ "+caller+" CALLING notes.note_4_onclick_check("+e.type+","+noteId+")", lbB+lf1); // SERVER/scripts/notes.js
+        //}}}
+        let promise = notes.note_4_onclick_check(e, noteId);
+console.log("promise:", promise);
+    };
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ PUBLIC
+    //└────────────────────────────────────────────────────────────────────────┘
+    // return  ● edit ● save ● remove {{{
     return { edit
         ,    save
         ,    remove
-        ,    get_editing_note_index
+
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ MVC MIGRATION
+        //└────────────────────────────────────────────────────────────────────┘
+        , load
+        , getAll
+        , get_editing_note_index
+        , set_editing_note_index
+        , check
     };
     //}}}
 

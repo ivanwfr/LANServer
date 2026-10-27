@@ -1,6 +1,21 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/to_html.css ● $APROJECTS/LANServer            ● _TAG (261026:02h:35) │*/
+/*│ style/to_html.css ● $APROJECTS/LANServer            ● _TAG (261026:20h:12) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
+/* md ● em ● strong {{{*/
+.md {
+    display          : inline-block;
+    background-color : #1008;
+               color : #FFFF;
+    border-radius    :   0.2em;
+    padding          : 0 0.5em;
+}
+
+/*{{{
+.md.i { font-style: italic; }
+}}}*/
+.md.b { font-weight  : bold; }
+
+/*}}}*/
 /* details open-close smoothing {{{*/
 :root {
     interpolate-size: allow-keywords;
@@ -246,11 +261,11 @@ DETAILS:open     { box-shadow        : -3px 0px 0px 1px #FFFFFF80; }
 
                        BOXU { margin: 0.5em 1.0em   0     0  ;                          }
                        BOXM { margin: 0     1.0em   0     0  ;                          }
-                       BOXD { margin: 0     1.0em   2.0em 0  ;                          }
+                       BOXD { margin: 0     1.0em   1.0em 0  ;                          }
 
                  BOXD+BOXU  { margin-top   : 0.1em; }
             BOXD:has(+BOXU) { margin-bottom: 0.5em; }
-         BOXD.last_of_group { margin-bottom: 2.0em; }
+         BOXD.last_of_group { margin-bottom: 0.5em; }
 
                       TABLE { margin: 10px;                                             }
 
@@ -259,7 +274,7 @@ BODY                        { margin-bottom:  50%;                              
 BOXU,BOXM,BOXD              {                                   padding:  0.1em 1.0em;  }
 
 DETAILS:open                { margin: 1.0em       1.0em      ;  padding-left:   2.0em;  }
-DETAILS:not(open)           { margin: 1.0em 0     1.0em   1px;  padding-left:   0    ;  }
+DETAILS:not(open)           { margin:   0em 0     2.0em   1px;  padding-left:   0    ;  }
 BODY>PRE>DETAILS:not(open)  { margin: 0     0     2.0em   1px;                          }
 
                         PRE {                                   padding:        1.0em;  }

@@ -155,7 +155,7 @@ const js_VIEW    = (function () {
         // log {{{
 //      noteInput .value       = ""; // Reset input after operation
 //      noteInput .title =        "VIEW\n🔵 Reset input after operation";
-        log("%c● ☎ VIEW CALLING js_input.reset_input"  , lbB+lf6);
+        log("%c● ☎ "+caller+" CALLING js_input.reset_input"  , lbB+lf6);
         //}}}
                               js_input.reset_input();
         break;
@@ -168,7 +168,7 @@ const js_VIEW    = (function () {
 //      saveBtn   .disabled    = false;
 //      saveBtn   .textContent = "Update Note #"+ (parseInt(payload.id)+1);
 //}}}
-        log("%c● ☎ VIEW CALLING js_details.note_5_onclick_edit"  , lbB+lf6);
+        log("%c● ☎ "+caller+" CALLING js_details.note_5_onclick_edit"  , lbB+lf6);
         //}}}
                               js_details.note_5_onclick_edit({}, parseInt(payload.id) );
         break;

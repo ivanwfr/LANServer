@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261018:21h:23)
+//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261027:21h:35)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵
 //│
@@ -7,14 +7,14 @@
 //└─────────────────────────────────────────────────────────────────[...]
 /* IMPORT {{{*/
 
-// globals js_VIEW   */ // STUB FOR MVC VIEW
+/* globals js_MODEL  */
 /* globals notes     */
 /* globals js_input  */
 /* globals js_notes  */
 /* globals js_ticker */
 
 //port { js_CNTRL   } from "./js_CNTRL.js"
-//port { js_MODEL   } from "./js_MODEL.js"
+import { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
 //port { js_boxing  } from "./js_boxing.js"
 //port { js_folds   } from "./js_folds.js"
@@ -102,9 +102,9 @@ if(tag_this) console.log("🔵 add_notes_DETAILS");
 const NOTE_DETAILS_HTML   = `
 <summary >📝 My Notes for This Page</summary>
 <div>
-    <button   id="narr_button"         onclick='js_notes.narrower             (event);'></button>
-    <button   id="tune_button"         onclick='js_notes.tunesize             (event);'></button>
-    <button   id="wide_button"         onclick='js_notes.wider                (event);'></button>
+    <button   id="narr_button"             onclick='js_notes.narrower            (event);'></button>
+    <button   id="tune_button"             onclick='js_notes.tunesize            (event);'></button>
+    <button   id="wide_button"             onclick='js_notes.wider               (event);'></button>
     <br>
     <textarea id="note_input_TEXTAREA" placeholder="${notes.PLACEHOLDER_CREATE_PROMPT}"></textarea>
     <button   id="save_note_BUTTON"        XXclick='  notes.note_1_onclick_save  (event)'                               >Save Note</button>
@@ -114,7 +114,7 @@ const NOTE_DETAILS_HTML   = `
     <DIV      id="saved_notes_DIV">
      <TABLE   id="saved_notes_TABLE"></TABLE>
     </DIV>
-    <div      id="status_line"         onclick='js_notes.tune_status  (event);' title='${STATUS_LINE_TITLE}'  ></div>
+    <div      id="status_line"             onclick='js_notes.tune_status  (event);' title='${STATUS_LINE_TITLE}'  ></div>
 </div>
 `;
 
@@ -212,7 +212,7 @@ if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
         js_input.value = note_row.dataset.content;
     }
     else {
-        let nArray     = notes.get_nArray();
+        let nArray     = js_MODEL.getAll();
         js_input.value = nArray[index].text;
     }
 
@@ -269,7 +269,7 @@ let set_editing_note_index = function(index)
         });
 
         // NEW LAST NOTE NUMBER
-        index = notes.get_nArray().length;
+        index = js_MODEL.getAll().length;
 
         let save_note_BUTTON = document.querySelector("#save_note_BUTTON");
         if( save_note_BUTTON )
@@ -315,7 +315,7 @@ if(tag_this) console.log("🔴 "+ caller);
         {
 if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
 
-            let nArray = notes.get_nArray();
+            let nArray = js_MODEL.getAll();
             notes.note_6_onclick_delete(e, nArray.length-1);
 
             js_ticker.changeInterval( js_details.AUTO_SAVE_IDLE_INTERVAL_MS );
@@ -341,7 +341,7 @@ if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
     }
     //}}}
     // CHANGED ● ADDING AUTO_SAVE NOTE {{{
-    let nArray = notes.get_nArray();
+    let nArray = js_MODEL.getAll();
     let index;
     if( js_notes.is_last_note_auto_save() )
     {
@@ -378,7 +378,7 @@ let is_input_same_as_original = function()
     // input text == note text
     let auto_save_text = AUTO_SAVE_TAG + text;
 
-    let nArray = notes.get_nArray();
+    let nArray = js_MODEL.getAll();
     if(   nArray[index].text.trim()
        != auto_save_text.substring(AUTO_SAVE_TAG.length).trim()
       )
@@ -393,7 +393,7 @@ let is_input_same_as_last_auto_save = function()
 {
     let input  = document.querySelector("#note_input_TEXTAREA");
     let text   = input.value.trim();
-    let nArray = notes.get_nArray();
+    let nArray = js_MODEL.getAll();
     if(!nArray.length)
         return false;
 
@@ -478,7 +478,7 @@ let is_input_auto_insert_prefix = function()
 /*_ get_input_auto_insert_prefix {{{*/
 let get_input_auto_insert_prefix = function()
 {
-    let nArray       = notes.get_nArray();
+    let nArray       = js_MODEL.getAll();
     let num =           nArray.length + 1;
 
     if( js_notes.is_last_note_auto_save() )

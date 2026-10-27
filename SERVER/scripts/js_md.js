@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_md.js                                               _TAG (261025:15h:53)
+//│ js_md.js                                               _TAG (261027:17h:54)
 //└────────────────────────────────────────────────────────────────────────────┘
 let js_md = (function() {
 "use strict";
@@ -55,6 +55,20 @@ let md_format_header_line  = function(l_in, l_num)
     return l_out;
 };
 /*}}}*/
+/*_ md_format_line_style {{{*/
+let md_format_line_style = function(l_in)
+{
+    // @see SERVER/style/to_html.css
+    let l_out
+        = l_in
+        .replace(            /\\\*/g,"_backslash_star_"                ) // mask   escaped star
+        .replace(/\*\*([^\*]+)\*\*/g,"<strong class='md b'>$1</strong>")
+        .replace(    /\*([^\*]+)\*/g,"<em     class='md i'>$1</em>"    )
+        .replace(/_backslash_star_/g,"*"                               ) // unmask escaped star
+    ;
+    return l_out;
+};
+/*}}}*/
 /*● md_format_table {{{*/
 const RGX_TABLE_SEP    = new RegExp("-+ *:* *\| *:* *-+");
 
@@ -100,7 +114,7 @@ let md_format_table = function(data_in)
             //│ ...and give them to the table formatter
             //└────────────────────────────────────────────────────────────────────────────┘
             if( table_rows ) {
-                data_out   += md_format_table_to_html( table_rows.trim() );
+                data_out   += md_format_table_row_to_html( table_rows.trim() );
             }
             data_out     += lines[i] + "\n";
         }
@@ -112,8 +126,8 @@ let md_format_table = function(data_in)
     return data_out;
 };
 /*}}}*/
-/*_ md_format_table_to_html {{{*/
-let md_format_table_to_html = function( table_rows )
+/*_ md_format_table_row_to_html {{{*/
+let md_format_table_row_to_html = function( table_rows )
 {
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ ...................................LF...|..... remove leading <br>
@@ -254,16 +268,20 @@ let   RGX_DOC_PATH;
 //}}}
 let document_contains_hash_comment = function(pathname)
 {
-    //  RGX_DOC_PATH {{{
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ RGX_DOC_PATH
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
     if(!RGX_DOC_PATH )
     {
         let s = "";
         RGX_DOC_PATH_NAMES.forEach((pattern) => s += "|"+pattern.replace(".","\."));
         s     = s.substr(1); // trim extra first pipe
         RGX_DOC_PATH = new RegExp("("+s+")","i");
-console.log("RGX_DOC_PATH:", RGX_DOC_PATH);
+//console.log("RGX_DOC_PATH:", RGX_DOC_PATH);
     }
     //}}}
+
     //┌────────────────────────────────────────────────────────────────────────┐
     //│.................server_loop.sh
     //└────────────────────────────▼(▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼)─────────────────┘
@@ -275,6 +293,7 @@ console.log("RGX_DOC_PATH:", RGX_DOC_PATH);
     // return {{{
     return { name: "js_md"
         ,    md_format_header_line
+        ,    md_format_line_style
         ,    md_format_table
     };
     //}}}
