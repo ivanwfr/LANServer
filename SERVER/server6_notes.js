@@ -1,8 +1,9 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server6_notes     ● $APROJECTS/LANServer/SERVER         _TAG (261016:19h:36)
+//│ server6_notes     ● $APROJECTS/LANServer/SERVER         _TAG (261028:19h:54)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
+/* globals server5_content */
 /*}}}*/
 let server6_notes = (function() {
 "use strict";
@@ -74,9 +75,21 @@ let handle_FETCH_AND_POST = function(request, response, body) // eslint-disable-
 /* log {{{*/
 let caller = "handle_FETCH_AND_POST";
 if(is_logging()) log_X(C+caller+"("+request.url+")");
-/*}}}*/
-    /* upload_notes {{{*/
     let    consumed_by;
+/*}}}*/
+    /* clear_this_visited_url {{{*/
+    if(   !consumed_by
+       && (request.url    == "/clear_this_visited_url")
+       && (request.method == "POST")
+    ) {
+        let { url } = JSON.parse( body );
+        consumed_by = server5_content.clear_this_visited_url( url );
+
+        server0_log.writeHead(response, caller, 200, { "Content-Type": "application/json; charset=UTF-8" });
+        response.end(JSON.stringify({ status: "ok", consumed_by }));
+    }
+    /*}}}*/
+    /* upload_notes {{{*/
     if(   !consumed_by
        && (request.url    == "/upload_notes")
        && (request.method == "POST")
@@ -107,6 +120,7 @@ if(is_logging()) log_X(C+"consumed_by returned by handle_GET=["+consumed_by+"]")
 let recap
     = "  ┌─────────────────────────────────────────────────────────────────┐\n"
     + "  │ "+caller    +": request=["+request.url                        +"]\n"
+    + "  │ .        body=[" + body                                       +"]\n"
     + "  │ .     user_id=[" + args.user_id                               +"]\n"
     + "  │ .        lang=[" + args.lang                                  +"]\n"
     + "● │ .     subject=[" + args.subject                               +"]\n"

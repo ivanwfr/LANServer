@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261027:21h:35)
+//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261028:17h:23)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵
 //│
@@ -68,7 +68,7 @@ const STATUS_LINE_TITLE   = "Click: brighter — bigger — dimmer";
 /*● onload ● DIV & TABLE ➔ js_notes ● listen ● ticker {{{*/
 let onload = function()
 {
-if(tag_this) console.log("onload");
+console.log("3 js_details \t🟠 onload:");
 
     document.addEventListener("visibilitychange", function(e) {
         if( document.hidden )
@@ -78,15 +78,17 @@ if(tag_this) console.log("onload");
         }
     });
 
+    // NOTES VIEW
     add_notes_DETAILS();
     js_notes.add_notes_DETAILS({ saved_notes_DIV, saved_notes_TABLE });
 
-    // NOTES DETAILS
+    // NOTES VIEW DATA OUT
     js_notes.layout_notes("onload");
 
-    // INPUT
+    // NOTES VIEW DATA IN
     js_input.layout_load();
 
+    // NOTES SERVER UPDATE
     js_ticker.setInterval(() => notes.note_1_onclick_save({ type: "auto_save" }), AUTO_SAVE_IDLE_INTERVAL_MS);
 };
 /*}}}*/
@@ -94,7 +96,7 @@ if(tag_this) console.log("onload");
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ LAYOUT & RENDER             🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴
 //└─────────────────────────────────────────────────────────────────[...]
-/*_ add_notes_DETAILS ● NOTE_DETAILS_HTML ● onclick {{{*/
+/*_ dd_notes_DETAILS ● NOTE_DETAILS_HTML ● onclick {{{*/
 let add_notes_DETAILS = function()
 {
 if(tag_this) console.log("🔵 add_notes_DETAILS");
@@ -508,4 +510,4 @@ let get_input_auto_insert_prefix = function()
 })();
 export { js_details }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
 window . js_details = js_details; // exposed to inline onclick handlers
-document.addEventListener("DOMContentLoaded", js_details.onload);
+

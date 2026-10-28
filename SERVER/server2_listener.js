@@ -119,7 +119,7 @@ if(is_logging()) log_G("..."+ caller);
 //}}}
 log_X(G+"● REQUEST #"+ response.request_count+" "+ request.method +" "+ uri.path);
 
-    // favicon.ico {{{
+    // 1. favicon.ico {{{
     if(uri.path == "favicon.ico")
     {
         server0_log.writeHead(response, caller, 404);
@@ -128,15 +128,15 @@ log_X(G+"● REQUEST #"+ response.request_count+" "+ request.method +" "+ uri.pa
         return;
     }
     //}}}
-    // reply_server_STATUS {{{
+    // 2. reply_server_STATUS {{{
     let args = { uri , request , response };
     let  consumed_by = "";
     if( !consumed_by) consumed_by = reply_server_STATUS ( args );
     //}}}
-    // dispatch_FETCH_AND_POST {{{
+    // 3. dispatch_FETCH_AND_POST {{{
     if( !consumed_by) consumed_by = dispatch_FETCH_AND_POST( args );
     //}}}
-    /* fs.readFile {{{*/
+    /* 4. fs.readFile {{{*/
     if(!consumed_by && uri.path)
     {
         consumed_by = server4_file.fs_read_file_or_folder(request,response,uri);
@@ -152,6 +152,7 @@ if(is_logging()   ) log_X(N+"dispatch: consumed_by=["+consumed_by+"]");
 const REQUEST_URL_ARRAY
     = [   "/fetch_notes"
         , "/upload_notes"
+        , "/clear_this_visited_url"
     ];
 
 /*}}}*/
@@ -303,7 +304,7 @@ let parse_url = function(url)
             ,   path : url_match[4]
             ,  query : url_match[5]
         };
-//console.dir(args)//FIXME
+//console.dir(args);
 
     return  args;
 };

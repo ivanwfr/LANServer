@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (261002:04h:00) │
+//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (261028:16h:50) │
 //└────────────────────────────────────────────────────────────────────────────┘
 // IMPORT {{{
 
@@ -183,9 +183,18 @@ const js_VIEW    = (function () {
         //}}}
         }
     }; //}}}
+/*● onload {{{*/
+let onload = function(e)
+{
+console.log("6 js_VIEW    \t🔵 onload:");
+
+    init(e);
+};
+/*}}}*/
     // js_VIEW bindEvents ● SM subscribe {{{
     let init = function(e)
     {
+console.log("js_VIEW.onload");//FIXME
         // log {{{
         let caller = "VIEW\t● init";
         if( is_logging() )
@@ -221,8 +230,8 @@ const js_VIEW    = (function () {
     };
     //}}}
     // init {{{
-    return {
-        init
+    return { init
+        ,    onload // MVC MIGRATION
     };
     //}}}
 
@@ -231,7 +240,6 @@ const js_VIEW    = (function () {
 //│ Application Bootstrap
 //└────────────────────────────────────────────────────────────────────────────┘
 //{{{
-document.addEventListener("DOMContentLoaded", js_VIEW.init);
 document.addEventListener("readystatechange", js_VIEW.init);
 //}}}
 

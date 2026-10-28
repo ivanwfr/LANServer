@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261026:19h:36) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261028:16h:44) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //{{{ SAVE → LOAD ● [DETAILS open state] ● [CONTAINERS scrollTop]
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -61,9 +61,8 @@ let initialized = false;
 //}}}
 let onload = function(e) /* eslint-disable-line no-unused-vars */
 {
+console.log("5 js_folds   \t🟢 onload:");
 // log {{{
-if(tag_this) console.log("⚫ %c js_folds.onload:", lbB+lb1);
-
     if( initialized ) return; // ...don't run twice
     /**/initialized = true;
 //}}}
@@ -666,7 +665,3 @@ return { name : "js_folds"
 }());
 export { js_folds }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
 window . js_folds = js_folds;
-document.addEventListener("DOMContentLoaded", js_folds.onload);
-/*
-@see    SERVER/style/to_html.css
-*/

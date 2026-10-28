@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261027:15h:57)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261028:20h:58)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -31,6 +31,8 @@ let js_linkify  = (function() {
 /*➔ onload {{{*/
 let onload  = function()
 {
+console.log("4 js_linkify \t🟡 onload:");
+
     // TURN PATH INTO HTML ANCHOR
     linkify_file_pathes();
 
@@ -140,6 +142,22 @@ let toggle_wrap = function(e)
     //}}}
 };
 /*}}}*/
+let clear_this_visited_url = function(url)
+{
+    let body = { url };
+    /**/body = JSON.stringify( body);
+    fetch("/clear_this_visited_url"
+          , {   method  :   "POST"
+              , headers : { "Content-Type": "application/json; charset=utf-8" }
+              , body })
+        .then ((response) =>   response.json() )
+        .then ((    data) => { console.log("clear_this_visited_url: "+ data); })
+        .catch((err) => {
+            console.error("clear_this_visited_url failed:",  err);
+        });
+    event.target.style.opacity                    = "0.2";
+    event.target.nextElementSibling.style.opacity = "0.2";
+};
 /*_ toggle_check {{{*/
 let toggle_check = function(e)
 {
@@ -258,6 +276,10 @@ let fold_close_open_toggle = function(e,state)
 //│ REBASE FULLY QUALIFIED HREF
 //└────────────────────────────────────────────────────────────────────────────┘
 /*_ linkify_file_pathes {{{*/
+//{{{
+const VISITED_HISTORY_UNCHECK_SYMBOL = "❌";
+
+//}}}
 let linkify_file_pathes = function()
 {
     //FIXME COMMENT
@@ -269,11 +291,27 @@ let linkify_file_pathes = function()
     let innerHTML = "";
     let       pre = document.querySelector("PRE");
     let     lines = pre.innerHTML.split("\n");
+
     lines.forEach((line) => {
         line = url_to_href.line_url_to_href( line );
+        // BUTTON to remove visited history {{{
+        if( line.startsWith(VISITED_HISTORY_UNCHECK_SYMBOL) )
+        {
+            let matches = line.match(/\>(.*)\<\/a\>/i);
+            if( matches ) {
+                let url = matches[1];
+                line
+                    = "<span class='md b' onclick='js_linkify.clear_this_visited_url(\""+url+"\")'>"
+                    +  VISITED_HISTORY_UNCHECK_SYMBOL
+                    + "</span>"
+                    + line.substr(1);
+            }
+        }
+        //}}}
         if( line )
             innerHTML  += line +"\n";
     });
+
     pre.innerHTML = innerHTML.trim();
 };
 /*}}}*/
@@ -341,17 +379,21 @@ let line_url_to_href = function(line, href_arg)
 //console.log("RGX_EXT:", RGX_EXT);
     }
     //}}}
-
-    // set or clear basename
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ SET or CLEAR *Page relative URL* **basename** ● (runlenght)
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ .......................11...............22222222..33...................
     //└────────────────────────▼▼───────────────▼▼▼▼▼▼▼▼──▼▼───────────────────┘
     let matches = line.match(/(.*)basename *= *([^\s<>]*)(.*)/);
-    if( matches ) {
+    if( matches )
+    {
 //console.log("\n"+line);
 //console.log("matches[1]=["+matches[1]+"]");
 //console.log("matches[2]=["+matches[2]+"]");
 //console.log("matches[3]=["+matches[3]+"]");
+
         basename = matches[2];
 
         let ttl = "URL basename: "+ (basename ? "Folder ["+basename+"]"  : "Cleared");
@@ -365,23 +407,25 @@ let line_url_to_href = function(line, href_arg)
     let l_trim = line  .trim();
         l_trim = l_trim.replace(  /<[^>]*>/g,"").trim();
         l_trim = l_trim.replace(/\?to_html/ ,"").trim();
-//console.log("l_trim=["+l_trim+"]");//FIXME
 
+//console.log("l_trim=["+l_trim+"]");//FIXME
+    //}}}
     //┌────────────────────────────────────────────────────────────────────────────┐
-    //│ 1/2. http (no href) ➔ MAKE A *<a href='url'>url</a>*
+    //│ 1/2. *http* with no *href* ➔ MAKE A *<a href='url'>url</a>*
     //└────────────────────────────────────────────────────────────────────────────┘
+    // match → a_href {{{
     let matched;
     if(line.includes("http") && !line.includes("href"))
     {
         line = line_a_from_http_no_href( line );
     }
+    //}}}
     //┌────────────────────────────────────────────────────────────────────────────┐
-    //│ 2/2 - FILE WITH SUPPORTED EXTENSION FILES: ahk, css, js, md...
+    //│ 2/2 - File with Supported EXTENSION ● i.e. .txt .ahk .css .js .md ...
     //└────────────────────────────────────────────────────────────────────────────┘
+    // match → a_href root + sub folders {{{
     else if(matched = line_match_supported_extension( l_trim ))
     {
-//console.log("\n%c"+ line, "background-color: #400");
-
         //┌────────────────────────────────────────────────────────────────┐
         //│ PATH:
         //│ ● FROM: AFTER A MANDATORY ( SPACE          )
@@ -395,11 +439,9 @@ let line_url_to_href = function(line, href_arg)
             .replace(/[\*\"'`](.*)[\*\"'`]*/ ,"$1").trim() // inner space
         ;
         /*}}}*/
-//console.log("%c● path=["+path+"]", "color: #0F0");
-
         //┌────────────────────────────────────────────────────────────────┐
         //│ 1/2  [ SLASH ] TO [ROOTED_NAME]
-        //│ i.e. [/SERVER] TO [http:192.168.1.114:447/SERVER]
+        //│ i.e. [/SERVER] TO [http://192.168.1.114:447/SERVER]
         //└────────────────────────────────────────────────────────────────┘
         //{{{
         let a_href;
@@ -409,7 +451,6 @@ let line_url_to_href = function(line, href_arg)
 //console.log("%c● a_href=["+a_href+"]", "color: #F06");
         }
         //}}}
-
         //┌────────────────────────────────────────────────────────────────┐
         //│ 2/2 [path] SUB FOLDERS TO PARSE
         //└────────────────────────────────────────────────────────────────┘
@@ -421,7 +462,7 @@ let line_url_to_href = function(line, href_arg)
             if( basename ) {
                 let p
                     = (path.startsWith("./") ? path.substr(2) : path);
-//console.log("p=["+p+"]");//FIXME
+//console.log("p=["+p+"]");
                 a_href = parse_sub_folders(href, root, basename, p);
             }
             else {
@@ -430,7 +471,6 @@ let line_url_to_href = function(line, href_arg)
 //console.log("%c● a_href=["+a_href+"]", "color: #F06");
         }
         //}}}
-
         //┌────────────────────────────────────────────────────────────────┐
         //│ [a_href] ... encodeURI
         //└────────────────────────────────────────────────────────────────┘
@@ -454,6 +494,8 @@ let line_url_to_href = function(line, href_arg)
 //console.log("%c"+ line  , "background-color: #822");
         //}}}
     }
+    //}}}
+
     return line;
 };
 /*}}}*/
@@ -506,47 +548,47 @@ let parse_sub_folders = function(href, root, folder, path)
 let line_a_from_http_no_href = function( line_in )
 {
     let line_out;
-            // URL IN A markdown table ● requires some syntax sanitation {{{
-            //............................(111111)(222222)(33333333)
-            let matches = line_in.match(/^( *<td>)(http.*)(<\/td> *)$/);  // @see /SERVER/server5_content.js markdown table to html
-            if( matches ) {
-                let url = matches[2];
-                let   a = "<a href='"+ encodeURI(url) +"'>"+url+"</a>";
-                line_out    = matches[1]+ a + matches[3]+"\n";
-            }
-            //}}}
-            // well recognized URL {{{
-            else {
-                //┌────────────────────────────────────────────────────────────┐
-                //│ When there is a BLANK or EOL at the end of an http URL
-                //│ ●
-                //│ matches[000000000000000000000000000000000000000]
-                //│ matches[11][222222222222222222222][33333333][44]
-                //│ ..... head  SCHEME_____URL_______  boundary  tail
-                //│ .....   ▼▼  ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  ▼▼▼▼▼▼▼▼  ▼▼
-                //│ ....(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)
-                //│ ●
-                //└────────────────────────────────────────────────────────────┘
-                matches = line_in.match(/^(.*["'`])(https?:\/\/[^>|<]+)(["'`].*)/)
-                ||        line_in.match(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)/)
-                ;
-                if( matches ) {
-                    let  head  = matches[1];
-                    let   url  = matches[2];
-                    let bound  = matches[3];
-                    let tail   = matches[4] || "";
+    // URL IN A markdown table ● requires some syntax sanitation {{{
+    //............................(111111)(222222)(33333333)
+    let matches = line_in.match(/^( *<td>)(http.*)(<\/td> *)$/);  // @see /SERVER/server5_content.js markdown table to html
+    if( matches ) {
+        let url = matches[2];
+        let   a = "<a href='"+ encodeURI(url) +"'>"+url+"</a>";
+        line_out    = matches[1]+ a + matches[3]+"\n";
+    }
+    //}}}
+    // well recognized URL {{{
+    else {
+        //┌────────────────────────────────────────────────────────────┐
+        //│ When there is a BLANK or EOL at the end of an http URL
+        //│ ●
+        //│ matches[000000000000000000000000000000000000000]
+        //│ matches[11][222222222222222222222][33333333][44]
+        //│ ..... head  SCHEME_____URL_______  boundary  tail
+        //│ .....   ▼▼  ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  ▼▼▼▼▼▼▼▼  ▼▼
+        //│ ....(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)
+        //│ ●
+        //└────────────────────────────────────────────────────────────┘
+        matches = line_in.match(/^(.*["'`])(https?:\/\/[^>|<]+)(["'`].*)/)
+        ||        line_in.match(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)/)
+        ;
+        if( matches ) {
+            let  head  = matches[1];
+            let   url  = matches[2];
+            let bound  = matches[3];
+            let tail   = matches[4] || "";
 
-                    line_out   = head
-                        +       "<a href='"+ encodeURI(url) +"'>"
-                        +        url
-                        +       "</a>"
-                        +        bound
-                        +        tail
-                        +       "\n";
-                }
-            }
-            //}}}
-    return line_out;
+            line_out   = head
+                +       "<a href='"+ encodeURI(url) +"'>"
+                +        url
+                +       "</a>"
+                +        bound
+                +        tail
+                +       "\n";
+        }
+    }
+    //}}}
+    return line_out || line_in;
 };
 /*}}}*/
 /*_ line_match_supported_extension {{{*/
@@ -595,16 +637,16 @@ globalThis.url_to_href  = url_to_href;
 //└────────────────────────────────────────────────────────────────────────────┘
 //{{{
     return { onload
-        ,    linkify_file_pathes
-
         ,    copy_container_text    // exposed to onclick
         ,    fold_close_open_toggle // exposed to onclick
         ,    toggle_check           // exposed to onclick
         ,    toggle_wrap            // exposed to onclick
+        ,    clear_this_visited_url // exposed to onclick
+        // DEBUG ONLY
+        ,    linkify_file_pathes
     };
 //}}}
 /*}}}*/
 })();
 export { js_linkify }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
 window . js_linkify = js_linkify; // exposed to onclick
-document.addEventListener("DOMContentLoaded", js_linkify.onload);

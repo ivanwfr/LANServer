@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261027:15h:56)
+//│ url_to_href.js                                       ● _TAG (261028:17h:44)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -29,7 +29,7 @@ let line_url_to_href = function(line, href_arg)
     let href
         = (typeof document != "undefined")
         ?         document.location.href
-        :                           href_arg;
+        : href_arg;
     let root          = href  .replace(/^(.*\/\/[^\/]*)\/.*/, "$1");  // up to first '/'
     let file          = href  .replace(/^.*\/(.*)$/         , "$1");  // after last  '/'
     let folder        = href  .substr(root.length);                   // after first '/'
@@ -53,17 +53,21 @@ let line_url_to_href = function(line, href_arg)
 //console.log("RGX_EXT:", RGX_EXT);
     }
     //}}}
-
-    // set or clear basename
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ SET or CLEAR *Page relative URL* **basename** ● (runlenght)
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ .......................11...............22222222..33...................
     //└────────────────────────▼▼───────────────▼▼▼▼▼▼▼▼──▼▼───────────────────┘
     let matches = line.match(/(.*)basename *= *([^\s<>]*)(.*)/);
-    if( matches ) {
+    if( matches )
+    {
 //console.log("\n"+line);
 //console.log("matches[1]=["+matches[1]+"]");
 //console.log("matches[2]=["+matches[2]+"]");
 //console.log("matches[3]=["+matches[3]+"]");
+
         basename = matches[2];
 
         let ttl = "URL basename: "+ (basename ? "Folder ["+basename+"]"  : "Cleared");
@@ -77,23 +81,25 @@ let line_url_to_href = function(line, href_arg)
     let l_trim = line  .trim();
         l_trim = l_trim.replace(  /<[^>]*>/g,"").trim();
         l_trim = l_trim.replace(/\?to_html/ ,"").trim();
-//console.log("l_trim=["+l_trim+"]");//FIXME
 
+//console.log("l_trim=["+l_trim+"]");//FIXME
+    //}}}
     //┌────────────────────────────────────────────────────────────────────────────┐
-    //│ 1/2. http (no href) ➔ MAKE A *<a href='url'>url</a>*
+    //│ 1/2. *http* with no *href* ➔ MAKE A *<a href='url'>url</a>*
     //└────────────────────────────────────────────────────────────────────────────┘
+    // match → a_href {{{
     let matched;
     if(line.includes("http") && !line.includes("href"))
     {
         line = line_a_from_http_no_href( line );
     }
+    //}}}
     //┌────────────────────────────────────────────────────────────────────────────┐
-    //│ 2/2 - FILE WITH SUPPORTED EXTENSION FILES: ahk, css, js, md...
+    //│ 2/2 - File with Supported EXTENSION ● i.e. .txt .ahk .css .js .md ...
     //└────────────────────────────────────────────────────────────────────────────┘
+    // match → a_href root + sub folders {{{
     else if(matched = line_match_supported_extension( l_trim ))
     {
-//console.log("\n%c"+ line, "background-color: #400");
-
         //┌────────────────────────────────────────────────────────────────┐
         //│ PATH:
         //│ ● FROM: AFTER A MANDATORY ( SPACE          )
@@ -107,8 +113,6 @@ let line_url_to_href = function(line, href_arg)
             .replace(/[\*\"'`](.*)[\*\"'`]*/ ,"$1").trim() // inner space
         ;
         /*}}}*/
-//console.log("%c● path=["+path+"]", "color: #0F0");
-
         //┌────────────────────────────────────────────────────────────────┐
         //│ 1/2  [ SLASH ] TO [ROOTED_NAME]
         //│ i.e. [/SERVER] TO [http:192.168.1.114:447/SERVER]
@@ -121,7 +125,6 @@ let line_url_to_href = function(line, href_arg)
 //console.log("%c● a_href=["+a_href+"]", "color: #F06");
         }
         //}}}
-
         //┌────────────────────────────────────────────────────────────────┐
         //│ 2/2 [path] SUB FOLDERS TO PARSE
         //└────────────────────────────────────────────────────────────────┘
@@ -142,7 +145,6 @@ let line_url_to_href = function(line, href_arg)
 //console.log("%c● a_href=["+a_href+"]", "color: #F06");
         }
         //}}}
-
         //┌────────────────────────────────────────────────────────────────┐
         //│ [a_href] ... encodeURI
         //└────────────────────────────────────────────────────────────────┘
@@ -166,6 +168,8 @@ let line_url_to_href = function(line, href_arg)
 //console.log("%c"+ line  , "background-color: #822");
         //}}}
     }
+    //}}}
+
     return line;
 };
 /*}}}*/

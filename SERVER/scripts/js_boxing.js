@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261027:17h:12)
+//│ js_boxing.js                                           _TAG (261028:16h:51)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -21,12 +21,12 @@ import {   js_md } from "./js_md.js"
 /*}}}*/
 let js_boxing = (function() {
 "use strict";
-/*● box_in {{{*/
+/*● onload {{{*/
 const DATA_ATTR_JS_BOXING = "data-js_boxing";
 
-let box_in = function(e) /* eslint-disable-line no-unused-vars */
+let onload = function(e) /* eslint-disable-line no-unused-vars */
 {
-//console.log("js_boxing.box_in:");
+console.log("2 js_boxing  \t🔴 onload:");
 //console.log("✔ document.readyState=["+document.readyState+"]");
 
     // GUARD CHECK: ALREADY  FORMATTED {{{
@@ -58,7 +58,7 @@ let box_out = function(e) /* eslint-disable-line no-unused-vars */
 //console.log("js_boxing.box_out:");
 
     document.body.innerHTML = ""
-      //+ "<button onclick='js_boxing.box_in()'>js_boxing.box_in()</button>\n"
+      //+ "<button onclick='js_boxing.onload()'>js_boxing.onload()</button>\n"
      // + "<pre>"+ document.body.textContent +"</pre>"
         +          document.body.textContent
     ;
@@ -314,7 +314,7 @@ let vim_fold_line = function(l_in, l_num)
 
     // return {{{
     return { name: "js_boxing"
-        ,    box_in
+        ,    onload
         ,    box_out
         // DEBUG ONLY
         ,    text_to_HTML
@@ -322,7 +322,5 @@ let vim_fold_line = function(l_in, l_num)
     //}}}
 })();
 try { module.exports = js_boxing; } catch(ex) { /*console.log(ex.message);*/ /*console.trace();*/ } /* eslint-disable-line no-unused-vars */
-  globalThis.js_boxing = js_boxing; //DEBUG ONLY
-  if(typeof document  != "undefined") js_boxing.box_in(); // CLIENT-SIDE ONLY//FIXME
-//if(typeof document  != "undefined") document.addEventListener("DOMContentLoaded", js_boxing.box_in);
-//console.log("%c❌❌❌ js_boxing.box_in() NOT CALLED", "font-size: 200%");
+export { js_boxing }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window.js_boxing     = js_boxing;

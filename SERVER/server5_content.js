@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261027:16h:39)
+//│ server5_content.js                                     _TAG (261028:19h:36)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 let url_to_href      = require("./url_to_href.js");
@@ -87,25 +87,26 @@ const PAGE_HEAD_INNER_HTML = ""
     + "\n"
     + "<!--base   href='https://ivanwfr.github.io/LANServer' /-->\n"
     + "\n"
-    + "<script type='module'  src='/scripts/js_log.js'     ></script>\n"
-    + "<script type='module'  src='/scripts/url_to_href.js'></script>\n"
+    + "<script type='module'  src='/scripts/js_log.js'     ></script>\n"    // LOGGING
     + "\n"
-    + "<script type='module'  src='/scripts/js_md.js'      ></script>\n"
-    + "<script type='module'  src='/scripts/js_boxing.js'  ></script>\n"
-    + "<script type='module'  src='/scripts/js_folds.js'   ></script>\n"
+    + "<script type='module'  src='/scripts/js_details.js' ></script>\n"    // VIM_FOLDS to DETAILS
+    + "<script type='module'  src='/scripts/js_boxing.js'  ></script>\n"    // comments  to BOX
+    + "<script type='module'  src='/scripts/js_linkify.js' ></script>\n"    // URL       to HTML
+    + "<script type='module'  src='/scripts/js_md.js'      ></script>\n"    // markdown  to HTML (called from js_linkify)
+    + "<script type='module'  src='/scripts/js_folds.js'   ></script>\n"    // open-close   DETAILS
+    + "\n"
     + "<script type='module'  src='/scripts/js_store.js'   ></script>\n"
     + "<script type='module'  src='/scripts/js_xpath.js'   ></script>\n"
-    + "<script type='module'  src='/scripts/js_linkify.js' ></script>\n"
     + "\n"
-    + "<script type='module'  src='/scripts/js_MODEL.js'   ></script>\n"
-    + "<script type='module'  src='/scripts/js_VIEW.js'    ></script>\n"
-    + "<script type='module'  src='/scripts/js_CNTRL.js'   ></script>\n"
+    + "<script type='module'  src='/scripts/js_MODEL.js'   ></script>\n"    // MODEL SM
+    + "<script type='module'  src='/scripts/js_VIEW.js'    ></script>\n"    // VIEW  SM
+    + "<script type='module'  src='/scripts/js_CNTRL.js'   ></script>\n"    // CNTRL SM
     + "\n"
-    + "<script type='module'  src='/scripts/js_ticker.js'  ></script>\n"
-    + "<script type='module'  src='/scripts/js_input.js'   ></script>\n"
-    + "<script type='module'  src='/scripts/notes.js'      ></script>\n"
-    + "<script type='module'  src='/scripts/js_details.js' ></script>\n"
-    + "<script type='module'  src='/scripts/js_notes.js'   ></script>\n"
+    + "<script type='module'  src='/scripts/notes.js'      ></script>\n"    // MODEL DATA
+    + "<script type='module'  src='/scripts/js_notes.js'   ></script>\n"    // MODEL DATA
+    + "\n"
+    + "<script type='module'  src='/scripts/js_ticker.js'  ></script>\n"    // VIEW USER
+    + "<script type='module'  src='/scripts/js_input.js'   ></script>\n"    // VIEW USER
     ;
 
 const PAGE_STYLE_LINKS = ""
@@ -227,12 +228,12 @@ ${        PAGE_HEAD_INNER_HTML  }
 ${        PAGE_STYLE_LINKS }
 </head>
 <body>
-<pre>${   escapeHTML(data) }</pre>
+<pre id='recently_visited'>${ escapeHTML(data) }</pre>
 </body>
 </html>
 `;
 
-//console.log("html=["+html+"]");
+//console.log("html=["+html.substr(1000,500)+"]");
             response.write( html );
         }
         /*}}}*/
@@ -284,8 +285,22 @@ let add_TO_HTML_BANNER = function(request, file_path)
 
 };
 /*}}}*/
+/*_ clear_this_visited_url {{{*/
+let clear_this_visited_url = function( url )
+{
+//console.log("server5_content.clear_this_visited_url("+url+")");
+    let index = url_array.indexOf( url    );
+    if( index ) url_array.splice(index, 1);
+//console.dir(url_array);
+    return "server5_content.clear_this_visited_url";
+};
+/*}}}*/
 /*_ add_recently_visited {{{*/
-let     url_array = [];
+//{{{
+const ROOT_URL  = "/";
+
+let   url_array =  [];
+//}}}
 let add_recently_visited = function(request, is_dir)
 {
     // SKIP QUERY
@@ -304,7 +319,7 @@ let add_recently_visited = function(request, is_dir)
     // ADD INITAL DEFAULTS
     if(!url_array.length)
     {
-        url_array.push    ( "/" );
+        url_array.push    ( ROOT_URL );
     }
 
     // ADD CONTAINING DIR
@@ -328,14 +343,18 @@ let add_recently_visited = function(request, is_dir)
         .sort()
         .forEach((      url) => {
             let current_url  = (request_url ==  url  );
-            let check_mark   =                               current_url  ? "√" :  "";
+            let check_mark
+                =  current_url              ?   "√"
+                : (        url == ROOT_URL) ?   ""
+                :                             "❌"
+            ;
             let dir_item     = is_dir ? url_to_href.line_url_to_href(url, href) : url;
             box_lines       += check_mark +"\t"+ dir_item +"\n";
         });
 
     return is_dir
-        ? "<pre>"+box_lines+"</pre>"
-        :         box_lines
+        ? "<pre id='recently_visited'>"+box_lines+"</pre>"
+        :                               box_lines
     ;
 };
 /*}}}*/
@@ -361,6 +380,7 @@ let escapeHTML = function(text)
         ,    onload
         ,    send_file_content
         ,    add_recently_visited
+        ,    clear_this_visited_url
     };
     //}}}
 })();

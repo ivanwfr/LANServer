@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER    ● _TAG (261005:01h:32) │
+//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER    ● _TAG (261028:20h:09) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ Here is a minimal, clutter-free implementation of                          │
 //│ a State Machine using an **IIFE** pattern:                                 │
@@ -14,20 +14,27 @@
 /* eslint-disable object-shorthand */
 /* eslint-disable dot-notation */
 
-/* globals  js_log  */
-                        //┌─────────────┐
-/* globals  js_MODEL */ //│ - Model     │
-/*     r    js_VIEW  */ //│ - View      │
-/* exported js_CNTRL */ //│ ● Controler │
-                        //└─────────────┘
+/* globals  js_log    */
+
+/* globals js_boxing  */
+/* globals js_md      */
+/* globals js_linkify */
+/* globals js_details */
+/* globals js_folds   */
+
+/* globals  js_MODEL  */
+/* globals  js_VIEW   */
+/* exported js_CNTRL  */
 
 //port { js_CNTRL   } from "./js_CNTRL.js"
 import { js_MODEL   } from "./js_MODEL.js"
-//port { js_VIEW    } from "./js_VIEW.js"
-//port { js_boxing  } from "./js_boxing.js"
-//port { js_folds   } from "./js_folds.js"
+import { js_VIEW    } from "./js_VIEW.js"
+import { js_boxing  } from "./js_boxing.js"
+import { js_md      } from "./js_md.js"
+import { js_folds   } from "./js_folds.js"
 //port { js_input   } from "./js_input.js"
-//port { js_linkify } from "./js_linkify.js"
+import { js_linkify } from "./js_linkify.js"
+import { js_details } from "./js_details.js"
 import { js_log     } from "./js_log.js"
 //port { js_notes   } from "./js_notes.js"
 //port { js_store   } from "./js_store.js"
@@ -55,6 +62,31 @@ const js_CNTRL     = (function () {
 
     /* eslint-enable  no-unused-vars */
     //}}}
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ onload ● DOM reshaping script call order
+//└────────────────────────────────────────────────────────────────────────────┘
+/*{{{
+ | ONLOAD ORDER       | RESHAPING THE DOM        |
+ |--------------------|--------------------------|
+ |1 🟤 **js_CNTRL**   | ONLOAD ORDER             |
+ |2 🟠 **js_boxing**  | *TEXT*      to *BOX*     |
+ |3 🔴 **js_details** | *VIM_FOLDS* to *DETAILS* |
+ |4 🟡 **js_linkify** | *URL*       to *HTML*    |
+ |5 🟢 **js_folds**   | open-close   DETAILS     |
+ |6 🔵 **js_VIEW**    | *MVC* State Machine      |
+}}}*/
+/*_ onload {{{*/
+let onload = function(e)
+{
+console.log("1 js_CNTRL   \t🟤 onload:");
+                  js_boxing   .onload(e);
+    requestAnimationFrame(() => js_details  .onload(e));
+    requestAnimationFrame(() => js_linkify  .onload(e));
+    requestAnimationFrame(() => js_folds    .onload(e));
+    requestAnimationFrame(() => js_VIEW     .onload(e));
+};
+/*}}}*/
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PRIVATE
@@ -323,8 +355,10 @@ const js_CNTRL     = (function () {
     return { subscribe
         ,    transition
         ,    getState
+        // MVC MIGRATION
+        ,  onload
         // DEBUG
-        , transitions
+        ,  transitions
     };
     //}}}
 
@@ -344,3 +378,5 @@ const js_CNTRL     = (function () {
 //└────────────────────────────────────────────────────────────────────────────┘
 
 export { js_CNTRL }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_CNTRL = js_CNTRL;
+document.addEventListener("DOMContentLoaded", js_CNTRL.onload);
