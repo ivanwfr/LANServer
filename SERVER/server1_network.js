@@ -1,7 +1,9 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-/*│ server1_network.js           */ const SERVER_NETWORK_TAG = "(261017:17h:26)";
+/*│ server1_network.js           */ const SERVER_NETWORK_TAG = "(261029:17h:16)";
 //└────────────────────────────────────────────────────────────────────────────┘
-
+// eslint {{{
+/* globals server5_content */
+//}}}
 let server1_network = (function() {
 "use strict";
 
@@ -145,13 +147,15 @@ if( response )
     /*}}}*/
     /*}}}*/
     /* FOLDERS {{{*/
-    let started_folder      = process.cwd().replace(/\\/g,"/");
-    let server_top_folder   = process.cwd().replace(/\\/g,"/")+"/"+ config.LAN_FOLDER;
+    let started_folder    = process.cwd().replace(/\\/g,"/");
+    let server_top_folder = process.cwd().replace(/\\/g,"/")+"/"+ config.LAN_FOLDER;
+    let url_array_length  = server5_content.get_visited_url_array_length();
 
     s = `
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │ SERVER STARTED IN ${   started_folder}
 │ SERVER TOP FOLDER ${server_top_folder}
+│ VISITED URL ARRAY ${url_array_length }
 └──────────────────────────────────────────────────────────────────────────────┘`;
 
     log_G(s);

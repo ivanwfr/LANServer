@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261028:17h:44)
+//│ url_to_href.js                                       ● _TAG (261029:22h:42)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -21,15 +21,15 @@ let   RGX_EXT;
 let   basename;
 let   a_href_to_html_array = [];
 //}}}
-/*_ line_url_to_href {{{*/
-let line_url_to_href = function(line, href_arg)
+/*● line_url_to_href {{{*/
+let line_url_to_href = function(line, dir_href)
 {
-//if(href_arg) console.log("url_to_href.line_url_to_href("+href_arg+")");
+//if(dir_href) console.log("url_to_href.line_url_to_href("+dir_href+")");
 // log {{{
     let href
         = (typeof document != "undefined")
         ?         document.location.href
-        : href_arg;
+        :                       dir_href;
     let root          = href  .replace(/^(.*\/\/[^\/]*)\/.*/, "$1");  // up to first '/'
     let file          = href  .replace(/^.*\/(.*)$/         , "$1");  // after last  '/'
     let folder        = href  .substr(root.length);                   // after first '/'
@@ -82,7 +82,7 @@ let line_url_to_href = function(line, href_arg)
         l_trim = l_trim.replace(  /<[^>]*>/g,"").trim();
         l_trim = l_trim.replace(/\?to_html/ ,"").trim();
 
-//console.log("l_trim=["+l_trim+"]");//FIXME
+//console.log("l_trim=["+l_trim+"]");
     //}}}
     //┌────────────────────────────────────────────────────────────────────────────┐
     //│ 1/2. *http* with no *href* ➔ MAKE A *<a href='url'>url</a>*
@@ -136,43 +136,86 @@ let line_url_to_href = function(line, href_arg)
             if( basename ) {
                 let p
                     = (path.startsWith("./") ? path.substr(2) : path);
-//console.log("p=["+p+"]");//FIXME
+//console.log("p=["+p+"]");
                 a_href = parse_sub_folders(href, root, basename, p);
             }
             else {
                 a_href = parse_sub_folders(href, root, folder, path);
             }
-//console.log("%c● a_href=["+a_href+"]", "color: #F06");
         }
         //}}}
-        //┌────────────────────────────────────────────────────────────────┐
-        //│ [a_href] ... encodeURI
-        //└────────────────────────────────────────────────────────────────┘
-        //{{{
-        let  q = (line.includes("?to_html") || a_href_to_html_array.includes( a_href )) ? "?to_html":"";
+//console.log("┌────────────────────────────────────────────────────────────────────┐");
+//console.log(a_href);
 
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ query
+        //└────────────────────────────────────────────────────────────────────┘
+        let  q = (line.includes("?to_html") || a_href_to_html_array.includes( a_href )) ? "?to_html":"";
         if(  q && !a_href_to_html_array.includes( a_href ))
                    a_href_to_html_array.push    ( a_href );
+//console.log("● q ["+q+"]");
 
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ a
+        //└────────────────────────────────────────────────────────────────────┘
         let  a = "<a href='"+ encodeURI(a_href) + q +"'>"+path+"</a>";
-//console.log("- a=["+a+"]");
+//console.log("● a ["+a+"]");
 
+        let  a_list = get_a_list(a_href, q);
+
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ p ● THE PART TO BE REPLACED BY: <a href='https://...'> path </a>
+        //└────────────────────────────────────────────────────────────────────┘
         let  p = line.includes(q) ? (path + q) : path;
-//console.log("- p=["+p+"]");
+//console.log("● p ["+ p      +"]");
 
-        line   = line.replace(p, a);
-//console.log(  "...p=["+p+"]");
-//console.log(  "line=["+line+"]\n@@@\n");
-//console.log("%c"+ a_href, "background-color: #040");
-//console.log("%c"+ line  , "background-color: #040");
-//console.log("%c"+ line  , "background-color: #822");
-        //}}}
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ line
+        //└────────────────────────────────────────────────────────────────────┘
+//console.log("├────────────────────────────────────────────────────────────────────┤");
+//console.log(            line    );
+        line   = line.replace(p, (a_list || a));
+
+//console.log("%c"+       line   , "background-color: #040");
+//console.log("└────────────────────────────────────────────────────────────────────┘");
     }
     //}}}
 
     return line;
 };
 /*}}}*/
+let get_a_list = function(a_href, q)
+{
+    //..........................(-----------------) /(pa))
+    let matches = a_href.match(/(https?:\/\/[^\/]*)\/(.*)$/);
+    if(!matches) return "";
+
+    let root = matches[1].trim();
+//console.log("root=["+root+"]");
+
+    let path = matches[2].trim();
+//console.log("path=["+path+"]");
+
+    let is_dir = path.endsWith("/");
+    if( is_dir ) path = path.slice(0,-1);
+//console.log("is_dir=["+is_dir+"]");
+
+    let a_list = "";
+    let subs   = "";
+    let dirs   = path.split("/");
+    for(let i=0; i < dirs.length; ++i)
+    {
+        let d = dirs[i];
+//console.log("...d=["+d+"]");
+        subs +=  d;
+        if(is_dir || (i  < (dirs.length - 1))) subs += "/";
+        else if(     (i == (dirs.length - 1))) subs +=   q;
+        a_list += ((i > 0) ? "→":"")+"<a href='"+ root +"/"+ subs +"'>"+ (d || "Root") +"</a>";
+    }
+//console.log("%c"+ a_list.replace(/→/,"→\n"), "background-color:black;");
+
+    return a_list;
+};
 /*_ parse_sub_folders {{{*/
 let parse_sub_folders = function(href, root, folder, path)
 {

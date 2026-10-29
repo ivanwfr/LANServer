@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261028:20h:58)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261029:22h:54)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -142,6 +142,7 @@ let toggle_wrap = function(e)
     //}}}
 };
 /*}}}*/
+/*_ clear_this_visited_url {{{*/
 let clear_this_visited_url = function(url)
 {
     let body = { url };
@@ -158,6 +159,7 @@ let clear_this_visited_url = function(url)
     event.target.style.opacity                    = "0.2";
     event.target.nextElementSibling.style.opacity = "0.2";
 };
+/*}}}*/
 /*_ toggle_check {{{*/
 let toggle_check = function(e)
 {
@@ -233,6 +235,7 @@ let copy_container_text = function(e)
     //}}}
 };
 /*}}}*/
+
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ FOLDING                                                                    │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -279,6 +282,7 @@ let fold_close_open_toggle = function(e,state)
 //{{{
 const VISITED_HISTORY_UNCHECK_SYMBOL = "❌";
 
+let   RGX_CLR;
 //}}}
 let linkify_file_pathes = function()
 {
@@ -292,19 +296,56 @@ let linkify_file_pathes = function()
     let       pre = document.querySelector("PRE");
     let     lines = pre.innerHTML.split("\n");
 
+    //  RGX_CLR {{{
+    if(!RGX_CLR )
+    {
+        let x = VISITED_HISTORY_UNCHECK_SYMBOL;
+        //....................()(lft)(last_href)(trailer..)
+        let match1 = "(^.*)";
+        let symbol =       "("+x+")";
+        let match2 =        "(.*')";
+        let e_href =             "(http[^']+)";
+        let match3 =                          "('.*$)";
+
+        RGX_CLR = new RegExp(`${match1}${symbol}${match2}${e_href}${match3}`, "");
+
+//console.log("RGX_CLR:", RGX_CLR);
+    }
+    //}}}
+
     lines.forEach((line) => {
         line = url_to_href.line_url_to_href( line );
         // BUTTON to remove visited history {{{
-        if( line.startsWith(VISITED_HISTORY_UNCHECK_SYMBOL) )
+        if(line && line.includes  (VISITED_HISTORY_UNCHECK_SYMBOL) )
         {
-            let matches = line.match(/\>(.*)\<\/a\>/i);
+//console.log("┌────────────────────────────────────────────────────────────────────┐");
+//console.log("line=["+line+"]");//FIXME
+          //let matches = line.match(/\>(.*)\<\/a\>/i);
+            // last href
+            let matches = line.match( RGX_CLR );
             if( matches ) {
-                let url = matches[1];
-                line
-                    = "<span class='md b' onclick='js_linkify.clear_this_visited_url(\""+url+"\")'>"
-                    +  VISITED_HISTORY_UNCHECK_SYMBOL
+                let m_1 = matches[1];
+                let sym = matches[2];
+                let m_3 = matches[3];
+                let url = matches[4];
+                let m_4 = matches[5];
+//console.log("m_1=["+m_1+"]");//FIXME
+//console.log("sym=["+sym+"]");//FIXME
+//console.log("m_3=["+m_3+"]");//FIXME
+//console.log("url=["+url+"]");//FIXME
+//console.log("m_4=["+m_4+"]");//FIXME
+
+                line= m_1
+                    + "<span onclick='js_linkify.clear_this_visited_url(\""+url+"\")'>"
+                    +  sym
                     + "</span>"
-                    + line.substr(1);
+                    + m_3
+                    + url
+                    + m_4
+                ;
+//console.log("line=["+line+"]");//FIXME
+//console.log("└────────────────────────────────────────────────────────────────────┘");
+
             }
         }
         //}}}
@@ -325,7 +366,7 @@ let linkify_file_pathes = function()
 //{{{
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261027:15h:56)
+//│ url_to_href.js                                       ● _TAG (261029:22h:42)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -347,15 +388,15 @@ let   RGX_EXT;
 let   basename;
 let   a_href_to_html_array = [];
 //}}}
-/*_ line_url_to_href {{{*/
-let line_url_to_href = function(line, href_arg)
+/*● line_url_to_href {{{*/
+let line_url_to_href = function(line, dir_href)
 {
-//if(href_arg) console.log("url_to_href.line_url_to_href("+href_arg+")");
+//if(dir_href) console.log("url_to_href.line_url_to_href("+dir_href+")");
 // log {{{
     let href
         = (typeof document != "undefined")
         ?         document.location.href
-        : href_arg;
+        :                       dir_href;
     let root          = href  .replace(/^(.*\/\/[^\/]*)\/.*/, "$1");  // up to first '/'
     let file          = href  .replace(/^.*\/(.*)$/         , "$1");  // after last  '/'
     let folder        = href  .substr(root.length);                   // after first '/'
@@ -408,7 +449,7 @@ let line_url_to_href = function(line, href_arg)
         l_trim = l_trim.replace(  /<[^>]*>/g,"").trim();
         l_trim = l_trim.replace(/\?to_html/ ,"").trim();
 
-//console.log("l_trim=["+l_trim+"]");//FIXME
+//console.log("l_trim=["+l_trim+"]");
     //}}}
     //┌────────────────────────────────────────────────────────────────────────────┐
     //│ 1/2. *http* with no *href* ➔ MAKE A *<a href='url'>url</a>*
@@ -441,7 +482,7 @@ let line_url_to_href = function(line, href_arg)
         /*}}}*/
         //┌────────────────────────────────────────────────────────────────┐
         //│ 1/2  [ SLASH ] TO [ROOTED_NAME]
-        //│ i.e. [/SERVER] TO [http://192.168.1.114:447/SERVER]
+        //│ i.e. [/SERVER] TO [http:192.168.1.114:447/SERVER]
         //└────────────────────────────────────────────────────────────────┘
         //{{{
         let a_href;
@@ -468,37 +509,80 @@ let line_url_to_href = function(line, href_arg)
             else {
                 a_href = parse_sub_folders(href, root, folder, path);
             }
-//console.log("%c● a_href=["+a_href+"]", "color: #F06");
         }
         //}}}
-        //┌────────────────────────────────────────────────────────────────┐
-        //│ [a_href] ... encodeURI
-        //└────────────────────────────────────────────────────────────────┘
-        //{{{
-        let  q = (line.includes("?to_html") || a_href_to_html_array.includes( a_href )) ? "?to_html":"";
+//console.log("┌────────────────────────────────────────────────────────────────────┐");
+//console.log(a_href);
 
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ query
+        //└────────────────────────────────────────────────────────────────────┘
+        let  q = (line.includes("?to_html") || a_href_to_html_array.includes( a_href )) ? "?to_html":"";
         if(  q && !a_href_to_html_array.includes( a_href ))
                    a_href_to_html_array.push    ( a_href );
+//console.log("● q ["+q+"]");
 
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ a
+        //└────────────────────────────────────────────────────────────────────┘
         let  a = "<a href='"+ encodeURI(a_href) + q +"'>"+path+"</a>";
-//console.log("- a=["+a+"]");
+//console.log("● a ["+a+"]");
 
+        let  a_list = get_a_list(a_href, q);
+
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ p ● THE PART TO BE REPLACED BY: <a href='https://...'> path </a>
+        //└────────────────────────────────────────────────────────────────────┘
         let  p = line.includes(q) ? (path + q) : path;
-//console.log("- p=["+p+"]");
+//console.log("● p ["+ p      +"]");
 
-        line   = line.replace(p, a);
-//console.log(  "...p=["+p+"]");
-//console.log(  "line=["+line+"]\n@@@\n");
-//console.log("%c"+ a_href, "background-color: #040");
-//console.log("%c"+ line  , "background-color: #040");
-//console.log("%c"+ line  , "background-color: #822");
-        //}}}
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ line
+        //└────────────────────────────────────────────────────────────────────┘
+//console.log("├────────────────────────────────────────────────────────────────────┤");
+//console.log(            line    );
+        line   = line.replace(p, (a_list || a));
+
+//console.log("%c"+       line   , "background-color: #040");
+//console.log("└────────────────────────────────────────────────────────────────────┘");
     }
     //}}}
 
     return line;
 };
 /*}}}*/
+let get_a_list = function(a_href, q)
+{
+    //..........................(-----------------) /(pa))
+    let matches = a_href.match(/(https?:\/\/[^\/]*)\/(.*)$/);
+    if(!matches) return "";
+
+    let root = matches[1].trim();
+//console.log("root=["+root+"]");
+
+    let path = matches[2].trim();
+//console.log("path=["+path+"]");
+
+    let is_dir = path.endsWith("/");
+    if( is_dir ) path = path.slice(0,-1);
+//console.log("is_dir=["+is_dir+"]");
+
+    let a_list = "";
+    let subs   = "";
+    let dirs   = path.split("/");
+    for(let i=0; i < dirs.length; ++i)
+    {
+        let d = dirs[i];
+//console.log("...d=["+d+"]");
+        subs +=  d;
+        if(is_dir || (i  < (dirs.length - 1))) subs += "/";
+        else if(     (i == (dirs.length - 1))) subs +=   q;
+        a_list += ((i > 0) ? "→":"")+"<a href='"+ root +"/"+ subs +"'>"+ (d || "Root") +"</a>";
+    }
+//console.log("%c"+ a_list.replace(/→/,"→\n"), "background-color:black;");
+
+    return a_list;
+};
 /*_ parse_sub_folders {{{*/
 let parse_sub_folders = function(href, root, folder, path)
 {
@@ -548,47 +632,47 @@ let parse_sub_folders = function(href, root, folder, path)
 let line_a_from_http_no_href = function( line_in )
 {
     let line_out;
-    // URL IN A markdown table ● requires some syntax sanitation {{{
-    //............................(111111)(222222)(33333333)
-    let matches = line_in.match(/^( *<td>)(http.*)(<\/td> *)$/);  // @see /SERVER/server5_content.js markdown table to html
-    if( matches ) {
-        let url = matches[2];
-        let   a = "<a href='"+ encodeURI(url) +"'>"+url+"</a>";
-        line_out    = matches[1]+ a + matches[3]+"\n";
-    }
-    //}}}
-    // well recognized URL {{{
-    else {
-        //┌────────────────────────────────────────────────────────────┐
-        //│ When there is a BLANK or EOL at the end of an http URL
-        //│ ●
-        //│ matches[000000000000000000000000000000000000000]
-        //│ matches[11][222222222222222222222][33333333][44]
-        //│ ..... head  SCHEME_____URL_______  boundary  tail
-        //│ .....   ▼▼  ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  ▼▼▼▼▼▼▼▼  ▼▼
-        //│ ....(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)
-        //│ ●
-        //└────────────────────────────────────────────────────────────┘
-        matches = line_in.match(/^(.*["'`])(https?:\/\/[^>|<]+)(["'`].*)/)
-        ||        line_in.match(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)/)
-        ;
-        if( matches ) {
-            let  head  = matches[1];
-            let   url  = matches[2];
-            let bound  = matches[3];
-            let tail   = matches[4] || "";
+            // URL IN A markdown table ● requires some syntax sanitation {{{
+            //............................(111111)(222222)(33333333)
+            let matches = line_in.match(/^( *<td>)(http.*)(<\/td> *)$/);  // @see /SERVER/server5_content.js markdown table to html
+            if( matches ) {
+                let url = matches[2];
+                let   a = "<a href='"+ encodeURI(url) +"'>"+url+"</a>";
+                line_out    = matches[1]+ a + matches[3]+"\n";
+            }
+            //}}}
+            // well recognized URL {{{
+            else {
+                //┌────────────────────────────────────────────────────────────┐
+                //│ When there is a BLANK or EOL at the end of an http URL
+                //│ ●
+                //│ matches[000000000000000000000000000000000000000]
+                //│ matches[11][222222222222222222222][33333333][44]
+                //│ ..... head  SCHEME_____URL_______  boundary  tail
+                //│ .....   ▼▼  ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  ▼▼▼▼▼▼▼▼  ▼▼
+                //│ ....(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)
+                //│ ●
+                //└────────────────────────────────────────────────────────────┘
+                matches = line_in.match(/^(.*["'`])(https?:\/\/[^>|<]+)(["'`].*)/)
+                ||        line_in.match(/^(.*)(https?:\/\/[^>|<|\s]+)(>|<|\s|$)(.*)/)
+                ;
+                if( matches ) {
+                    let  head  = matches[1];
+                    let   url  = matches[2];
+                    let bound  = matches[3];
+                    let tail   = matches[4] || "";
 
-            line_out   = head
-                +       "<a href='"+ encodeURI(url) +"'>"
-                +        url
-                +       "</a>"
-                +        bound
-                +        tail
-                +       "\n";
-        }
-    }
-    //}}}
-    return line_out || line_in;
+                    line_out   = head
+                        +       "<a href='"+ encodeURI(url) +"'>"
+                        +        url
+                        +       "</a>"
+                        +        bound
+                        +        tail
+                        +       "\n";
+                }
+            }
+            //}}}
+    return line_out;
 };
 /*}}}*/
 /*_ line_match_supported_extension {{{*/

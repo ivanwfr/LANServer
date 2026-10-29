@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER    ● _TAG (261028:20h:09) │
+//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER    ● _TAG (261028:22h:10) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ Here is a minimal, clutter-free implementation of                          │
 //│ a State Machine using an **IIFE** pattern:                                 │
@@ -80,7 +80,7 @@ const js_CNTRL     = (function () {
 let onload = function(e)
 {
 console.log("1 js_CNTRL   \t🟤 onload:");
-                  js_boxing   .onload(e);
+    requestAnimationFrame(() => js_boxing   .onload(e));
     requestAnimationFrame(() => js_details  .onload(e));
     requestAnimationFrame(() => js_linkify  .onload(e));
     requestAnimationFrame(() => js_folds    .onload(e));

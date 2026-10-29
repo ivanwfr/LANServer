@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261028:16h:44) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261029:01h:11) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //{{{ SAVE → LOAD ● [DETAILS open state] ● [CONTAINERS scrollTop]
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -48,7 +48,8 @@ let tag_this = false || log_this;
 /* eslint-disable no-unused-vars */
 let                               lbB         = js_log.lbB;
 let                               lbX         = js_log.lbX;
-let [lb1,lb2,lb3,lb4,lb5,lb6,lb7,lb8,lb9,lb0] =  js_log.lbX;
+let [lb0,lb1,lb2,lb3,lb4,lb5,lb6,lb7,lb8,lb9] = js_log.lbX;
+let [lf0,lf1,lf2,lf3,lf4,lf5,lf6,lf7,lf8,lf9] = js_log.lfX;
 /* eslint-enable  no-unused-vars */
 //}}}
 
@@ -66,15 +67,24 @@ console.log("5 js_folds   \t🟢 onload:");
     if( initialized ) return; // ...don't run twice
     /**/initialized = true;
 //}}}
-
+//{{{
     setTimeout(details_update_click_listeners,  250);
-    setTimeout(load_details_open_state       , 1500);
+    setTimeout(load_details_open_state       ,  500);
     setTimeout(load_details_checked_state    , 1500);
     setTimeout(load_containers_scrollTop     , 2000);
-/*{{{
-    setTimeout(() => document.body.style.visibility="visible", 2500);
-    setTimeout(() => document.body.style.opacity="1.0", 2500);
-}}}*/
+//}}}
+//{{{
+//    setTimeout(load_details_open_state       , 0);
+//    setTimeout(load_containers_scrollTop     , 0);
+//    setTimeout(load_details_checked_state    , 0);
+//    setTimeout(details_update_click_listeners, 0);
+//}}}
+//{{{
+//    requestAnimationFrame(() => details_update_click_listeners());
+//    requestAnimationFrame(() => load_details_open_state       ());
+//    requestAnimationFrame(() => load_details_checked_state    ());
+//    requestAnimationFrame(() => load_containers_scrollTop     ());
+//}}}
 
     window.addEventListener("pagehide", save_containers_scrollTop_handler );
     window.addEventListener("pagehide", save_details_open_state_handler   );
@@ -100,7 +110,7 @@ let save_details_open_state = function()
 let save_details_open_state_handler = function()
 {
 /*{{{*/
-if(tag_this) console.log("⚫ %c js_folds.save_details_open_state_handler:", lbB+lb3);
+if(tag_this) console.log("🟢 %c js_folds.save_details_open_state_handler:", lbB+lf5);
 
     save_details_open_state_timeout = null;
 /*}}}*/
@@ -133,7 +143,8 @@ if(log_this) console.dir(el);
 /*○ load_details_open_state {{{*/
 let load_details_open_state = function()
 {
-if(tag_this) console.log("⚫ %c js_folds.load_details_open_state:", lbB+lb3);
+//if(tag_this)
+    console.log("🟢 %c js_folds.load_details_open_state:", lbB+lf5);
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PREVENT CLOSING DETAILS ● so we can open more than one                 │
@@ -182,7 +193,7 @@ let save_details_checked_state = function()
 let save_details_checked_state_handler = function()
 {
 /*{{{*/
-if(tag_this) console.log("⚫ %c js_folds.save_details_checked_state_handler:", lbB+lb3);
+if(tag_this) console.log("⚫ %c js_folds.save_details_checked_state_handler:", lbB+lf3);
 
     save_details_checked_state_timeout = null;
 /*}}}*/
@@ -212,7 +223,8 @@ if(log_this) console.dir(el);
 /*○ load_details_checked_state {{{*/
 let load_details_checked_state = function()
 {
-if(tag_this) console.log("⚫ %c js_folds.load_details_checked_state:", lbB+lb3);
+//if(tag_this)
+    console.log("🟢 %c js_folds.load_details_checked_state:", lbB+lf5);
 
     //┌───────────────────────────────────────────────────────────────────────┐
     //│ RESTORE             ● store details checked state from [localStorage] │
@@ -291,7 +303,8 @@ if(tag_this) console.log(" 🟡 %c"+xpath, "background-color:black");
 /*○ load_containers_scrollTop {{{*/
 let load_containers_scrollTop = function()
 {
-if(tag_this) console.log("⚫ %c js_folds.load_containers_scrollTop:", lbB+lb4);
+//if(tag_this)
+    console.log("🟢 %c js_folds.load_containers_scrollTop:", lbB+lf5);
 
     //┌───────────────────────────────────────────────────────────────┐
     //│ RESTORE ● scrollable-containers-scrollTop from [localStorage] │
@@ -314,7 +327,8 @@ if(tag_this) console.log(" 🟡 %c"+item.xpath, "background-color:black");
 /*○ details_update_click_listeners {{{*/
 let details_update_click_listeners = function()
 {
-if(log_this) console.log("⚫ %c js_folds.details_update_click_listeners:", lbB);
+//if(log_this)
+    console.log("🟢 %c js_folds.details_update_click_listeners:", lbB+lf5);
 
     // CLOSE DETAILS ● click container left margin
     let some_listener_added = "";

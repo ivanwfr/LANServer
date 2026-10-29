@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261028:19h:36)
+//│ server5_content.js                                     _TAG (261029:22h:32)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 let url_to_href      = require("./url_to_href.js");
@@ -73,6 +73,8 @@ let onload = function(args)
     //│           - createServer:172:
     //│             - server5_content.onload({ config });
     //└────────────────────────────────────────────────────────────────────────┘
+
+    load_url_array();
 };
 /*}}}*/
 
@@ -285,30 +287,35 @@ let add_TO_HTML_BANNER = function(request, file_path)
 
 };
 /*}}}*/
-/*_ clear_this_visited_url {{{*/
-let clear_this_visited_url = function( url )
-{
-//console.log("server5_content.clear_this_visited_url("+url+")");
-    let index = url_array.indexOf( url    );
-    if( index ) url_array.splice(index, 1);
-//console.dir(url_array);
-    return "server5_content.clear_this_visited_url";
-};
-/*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ url_array ● SAVE ● LOAD
+//└────────────────────────────────────────────────────────────────────────────┘
+//{{{
+const   fs = require("fs");
+const path = require("path");
+const VISITED_URL_ARRAY_FILE = path.join("STORAGE", "visited_url_array.json");
+//}}}
 /*_ add_recently_visited {{{*/
 //{{{
 const ROOT_URL  = "/";
+const VISITED_HISTORY_UNCHECK_SYMBOL = "**❌**";
+const VISITED_HISTORY_CHECKED_SYMBOL = "* ✔*";
 
 let   url_array =  [];
 //}}}
-let add_recently_visited = function(request, is_dir)
+let add_recently_visited = function(request, dir_list_page)
 {
-    // SKIP QUERY
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ SKIP QUERY
+    //└────────────────────────────────────────────────────────────────────────┘
     let request_url
         = request.url.replace(/\?.*/,"");
 
-    // NORMALIZE FOLDER WITH ENDING SLASH
-    if( is_dir ) {
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ NORMALIZE FOLDER WITH ENDING SLASH
+    //└────────────────────────────────────────────────────────────────────────┘
+    if( dir_list_page ) {
         if(!request_url.endsWith("/"))
             request_url += "/";
     }
@@ -316,48 +323,114 @@ let add_recently_visited = function(request, is_dir)
         request_url += "?to_html";      // next time pretty print
     }
 
-    // ADD INITAL DEFAULTS
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ADD INITAL DEFAULTS
+    //└────────────────────────────────────────────────────────────────────────┘
     if(!url_array.length)
-    {
         url_array.push    ( ROOT_URL );
-    }
 
-    // ADD CONTAINING DIR
-    if(!request_url.endsWith("/"))
-    {
-        let dirPath = request_url.replace(/\/[^\/]*$/, "");
-        if( dirPath ) dirPath += "/";
-        if(!url_array.includes( dirPath ))
-            url_array.push    ( dirPath );
-    }
-
-    // ADD TO THE VISITED LIST
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ADD TO THE VISITED LIST
+    //└────────────────────────────────────────────────────────────────────────┘
     if(!url_array.includes( request_url ))
-    {
         url_array.push    ( request_url );
-    }
 
-    let href      = server1_network.get_net_href_root( request ) + request.url +"?to_html";
-    let box_lines = "";
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ REMOVE SHORTER CONTAINED ENTRIEs
+    //└────────────────────────────────────────────────────────────────────────┘
+    url_array = remove_contained( url_array );
+    url_array.unshift("/");
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ STORE VISITED LIST ● LOADED BY SERVER RESTART
+    //└────────────────────────────────────────────────────────────────────────┘
+    save_url_array();
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ VISITED URL LINES
+    //└────────────────────────────────────────────────────────────────────────┘
+    let dir_href   = server1_network.get_net_href_root( request ) + request.url +"?to_html";
+    let text_lines = "";
     url_array
         .sort()
-        .forEach((      url) => {
-            let current_url  = (request_url ==  url  );
+        .forEach(( dirent_url) => {
+            let current_url    = (request_url ==  dirent_url  );
             let check_mark
-                =  current_url              ?   "√"
-                : (        url == ROOT_URL) ?   ""
-                :                             "❌"
+                =  current_url              ? VISITED_HISTORY_CHECKED_SYMBOL
+                : (dirent_url ==  ROOT_URL) ? ""
+                :                             VISITED_HISTORY_UNCHECK_SYMBOL
             ;
-            let dir_item     = is_dir ? url_to_href.line_url_to_href(url, href) : url;
-            box_lines       += check_mark +"\t"+ dir_item +"\n";
+            let dir_item = dir_list_page
+                ? url_to_href.line_url_to_href(dirent_url, dir_href)
+                :                              dirent_url
+            ;
+            text_lines      += check_mark +"\t"+ dir_item +"\n";
         });
 
-    return is_dir
-        ? "<pre id='recently_visited'>"+box_lines+"</pre>"
-        :                               box_lines
+    return dir_list_page
+        ? "<pre id='recently_visited'>"+text_lines+"</pre>"
+        :                               text_lines
     ;
 };
 /*}}}*/
+/*_ remove_contained {{{*/
+let remove_contained = function(str_array)
+{
+//console.log("str_array", str_array);
+    let longer_first
+        = [...str_array].sort((a, b) => b.length - a.length);
+
+    let not_contained = [];
+
+    for(let str of longer_first) {
+        if(!not_contained.some((existing) => existing.includes(str)))
+            not_contained.push( str );
+    }
+
+//console.log("not_contained", not_contained);
+    return not_contained;
+};
+/*}}}*/
+/*_ clear_this_visited_url {{{*/
+let clear_this_visited_url = function( url )
+{
+//console.log("server5_content.clear_this_visited_url("+url+")");
+    let index = url_array.indexOf( url    );
+    if( index ) url_array.splice(index, 1);
+
+    // STORE VISITED LIST ● LOADED BY SERVER RESTART
+    save_url_array();
+
+    return "server5_content.clear_this_visited_url";
+};
+/*}}}*/
+/*_ save_url_array {{{*/
+let save_url_array = function()
+{
+//console.log("server5_content.save_url_array( x"+url_array.length+" )");
+    if(url_array.length > 1)
+        fs. writeFileSync( VISITED_URL_ARRAY_FILE , JSON.stringify(url_array, null, 2));
+    else if(fs.existsSync( VISITED_URL_ARRAY_FILE ) )
+        fs.    unlinkSync( VISITED_URL_ARRAY_FILE );
+};
+/*}}}*/
+/*_ load_url_array {{{*/
+let load_url_array = function()
+{
+    url_array = [];
+    try {
+        let val = fs.readFileSync(VISITED_URL_ARRAY_FILE, "utf-8");
+        if( val ) url_array = JSON.parse( val );
+    } catch(ex) { /* eslint-disable-line no-unused-vars */
+        //console.log("server5_content.load_url_array: ", ex);
+    }
+//console.log("server5_content.load_url_array( x"+url_array.length+" )");
+};
+/*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ UTIL
+//└────────────────────────────────────────────────────────────────────────────┘
 /*● escapeHTML ● Sanitize text for HTML {{{*/
 let escapeHTML = function(text)
 {
@@ -381,6 +454,7 @@ let escapeHTML = function(text)
         ,    send_file_content
         ,    add_recently_visited
         ,    clear_this_visited_url
+        ,    get_visited_url_array_length : () => url_array.length
     };
     //}}}
 })();
