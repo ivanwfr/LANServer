@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261029:22h:42)
+//│ url_to_href.js                                       ● _TAG (261030:03h:38)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -210,7 +210,7 @@ let get_a_list = function(a_href, q)
         subs +=  d;
         if(is_dir || (i  < (dirs.length - 1))) subs += "/";
         else if(     (i == (dirs.length - 1))) subs +=   q;
-        a_list += ((i > 0) ? "→":"")+"<a href='"+ root +"/"+ subs +"'>"+ (d || "Root") +"</a>";
+        a_list += ((i > 0) ? "∙":"")+"<a href='"+ root +"/"+ subs +"'>"+ (d || "Root") +"</a>";
     }
 //console.log("%c"+ a_list.replace(/→/,"→\n"), "background-color:black;");
 

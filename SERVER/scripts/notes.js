@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261027:22h:49) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261030:15h:29) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
 //│                                                                            │
@@ -990,6 +990,10 @@ let update_summary = function()
         ,    note_3_onclick_export          //...onclick
         ,    center_input_placeholder
         ,    reset_input_placeholder
+
+        // MVC MIGRATION
+        ,    exportNotes: note_3_onclick_export
+
         // DEBUG
         , scroll_TR_intoView
         , note_7_onclick_wasted_get_buffer

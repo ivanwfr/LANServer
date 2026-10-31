@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261029:22h:32)
+//│ server5_content.js                                     _TAG (261030:03h:20)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 let url_to_href      = require("./url_to_href.js");
@@ -300,7 +300,7 @@ const VISITED_URL_ARRAY_FILE = path.join("STORAGE", "visited_url_array.json");
 //{{{
 const ROOT_URL  = "/";
 const VISITED_HISTORY_UNCHECK_SYMBOL = "**❌**";
-const VISITED_HISTORY_CHECKED_SYMBOL = "* ✔*";
+const VISITED_HISTORY_CHECKED_SYMBOL =  "*✔*";
 
 let   url_array =  [];
 //}}}

@@ -1,16 +1,16 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/to_html.css ● $APROJECTS/LANServer            ● _TAG (261026:20h:12) │*/
+/*│ style/to_html.css ● $APROJECTS/LANServer          ● _TAG (261026:20h:12) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 /* md ● em ● strong {{{*/
 .md {
     display          : inline-block;
                color : #FFF;
     border-radius    :   0.2em;
-    padding          : 0 0.5em;
+    padding          : 0 0.2em;
     border           : 1px solid #888;
 }
 
-.md.i { font-style   : italic; background-color : #020A !important; border-color : #0F04; color : #EFE; }
+.md.i { font-style   : italic; background-color : #020A !important; border-color : #0F04; color : #EFE; padding: 0 0.4em; }
 .md.b { font-weight  :   bold; background-color : #200A !important; border-color : #F004; color : #FEE; }
 
 /*}}}*/
@@ -141,6 +141,9 @@ BOXU:nth-of-type(20), BOXU:nth-of-type(20) ~ BOXM, BOXU:nth-of-type(20) ~ BOXD {
 .markdown_table TD                     { background-color: #000; border: 1px solid #444; }
 .markdown_table TR:nth-of-type(even) * { background-color: #000F; }
 .markdown_table TR:nth-of-type(odd)  * { background-color: #222F; }
+/*{{{
+.markdown_table TD { text-overflow     : ellipsis; }
+}}}*/
 /*}}}*/
 
 /* stipped background ● note_row.timestamp {{{*/
@@ -320,7 +323,9 @@ DETAILS:open                { white-space-collapse : preserve-breaks;   }
 DETAILS:open                { white-space          : normal;            }
 
 .code                       { white-space          : pre;               }
+/*{{{
 .markdown_table TD          { white-space          : pre;               }
+}}}*/
 
 /*}}}*/
 /* cursor   ● user-select {{{*/

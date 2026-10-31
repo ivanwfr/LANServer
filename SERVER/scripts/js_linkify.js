@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261029:22h:54)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261030:04h:04)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -143,8 +143,9 @@ let toggle_wrap = function(e)
 };
 /*}}}*/
 /*_ clear_this_visited_url {{{*/
-let clear_this_visited_url = function(url)
+let clear_this_visited_url = function(e,url)
 {
+    let e_target = e.target;
     let body = { url };
     /**/body = JSON.stringify( body);
     fetch("/clear_this_visited_url"
@@ -152,12 +153,22 @@ let clear_this_visited_url = function(url)
               , headers : { "Content-Type": "application/json; charset=utf-8" }
               , body })
         .then ((response) =>   response.json() )
-        .then ((    data) => { console.log("clear_this_visited_url: "+ data); })
+        .then ((    data) => { /* eslint-disable-line no-unused-vars */
+//console.log("clear_this_visited_url:"+ JSON.stringify(data));
+            e_target.style.opacity                    = "0.2";
+            let a =   e_target.nextElementSibling
+                   || e_target.parentElement.nextElementSibling
+            ;
+            if( a ) {
+                do {
+                    a.style.opacity = "0.5";
+                } while(   (a = a.nextElementSibling)
+                           && (a.tagName == "A"        ));
+            }
+        })
         .catch((err) => {
             console.error("clear_this_visited_url failed:",  err);
         });
-    event.target.style.opacity                    = "0.2";
-    event.target.nextElementSibling.style.opacity = "0.2";
 };
 /*}}}*/
 /*_ toggle_check {{{*/
@@ -336,7 +347,7 @@ let linkify_file_pathes = function()
 //console.log("m_4=["+m_4+"]");//FIXME
 
                 line= m_1
-                    + "<span onclick='js_linkify.clear_this_visited_url(\""+url+"\")'>"
+                    + "<span onclick='js_linkify.clear_this_visited_url(event,\""+url+"\")'>"
                     +  sym
                     + "</span>"
                     + m_3
@@ -366,7 +377,7 @@ let linkify_file_pathes = function()
 //{{{
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261029:22h:42)
+//│ url_to_href.js                                       ● _TAG (261030:03h:38)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -577,7 +588,7 @@ let get_a_list = function(a_href, q)
         subs +=  d;
         if(is_dir || (i  < (dirs.length - 1))) subs += "/";
         else if(     (i == (dirs.length - 1))) subs +=   q;
-        a_list += ((i > 0) ? "→":"")+"<a href='"+ root +"/"+ subs +"'>"+ (d || "Root") +"</a>";
+        a_list += ((i > 0) ? "∙":"")+"<a href='"+ root +"/"+ subs +"'>"+ (d || "Root") +"</a>";
     }
 //console.log("%c"+ a_list.replace(/→/,"→\n"), "background-color:black;");
 

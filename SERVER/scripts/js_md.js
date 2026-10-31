@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_md.js                                               _TAG (261027:17h:54)
+//│ js_md.js                                               _TAG (261031:18h:13)
 //└────────────────────────────────────────────────────────────────────────────┘
 let js_md = (function() {
 "use strict";
@@ -61,10 +61,10 @@ let md_format_line_style = function(l_in)
     // @see SERVER/style/to_html.css
     let l_out
         = l_in
-        .replace(            /\\\*/g,"_backslash_star_"                ) // mask   escaped star
-        .replace(/\*\*([^\*]+)\*\*/g,"<strong class='md b'>$1</strong>")
-        .replace(    /\*([^\*]+)\*/g,"<em     class='md i'>$1</em>"    )
-        .replace(/_backslash_star_/g,"*"                               ) // unmask escaped star
+        .replace(              /\\\*/g,"_backslash_star_"                ) // mask   escaped star
+        .replace(/\*\*([^\*\|]+)\*\*/g,"<strong class='md b'>$1</strong>")
+        .replace(    /\*([^\*\|]+)\*/g,"<em     class='md i'>$1</em>"    )
+        .replace(  /_backslash_star_/g,"*"                               ) // unmask escaped star
     ;
     return l_out;
 };
@@ -76,11 +76,11 @@ let md_format_table = function(data_in)
 {
     let data_out = "";
 
-    let lines = data_in.split("\n")                      ;  // keep indentation
+    let lines = data_in.split("\n");                            // keep indentation
 
     for(let i = 0; i < lines.length; ++i)
     {
-        if(lines[i].match(/(?:BOX|\/\/)/))                  // non-capturing group
+        if(lines[i].match(/(?:BOX|^\s*\/\/)/))                  // non-capturing group
         {
             data_out     += lines[i].replace(/ *\/\/ ?/ , "") + "\n";
             continue;
@@ -163,6 +163,7 @@ let md_format_table_row_to_html = function( table_rows )
             .  replace( /^ *\/\/ *│ */ ,""                     ) // extract table from a box
             .  replace(         /\\\|/g,"_backslash_pipe_"     ) // mask escaped pipe
             .  replace(         /\\\\/g,"_backslash_backslash_") // mask escaped backspace
+            .  replace(          /\\§/g,"_cr_"                 ) // mask escaped cr
             .  replace(        /\\(.)/g,"$1"                   ) // mask escaped ...others
         ;
 
@@ -187,7 +188,9 @@ let md_format_table_row_to_html = function( table_rows )
     ;
     for (let cell of headerCells) {
         let     text = cell.trim().replace(/_backslash_pipe_/g     ,"|" )   // unmask escaped pipe
-                                  .replace(/_backslash_backslash_/g,"\\");  // unmask escaped backspace
+                                  .replace(/_backslash_backslash_/g,"\\")   // unmask escaped backspace
+                                  .replace(/_cr_/g                 ,"§" )   // unmask escaped cr
+        ;
         html        += `   <th>${text}</th>\n`;
     }
     html += ""
@@ -204,7 +207,9 @@ let md_format_table_row_to_html = function( table_rows )
         html += "  <tr>\n";
         for(let cell of row) {
             let text = cell.trim().replace(/_backslash_pipe_/g     ,"|" )   // unmask escaped pipe
-                                  .replace(/_backslash_backslash_/g,"\\");  // unmask escaped backspace
+                                  .replace(/_backslash_backslash_/g,"\\")   // unmask escaped backspace
+                                  .replace(/_cr_/g                 ,"§" )   // unmask escaped cr
+            ;
             html    += `   <td>${text}</td>\n`;
         }
         html += "  </tr>\n";
@@ -234,15 +239,21 @@ let md_format_table_row = function(line)
     line = line
         .replace(    /&lt;br&gt;/g,"_br_"       ) // <br>
         .replace(          /null/g,"🖕"         ) // NUL
+      //.replace(      /\bnull\b/g,"🖕"         ) // NUL
         .replace(         /false/g,"👎"         ) // false
         .replace(          /true/g,"👍"         ) // true
-        .replace(           / *▼/g,"_br_"       ) // LF
+      //.replace(           / *▼/g,"_br_"       ) // LF
+      //.replace(           / *↵/g,"_br_"       ) // LF  // inoremap: ^KCR
+      //.replace(           / *¶/g,"_br_"       ) // LF  // digraphs: ^Kpp ¶ PARAGRAPH ● http://xahlee.info/comp/unicode_reference_symbol.html
+        .replace(           / *§/g,"_br_"       ) // LF  // digraphs: ^KSE § SECTION   ● http://xahlee.info/comp/unicode_reference_symbol.html
         .replace(           / *➔/g,"\t"         ) // TAB
         .replace( / *● *([^●]*●)/ ,"_br_👉 $1"  ) // or
         .replace(         / *● */g,"_br_or "    ) // or
         .replace(      /\|_br_ */g,"|"          ) // ...delete leading <br>
         .replace(      /<br>_br_/g,"<br>"       ) // ...delete added <br> too many
         .replace(          /_br_/g,"<br>"       ) // ...commit required <br>
+        .replace(          /_lb_/g,"{"          ) // guarded VIM_FOLDS OPEN
+        .replace(          /_rb_/g,"}"          ) // guarded VIM_FOLDS CLOS
     ;
 
     //......................._▼___(NOBS__+BS2___NoBS)_$_________________(DEFAULT_STRING___)
