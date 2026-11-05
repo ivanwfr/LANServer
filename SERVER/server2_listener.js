@@ -17,7 +17,7 @@ let { networkInterfaces }       = require("os"   ); /* eslint-disable-line no-un
 let server0_log      = require("./server0_log.js");
 //...{{{
 /* eslint-disable no-unused-vars */
-// INLINING:
+// INTERNING:
 let { log
     ,    toggle
     ,    is_logging

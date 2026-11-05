@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_xpath.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261018:21h:25) │
+//│ js_xpath.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261101:16h:49) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -104,11 +104,65 @@ let get_sibling_rank = function(node)
     return rank;
  };
 /*}}}*/
+/*_ parse_url ● @see also SERVER/server2_listener.js {{{*/
+let parse_url = function(url)
+{
+// log {{{
+//log_X("parse_url:")
+//log_X("url:")
+//console.dir( url  )
+//log_X("decodeURIComponent(url):")
+//console.dir( decodeURIComponent(url)  )
+//}}}
+
+    // setup default parsing_failed_empty_segments
+    let url_match
+        = [   ""/* [0]    url */
+            , ""/* [1] scheme */
+            , ""/* [2]   port */
+            , ""/* [3] domain */
+            , ""/* [4]   path */
+            , ""/* [5]  query */
+        ];
+
+    try {
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ https://192.168.1.14:447/SERVER/server.js
+        //└────────────────────────────────────────────────────────────────────┘
+        url_match
+            = decodeURIComponent(url)
+            . replace(     /\+/g, " ")  // encoded space
+            . replace(     /\r/g, " ")  // CR
+            . replace(     /\n/g, " ")  // LF
+            . replace(  /\s\s+/g, " ")  // multiple spaces
+            . replace(/\s*;\s*$/,  "")  // trailing separator
+            . match(/^(\w+)?(:\/\/)?([^\/]+)?\/([^\?]+)?\??(.*)?/);
+//┌───────────────────▲───▲─▲─────▲─▲──────▲───▲──────▲────────────────────────┐
+//│                   (111) (22222) (333333)   (444444)    (55)
+//│                    ▲▲▲   ▲▲▲▲▲   ▲▲▲▲▲▲     ▲▲▲▲▲▲      ▲▲
+//│                  scheme  port    domain      path     query
+//└────────────────────────────────────────────────────────────────────────────┘
+    }
+    catch(err) { console.warn(err); }
+
+    let args
+        = {   scheme : url_match[1]
+          //,   port : url_match[2]
+            , domain : url_match[3]
+            ,   path : url_match[4]
+            ,  query : url_match[5]
+        };
+//console.dir(args);
+
+    return  args;
+};
+/*}}}*/
 /*● return {{{*/
 return {  name : "js_xpath"
     ,            get_nodeXPath
     ,            get_nodeXPath_as_key
     ,            get_nodeXPath_target
+    ,            parse_url
 };
 /*}}}*/
 })();

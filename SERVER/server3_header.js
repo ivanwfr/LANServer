@@ -15,7 +15,7 @@ let server3_header = (function() {
 let server0_log      = require("./server0_log.js");
 //...{{{
 /* eslint-disable no-unused-vars */
-// INLINING:
+// INTERNING:
 let { log
     ,    toggle
     ,    is_logging

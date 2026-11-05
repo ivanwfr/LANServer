@@ -1,24 +1,26 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (261018:21h:22) │
+//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (261105:00h:05) │
 //├────────────────────────────────────────────────────────────────────────────┤
 /* IMPORT {{{*/
 
-/* globals  js_store   */
-/* globals  js_details */
-/* globals  js_notes   */
 /* globals     notes   */
+/* globals  js_CNTRL   */
+/* globals  js_details */
+/* globals  js_log     */
+/* globals  js_notes   */
+/* globals  js_store   */
 /* globals  js_ticker  */
 
 /* exported js_input   */
 
-//port { js_CNTRL   } from "./js_CNTRL.js"
+import { js_CNTRL   } from "./js_CNTRL.js"
 //port { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
 //port { js_boxing  } from "./js_boxing.js"
 //port { js_folds   } from "./js_folds.js"
 //port { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
-//port { js_log     } from "./js_log.js"
+import { js_log     } from "./js_log.js"
 import { js_details } from "./js_details.js"
 import { js_notes   } from "./js_notes.js"
 import { js_store   } from "./js_store.js"
@@ -29,8 +31,38 @@ import { notes      } from "./notes.js"
 /*}}}*/
 let js_input = (function()
 {
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ ◯  INTERNING ● SERVER/scripts/js_log.js
+//└────────────────────────────────────────────────────────────────────────────┘
+const MODULE = "%c★🟢 js_input\t\t● ";
 let log_this = false;
 let tag_this = false || log_this;
+// ●log-items inlining ● SERVER/scripts/js_log.js {{{
+/* eslint-disable no-unused-vars */
+
+js_log.register( { module_name : "js_input"
+                 , module_num  : 0
+                 , log_this_fn : (state) => log_this = state
+                 , tag_this_fn : (state) => tag_this = state } );
+
+let log                                        = js_log.log;
+let console_clear                              = js_log.console_clear;
+
+let ellipsis                                   = js_log.ellipsis;
+let get_src_link                               = js_log.get_src_link;
+
+let lbB                                        = js_log.lbB;
+
+let b_X                                        = js_log.b_X;
+let lbX                                        = js_log.lbX;
+let lfX                                        = js_log.lfX;
+let [b_0,b_1,b_2,b_3,b_4,b_5,b_6 ,b_7,b_8,b_9] = js_log.b_X;
+let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
+let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
+
+/* eslint-enable  no-unused-vars */
+//}}}
+
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 GUI (js_notes)  GUI LEAK ● DATA ➔ VIEW                               🖥 │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -57,7 +89,8 @@ let add_notes_GUI = function(args)
 /*  input_listener {{{*/
 let input_listener = function(e)
 {
-if(tag_this) console.log("🟣 input_listener: "+ e.type);
+let caller = "input_listener";
+if(tag_this) log(MODULE+caller+"🟣 "+ e.type, lb0);
 
 try{
     let input_value = input.value.trim();
@@ -76,7 +109,7 @@ try{
         //│ [input.value] changed
         //└────────────────────────────────────────────────────────────────────┘
         //{{{
-if(tag_this) console.log( "input_value changed:\n"
+if(tag_this) log( "input_value changed:\n"
                         + "● FROM ["+oldValue+"]\n"
                         + "● TO   ["+newValue+"]");
 
@@ -156,7 +189,8 @@ let input_check_empty_state = function()
 /*  reset_input {{{*/
 let reset_input = function(_caller)
 {
-if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""));
+let caller = "reset_input";
+if(tag_this) log(MODULE+caller+"🟣 "+ (_caller ? (" ← "+_caller) : ""), lb0);
 
     // CLEAR TEXTAREA CONTENT
     input.dataset.content = input.value; // backup, not used yet...
@@ -168,7 +202,7 @@ if(tag_this) console.log("🟣 reset_input"+ (_caller ? (" ← "+_caller) : ""))
     input.classList.remove("auto_insert_prefix");
 
     // UPDATE STANDOUT IN [saved_notes_DIV]
-    js_details.set_editing_note_index(-1);
+    js_CNTRL.set_editing_note_index(-1);
 
     js_ticker.changeInterval( js_notes.AUTO_SAVE_IDLE_INTERVAL_MS );
 };
@@ -179,7 +213,8 @@ let get_id_wh_storage_key = function() { return "id_wh__"+ js_store.get_page_sto
 /*  input_save {{{*/
 let input_save = function(_caller)
 {
-if(tag_this) console.log("🟣 input_save"+ (_caller ? (" ← "+_caller) : ""));
+let caller = "input_save";
+if(tag_this) log(MODULE+caller+"🟣 "+ (_caller ? (" ← "+_caller) : ""), lb0);
 
     if( js_details.is_input_auto_insert_prefix() ) return;
 
@@ -201,7 +236,8 @@ if(tag_this) console.log("🟣 input_save"+ (_caller ? (" ← "+_caller) : ""));
 /*  input_load {{{*/
 let input_load = function()
 {
-if(tag_this) console.log("🟣 input_load");
+let caller = "input_load";
+if(tag_this) log(MODULE+caller, lb0);
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ NO SAVED INPUT CONTENT FROM PREVIOUS SESSION DID                       │
@@ -251,7 +287,7 @@ if(tag_this) console.log("🟣 input_load");
     // SCROLL LAST NOTE INTO VIEW
     notes.note_scrollIntoView();
 
-if(log_this) console.log( text );
+if(log_this) log( text );
 };
 /*}}}*/
 
@@ -264,7 +300,8 @@ let   resizeObserver;
 let layout_look = function(element)
 {
 //{{{
-if(log_this) console.log("🟤 layout_look:", (element.id || element.tagName));
+let caller = "layout_look";
+if(tag_this) log(MODULE+caller+"🟤", (element.id || element.tagName), lb0);
 //}}}
     /* create resizeObserver {{{*/
     if(!resizeObserver)
@@ -276,7 +313,7 @@ if(log_this) console.log("🟤 layout_look:", (element.id || element.tagName));
                     ,          width: entry.contentRect.width
                     ,         height: entry.contentRect.height };
 
-if(log_this) console.log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x ${id_wh.height}`);
+if(log_this) log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x ${id_wh.height}`);
 
                 if( id_wh_save_timeout ) clearTimeout( id_wh_save_timeout );
                     id_wh_save_timeout = setTimeout(layout_save, ID_WH_SAVE_COOLDOWN);
@@ -294,7 +331,8 @@ if(log_this) console.log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x 
 let layout_save = function()
 {
 
-if(log_this) console.log("🟤 layout_save()");
+let caller = "layout_save";
+if(tag_this) log(MODULE+caller, lb0);
 
     let id_wh_array
         = [ layout_eval( input           )
@@ -312,14 +350,16 @@ let layout_eval = function(el)
     let id_wh = { id    : el.id
                 , width : parseInt( rect.width  )
                 , height: parseInt( rect.height ) };
-if(log_this) console.log(`🟤 layout_eval: ${id_wh.id} size: ${id_wh.width} x ${id_wh.height}`);
+let caller = "layout_eval";
+if(tag_this) log(MODULE+caller+`🟤 ${id_wh.id} size: ${id_wh.width} x ${id_wh.height}`, lb0);
     return id_wh;
 };
 /*}}}*/
 /*  layout_load {{{*/
 let layout_load = function()
 {
-if(log_this) console.log("🟤 layout_load:");
+let caller = "layout_load";
+if(tag_this) log(MODULE+caller, lb0);
 
     let id_wh_storage_key = get_id_wh_storage_key();
 
@@ -333,7 +373,7 @@ if(log_this) console.log("🟤 layout_load:");
         target.style.width                 =    id_wh.width +"px";
         target.style.height                =    id_wh.height+"px";
 
-if(log_this) console.log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x ${id_wh.height}`);
+if(log_this) log(`🟤 Element ${id_wh.id} resized to: ${id_wh.width} x ${id_wh.height}`);
     }
 
     //note_DETAILS.open = true; // let load_details_open_state do this

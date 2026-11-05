@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261030:04h:04)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261104:20h:22)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -10,6 +10,8 @@
 
 /* global js_folds */
 /* global js_input */
+/* global js_log   */
+/* global js_xpath */
 
 //port { js_CNTRL   } from "./js_CNTRL.js"
 //port { js_MODEL   } from "./js_MODEL.js"
@@ -18,20 +20,54 @@
 import { js_folds   } from "./js_folds.js"
 import { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
-//port { js_log     } from "./js_log.js"
+import { js_log     } from "./js_log.js"
 //port { js_notes   } from "./js_notes.js"
 //port { js_store   } from "./js_store.js"
 //port { js_ticker  } from "./js_ticker.js"
-//port { js_xpath   } from "./js_xpath.js"
+import { js_xpath   } from "./js_xpath.js"
 //port { notes      } from "./notes.js"
 //port { url_to_href} from "./url_to_href.js"
 
 /*}}}*/
-let js_linkify  = (function() {
+let js_linkify  = (function()
+{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ ◯  INTERNING ● SERVER/scripts/js_log.js
+//└────────────────────────────────────────────────────────────────────────────┘
+const MODULE = "%c★🟣 js_linkify\t\t● ";
+let   log_this;
+let   tag_this;
+//{{{
+/* eslint-disable no-unused-vars */
+
+js_log.register( { module_name : "js_linkify"
+                 , module_num  : 0
+                 , log_this_fn : (state) => log_this = state
+                 , tag_this_fn : (state) => tag_this = state } );
+
+let log                                        = js_log.log;
+let console_clear                              = js_log.console_clear;
+
+let ellipsis                                   = js_log.ellipsis;
+let get_src_link                               = js_log.get_src_link;
+
+let lbB                                        = js_log.lbB;
+
+let b_X                                        = js_log.b_X;
+let lbX                                        = js_log.lbX;
+let lfX                                        = js_log.lfX;
+let [b_0,b_1,b_2,b_3,b_4,b_5,b_6 ,b_7,b_8,b_9] = js_log.b_X;
+let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
+let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
+
+/* eslint-enable  no-unused-vars */
+//}}}
+
 /*➔ onload {{{*/
 let onload  = function()
 {
-console.log("4 js_linkify \t🟡 onload:");
+let caller = "onload";
+if(tag_this) log(MODULE+caller+"4 🟡 onload:");
 
     // TURN PATH INTO HTML ANCHOR
     linkify_file_pathes();
@@ -69,7 +105,15 @@ let colorize_details = function()
 /*_ format_summary_comments {{{*/
 let format_summary_comments = function()
 {
+    let top_details;
     for(let summary of document.querySelectorAll("summary")) {
+        // Identify *top_details* as a details hiding container {{{
+        if(!top_details)
+        {
+            top_details    = summary.parentElement;
+            top_details.id = "top_details";
+        }
+        //}}}
         // TRIM: / and * {{{
         summary.textContent
             = summary.textContent
@@ -110,8 +154,21 @@ let format_summary_comments = function()
                 + "      style='float:left; margin-left: 3em;'"
                 + "    class='em_wrap'"
                 + ">↷</em>&nbsp;"
-
             ;
+
+            //┌────────────────────────────────────────────────────────────────────────────┐
+            //│ HIDE TOP-LEVEL DETAILS ..........body/pre/details.....[#]...../summary
+            //└───────────────────────────────────────▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼────▼▼▼▼▼▼───▼▼▼▼▼▼▼▼┘
+            if(js_xpath.get_nodeXPath(summary).match(/body.pre.details(?:\[\d+\])?\/summary/))
+               summary.innerHTML += ""
+                + "<em onclick='js_linkify.toggle_hide( event );"
+                + "             return false;'"
+                + "      title='✘\n Hide\n this section'"
+                + "      style='position:absolute; left: 0em;'"
+                + "    class='em_hide'"
+                + ">✘</em>&nbsp;"
+            ;
+
         //}}}
     }
     // HIDE FOLD BUTTON FOR DETAILS WITH NO EMBEDDED FOLDS TO OPEN {{{
@@ -121,6 +178,11 @@ let format_summary_comments = function()
         if( child ) child.style.visibility = "hidden"; // fold EM
     });
     //}}}
+    // populate em_hide title
+    let em_hide      = top_details.querySelector(".em_hide");
+    em_hide.title = ""
+    +"⚫ … will hide all closed sections\n"
+    +"🟡 … will unhide currently hidden";
 };
 /*}}}*/
 /*_ toggle_wrap {{{*/
@@ -145,6 +207,8 @@ let toggle_wrap = function(e)
 /*_ clear_this_visited_url {{{*/
 let clear_this_visited_url = function(e,url)
 {
+let caller = "clear_this_visited_url";
+
     let e_target = e.target;
     let body = { url };
     /**/body = JSON.stringify( body);
@@ -154,7 +218,7 @@ let clear_this_visited_url = function(e,url)
               , body })
         .then ((response) =>   response.json() )
         .then ((    data) => { /* eslint-disable-line no-unused-vars */
-//console.log("clear_this_visited_url:"+ JSON.stringify(data));
+if(tag_this) log(MODULE+caller+":"+ JSON.stringify(data));
             e_target.style.opacity                    = "0.2";
             let a =   e_target.nextElementSibling
                    || e_target.parentElement.nextElementSibling
@@ -201,6 +265,86 @@ let toggle_check = function(e)
     e.stopImmediatePropagation();
     e.preventDefault          ();
     //}}}
+};
+/*}}}*/
+/*_ toggle_hide {{{*/
+let toggle_hide = function(e)
+{
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ TODO: reparent hidden DETAILS into *Recently visited* container.
+    //└────────────────────────────────────────────────────────────────────────┘
+    let details     = e.target.closest      ("DETAILS");
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● click *top DETAILS em_hide button*
+    //│   1/2 NO   hidden DETAILS →   HIDE all CLOSED first level DETAILS
+    //│   2/2 SOME hidden DETAILS → UNHIDE all HIDDEN first level DETAILS
+    //│ ● click *visible* DETAILS → TOGGLE its HIDDEN state
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
+    let top_details  = document.querySelector("#top_details");
+    if( top_details == details)
+    {
+        let hidden_array = top_details.querySelectorAll(":scope >DETAILS");
+        if( hidden_array.length > 0)
+        {
+            hidden_array
+                .forEach((el) => {              toggle_hide_element(top_details, el, false); }); // unhide
+        }
+        else {
+            top_details. parentElement.querySelectorAll(":scope >DETAILS")
+                .forEach((el) => { if(!el.open) toggle_hide_element(top_details, el,  true); }); // hide
+        }
+    }
+    else {                         toggle_hide_element(top_details, details  ); }   //  toggle
+    //}}}
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ colorize top_details em_hide button
+    //└────────────────────────────────────────────────────────────────────────┘
+    let hidden_array = top_details.querySelectorAll(":scope >DETAILS");
+    top_details.classList.toggle("has_some_hidden", (hidden_array.length));
+
+//    // TOGGLE [display] {{{
+//    let hidden      = details.classList.toggle("hidden");
+//    details.querySelectorAll("DETAILS")
+//        .forEach((el) => el.classList.toggle("hidden", hidden));
+//    //}}}
+    // cancel container event delegation {{{
+    e.cancelBubble        = true;
+    e.stopPropagation         ();
+    e.stopImmediatePropagation();
+    e.preventDefault          ();
+    //}}}
+};
+/*}}}*/
+/*_ toggle_hide_element {{{*/
+let toggle_hide_element = function(top_details, details, hide_unhide_or_toggle)
+{
+    if(top_details == details) return;  // dodge forEach call on itself
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ 1/3 ● HIDE
+    //│ 2/3 ● UNHIDE
+    //│ 3/3 ● TOGGLE
+    //└────────────────────────────────────────────────────────────────────────┘
+    let hiding
+        = (hide_unhide_or_toggle != undefined)
+        ?  hide_unhide_or_toggle
+        : (details.parentElement != top_details) // toggle
+    ;
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ HIDE or UNHIDE element
+    //└────────────────────────────────────────────────────────────────────────┘
+    if( hiding )
+    {
+        details.open = false;
+        top_details              .insertBefore(details, null); // hide inside top_details
+        details.classList.add   ("hidden");
+    }
+    else {
+        top_details.parentElement.insertBefore(details, null); // unhide: bottom of first level container
+        details.classList.remove("hidden");
+    }
 };
 /*}}}*/
 /*➔ copy_container_text {{{*/
@@ -253,6 +397,7 @@ let copy_container_text = function(e)
 /*➔ fold_close_open_toggle {{{*/
 let fold_close_open_toggle = function(e,state)
 {
+let caller = "fold_close_open_toggle"; /* eslint-disable-line no-unused-vars */
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PREVENT CLOSING DETAILS                                                │
     //└────────────────────────────────────────────────────────────────────────┘
@@ -264,8 +409,6 @@ let fold_close_open_toggle = function(e,state)
     let    count = 0;
     for(let el of el_array)
     {
-//console.log("%c"+ el.firstElementChild.textContent, "color: "+BG[level%10]); // i.e. SUMMARY
-
         //┌────────────────────────────────────────────────────────────────────────┐
         //│ [state==2] => toggle first state ..and set siblings state likewise.    │
         //└────────────────────────────────────────────────────────────────────────┘
@@ -280,7 +423,7 @@ let fold_close_open_toggle = function(e,state)
         if( e.stopImmediatePropagation ) event.stopImmediatePropagation();
         if( e.preventDefault           ) event.preventDefault          ();
     }
-//console.log("%c "+ (count ? count:"NO") +" fold"+ (count>1 ? "s":"") +" "+ ((state==0) ? "closed" : ((state==1) ? "opened":"toggled") +" "), "background-color: "+BG[count]);
+//if(log_this) log(MODULE+caller+"%c "+ (count ? count:"NO") +" fold"+ (count>1 ? "s":"") +" "+ ((state==0) ? "closed" : ((state==1) ? "opened":"toggled") +" "), "background-color: "+BG[count]);
 
     return count;
 };
@@ -297,6 +440,8 @@ let   RGX_CLR;
 //}}}
 let linkify_file_pathes = function()
 {
+let caller = "linkify_file_pathes";
+
     //FIXME COMMENT
     url_to_href.basename_clear();
 
@@ -320,7 +465,7 @@ let linkify_file_pathes = function()
 
         RGX_CLR = new RegExp(`${match1}${symbol}${match2}${e_href}${match3}`, "");
 
-//console.log("RGX_CLR:", RGX_CLR);
+if(log_this) log(MODULE+caller+"RGX_CLR:", RGX_CLR);
     }
     //}}}
 
@@ -329,8 +474,12 @@ let linkify_file_pathes = function()
         // BUTTON to remove visited history {{{
         if(line && line.includes  (VISITED_HISTORY_UNCHECK_SYMBOL) )
         {
-//console.log("┌────────────────────────────────────────────────────────────────────┐");
-//console.log("line=["+line+"]");//FIXME
+//{{{
+if(log_this) {
+    log("┌────────────────────────────────────────────────────────────────────┐\n"
+       +"line=["+line+"]");
+}
+//}}}
           //let matches = line.match(/\>(.*)\<\/a\>/i);
             // last href
             let matches = line.match( RGX_CLR );
@@ -340,12 +489,15 @@ let linkify_file_pathes = function()
                 let m_3 = matches[3];
                 let url = matches[4];
                 let m_4 = matches[5];
-//console.log("m_1=["+m_1+"]");//FIXME
-//console.log("sym=["+sym+"]");//FIXME
-//console.log("m_3=["+m_3+"]");//FIXME
-//console.log("url=["+url+"]");//FIXME
-//console.log("m_4=["+m_4+"]");//FIXME
-
+//{{{
+if(log_this) {
+    log("m_1=["+m_1+"]\n"
+       +"sym=["+sym+"]\n"
+       +"m_3=["+m_3+"]\n"
+       +"url=["+url+"]\n"
+       +"m_4=["+m_4+"]");
+}
+//}}}
                 line= m_1
                     + "<span onclick='js_linkify.clear_this_visited_url(event,\""+url+"\")'>"
                     +  sym
@@ -354,8 +506,12 @@ let linkify_file_pathes = function()
                     + url
                     + m_4
                 ;
-//console.log("line=["+line+"]");//FIXME
-//console.log("└────────────────────────────────────────────────────────────────────┘");
+//{{{
+if(log_this) {
+    log("line=["+line+"]\n"
+        +"└────────────────────────────────────────────────────────────────────┘");
+}
+//}}}
 
             }
         }
@@ -377,7 +533,7 @@ let linkify_file_pathes = function()
 //{{{
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261030:03h:38)
+//│ url_to_href.js                                       ● _TAG (261101:04h:54)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -427,7 +583,7 @@ let line_url_to_href = function(line, dir_href)
         let s   = "";
         RGX_EXT_ARRAY.forEach((ext) => s += "|"+ext);
         s       = s.substr(1); // trim extra first pipe
-        RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9]+\\.("+s+"))","g");
+        RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9\.]+\\.("+s+"))","g");
 //console.log("RGX_EXT:", RGX_EXT);
     }
     //}}}
@@ -446,10 +602,11 @@ let line_url_to_href = function(line, dir_href)
 //console.log("matches[2]=["+matches[2]+"]");
 //console.log("matches[3]=["+matches[3]+"]");
 
+        let prev = basename;
         basename = matches[2];
 
-        let ttl = "URL basename: "+ (basename ? "Folder ["+basename+"]"  : "Cleared");
-        let tag =                   (basename ?       "🟢 in "+basename : "⚫"     );
+        let ttl = "URL basename: "+ (basename ? "Folder ["+basename+"]" : "Cleared"    );
+        let tag =                   (basename ? "🟢 >> "  +basename     : "⚫ << "+prev);
         return matches[1]
             +  "<span class='basename' title='"+ttl+"'>"+tag+"</span>"
             +  matches[3]
@@ -515,7 +672,7 @@ let line_url_to_href = function(line, dir_href)
                 let p
                     = (path.startsWith("./") ? path.substr(2) : path);
 //console.log("p=["+p+"]");
-                a_href = parse_sub_folders(href, root, basename, p);
+                a_href = parse_sub_folders(href, root, basename+"/.", p);
             }
             else {
                 a_href = parse_sub_folders(href, root, folder, path);
@@ -562,6 +719,7 @@ let line_url_to_href = function(line, dir_href)
     return line;
 };
 /*}}}*/
+/*_ get_a_list {{{*/
 let get_a_list = function(a_href, q)
 {
     //..........................(-----------------) /(pa))
@@ -594,50 +752,70 @@ let get_a_list = function(a_href, q)
 
     return a_list;
 };
-/*_ parse_sub_folders {{{*/
+/*}}}*/
+/*_ parse_sub_folders ● remove an overlapping folder-path-segment {{{*/
 let parse_sub_folders = function(href, root, folder, path)
 {
-    let folders       = folder.split("/").filter(Boolean);            // remove falsy items
-    //console.log("%c folders: "+ String(folders).padStart(47) ,"background-color: #000; color: #F0F");
+//console.log("┌───────────────────────────────────────────────────────────────────────────┐");
 
-    let parents  = path.split("/").filter(Boolean);  // remove falsy items
+    let D_NAMES  = folder.split("/").filter(Boolean);
+//console.log("%c D_NAMES: "+ D_NAMES                 , "background-color: #000; color: #0F0");
 
-    let fileName = parents.pop();
-//console.log("%c● fileName=["+fileName+"]", "background-color: #066");
+    let f_names  = path  .split("/").filter(Boolean);
+//console.log("%c f_names: "+ f_names                 , "background-color: #000; color: #F0F");
+
+    let fileName = f_names.pop();
+//console.log("%c● fileName=["+fileName+"]"           , "background-color: #000; color: #FF0");
 
     let up_count =  0;
     let sub_fold = "";
-    let      f;
-    let      p;
-    for(     f  = folders.length-1
-             ,    p  = parents.length-1
-             ;   (f >= 0) && (p >= 0)
-             ;  --f       , --p
+    let      d,          f;
+    for(     d              =  D_NAMES.length-1
+        ,                f  =  f_names.length-1
+        ;   (d >= 0) && (f >= 0)
+        ;  --d       , --f
        ) {
-        // current dir is current parent {{{
-        if(parents[p] == ".")
+        // current dir is current parent
+        if(      f_names[f] == ".")
         {
-            sub_fold   = folders[f] +"/"+ sub_fold;
+            sub_fold   =       D_NAMES[d] +"/"+ sub_fold;
             up_count  += 1;
         }
-        //}}}
-        // going deeper... {{{
-        else if(folders[f] != parents[p])
+        // going deeper...
+        else if( f_names[f] != D_NAMES[d])
         {
             up_count  += 1;
-            sub_fold   = parents[p] +"/"+ sub_fold;
+            sub_fold   = f_names[f] +"/"+ sub_fold;
         }
-        //}}}
+//console.log(up_count+" %c sub_fold\=["+sub_fold+"]" , "background-color: #000; color: #FF0");
     }
-//console.log("%c● sub_fold\=["+sub_fold+"]", "background-color: #660");
 
-    let a_href  = root +"/";
-    for(     f  = 0; f < (folders.length - up_count); ++f)
-        a_href += folders[f] +"/";
-    a_href     += sub_fold + fileName;
+    let a_href  = root +  "/";
+    for(     d  = 0; d < (D_NAMES.length - up_count); ++d)
+        a_href +=         D_NAMES[d] +"/";
+    a_href     +=         sub_fold
+        +                 fileName;
 
+//console.log("%c● a_href\=["+a_href+"]"              , "background-color: #000; color: #0FF");
+//console.log("└───────────────────────────────────────────────────────────────────────────┘");
     return a_href;
 };
+/*{{{ SAMPLE LINKS
+
+    basename =
+                   js_linkify.js
+           scripts/js_linkify.js
+    SERVER/scripts/js_linkify.js
+    /USR/ivan/VIM/mapKeys.func.vim
+                  mapKeys.func.vim
+
+    basename = /USR/ivan/VIM
+                             MAP/mapKeys.func.vim
+
+    basename = /USR/ivan/VIM/MAP
+                                 mapKeys.func.vim
+
+}}}*/
 /*}}}*/
 /*_ line_a_from_http_no_href {{{*/
 let line_a_from_http_no_href = function( line_in )
@@ -735,6 +913,7 @@ globalThis.url_to_href  = url_to_href;
         ,    copy_container_text    // exposed to onclick
         ,    fold_close_open_toggle // exposed to onclick
         ,    toggle_check           // exposed to onclick
+        ,    toggle_hide            // exposed to onclick
         ,    toggle_wrap            // exposed to onclick
         ,    clear_this_visited_url // exposed to onclick
         // DEBUG ONLY

@@ -1,27 +1,28 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261030:15h:29) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261104:19h:31) │
 //├────────────────────────────────────────────────────────────────────────────┤
-//│ 🔴 Create, save, load and delete Notes in a section at the end of the body │
-//│                                                                            │
-//│                                                                            │
+//│{{{
+//│ 🔴 Create, save, load and delete Notes in a section at the end of the body
+//│}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
-/* globals js_MODEL */
-/* globals js_details */
-/* globals js_notes */
-/* globals js_store */
-/* globals js_input */
+/* globals  js_log    */
+/* globals js_CNTRL   */
+/* globals js_VIEW    */
+/* globals js_input   */
+/* globals js_notes   */
+/* globals js_store   */
 
-//port { js_CNTRL   } from "./js_CNTRL.js"
-import { js_MODEL   } from "./js_MODEL.js"
-//port { js_VIEW    } from "./js_VIEW.js"
+import { js_CNTRL   } from "./js_CNTRL.js"
+//port { js_MODEL   } from "./js_MODEL.js"
+import { js_VIEW    } from "./js_VIEW.js"
 //port { js_boxing  } from "./js_boxing.js"
-import { js_details } from "./js_details.js"
+//port { js_details } from "./js_details.js"
 //port { js_folds   } from "./js_folds.js"
 import { js_input   } from "./js_input.js"
 //port { js_linkify } from "./js_linkify.js"
-//port { js_log     } from "./js_log.js"
+import { js_log     } from "./js_log.js"
 import { js_notes   } from "./js_notes.js"
 import { js_store   } from "./js_store.js"
 //port { js_ticker  } from "./js_ticker.js"
@@ -31,8 +32,37 @@ import { js_store   } from "./js_store.js"
 /*}}}*/
 let notes = (function()
 {
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ ◯  INTERNING ● SERVER/scripts/js_log.js
+//└────────────────────────────────────────────────────────────────────────────┘
+const MODULE = "★🟣 notes\t\t● ";
 let log_this = false;
 let tag_this = false || log_this;
+//{{{
+/* eslint-disable no-unused-vars */
+
+js_log.register( { module_name : "notes"
+                 , module_num  : 4
+                 , log_this_fn : (state) => log_this = state
+                 , tag_this_fn : (state) => tag_this = state } );
+
+let log                                        = js_log.log;
+let console_clear                              = js_log.console_clear;
+
+let ellipsis                                   = js_log.ellipsis;
+let get_src_link                               = js_log.get_src_link;
+
+let lbB                                        = js_log.lbB;
+
+let b_X                                        = js_log.b_X;
+let lbX                                        = js_log.lbX;
+let lfX                                        = js_log.lfX;
+let [b_0,b_1,b_2,b_3,b_4,b_5,b_6 ,b_7,b_8,b_9] = js_log.b_X;
+let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
+let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
+
+/* eslint-enable  no-unused-vars */
+//}}}
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ DATA                                                                      🔴
@@ -110,11 +140,11 @@ let caller = "upload_notes_to_server";
     let server_upload_pending = request_server_upload_pending();
     if(!server_upload_pending )
     {
-if(log_this) console.log("%c "+caller+" ● ["+_caller+"] ● Notes unchanged ["+ change_time +"]", "color: #888");
+if(log_this) log(MODULE+caller+" ● ["+_caller+"] ● Notes unchanged ["+ change_time +"]");
 
         return null;
     }
-//console.log( JSON.stringify( nArray ) );
+//log( JSON.stringify( nArray ) );
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ ● from upload_notes_to_server   localStorage redundant                 │
@@ -122,18 +152,18 @@ if(log_this) console.log("%c "+caller+" ● ["+_caller+"] ● Notes unchanged ["
     //│ ● TODO: ADD URL_KEY FIELD FOR PER-PAGE NOTES_FILE NAMES                │
     //└────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
-if(tag_this) console.log("%c "+caller                    + ":\n"
-                         +" ▲ [ "+ _caller               +" ]\n"
-                         +" ● [ "+ server_upload_pending +" ]\n"
-                         +" ● nArray[ x"+nArray.length   +" ]\n"
-                         +" ● time now ["+ change_time   +" ]\n"
-                         , "color: #FF0");
+if(tag_this) log(MODULE+caller+":\n"
+                 +" ▲ [ "+ _caller               +" ]\n"
+                 +" ● [ "+ server_upload_pending +" ]\n"
+                 +" ● nArray[ x"+nArray.length   +" ]\n"
+                 +" ● time now ["+ change_time   +" ]\n");
+
 /*}}}*/
     let          notes_storage_key = get_notes_storage_key();
     let body = { notes_storage_key , nArray };
     /**/body = JSON.stringify( body);
 
-if(log_this) console.log( JSON.parse( body ) );
+if(log_this) log( JSON.parse( body ) );
 
     // SEND NARRAY TO THE SERVER
     let promise
@@ -142,11 +172,11 @@ if(log_this) console.log( JSON.parse( body ) );
               , headers : { "Content-Type": "application/json; charset=utf-8" }
               , body })
     .then ((response) =>    response.json() )
-    .then ((    data) => {  if(tag_this) console.log  ("Notes upload status:", data); request_server_upload( false ); })
+    .then ((    data) => {  if(tag_this) log  ("Notes upload status:", data); request_server_upload( false ); })
     .catch((     err) => {/*console.error("Notes upload failed:",  err);*/}) /* eslint-disable-line handle-callback-err, no-unused-vars */
     ;
 
-if(tag_this) console.log("%c ● UPLOADED: ["+ new Date( Date.now() ) +"]", "color: green");
+if(tag_this) log(MODULE+caller+b_5+" UPLOADED: ["+ new Date( Date.now() ) +"]");
     return promise;
 };
 /*}}}*/
@@ -206,15 +236,16 @@ let notes_loaded_from;
 /*}}}*/
 let load_notes = function()
 {
+let caller = "load_notes ";
     let notes_storage_key = get_notes_storage_key();
-if(tag_this) console.log("🟡%c load_notes\t\t  ["+ notes_storage_key +"]", "color: #FF0");
+if(tag_this) log(MODULE+caller+b_4+" load_notes\t\t  ["+ notes_storage_key +"]");
 
     return fetch("/fetch_notes?notes_storage_key="+notes_storage_key)
         .then (( res  ) => res.json())
         .then (( data ) => load_server_notes(data))
         .catch(( err  ) => {
             // No notes yet
-               console.log ("Could not retrieve notes from server", err);
+               if(tag_this) log("Could not retrieve notes from server:\n", err);
 
             load_client_notes();
 
@@ -226,8 +257,9 @@ if(tag_this) console.log("🟡%c load_notes\t\t  ["+ notes_storage_key +"]", "co
 /*_ load_server_notes {{{*/
 let load_server_notes = function(data)
 {
-if(tag_this) console.log("🟡%c load_server_notes(data: "+ (typeof data) +")", "color: #FF0");
-//console.log("data=["+data+"]");
+let caller = "load_server_notes ";
+if(tag_this) log(MODULE+caller+b_4+" load_server_notes(data: "+ (typeof data) +")");
+//log("data=["+data+"]");
 
     // SERVER-SIDE NOTES ARRAY
     if(Array.isArray(data) && data.length)
@@ -256,7 +288,8 @@ if(tag_this) console.log("🟡%c load_server_notes(data: "+ (typeof data) +")", 
 /*_ load_client_notes {{{*/
 let load_client_notes = function()
 {
-if(tag_this) console.log("%c load_client_notes", "color: #F00");
+let caller = "load_client_notes ";
+if(tag_this) log(MODULE+caller+b_2+" load_client_notes");
 
     let notes_storage_key = get_notes_storage_key();
     try {
@@ -285,119 +318,131 @@ if(tag_this) console.log("%c load_client_notes", "color: #F00");
 
 
 
-
-
-
-
-
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟤  M📖 V C REFACTORING ZONE ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+//│ 🔴  M📖 V C REFACTORING ZONE ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+//│ 🟠  M📖 V C REFACTORING ZONE ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+//│ 🟡  M📖 V C REFACTORING ZONE ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+//│ 🟢  M📖 V C REFACTORING ZONE ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+//└────────────────────────────────────────────────────────────────────────────┘
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟤 SAVE   ● note_1_onclick_save                                         🡮  │
+//│ 🟤 SAVE   ● note_1_onclick_save                                         💾 │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴 nArray
 //● note_1_onclick_save {{{
-let note_1_onclick_save = function(e={})
+let note_1_onclick_save = function(e_or_payload={})
 {
-if(tag_this) console.log("🟤 note_1_onclick_save("+e.type+")");
+//{{{
+let caller = "notes.note_1_onclick_save";
+if(tag_this) log(MODULE+caller+"("+e_or_payload.type+")");
 
-    if( !input ) return;
+//}}}
 
-    if( js_details.is_input_auto_insert_prefix() ) return;
-//DATA text
-    /* input text {{{*/
-    let  text = input.value.trim();
-
-    //}}}
-//VIEW auto_save
-    // if js_details.save_note_auto ...return {{{
-    if(e.type == "auto_save")
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ VIEW
+    //│ - input
+    //│ - js_VIEW.no_input_to_save ...return
+    //└────────────────────────────────────────────────────────────────────────┘
+    if( js_VIEW.no_input_to_save(input, e_or_payload) )
     {
-        js_details.save_note_auto( e );
-
         return;
     }
-    //}}}
-//DATA auto_save
-    // or delete auto_save ... {{{
-    else if( js_notes.is_last_note_auto_save()  )
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ DATA
+    //│ - is_last_note_auto_save
+    //│ - nArray
+    //└────────────────────────────────────────────────────────────────────────┘
+    // data last_note_auto_save:    ➔ DELETE  auto_save NOTE ... {{{
+    else if( is_last_note_auto_save()  )
     {
         nArray.splice(nArray.length-1, 1);
     }
     //}}}
-//VIEW !text
-    // if input empty ...return {{{
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ VIEW
+    //│ - input.value ...return
+    //└────────────────────────────────────────────────────────────────────────┘
+    // VIEW text_input_empty:       ➔ RETURN {{{
+    let  text
+        =  e_or_payload.content
+        ||        input.value
+    ;
     if( !text )
         return;
 
+    text = text.trim();
     //}}}
-//VIEW index → DATA update old ➔ SERVER upload
-    // REPLACE NOTE {{{
-    let index  = js_details.get_editing_note_index();
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ DATA
+    //│ - js_CNTRL.get_editing_note_index
+    //│ - request_server_upload
+    //│ - localStorage
+    //│ - get_notes_storage_key
+    //│ - upload_notes_to_server
+    //└────────────────────────────────────────────────────────────────────────┘
+    // data index update:           ➔ SERVER  upload {{{
+    let index
+        = (typeof e_or_payload.editingIndex != "undefined")
+        ?         e_or_payload.editingIndex
+        :         js_CNTRL.get_editing_note_index()
+    ;
     if( index >= 0)
     {
         //┌────────────────────────────────────────────────────────────────────┐
-        //│ PRESERVE old checked stated and timestamp                          │
+        //│ ● UPDATE TEXT
+        //│ ● KEEP   CHECK
+        //│ ● KEEP   TIMESTAMP
         //└────────────────────────────────────────────────────────────────────┘
-      //nArray.splice(index, 1, {                                 text, timestamp: Date.now()              });
-        nArray.splice(index, 1, { checked: nArray[index].checked, text, timestamp: nArray[index].timestamp });
+        nArray.splice(index, 1, { checked: nArray[index].checked
+            ,                        text
+            ,                   timestamp: nArray[index].timestamp
+        });
 
-        request_server_upload("Note #"+(index            )+" EDITED");
+        request_server_upload("Note #"+(index )+" EDITED");
     }
     //}}}
-//VIEW index → DATA add new ➔ SERVER upload (schedule)
-    // ADD NEW NOTE {{{
+    // data index add:              ➔ SERVER  upload {{{
     else {
         nArray.push(            { text, timestamp: Date.now() });
 
         request_server_upload("Note #"+(nArray.length + 1)+" ADDED");
     }
     //}}}
-//VIEW index → DATA add new ➔ localStorage upload
-    // ... 🟢 STORE NOTES IN localStorage {{{
+    // data localStorage:           ➔ STORAGE update {{{
     localStorage.setItem(get_notes_storage_key(), JSON.stringify( nArray ));
 
     //}}}
-//VIEW ➔ SERVER upload (sync)
-    // ... 🟢 SYNCHRONOUSLY UPLOAD NOTES TO SERVER {{{
+    // data sync:                   ➔ SERVER  upload {{{
     upload_notes_to_server();
 
     //}}}
-//VIEW clear input
-    // ... 🔵 CLEAR USER INPUT ONCE SAVED {{{
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ VIEW
+    //│ - js_input.reset_input
+    //│ - js_notes.layout_notes
+    //└────────────────────────────────────────────────────────────────────────┘
+    // VIEW input:                  ➔ GUI     clear {{{
     js_input.reset_input("note_1_onclick_save");
 
     //}}}
-//VIEW update notes table
+    // VIEW notes table:            ➔ GUI     update {{{
     js_notes.layout_notes("note_1_onclick_save", index);
+
+    //}}}
 };
 //}}}
 
-
-//FIXME
-//{{{
-//let save_note = function(payload)
-//{
-//};
-//}}}
-
-
-
-
-
-
-
-
-
-
-
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🔴 IMPORT ● note_2_onclick_import                                     🢀    │
+//│ 🔴 IMPORT ● note_2_onclick_import                                       🢀  │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴 nArray
 /*● note_2_onclick_import ● onclick ● cb_BUTTON {{{*/
 let note_2_onclick_import = function(e)
 {
-if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
+let caller = "note_2_onclick_import ";
+if(tag_this) log(MODULE+caller+b_2+" "+e.target.innerText +"note_2_onclick_import");
     // IF INPUT IS EMPTY {{{
     let buffer = input.value.trim();
     if(!buffer) {
@@ -414,11 +459,11 @@ if(tag_this) console.log("🔴 "+e.target.innerText +"note_2_onclick_import");
     //│ 🔴 Note #1                                       │
     //│ 2/4 AUTO-SAVE LOOP DONE DELETE TEMPORARY NOTE    │
     //│ if(nArray.length && not...)                      │
-    //│ replace with js_notes.is_last_note_auto_save              │
+    //│ replace with is_last_note_auto_save              │
     //└──────────────────────────────────────────────────┘
     //}}}
     // cancel pending auto_save message {{{
-    if( js_notes.is_last_note_auto_save())
+    if( is_last_note_auto_save())
         note_6_onclick_delete(e, nArray.length-1);
 
     //}}}
@@ -490,14 +535,14 @@ let note_2_onclick_import_push_note = function(note_args)
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟠 EXPORT ● note_3_onclick_export                                       🢂  │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴 nArray
 /*● note_3_onclick_export ● onclick ● cb_BUTTON {{{*/
 const FOLD_OPEN = "{{{";
 const FOLD_CLOSE= "}}}"; /* eslint-disable-line no-unused-vars */
 const NOTE_H_SEP = " ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●"+FOLD_OPEN+"1";
 let note_3_onclick_export = function(e)
 {
-if(tag_this) console.log("🟠 "+e.target.innerText +"note_3_onclick_export");
+let caller = "note_3_onclick_export ";
+if(tag_this) log(MODULE+caller+b_1+" "+e.target.innerText +"note_3_onclick_export");
     if(!nArray.length) return;
 
     let buffer = "";
@@ -540,7 +585,8 @@ let center_input_placeholder = function(placeholder,delay)
 };
 let reset_input_placeholder = function()
 {
-if(tag_this) console.log("⚫ reset_input_placeholder");
+let caller = "reset_input_placeholder ";
+if(tag_this) log(MODULE+caller+b_8+" reset_input_placeholder");
 
     input.setAttribute(    "placeholder", PLACEHOLDER_CREATE_PROMPT);
 
@@ -550,13 +596,13 @@ if(tag_this) console.log("⚫ reset_input_placeholder");
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟡 CHECK  ● note_4_onclick_check                                    [ ] ✅ │
+//│ 🟡 CHECK  ● note_4_onclick_check                                        ✅ │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴 nArray
 //● note_4_onclick_check {{{
 let note_4_onclick_check = function(e,index)
 {
-if(tag_this) console.log("🟡 note_4_onclick_check: "+ e.type);
+let caller = "note_4_onclick_check ";
+if(tag_this) log(MODULE+caller+b_4+" note_4_onclick_check: "+ e.type);
 
     // cancelBubble ● cancel container's click delegation {{{
     e.cancelBubble = true;
@@ -596,7 +642,7 @@ if(tag_this) console.log("🟡 note_4_onclick_check: "+ e.type);
 //  layout_notes("note_4_onclick_check", index);
 
     // SYNC INPUT ● while editing checked note
-    if(js_details.get_editing_note_index() == index)
+    if(js_CNTRL.get_editing_note_index() == index)
     {
         if( get_checked(index)) input  .classList.add   ("checked");
         else                    input  .classList.remove("checked");
@@ -607,8 +653,8 @@ if(tag_this) console.log("🟡 note_4_onclick_check: "+ e.type);
 
     // ... 🟢 SYNCHRONOUSLY UPLOAD NOTES TO SERVER
     let promise = upload_notes_to_server();
-//console.log("🟡 note_4_onclick_check: "+ e.type);
-//console.log("promise:", promise);
+//log("🟡 note_4_onclick_check: "+ e.type);
+//log("promise:", promise);
     return promise;
 };
 //}}}
@@ -620,27 +666,26 @@ let get_checked = function(index)
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ 🟢 EDIT   ● note_5_onclick_edit                                         ✎  │
+//│ 🟢 EDIT   ● note_5_onclick_edit                                         ✍ │
 //└────────────────────────────────────────────────────────────────────────────┘
-
-
+// MOVED TO: SERVER/scripts/js_details.js
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🔵 DELETE ● note_6_onclick_delete                                       ✕  │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴 nArray nArray_wasted
 //● note_6_onclick_delete {{{
 let note_6_onclick_delete = function(e,index)
 {
-if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
+let caller = "note_6_onclick_delete ";
+if(tag_this) log(MODULE+caller+b_6+" note_6_onclick_delete: "+ e.type);
 
     // cancelBubble ● cancel container's click delegation {{{
     e.cancelBubble = true;
 
     //}}}
 
-    let deleting_editing_note   = (index == js_details.get_editing_note_index());
-    let deleting_auto_save_note = (index == nArray.length) && js_notes.is_last_note_auto_save();
+    let deleting_editing_note   = (index == js_CNTRL.get_editing_note_index());
+    let deleting_auto_save_note = (index == nArray.length) && is_last_note_auto_save();
     if( deleting_editing_note || deleting_auto_save_note)
         js_input.reset_input("note_6_onclick_delete");
 
@@ -667,13 +712,13 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
     js_notes.layout_notes("note_6_onclick_delete", index);
 
     // SHIFT EDITING NOTE DIV
-    let editing_note_index  = js_details.get_editing_note_index();
+    let editing_note_index  = js_CNTRL.get_editing_note_index();
     if( editing_note_index >= 0)
     {
         if(index < editing_note_index)
-            js_MODEL.set_editing_note_index(editing_note_index -1 );
+            js_CNTRL.set_editing_note_index(editing_note_index -1 );
         else
-            js_MODEL.set_editing_note_index(editing_note_index    );
+            js_CNTRL.set_editing_note_index(editing_note_index    );
     }
 };
 //}}}
@@ -681,7 +726,6 @@ if(tag_this) console.log("🔵 note_6_onclick_delete: "+ e.type);
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟠 WASTED ● note_7_onclick_wasted                                     🢀 🗑 │
 //└────────────────────────────────────────────────────────────────────────────┘
-// 📖 🔴🔴🔴 nArray nArray_wasted
 /*● note_7_onclick_wasted ● onclick ● cb_BUTTON {{{*/
 //{{{
 const CLEAR_DELETED_NOTES = "Clear deleted notes";
@@ -689,7 +733,8 @@ const CLEAR_DELETED_NOTES = "Clear deleted notes";
 //}}}
 let note_7_onclick_wasted = function(e)
 {
-if(tag_this) console.log("🟠 "+e.target.innerText +"note_7_onclick_wasted");
+let caller = "note_7_onclick_wasted ";
+if(tag_this) log(MODULE+caller+b_3+" "+e.target.innerText +"note_7_onclick_wasted");
 
     if(!nArray_wasted.length) return;
 
@@ -794,6 +839,49 @@ let note_7_onclick_wasted_get_buffer = function()
 };
 /*}}}*/
 
+//┌─────────────────────────────────────────────────────────────────[...]
+//│ HELPER STATE CHECKERS       🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣
+//└─────────────────────────────────────────────────────────────────[...]
+/*_ is_last_note_auto_save ● Check if last note is auto-save {{{*/
+//{{{
+let is_last_note_auto_save_reason;
+//}}}
+let is_last_note_auto_save = function()
+{
+//{{{
+let caller = "is_last_note_auto_save";
+    let reason;
+//}}}
+
+    if(!nArray.length)
+        reason = "NO SAVED NOTES YET";
+
+    else if(!nArray[nArray.length-1].text.startsWith(AUTO_SAVE_TAG))
+        reason = "NO AUTO_SAVE_TAG IN LAST NOTE";
+
+//{{{
+if(reason != is_last_note_auto_save_reason)
+{
+if(tag_this) log(MODULE+caller+(reason ? reason:"YES"));
+    is_last_note_auto_save_reason = reason;
+}
+//}}}
+    return  !reason;
+};
+/*}}}*/
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟤  M📖 V C REFACTORING ZONE ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+//│ 🔴  M📖 V C REFACTORING ZONE ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+//│ 🟠  M📖 V C REFACTORING ZONE ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+//│ 🟡  M📖 V C REFACTORING ZONE ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+//│ 🟢  M📖 V C REFACTORING ZONE ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+//└────────────────────────────────────────────────────────────────────────────┘
+
+
+
+
+
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟣 STANDOUT                                                             💡 │
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -816,7 +904,7 @@ let standout_note_at_index = function(index)
         =  (index >= 0)
         && (index == (nArray.length -1));
 
-    if( is_last_note && js_notes.is_last_note_auto_save() )
+    if( is_last_note && is_last_note_auto_save() )
         index = standout_note_index;
 
     if(index >= 0)
@@ -867,7 +955,8 @@ let scroll_TR_intoView = function(tr)
 let scroll_TR_intoView_handler = function(tr)
 {
 /*{{{*/
-if(tag_this) console.log("🟣%c scroll_TR_intoView_handler: %c"+js_notes.ellipsis(tr.innerText.trim(),50), "color: magenta", "background-color:black");
+let caller = "scroll_TR_intoView_handler ";
+if(tag_this) log(MODULE+caller+b_7+" scroll_TR_intoView_handler: %c"+ellipsis(tr.innerText.trim(),50), lb0);
 
     scroll_TR_intoView_timeout = null;
 /*}}}*/
@@ -904,9 +993,9 @@ if(tag_this) console.log("🟣%c scroll_TR_intoView_handler: %c"+js_notes.ellips
     let box_scrollY = box.scrollTop + offset_new;
 
 /*{{{
-console.log(".offset_old=["+ offset_old  +"]");
-console.log(".offset_new=["+ offset_new  +"]");
-console.log("box_scrollY=["+ box_scrollY +"]");
+log(".offset_old=["+ offset_old  +"]");
+log(".offset_new=["+ offset_new  +"]");
+log("box_scrollY=["+ box_scrollY +"]");
 }}}*/
     /*}}}*/
 
@@ -993,6 +1082,7 @@ let update_summary = function()
 
         // MVC MIGRATION
         ,    exportNotes: note_3_onclick_export
+        , is_last_note_auto_save
 
         // DEBUG
         , scroll_TR_intoView

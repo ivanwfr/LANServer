@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261028:17h:23)
+//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261105:00h:04)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵
 //│
@@ -8,10 +8,11 @@
 /* IMPORT {{{*/
 
 /* globals js_MODEL  */
-/* globals notes     */
 /* globals js_input  */
+/* globals js_log    */
 /* globals js_notes  */
 /* globals js_ticker */
+/* globals notes     */
 
 //port { js_CNTRL   } from "./js_CNTRL.js"
 import { js_MODEL   } from "./js_MODEL.js"
@@ -30,15 +31,43 @@ import { notes      } from "./notes.js"
 /*}}}*/
 let js_details  = (function()
 {
-"use strict";
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ ◯  INTERNING ● SERVER/scripts/js_log.js
+//└────────────────────────────────────────────────────────────────────────────┘
+const MODULE = "%c★🟢 js_details\t\t● ";
+let log_this = false;
+let tag_this = false || log_this;
+//{{{
+/* eslint-disable no-unused-vars */
+
+js_log.register( { module_name : "js_details"
+                 , module_num  : 0
+                 , log_this_fn : (state) => log_this = state
+                 , tag_this_fn : (state) => tag_this = state } );
+
+let log                                        = js_log.log;
+let console_clear                              = js_log.console_clear;
+
+let ellipsis                                   = js_log.ellipsis;
+let get_src_link                               = js_log.get_src_link;
+
+let lbB                                        = js_log.lbB;
+
+let b_X                                        = js_log.b_X;
+let lbX                                        = js_log.lbX;
+let lfX                                        = js_log.lfX;
+let [b_0,b_1,b_2,b_3,b_4,b_5,b_6 ,b_7,b_8,b_9] = js_log.b_X;
+let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
+let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
+
+/* eslint-enable  no-unused-vars */
+//}}}
 
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ DATA                        ⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
 //└─────────────────────────────────────────────────────────────────[...]
 // NOTE DIV, TABLE, AUTO_SAVE TAG AND INTERVAL {{{
 
-let log_this = false;
-let tag_this = false || log_this;
 
 const AUTO_SAVE_IDLE_INTERVAL_MS = 5000;
 const AUTO_SAVE_EDIT_INTERVAL_MS = 1000;
@@ -68,7 +97,7 @@ const STATUS_LINE_TITLE   = "Click: brighter — bigger — dimmer";
 /*● onload ● DIV & TABLE ➔ js_notes ● listen ● ticker {{{*/
 let onload = function()
 {
-console.log("3 js_details \t🟠 onload:");
+if(tag_this) log("3 js_details \t🟠 onload:");
 
     document.addEventListener("visibilitychange", function(e) {
         if( document.hidden )
@@ -96,10 +125,11 @@ console.log("3 js_details \t🟠 onload:");
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ LAYOUT & RENDER             🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴
 //└─────────────────────────────────────────────────────────────────[...]
-/*_ dd_notes_DETAILS ● NOTE_DETAILS_HTML ● onclick {{{*/
+/*_ add_notes_DETAILS ● NOTE_DETAILS_HTML ● onclick {{{*/
 let add_notes_DETAILS = function()
 {
-if(tag_this) console.log("🔵 add_notes_DETAILS");
+let caller = "add_notes_DETAILS";
+if(tag_this) log(MODULE+caller+"🔵 add_notes_DETAILS");
 
 const NOTE_DETAILS_HTML   = `
 <summary >📝 My Notes for This Page</summary>
@@ -175,13 +205,16 @@ const NOTE_DETAILS_HTML   = `
 
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ EDIT NOTE                   🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠
+//│ MOVED FROM SERVER/scripts/notes.js
+//│ CALLED BY  SERVER/scripts/js_details.js
+//│ CALLED BY  SERVER/scripts/js_VIEW.js
 //└─────────────────────────────────────────────────────────────────[...]
-// note_5_onclick_edit ● onclick ● note_row {{{
 //● note_5_onclick_edit {{{
 let note_5_onclick_edit = function(e,index)
 {
 // log {{{
-if(tag_this) console.log("🟢 note_5_onclick_edit: "+ e.type);
+let caller = "note_5_onclick_edit";
+if(tag_this) log(MODULE+caller+"note_5_onclick_edit: "+ e.type, lb0);
 //}}}
     // STORE CURRENT INPUT CONTENT (to be restored by next reload) {{{
     js_input.input_save("note_5_onclick_edit");
@@ -289,18 +322,31 @@ let set_editing_note_index = function(index)
     //}}}
 };
 /*}}}*/
-//}}}
+/*_ get_editing_note_index {{{*/
+let get_editing_note_index = function()
+{
+    //┌────────────────────────────────────────────┐
+    //│ SAVE BUTTON attribute USED AS DATA SOURCE! │
+    //└────────────────────────────────────────────┘
+    let index = -1;
+    let save_note_BUTTON = document.querySelector("#save_note_BUTTON");
+    if( save_note_BUTTON ) {
+        let attr = save_note_BUTTON.getAttribute( EDITING_NOTE_NUM );
+        if( attr ) index = parseInt(attr-1);
+    }
+    return index;
+};
+/*}}}*/
 
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ AUTO-SAVE EDITED NOTE       🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡
 //└─────────────────────────────────────────────────────────────────[...]
-// save_note_auto ● changed-unchanged state {{{
 /*_ save_note_auto {{{*/
 let save_note_auto = function(e={})
 {
 //{{{
 let caller = "save_note_auto";
-if(tag_this) console.log("🔴 "+ caller);
+if(tag_this) log(MODULE+caller, lb0);
 
 //}}}
     // SAME AS ORIGINAL ● save_note_BUTTON disabled {{{
@@ -313,9 +359,9 @@ if(tag_this) console.log("🔴 "+ caller);
         let save_note_BUTTON = document.querySelector("#save_note_BUTTON");
         if( save_note_BUTTON ) save_note_BUTTON.setAttribute("disabled","");
 
-        if(js_notes.is_last_note_auto_save())
+        if(notes.is_last_note_auto_save())
         {
-if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
+if(tag_this) log("🔴 AUTO_SAVE DELETE NOTE");
 
             let nArray = js_MODEL.getAll();
             notes.note_6_onclick_delete(e, nArray.length-1);
@@ -345,7 +391,7 @@ if(tag_this) console.log("🔴 AUTO_SAVE DELETE NOTE");
     // CHANGED ● ADDING AUTO_SAVE NOTE {{{
     let nArray = js_MODEL.getAll();
     let index;
-    if( js_notes.is_last_note_auto_save() )
+    if( notes.is_last_note_auto_save() )
     {
         index = nArray.length-1;
     }
@@ -386,7 +432,10 @@ let is_input_same_as_original = function()
       )
         return false;
 
-if(log_this) console.log("⚫ AUTO_SAVE SAME AS ORIGINAL");
+//{{{
+let caller = "is_input_same_as_original";
+if(log_this) log(MODULE+caller+"⚫ AUTO_SAVE SAME AS ORIGINAL", lb0);
+//}}}
     return true;
 };
 /*}}}*/
@@ -403,35 +452,24 @@ let is_input_same_as_last_auto_save = function()
     if(nArray[nArray.length-1].text.trim() != auto_save_text.trim())
         return false;
 
-if(log_this) console.log("🔵 AUTO_SAVE: INPUT UNCHANGED");
+//{{{
+let caller = "is_input_same_as_last_auto_save";
+if(log_this) log(MODULE+caller+"🔵 AUTO_SAVE: INPUT UNCHANGED", lb0);
+//}}}
     return true;
 };
             /*}}}*/
-/*_ get_editing_note_index {{{*/
-let get_editing_note_index = function()
-{
-    //┌────────────────────────────────────────────┐
-    //│ SAVE BUTTON attribute USED AS DATA SOURCE! │
-    //└────────────────────────────────────────────┘
-    let index = -1;
-    let save_note_BUTTON = document.querySelector("#save_note_BUTTON");
-    if( save_note_BUTTON ) {
-        let attr = save_note_BUTTON.getAttribute( EDITING_NOTE_NUM );
-        if( attr ) index = parseInt(attr-1);
-    }
-    return index;
-};
-/*}}}*/
-//}}}
 
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ INPUT FOCUS-BLUR            🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢
 //└─────────────────────────────────────────────────────────────────[...]
-// input_focus_listener ● blur ● prefix {{{
 /*● input_focus_listener {{{*/
 let input_focus_listener = function()
 {
-//console.log("🟢 input_focus_listener");
+//{{{
+let caller = "input_focus_listener";
+if(log_this) log(MODULE+caller+"🟢 input_focus_listener", lb0);
+//}}}
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ ● INSERT AUTO-INSERT NEW NOTE NUM
@@ -447,8 +485,10 @@ let input_focus_listener = function()
 /*● input_blur_listener {{{*/
 let input_blur_listener = function()
 {
-//console.log("⚫ input_blur_listener");
-
+//{{{
+let caller = "input_blur_listener";
+if(log_this) log(MODULE+caller+"⚫ input_blur_listener", lb0);
+//}}}
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ ● CANCEL AUTO-INSERT NEW NOTE NUM
     //└────────────────────────────────────────────────────────────────────────┘
@@ -463,6 +503,10 @@ let input_blur_listener = function()
 /*● is_input_auto_insert_prefix {{{*/
 let is_input_auto_insert_prefix = function()
 {
+//{{{
+let caller = "is_input_auto_insert_prefix";
+if(log_this) log(MODULE+caller+"⚫ input_blur_listener", lb0);
+//}}}
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ ● CHECK  AUTO-INSERT NEW NOTE NUM
     //└────────────────────────────────────────────────────────────────────────┘
@@ -483,13 +527,12 @@ let get_input_auto_insert_prefix = function()
     let nArray       = js_MODEL.getAll();
     let num =           nArray.length + 1;
 
-    if( js_notes.is_last_note_auto_save() )
+    if( notes.is_last_note_auto_save() )
        num -= 1;
 
     return             num+".\t";
 };
 /*}}}*/
-//}}}
 
     // return {{{
     return { name: "js_details"

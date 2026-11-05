@@ -1,5 +1,13 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (261028:16h:50) │
+//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (261105:01h:30) │
+//├────────────────────────────────────────────────────────────────────────────┤
+//{{{
+//│ Here is how `js_VIEW.js` can be structured
+//│ using a clean IIFE pattern:
+//│
+//│ to wire up the event listeners to  `js_CNTRL.transition()`
+//│ and handle reactive UI updates via `js_CNTRL.subscribe ()
+//}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 // IMPORT {{{
 
@@ -32,208 +40,257 @@ import { js_details } from "./js_details.js"
 //port { notes      } from "./notes.js"
 
 //}}}
+const js_VIEW    = (function()
+{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ ◯  INTERNING ● SERVER/scripts/js_log.js
+//└────────────────────────────────────────────────────────────────────────────┘
+const MODULE = "%c★🟣 VIEW\t\t● "; const CALLING = "%c ☎ CALLING\t";
+let log_this = false;
+let tag_this = false || log_this;
 //{{{
-//│ Here is how `js_VIEW.js` can be structured
-//│ using a clean IIFE pattern:
-//│
-//│ to wire up the event listeners to  `js_CNTRL.transition()`
-//│ and handle reactive UI updates via `js_CNTRL.subscribe ()
+/* eslint-disable no-unused-vars */
+
+js_log.register( { module_name : "js_VIEW"
+                 , module_num  : 2
+                 , log_this_fn : (state) => log_this = state
+                 , tag_this_fn : (state) => tag_this = state } );
+
+let log                                        = js_log.log;
+let console_clear                              = js_log.console_clear;
+
+let ellipsis                                   = js_log.ellipsis;
+let get_src_link                               = js_log.get_src_link;
+
+let lbB                                        = js_log.lbB;
+
+let b_X                                        = js_log.b_X;
+let lbX                                        = js_log.lbX;
+let lfX                                        = js_log.lfX;
+let [b_0,b_1,b_2,b_3,b_4,b_5,b_6 ,b_7,b_8,b_9] = js_log.b_X;
+let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
+let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
+
+/* eslint-enable  no-unused-vars */
 //}}}
-const js_VIEW    = (function () {
-
-    // ● log-items inlining ● SERVER/scripts/js_log.js {{{
-    /* eslint-disable no-unused-vars */
-
-    let log                                        = js_log.log;
-    let is_logging                                 = js_log.is_logging;
-    let console_clear                              = js_log.console_clear;
-
-    let ellipsis                                   = js_log.ellipsis;
-    let get_src_link                               = js_log.get_src_link;
-
-    let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
-    let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
-    let lbB                                        = js_log.lbB;
-    let lbX                                        = js_log.lbX;
-
-    /* eslint-enable  no-unused-vars */
-    //}}}
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PRIVATE
     //└────────────────────────────────────────────────────────────────────────┘
-    // const      ➔ input ● button ● table {{{
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ DOM References
-    //└────────────────────────────────────────────────────────────────────────┘
-    let noteInput  ; // defined by init() = document.getElementById( "note_input_TEXTAREA" );
-    let saveBtn    ; // defined by init() = document.getElementById( "save_note_BUTTON"    );
-    let notesTable ; // defined by init() = document.getElementById( "saved_notes_TABLE"   );
-    //}}}
-    //  bindEvents ➔ click ● input ● utton  ● able {{{
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ 1. Wire up DOM events to send intents to the State Machine
-    //│ Dispatch intent rather than business logic
-    //└────────────────────────────────────────────────────────────────────────┘
-    let bindEvents = function()
-    {
-        // log {{{
-        let caller = "VIEW\t● bindEvents";
-        if( is_logging() ) log("%c"+caller+":"                          , lf6 );
-        //}}}
+// const      ➔ input ● button ● table {{{
+//┌────────────────────────────────────────────────────────────────────────┐
+//│ DOM References
+//└────────────────────────────────────────────────────────────────────────┘
+let noteInput  ; // defined by init() = document.getElementById( "note_input_TEXTAREA" );
+let saveBtn    ; // defined by init() = document.getElementById( "save_note_BUTTON"    );
+let notesTable ; // defined by init() = document.getElementById( "saved_notes_TABLE"   );
+//}}}
+//  bindEvents ➔ click ● input ● utton  ● able {{{
+//┌────────────────────────────────────────────────────────────────────────┐
+//│ 1. Wire up DOM events to send intents to the State Machine
+//│ Dispatch intent rather than business logic
+//└────────────────────────────────────────────────────────────────────────┘
+let bindEvents = function()
+{
+// log {{{
+let caller = "bindEvents";
+if(tag_this) log(MODULE+caller, lbB+lf6);
+//}}}
 
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ saveBtn ● SAVE_NOTE
-        //└────────────────────────────────────────────────────────────────────┘
-        saveBtn.addEventListener("click", () => { //{{{
-          //const content = noteInput.value;
-            const content = noteInput.dataset.content;  // as set by js_input.reset_input()
-            js_CNTRL.transition("SAVE_NOTE", { content });
-        }); //}}}
+    //┌────────────────────────────────────────────────────────────────────┐
+    //│ saveBtn ● SAVE_NOTE
+    //└────────────────────────────────────────────────────────────────────┘
+    saveBtn.addEventListener("click", () => { //{{{
+      //const content = noteInput.value;
+        const content = noteInput.dataset.content;  // as set by js_input.reset_input()
+        js_CNTRL.transition("SAVE_NOTE", { content });
+    }); //}}}
 
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ notesTable ● SELECT_NOTE
-        //│ notesTable ● DELETE_NOTE
-        //└────────────────────────────────────────────────────────────────────┘
-        notesTable.addEventListener("click", (e) => { //{{{
-            const row = e.target.closest("tr");
-            if(  !row ) return;
+    //┌────────────────────────────────────────────────────────────────────┐
+    //│ notesTable ● SELECT_NOTE
+    //│ notesTable ● DELETE_NOTE
+    //└────────────────────────────────────────────────────────────────────┘
+    notesTable.addEventListener("click", (e) => { //{{{
+        const row = e.target.closest("tr");
+        if(  !row ) return;
 
-            //┌────────────────────────────────────────────────────────────────┐
-            //│ ID      **nArray[index)**
-            //└────────────────────────────────────────────────────────────────┘
-            const noteId = row.dataset.id;
+        //┌────────────────────────────────────────────────────────────────┐
+        //│ ID      **nArray[index)**
+        //└────────────────────────────────────────────────────────────────┘
+        const noteId = row.dataset.id;
 
-            //┌────────────────────────────────────────────────────────────────┐
-            //│ DELETE  **delete-btn**
-            //└────────────────────────────────────────────────────────────────┘
-            if(e.target.classList.contains("delete_button")) {
-                js_CNTRL.transition("DELETE_NOTE", noteId);
-            }
-            //┌────────────────────────────────────────────────────────────────┐
-            //│ EDIT    **default**
-            //└────────────────────────────────────────────────────────────────┘
-            else {
-                //┌────────────────────────────────────────────────────────────┐
-                //│ CONTENT **nArray[index].text**
-                //└────────────────────────────────────────────────────────────┘
-                const   content = row.dataset.content;//FIXME
-                //nst   content = row.getAttribute("title");
+        //┌────────────────────────────────────────────────────────────────┐
+        //│ DELETE  **delete-btn**
+        //└────────────────────────────────────────────────────────────────┘
+        if(e.target.classList.contains("delete_button")) {
+            js_CNTRL.transition("DELETE_NOTE", noteId);
+        }
+        //┌────────────────────────────────────────────────────────────────┐
+        //│ EDIT    **default**
+        //└────────────────────────────────────────────────────────────────┘
+        else {
+            //┌────────────────────────────────────────────────────────────┐
+            //│ CONTENT **nArray[index].text**
+            //└────────────────────────────────────────────────────────────┘
+            const   content = row.dataset.content;//FIXME
+            //nst   content = row.getAttribute("title");
 //              noteInput.value = content;
 //              noteInput.title = 'VIEW\n🔵 notesTable.addEventListener("click")'; /* eslint-disable-line quotes */
-                js_CNTRL.transition("SELECT_NOTE", { id: noteId, content });
-            }
-        }); //}}}
+            js_CNTRL.transition("SELECT_NOTE", { id: noteId, content });
+        }
+    }); //}}}
 
-    }; //}}}
+}; //}}}
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PUBLIC
     //└────────────────────────────────────────────────────────────────────────┘
-    //  render     ➔ content ● input  ●utton  ●able {{{
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ Render view changes based on state notifications
-    //└────────────────────────────────────────────────────────────────────────┘
-    let render = function(currentState, payload)
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟤  M V💻 C REFACTORING ZONE ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+//└────────────────────────────────────────────────────────────────────────────┘
+/*_ no_input_to_save {{{*/
+//{{{
+let no_input_to_save_reason;
+//}}}
+let no_input_to_save = function(input, e)
+{
+//{{{
+let caller = "no_input_to_save";
+    let reason;
+//}}}
+    // VIEW !input text:            ➔ RETURN {{{
+    if( !input || !input.value ) {
+        reason = "!input value";
+    }
+    else if( js_details.is_input_auto_insert_prefix() )
     {
-        // log {{{
-        let caller = "VIEW\t● render";
-        if( is_logging() )
-        {
-            log("%c"+caller                                                     , lf6      );
-            log("%c● called_by...:\t%c" + get_src_link()                        , lf6 , lb0);
-            log("%c● currentState:\t%c["+ currentState                      +"]", lf6 , lb1);
-            log("%c● payload.....:\t%c["+ ellipsis(JSON.stringify(payload)) +"]", lf6 , lb3);
-        }
-        //}}}
-        switch (currentState)
-        {
-        //    IDLE {{{
-        case "IDLE":
-        saveBtn   .disabled    = false;
-        saveBtn   .textContent = "Save Note";
-        // log {{{
+        reason = "is_input_auto_insert_prefix";
+    }
+    //}}}
+    // VIEW event_auto_save:        ➔ HANDLE  auto_save {{{
+    else if(e.type == "auto_save")
+    {
+        js_details.save_note_auto( e );
+
+        reason = "e.type == auto_save";
+    }
+    //}}}
+//{{{
+if(reason != no_input_to_save_reason)
+{
+if(tag_this) log(MODULE+caller+": "+reason, lbB+lf6);
+    no_input_to_save_reason    =    reason;
+}
+//}}}
+    return reason;
+};
+/*}}}*/
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ 🟤  M V💻 C REFACTORING ZONE ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+//└────────────────────────────────────────────────────────────────────────────┘
+//  render     ➔ content ● input  ●utton  ●able {{{
+//┌────────────────────────────────────────────────────────────────────────┐
+//│ Render view changes based on state notifications
+//└────────────────────────────────────────────────────────────────────────┘
+let render = function(currentState, payload)
+{
+// log {{{
+let caller = "render";
+if(tag_this) log(MODULE+caller, lbB+lf6);
+if(log_this) {
+    log("%c● called_by...:\t%c" + get_src_link()                        , lf6 , lb0);
+    log("%c● currentState:\t%c["+ currentState                      +"]", lf6 , lb1);
+    log("%c● payload.....:\t%c["+ ellipsis(JSON.stringify(payload)) +"]", lf6 , lb3);
+}
+//}}}
+    switch (currentState)
+    {
+    //    IDLE {{{
+    case "IDLE":
+    saveBtn   .disabled    = false;
+    saveBtn   .textContent = "Save Note";
+    // log {{{
 //      noteInput .value       = ""; // Reset input after operation
 //      noteInput .title =        "VIEW\n🔵 Reset input after operation";
-        log("%c● ☎ "+caller+" CALLING js_input.reset_input"  , lbB+lf6);
-        //}}}
-                              js_input.reset_input();
-        break;
+    if(log_this) log(CALLING+"js_input.reset_input"  , lbB+lf6);
+    //}}}
+                          js_input.reset_input();
+    break;
 
-        //}}}
-        //    EDITING {{{
-        case "EDITING":
-        // log {{{
+    //}}}
+    //    EDITING {{{
+    case "EDITING":
+    // log {{{
 //{{{
 //      saveBtn   .disabled    = false;
 //      saveBtn   .textContent = "Update Note #"+ (parseInt(payload.id)+1);
 //}}}
-        log("%c● ☎ "+caller+" CALLING js_details.note_5_onclick_edit"  , lbB+lf6);
-        //}}}
-                              js_details.note_5_onclick_edit({}, parseInt(payload.id) );
-        break;
+    if(log_this) log(CALLING+"js_details.note_5_onclick_edit"  , lbB+lf6);
+    //}}}
+                          js_details.note_5_onclick_edit({}, parseInt(payload.id) );
+    break;
 
-        //}}}
-        //    SAVING | DELETING {{{
-        case "SAVING":
-        case "DELETING":
-        saveBtn   .disabled    = true;
-        saveBtn   .textContent = currentState === "SAVING" ? "Saving..." : "Deleting...";
-        break;
-        //}}}
-        }
-    }; //}}}
+    //}}}
+    //    SAVING | DELETING {{{
+    case "SAVING":
+    case "DELETING":
+    saveBtn   .disabled    = true;
+    saveBtn   .textContent = currentState === "SAVING" ? "Saving..." : "Deleting...";
+    break;
+    //}}}
+    }
+}; //}}}
 /*● onload {{{*/
 let onload = function(e)
 {
-console.log("6 js_VIEW    \t🔵 onload:");
+let caller = "onload";
+if(tag_this) log(MODULE+caller, lbB+lf6);
 
-    init(e);
+init(e);
 };
 /*}}}*/
-    // js_VIEW bindEvents ● SM subscribe {{{
-    let init = function(e)
-    {
-console.log("js_VIEW.onload");//FIXME
-        // log {{{
-        let caller = "VIEW\t● init";
-        if( is_logging() )
-        {
-            console_clear(caller);
-            log("%c"+caller+":"                                         , lf6      );
-            log("%c................e.type %c["+ e.type              +"]", lf6 , lb1);
-            log("%c...document.readyState %c["+ document.readyState +"]", lf6 , lb2);
-            log("%c.............noteInput %c["+ noteInput?.tagName  +"]", lf6 , lb1);
-        }
-        //}}}
-        if( noteInput ) return;
-        noteInput  = document.getElementById( "note_input_TEXTAREA" ); if(!noteInput  ) return;
-        saveBtn    = document.getElementById( "save_note_BUTTON"    ); if(!saveBtn    ) return;
-        notesTable = document.getElementById( "saved_notes_TABLE"   ); if(!notesTable ) return;
-        // log {{{
-        if( is_logging() ) {
-            log("%c● noteInput :\t"+ (noteInput  && noteInput .tagName), lf6 );
-            log("%c● saveBtn   :\t"+ (saveBtn    && saveBtn   .tagName), lf6 );
-            log("%c● notesTable:\t"+ (notesTable && notesTable.tagName), lf6 );
-        }
-        //}}}
-
-        //┌────────────────────────────────────────────────────────────────┐
-        //│ 1. Wire up DOM events to send intents to the State Machine
-        //└────────────────────────────────────────────────────────────────┘
-        bindEvents();
-
-        //┌────────────────────────────────────────────────────────────────┐
-        //│ 2. Subscribe to the State Machine to receive state updates
-        //└────────────────────────────────────────────────────────────────┘
-        js_CNTRL.subscribe( render );
-    };
+// js_VIEW bindEvents ● SM subscribe {{{
+let init = function(e)
+{
+// log {{{
+let caller = "init";
+if(tag_this) log(MODULE+caller, lbB+lf6);
+if(log_this) {
+    log("%c................e.type %c["+ e.type              +"]", lf6 , lb1);
+    log("%c...document.readyState %c["+ document.readyState +"]", lf6 , lb2);
+    log("%c.............noteInput %c["+ noteInput?.tagName  +"]", lf6 , lb1);
+}
+//}}}
+    if( noteInput ) return;
+    noteInput  = document.getElementById( "note_input_TEXTAREA" ); if(!noteInput  ) return;
+    saveBtn    = document.getElementById( "save_note_BUTTON"    ); if(!saveBtn    ) return;
+    notesTable = document.getElementById( "saved_notes_TABLE"   ); if(!notesTable ) return;
+    // log {{{
+    if(log_this) {
+        log("%c● noteInput :\t"+ (noteInput  && noteInput .tagName), lf6 );
+        log("%c● saveBtn   :\t"+ (saveBtn    && saveBtn   .tagName), lf6 );
+        log("%c● notesTable:\t"+ (notesTable && notesTable.tagName), lf6 );
+    }
     //}}}
-    // init {{{
-    return { init
-        ,    onload // MVC MIGRATION
-    };
-    //}}}
+
+    //┌────────────────────────────────────────────────────────────────┐
+    //│ 1. Wire up DOM events to send intents to the State Machine
+    //└────────────────────────────────────────────────────────────────┘
+    bindEvents();
+
+    //┌────────────────────────────────────────────────────────────────┐
+    //│ 2. Subscribe to the State Machine to receive state updates
+    //└────────────────────────────────────────────────────────────────┘
+    js_CNTRL.subscribe("VIEW", render);
+};
+//}}}
+
+// return {{{
+return { init
+    ,    onload // MVC MIGRATION
+    , no_input_to_save
+};
+//}}}
 
 })();
 //┌────────────────────────────────────────────────────────────────────────────┐

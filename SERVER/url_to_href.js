@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261030:03h:38)
+//│ url_to_href.js                                       ● _TAG (261101:04h:54)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -49,7 +49,7 @@ let line_url_to_href = function(line, dir_href)
         let s   = "";
         RGX_EXT_ARRAY.forEach((ext) => s += "|"+ext);
         s       = s.substr(1); // trim extra first pipe
-        RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9]+\\.("+s+"))","g");
+        RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9\.]+\\.("+s+"))","g");
 //console.log("RGX_EXT:", RGX_EXT);
     }
     //}}}
@@ -68,10 +68,11 @@ let line_url_to_href = function(line, dir_href)
 //console.log("matches[2]=["+matches[2]+"]");
 //console.log("matches[3]=["+matches[3]+"]");
 
+        let prev = basename;
         basename = matches[2];
 
-        let ttl = "URL basename: "+ (basename ? "Folder ["+basename+"]"  : "Cleared");
-        let tag =                   (basename ?       "🟢 in "+basename : "⚫"     );
+        let ttl = "URL basename: "+ (basename ? "Folder ["+basename+"]" : "Cleared"    );
+        let tag =                   (basename ? "🟢 >> "  +basename     : "⚫ << "+prev);
         return matches[1]
             +  "<span class='basename' title='"+ttl+"'>"+tag+"</span>"
             +  matches[3]
@@ -137,7 +138,7 @@ let line_url_to_href = function(line, dir_href)
                 let p
                     = (path.startsWith("./") ? path.substr(2) : path);
 //console.log("p=["+p+"]");
-                a_href = parse_sub_folders(href, root, basename, p);
+                a_href = parse_sub_folders(href, root, basename+"/.", p);
             }
             else {
                 a_href = parse_sub_folders(href, root, folder, path);
@@ -184,6 +185,7 @@ let line_url_to_href = function(line, dir_href)
     return line;
 };
 /*}}}*/
+/*_ get_a_list {{{*/
 let get_a_list = function(a_href, q)
 {
     //..........................(-----------------) /(pa))
@@ -216,50 +218,68 @@ let get_a_list = function(a_href, q)
 
     return a_list;
 };
-/*_ parse_sub_folders {{{*/
+/*}}}*/
+/*_ parse_sub_folders ● remove an overlapping folder-path-segment {{{*/
 let parse_sub_folders = function(href, root, folder, path)
 {
-    let folders       = folder.split("/").filter(Boolean);            // remove falsy items
-    //console.log("%c folders: "+ String(folders).padStart(47) ,"background-color: #000; color: #F0F");
+//console.log("┌───────────────────────────────────────────────────────────────────────────┐");
 
-    let parents  = path.split("/").filter(Boolean);  // remove falsy items
+    let D_NAMES  = folder.split("/").filter(Boolean);
+//console.log("%c D_NAMES: "+ D_NAMES                 , "background-color: #000; color: #0F0");
 
-    let fileName = parents.pop();
-//console.log("%c● fileName=["+fileName+"]", "background-color: #066");
+    let f_names  = path  .split("/").filter(Boolean);
+//console.log("%c f_names: "+ f_names                 , "background-color: #000; color: #F0F");
+
+    let fileName = f_names.pop();
+//console.log("%c● fileName=["+fileName+"]"           , "background-color: #000; color: #FF0");
 
     let up_count =  0;
     let sub_fold = "";
-    let      f;
-    let      p;
-    for(     f  = folders.length-1
-             ,    p  = parents.length-1
-             ;   (f >= 0) && (p >= 0)
-             ;  --f       , --p
+    let      d,          f;
+    for(     d              =  D_NAMES.length-1
+        ,                f  =  f_names.length-1
+        ;   (d >= 0) && (f >= 0)
+        ;  --d       , --f
        ) {
-        // current dir is current parent {{{
-        if(parents[p] == ".")
+        // current dir is current parent
+        if(      f_names[f] == ".")
         {
-            sub_fold   = folders[f] +"/"+ sub_fold;
+            sub_fold   =       D_NAMES[d] +"/"+ sub_fold;
             up_count  += 1;
         }
-        //}}}
-        // going deeper... {{{
-        else if(folders[f] != parents[p])
+        // going deeper...
+        else if( f_names[f] != D_NAMES[d])
         {
             up_count  += 1;
-            sub_fold   = parents[p] +"/"+ sub_fold;
+            sub_fold   = f_names[f] +"/"+ sub_fold;
         }
-        //}}}
+//console.log(up_count+" %c sub_fold\=["+sub_fold+"]" , "background-color: #000; color: #FF0");
     }
-//console.log("%c● sub_fold\=["+sub_fold+"]", "background-color: #660");
 
-    let a_href  = root +"/";
-    for(     f  = 0; f < (folders.length - up_count); ++f)
-        a_href += folders[f] +"/";
-    a_href     += sub_fold + fileName;
+    let a_href  = root +  "/";
+    for(     d  = 0; d < (D_NAMES.length - up_count); ++d)
+        a_href +=         D_NAMES[d] +"/";
+    a_href     +=         sub_fold
+        +                 fileName;
 
+//console.log("%c● a_href\=["+a_href+"]"              , "background-color: #000; color: #0FF");
+//console.log("└───────────────────────────────────────────────────────────────────────────┘");
     return a_href;
 };
+/*{{{ SAMPLE LINKS
+
+    basename =
+    SERVER/scripts/js_linkify.js
+    /USR/ivan/VIM/mapKeys.func.vim
+                  mapKeys.func.vim
+
+    basename = /USR/ivan/VIM
+                             MAP/mapKeys.func.vim
+
+    basename = /USR/ivan/VIM/MAP
+                                 mapKeys.func.vim
+
+}}}*/
 /*}}}*/
 /*_ line_a_from_http_no_href {{{*/
 let line_a_from_http_no_href = function( line_in )

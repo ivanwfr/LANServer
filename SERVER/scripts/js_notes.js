@@ -1,9 +1,11 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261027:22h:17)
+//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261104:19h:05)
 //├─────────────────────────────────────────────────────────────────[...]
+//│{{{
 //│ 🔵 View Helper: Renders, layouts, and scrolls notes in the DOM
 //│    State Management ➔ js_CNTRL (via js_MODEL, js_VIEW)
 //│    Data  Operations ➔ notes.js (via js_MODEL)
+//│}}}
 //└─────────────────────────────────────────────────────────────────[...]
 /* IMPORT {{{*/
 
@@ -29,39 +31,42 @@ import { notes      } from "./notes.js"
 /*}}}*/
 let js_notes    = (function()
 {
-"use strict";
-
-//┌─────────────────────────────────────────────────────────────────[...]
-//│ DATA                        ⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
-//└─────────────────────────────────────────────────────────────────[...]
-// LOGGING, CONSTANTS, DOM REFERENCES {{{
-//┌─────────────────────────────────────────────────────────────────[...]
-//│ LOGGING
-//└─────────────────────────────────────────────────────────────────[...]
-// ● log-items inlining ● SERVER/scripts/js_log.js {{{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ ◯  INTERNING ● SERVER/scripts/js_log.js
+//└────────────────────────────────────────────────────────────────────────────┘
+const MODULE = "★ js_notes\t\t● ";
+let log_this = false;
+let tag_this = false  || log_this;
+//{{{
 /* eslint-disable no-unused-vars */
 
+js_log.register( { module_name : "js_notes"
+                 , module_num  : 5
+                 , log_this_fn : (state) => log_this = state
+                 , tag_this_fn : (state) => tag_this = state } );
+
 let log                                        = js_log.log;
-let is_logging                                 = js_log.is_logging;
 let console_clear                              = js_log.console_clear;
 
 let ellipsis                                   = js_log.ellipsis;
 let get_src_link                               = js_log.get_src_link;
 
-let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
-let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
 let lbB                                        = js_log.lbB;
+
+let b_X                                        = js_log.b_X;
 let lbX                                        = js_log.lbX;
+let lfX                                        = js_log.lfX;
+let [b_0,b_1,b_2,b_3,b_4,b_5,b_6 ,b_7,b_8,b_9] = js_log.b_X;
+let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
+let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
 
 /* eslint-enable  no-unused-vars */
 //}}}
-// ● log configuration {{{
-let log_this = false;
-let tag_this = false || log_this;
-//}}}
+
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ CONSTANTS
+//│ DATA                        ⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
 //└─────────────────────────────────────────────────────────────────[...]
+// CONSTANTS, DOM REFERENCES {{{
 /* ●  BULLETS {{{*/
 const BULLETS
     = [ "◯","🟤","🔴","🟠","🟡","🟢","🔵","🟣","⚫","⚪️" ];
@@ -72,10 +77,7 @@ const AUTO_SAVE_IDLE_INTERVAL_MS = 5000;
 const AUTO_SAVE_EDIT_INTERVAL_MS = 1000;
 const AUTO_SAVE_TAG         = "(auto_save)\n";
 //}}}
-//┌─────────────────────────────────────────────────────────────────[...]
-//│ DOM REFERENCES                                    │
-//└─────────────────────────────────────────────────────────────────[...]
-/* Notes DIV TABLE {{{*/
+/* ●  Notes DIV TABLE {{{*/
 let saved_notes_DIV;    // width
 let saved_notes_TABLE;  // innerHTML
 let layout_count = 0;
@@ -88,7 +90,8 @@ let layout_count = 0;
 /*_ add_notes_DETAILS ● Initialize DOM refs {{{*/
 let add_notes_DETAILS = function(args)
 {
-if(tag_this) console.log("🔵 add_notes_DETAILS");
+let caller = "add_notes_DETAILS";
+if(tag_this) log(MODULE+caller+"🔵 add_notes_DETAILS");
 
     //┌─────────────────────────────────────────────────────────────[...]
     //│ CACHE DOM REFERENCES (from js_notes context, passed by VIEW)
@@ -100,17 +103,17 @@ if(tag_this) console.log("🔵 add_notes_DETAILS");
     //│ VERIFY DOM AVAILABILITY
     //└─────────────────────────────────────────────────────────────[...]
     if(!saved_notes_DIV  ) {
-        if( is_logging() ) log("%c● saved_notes_DIV not found", lb1+lbB);
+        if(log_this) log(MODULE+"%c● saved_notes_DIV not found", lb1+lbB);
         return false;
     }
     if(!saved_notes_TABLE) {
-        if( is_logging() ) log("%c● saved_notes_TABLE not found", lb1+lbB);
+        if(log_this) log(MODULE+"%c● saved_notes_TABLE not found", lb1+lbB);
         return false;
     }
 
-    if( is_logging() ) {
-        log("%c● saved_notes_DIV  :\t"+ (saved_notes_DIV   && saved_notes_DIV  .tagName), lf6 );
-        log("%c● saved_notes_TABLE:\t"+ (saved_notes_TABLE && saved_notes_TABLE.tagName), lf6 );
+    if(log_this) {
+        log(MODULE+"%c● saved_notes_DIV  :\t"+ (saved_notes_DIV   && saved_notes_DIV  .tagName), lf6 );
+        log(MODULE+"%c● saved_notes_TABLE:\t"+ (saved_notes_TABLE && saved_notes_TABLE.tagName), lf6 );
     }
 
     return true;
@@ -130,13 +133,14 @@ if(tag_this) console.log("🔵 add_notes_DETAILS");
 //└─────────────────────────────────────────────────────────────────[...]
 let layout_notes = function(_caller="?", index_arg=-1)
 {
-if(tag_this) console.log("🔵 layout_notes ← "+ _caller);
+let caller = "layout_notes";
+if(tag_this) log(MODULE+caller+"🔵 layout_notes ← "+ _caller);
 
     //┌──────────────────────────────────────────────────────────────[...]
     //│ ENSURE TABLE IS AVAILABLE
     //└──────────────────────────────────────────────────────────────[...]
     if(!saved_notes_TABLE) {
-        if( is_logging() ) log("%c● layout_notes: TABLE NOT FOUND", lb1+lbB);
+        if(log_this) log(MODULE+"%c● layout_notes: TABLE NOT FOUND", lb1+lbB);
         return;
     }
 
@@ -182,13 +186,12 @@ if(tag_this) console.log("🔵 layout_notes ← "+ _caller);
     //┌──────────────────────────────────────────────────────────────[...]
     //│ DEBUG: Log layout operation
     //└──────────────────────────────────────────────────────────────[...]
-    if( is_logging() ) {
-        let caller = "js_notes ● layout_notes";
-        log("%c"+caller                                   , lf6     );
-        log("%c● _caller...:\t%c["+ _caller           +"]", lf6, lb0);
-        log("%c● index.....:\t%c["+ index_arg         +"]", lf6, lb1);
-        log("%c● layout_cnt:\t%c["+ layout_count      +"]", lf6, lb2);
-        log("%c● nArray.len:\t%c["+ nArray.length     +"]", lf6, lb3);
+    if(log_this) {
+        log(MODULE+"%c"+caller                                   , lf6     );
+        log(MODULE+"%c● _caller...:\t%c["+ _caller           +"]", lf6, lb0);
+        log(MODULE+"%c● index.....:\t%c["+ index_arg         +"]", lf6, lb1);
+        log(MODULE+"%c● layout_cnt:\t%c["+ layout_count      +"]", lf6, lb2);
+        log(MODULE+"%c● nArray.len:\t%c["+ nArray.length     +"]", lf6, lb3);
     }
 };
 /*}}}*/
@@ -299,7 +302,8 @@ let standout_note_index;
 
 let standout_note_at_index = function(index)
 {
-if(tag_this) console.log("🔵 standout_note_at_index: "+ index);
+let caller = "standout_note_at_index";
+if(tag_this) log(MODULE+caller+"🔵 standout_note_at_index: "+ index);
 
     if(index < 0)
         index = standout_note_index;
@@ -313,7 +317,7 @@ if(tag_this) console.log("🔵 standout_note_at_index: "+ index);
         =  (index >= 0)
         && (index == (notes.get_nArray().length -1));
 
-    if( is_last_note && is_last_note_auto_save() )
+    if( is_last_note && notes.is_last_note_auto_save() )
         index = standout_note_index;
 
     document.querySelectorAll(".standout").forEach((el) => el.classList.remove("standout"));
@@ -333,7 +337,8 @@ if(tag_this) console.log("🔵 standout_note_at_index: "+ index);
 /*_ note_scrollIntoView ● Scroll note into viewport {{{*/
 let note_scrollIntoView = function(index=-1)
 {
-if(tag_this) console.log("🔵 note_scrollIntoView: "+ index);
+let caller = "note_scrollIntoView";
+if(tag_this) log(MODULE+caller+"🔵 note_scrollIntoView: "+ index);
 
     let nArray = notes.get_nArray();
     if( !nArray.length ) return;
@@ -356,7 +361,8 @@ let note_row_scrollIntoView_timeout;
 
 let note_row_scrollIntoView = function(tr)
 {
-if(tag_this) console.log("🔵 note_row_scrollIntoView: debounce set");
+let caller = "note_row_scrollIntoView";
+if(tag_this) log(MODULE+caller+"🔵 note_row_scrollIntoView: debounce set");
 
     if(note_row_scrollIntoView_timeout) clearTimeout( note_row_scrollIntoView_timeout );
        note_row_scrollIntoView_timeout =  setTimeout( note_row_scrollIntoView_handler , NOTE_ROW_SCROLLINTOVIEW_DELAY, tr);
@@ -365,7 +371,8 @@ if(tag_this) console.log("🔵 note_row_scrollIntoView: debounce set");
 /*_ note_row_scrollIntoView_handler {{{*/
 let note_row_scrollIntoView_handler = function(tr)
 {
-if(tag_this) console.log("🔵 note_row_scrollIntoView_handler: %c"+ellipsis(tr.innerText.trim(),50), "color: magenta");
+let caller = "note_row_scrollIntoView_handler";
+if(tag_this) log(MODULE+caller+"🔵 note_row_scrollIntoView_handler: %c"+ellipsis(tr.innerText.trim(),50), "color: magenta");
 
     note_row_scrollIntoView_timeout = null;
 
@@ -420,7 +427,8 @@ let getClosestScrollableAncestor = function(el)
 /*_ wider ● Increase textarea width {{{*/
 let wider = function()
 {
-if(tag_this) console.log("🔵 wider");
+let caller = "wider";
+if(tag_this) log(MODULE+caller+"🔵 wider");
 
     let input = get_input();
     if(!input) return;
@@ -432,7 +440,8 @@ if(tag_this) console.log("🔵 wider");
 /*_ narrower ● Decrease textarea width {{{*/
 let narrower = function(e) /* eslint-disable-line no-unused-vars */
 {
-if(tag_this) console.log("🔵 narrower");
+let caller = "narrower";
+if(tag_this) log(MODULE+caller+"🔵 narrower");
 
     let input = get_input();
     if(!input) return;
@@ -444,7 +453,8 @@ if(tag_this) console.log("🔵 narrower");
 /*_ tunesize ● Cycle layout sizes {{{*/
 let tunesize = function(e)
 {
-if(tag_this) console.log("🔵 tunesize");
+let caller = "tunesize";
+if(tag_this) log(MODULE+caller+"🔵 tunesize");
 
     if(!e.target) return;
 
@@ -479,7 +489,8 @@ let update_layout_width = function(w)
 /*_ tune_status ● Cycle status display modes {{{*/
 let tune_status = function(e) /* eslint-disable-line no-unused-vars */
 {
-if(tag_this) console.log("🔵 tune_status");
+let caller = "tune_status";
+if(tag_this) log(MODULE+caller+"🔵 tune_status");
 
     let status_line = get_status_line();
     if(!status_line) return;
@@ -494,7 +505,8 @@ if(tag_this) console.log("🔵 tune_status");
 /*_ show_status ● Display status message {{{*/
 let show_status = function(msg)
 {
-if(tag_this) console.log("🔵 show_status( "+msg+" )");
+let caller = "show_status";
+if(tag_this) log(MODULE+caller+"🔵 show_status( "+msg+" )");
 
     let status_line = get_status_line();
     if(!status_line) return;
@@ -538,7 +550,8 @@ let tail_status = function(...args)
 /*_ tics_status ● Format layout count as bullet string {{{*/
 let tics_status = function( count )
 {
-if(tag_this) console.log("🔵 tics_status: "+ count);
+let caller = "tics_status";
+if(tag_this) log(MODULE+caller+"🔵 tics_status: "+ count);
 
     let   cent = parseInt(       count / 100);
     let   tens = parseInt(       count /  10);
@@ -552,24 +565,6 @@ if(tag_this) console.log("🔵 tics_status: "+ count);
 };
 /*}}}*/
 //}}}
-
-//┌─────────────────────────────────────────────────────────────────[...]
-//│ HELPER STATE CHECKERS       🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣
-//└─────────────────────────────────────────────────────────────────[...]
-/*_ is_last_note_auto_save ● Check if last note is auto-save {{{*/
-let is_last_note_auto_save = function()
-{
-    let nArray = notes.get_nArray();
-   if(!nArray.length )
-       return false;
-
-    if(!nArray[nArray.length-1].text.startsWith(AUTO_SAVE_TAG) )
-       return false;
-
-if(log_this) console.log("🔵 IS_LAST_NOTE_AUTO_SAVE");
-   return true;
-};
-/*}}}*/
 
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ UTILITY
@@ -592,8 +587,9 @@ let escapeHTML = function(text)
 /*● copy_to_clipboard ● Copy text to system clipboard {{{*/
 let copy_to_clipboard = function(buffer)
 {
-if(tag_this) console.log("🔵 copy_to_clipboard");
-if(log_this) console.log( buffer );
+let caller = "copy_to_clipboard";
+if(tag_this) log(MODULE+caller+"🔵 copy_to_clipboard");
+if(log_this) log( buffer );
 
     navigator.clipboard.writeText( buffer );
 };
@@ -672,13 +668,12 @@ let get_status_line = function()
         //│ DEBUG ONLY
         //└──────────────────────────────────────────────────────────────[...]
         , layout_count : () => layout_count
-        , log         : () => { log_this = !log_this; console.log("log_this=["+log_this+"]"); }
-        , tag         : () => { tag_this = !tag_this; console.log("tag_this=["+tag_this+"]"); }
+        , log          : () => { log_this = !log_this; log("log_this=["+log_this+"]"); }
+        , tag          : () => { tag_this = !tag_this; log("tag_this=["+tag_this+"]"); }
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵 ▼▼▼ MVC REFACTORING ZONE ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
 //└────────────────────────────────────────────────────────────────────────────┘
-        , is_last_note_auto_save
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵 ▲▲▲ MVC REFACTORING ZONE ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 //└────────────────────────────────────────────────────────────────────────────┘

@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261030:20h:02)
+//│ js_boxing.js                                           _TAG (261104:19h:55)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -15,24 +15,62 @@
 //}}}
 /* IMPORT {{{*/
 
-/* globals js_md */
-import {   js_md } from "./js_md.js"
+/* globals js_log   */
+/* globals js_md    */
+/* globals js_xpath */
+
+import {   js_log   } from "./js_log.js"
+import {   js_md    } from "./js_md.js"
+import {   js_xpath } from "./js_xpath.js"
 
 /*}}}*/
-let js_boxing = (function() {
-"use strict";
+let js_boxing = (function()
+{
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ ◯  INTERNING ● SERVER/scripts/js_log.js
+//└────────────────────────────────────────────────────────────────────────────┘
+const MODULE = "★🟣 js_boxing\t\t● ";
+let log_this = false;
+let tag_this = false || log_this;
+//{{{
+/* eslint-disable no-unused-vars */
+
+js_log.register( { module_name : "js_boxing"
+                 , module_num  : 0
+                 , log_this_fn : (state) => log_this = state
+                 , tag_this_fn : (state) => tag_this = state } );
+
+let log                                        = js_log.log;
+let console_clear                              = js_log.console_clear;
+
+let ellipsis                                   = js_log.ellipsis;
+let get_src_link                               = js_log.get_src_link;
+
+let lbB                                        = js_log.lbB;
+
+let b_X                                        = js_log.b_X;
+let lbX                                        = js_log.lbX;
+let lfX                                        = js_log.lfX;
+let [b_0,b_1,b_2,b_3,b_4,b_5,b_6 ,b_7,b_8,b_9] = js_log.b_X;
+let [lb0,lb1,lb2,lb3,lb4,lb5,lb6 ,lb7,lb8,lb9] = js_log.lbX;
+let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
+
+/* eslint-enable  no-unused-vars */
+//}}}
+
 /*● onload {{{*/
 const DATA_ATTR_JS_BOXING = "data-js_boxing";
 
 let onload = function(e) /* eslint-disable-line no-unused-vars */
 {
-console.log("2 js_boxing  \t🔴 onload:");
-//console.log("✔ document.readyState=["+document.readyState+"]");
+let caller = "onload";
+if(tag_this) log(MODULE+caller+" 2 js_boxing  \t🔴 onload:");
+if(log_this) log("✔ document.readyState=["+document.readyState+"]");
 
     // GUARD CHECK: ALREADY  FORMATTED {{{
     let value = document.body.getAttribute( DATA_ATTR_JS_BOXING );
     if( value ) {
-        console.log("ALREADY FORMATTED:  "+DATA_ATTR_JS_BOXING+"=["+value+"]");
+        log("...ALREADY FORMATTED:  "+DATA_ATTR_JS_BOXING+"=["+value+"]");
         return;
     }
     //}}}
@@ -55,7 +93,8 @@ console.log("2 js_boxing  \t🔴 onload:");
 /*_ box_out {{{*/
 let box_out = function(e) /* eslint-disable-line no-unused-vars */
 {
-//console.log("js_boxing.box_out:");
+let caller = "box_out";
+if(log_this) log(MODULE+caller);
 
     document.body.innerHTML = ""
       //+ "<button onclick='js_boxing.onload()'>js_boxing.onload()</button>\n"
@@ -81,6 +120,8 @@ const HEX_25A0  = "\u25A0"; // ■
 //}}}
 let text_to_HTML = function(data_in)
 {
+let caller = "text_to_HTML";
+if(log_this) log(MODULE+caller);
     // TRACK CODE-SECTION LINES ● get page header offset to first file content {{{
     let last_BOXD_index;
     let in_code = {};
@@ -93,12 +134,17 @@ let text_to_HTML = function(data_in)
     //}}}
 
     // LINE FILTER {{{
+    let file_name = js_xpath
+        .parse_url(document.location.href)
+        .path
+        .match(/([^\/?#]*)(?:[?#]|$)/)?.[1] ?? "";  // strip any query or fragment
+
     let data_out = "";
     let    lines = data_in.split("\n");
     for(let i = 0; i < lines.length; ++i)
     {
         let l = lines[i];
-//console.log("%c"+l, "background-color: #008;");//FIXME
+if(log_this) log("%c"+l, "background-color: #008;");//FIXME
 
         l =         l.  replace(                  /</g, "&lt;"           ); // html entities
         l =         l.  replace(                  />/g, "&gt;"           ); // html entities
@@ -112,7 +158,7 @@ let text_to_HTML = function(data_in)
         //└────────────────────────────────────────────────────────────────────┘
         if( RGX_VOPEN_OR__VCLOSE_LINE.exec(l) ) {
             data_out += js_md.md_format_header_line(""); // CLOSE ALL PENDING DETAILS
-            l = vim_fold_line(l, i-recently_visited_header_lines);
+            l = vim_fold_line(l, file_name, i-recently_visited_header_lines);
         }
 
         //┌────────────────────────────────────────────────────────────────────┐
@@ -190,7 +236,7 @@ let text_to_HTML = function(data_in)
             if( in_code.line ) {
 //{{{
 //if(in_code.line && (i-in_code.line) > 100)
-//    console.log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
+//    log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
 //               , "background-color: #006"                                                   ,"background-color: #808");
 //}}}
                 l  = "```</pre>\n";
@@ -229,14 +275,17 @@ let text_to_HTML = function(data_in)
         data_out +=             l  ;
     }
     //}}}
-if(in_code.line) {
+//{{{
+if(tag_this && in_code.line)
+{
     let i = lines.length;
-    console.log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
-               , "background-color: #006"                                                  ,"background-color: #A00;");
+    log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
+            ,lf6                                                                    ,lb2              );
 
-    console.log( "❌ %c missing a code-end-marker: %c ``` "
-               , "color: red;"                   ,"background-color: red;");
+    log( "❌ %c missing a code-end-marker: %c ``` "
+            ,lf2                          ,lb2     );
 }
+//}}}
 
     data_out += js_md.md_format_header_line( ""       ); // CLOSE DANGLING DETAILS
     data_out  = js_md.md_format_table      ( data_out );
@@ -278,18 +327,20 @@ const RGX_VOPEN_LINE            = new RegExp(PAT_BLOC  + PAT_VOPEN  + PAT_BLOC  
 const RGX_VCLOSE_LINE           = new RegExp(PAT_BLOC  + PAT_VCLOSE + PAT_BLOC  ); // line contains close vim fold  .. replace
 
 //... REPLACEMENT
-const RPL_VOPEN_AND_VCLOSE_LINE =                   "{{ {$1} }}"                              ; // remove both surrounding folds
-const RPL_VOPEN_LINE            = "<details>\n<summary title='_title_'>$1 $2</summary>\n<pre>"; // vim open  => CLOSE details
-const RPL_VCLOSE_LINE           =                     "$1 $2\n</pre>\n</details>"             ; // vim close => OPEN  details+summary
+const RPL_VOPEN_AND_VCLOSE_LINE = "{{ {$1} }}"                                                       ; // remove both surrounding folds
+const RPL_VOPEN_LINE  = "<details>\n<summary title='_ttl_' data-badge='_lnu_'>$1 $2</summary>\n<pre>"; // vim open  => CLOSE details
+const RPL_VCLOSE_LINE = "$1 $2\n</pre>\n</details>"                                                  ; // vim close => OPEN  details+summary
 
 
 //}}}
-let vim_fold_line = function(l_in, l_num)
+let vim_fold_line = function(l_in, file, l_num)
 {
 
     let l = l_in.replace(RGX_VOPEN_AND_VCLOSE_LINE, RPL_VOPEN_AND_VCLOSE_LINE); // BOTH FIRST
-    l     = l.replace(RGX_VOPEN_LINE              , RPL_VOPEN_LINE           ).replace(/_title_/, "line number "+l_num);
-    l     = l.replace(RGX_VCLOSE_LINE             , RPL_VCLOSE_LINE          );
+    l     = l   .replace(RGX_VOPEN_LINE           , RPL_VOPEN_LINE           )
+                .replace(                  /_ttl_/, "line number "+l_num     )
+                .replace(                  /_lnu_/, file +" line "+l_num     ); // SERVER/style/to_html.css
+    l     = l   .replace(RGX_VCLOSE_LINE          , RPL_VCLOSE_LINE          );
 
     return l;
 };
@@ -304,6 +355,6 @@ let vim_fold_line = function(l_in, l_num)
     };
     //}}}
 })();
-try { module.exports = js_boxing; } catch(ex) { /*console.log(ex.message);*/ /*console.trace();*/ } /* eslint-disable-line no-unused-vars */
+try { module.exports = js_boxing; } catch(ex) { /*log(ex.message);*/ /*console.trace();*/ } /* eslint-disable-line no-unused-vars */
 export { js_boxing }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
 window.js_boxing     = js_boxing;

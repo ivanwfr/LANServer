@@ -1,11 +1,10 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261018:21h:25) │
+//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261104:19h:11) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 /*}}}*/
-let js_store = (function() { /* eslint-disable-line no-unused-vars */
-let log_this = false;
-
+let js_store = (function()
+{
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ● set ● get ● del
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -65,8 +64,6 @@ let get_page_fileName = function()
 
 let parse_location_href = function()
 {
-if(log_this) console.log("◯ get_page_storage_key");
-
     let matches
         = location.href
         .  match(/(^.*\/\/[^\/]*)\/(.*)\/([^\?]*)(.*)/ ,  "");
@@ -80,17 +77,15 @@ if(log_this) console.log("◯ get_page_storage_key");
     let baseName         = matches[1].replace(/\W+/g, "_");
     let pathName         = matches[2].replace(/\W+/g, "_");
     let fileName         = matches[3].replace(/\W+/g, "_");
-    let path_fragment    = matches[4];
+    let path_fragment    = matches[4]; /* eslint-disable-line no-unused-vars */
     let page_storage_key = (pathName+"__"+fileName);
 
 /*{{{*/
-if(log_this) {
-    console.log("◯ baseName         \t\t["+ baseName          +"]\n"
-               +"◯ pathName         \t\t["+ pathName          +"]\n"
-               +"◯ fileName         \t\t["+ fileName          +"]\n"
-               +"◯ path_fragment    \t\t["+ path_fragment     +"]\n"
-               +"◯ page_storage_key \t\t["+ page_storage_key  +"]\n");
-}
+//console.log("◯ baseName         \t\t["+ baseName          +"]\n"
+//           +"◯ pathName         \t\t["+ pathName          +"]\n"
+//           +"◯ fileName         \t\t["+ fileName          +"]\n"
+//           +"◯ path_fragment    \t\t["+ path_fragment     +"]\n"
+//           +"◯ page_storage_key \t\t["+ page_storage_key  +"]\n");
 /*}}}*/
 
     parsed_location_href = { baseName , pathName , fileName , page_storage_key };
@@ -110,9 +105,9 @@ let getArray = function(key)
         let parsed = JSON.parse( val );
         return Array.isArray( parsed ) ? parsed : [];
     }
-    catch( err )
+    catch( err ) /* eslint-disable-line no-unused-vars */
     {
-if(log_this) console.log("🔴  getArray("+key+"): invalid localStorage value:", key, err);
+//console.log("🔴  getArray("+key+"): invalid localStorage value:", key, err);
 
         delItem(get_page_prefix() +"."+ key);
         return [];

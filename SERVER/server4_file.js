@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server4_file.js                                        _TAG (261029:17h:52)
+//│ server4_file.js                                        _TAG (261101:15h:38)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -25,7 +25,7 @@ let { networkInterfaces }       = require("os"   ); /* eslint-disable-line no-un
 let server0_log      = require("./server0_log.js");
 //...{{{
 /* eslint-disable no-unused-vars */
-// INLINING:
+// INTERNING:
 let { log
     ,    toggle
     ,    is_logging
@@ -242,16 +242,24 @@ A:visited {            color: #F0F; }
 }}}*/
    }
    #div_copy.clicked::after {
-     content        : "...path is in the clipboard";
+     content        : "✔ PATH IS IN THE CLIPBOARD";
      font-style     : italic;
      font-size      : 150%;
-     color          : #888F;
+     color          : #0F0;
    }
-   #div_copy.clicked>INPUT {
+   #div_copy.ctrlKey::after {
+     content        : "⚙ OPENING A BLANK TAG...";
+     font-style     : italic;
+     font-size      : 150%;
+     color          : #FF0;
+   }
+   #div_copy.clicked>INPUT,
+   #div_copy.ctrlKey>INPUT {
 /*{{{
-    opacity: 0.5;
+     opacity: 0.5;
+     display: none;
 }}}*/
-    display: none;
+     color          : #0F0;
    }
 /*
    LI:nth-of-type(odd) { padding-left: 3em; }
@@ -264,28 +272,34 @@ A:visited {            color: #F0F; }
  </head>
 <!--}}}-->
  <body> <!--{{{-->
+<!-- COPY -->
   <div   id  ="div_copy"
-      title  ="copy folder path\nto clipboard"
-      onmousedown='this.querySelector("INPUT").select();
-               document.execCommand("copy"); this.classList.add   ("clicked");
-               setTimeout(()              => this.querySelector("A").click() , 2500);
-/*{{{
-}}}*/
-               setTimeout(()              => this.classList.remove("clicked"), 3000);
+      title  ="👆\nclick to copy folder path to clipboard\n⚠ Ctrl will open a blank tag"
+      onmousedown='
+       this                  .querySelector  ( "INPUT"   ).select();
+       document              .execCommand    ( "copy"    );
+                         this.className      = "clicked"  ;
+       if( event.ctrlKey ) {
+        setTimeout(() => this.className      = "ctrlKey"  , 1000);
+        setTimeout(() => this.querySelector("A").click()  , 2500);
+       }
+       setTimeout(() =>  this.className      = ""         , 3000);
       '>
-       
-       Index of<a  href="about:blank"
-          title="copy path and...\n...open a new tab..."
-         target="LANServer drive"
-       ></a>
-       <input type="text" value="{file_path}">
-      </div>
-  <br>      <b    style='margin-left:4em;'                  > {top_title} </b>
-  <br>      <b    style='margin-left:4em;'                  > {link_list} </b>
-  <div>{recent_div}</div>
-  <ul>
-   {dir_items}
-  </ul>
+<!-- FILE_PATH  -->
+        Index of<a  href="about:blank" target="LANServer drive"></a>
+        <input type="text"                      value="_file_path_">
+
+<!-- TOP_TITLE  -->
+        <br>
+        <b style='margin-left:4em;'> _top_title_    </b>
+
+<!-- LINK_LIST  -->
+        <br>
+        <b style='margin-left:4em;'> _link_list_    </b>
+
+  </div>
+<!-- recent_div --> <div>                             _recent_div_ </div>
+<!-- dir_items  --> <ul>                              _dir_items_   </ul>
  </body> <!--}}}-->
 </html>
 `;
@@ -356,11 +370,11 @@ let caller = "fs_readDir";
 
         server0_log.writeHead(response, caller, 200, { "Content-Type": "text/html" });
 
-        response.end( STYLE_DIR.replace("{file_path}" , file_path)
-                      .         replace("{top_title}" , top_title)
-                      .         replace("{link_list}" , link_list)
-                      .         replace("{recent_div}", server5_content.add_recently_visited(request, true)) // is_dir
-                      .         replace("{dir_items}" , dir_items)
+        response.end( STYLE_DIR.replace("_file_path_" , file_path)
+                      .         replace("_top_title_" , top_title)
+                      .         replace("_link_list_" , link_list)
+                      .         replace("_recent_div_", server5_content.add_recently_visited(request, true)) // is_dir
+                      .         replace("_dir_items_" , dir_items)
                     );
     });
     //}}}
