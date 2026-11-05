@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER          ● _TAG (261104:19h:31) │
+//│ notes.js     ● $APROJECTS/LANServer/SERVER           ● _TAG (261105:03h:58)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body
@@ -35,7 +35,7 @@ let notes = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "★🟣 notes\t\t● ";
+const MODULE = "%c★🟡 notes\t\t● ";
 let log_this = false;
 let tag_this = false || log_this;
 //{{{
@@ -140,7 +140,7 @@ let caller = "upload_notes_to_server";
     let server_upload_pending = request_server_upload_pending();
     if(!server_upload_pending )
     {
-if(log_this) log(MODULE+caller+" ● ["+_caller+"] ● Notes unchanged ["+ change_time +"]");
+if(log_this) log(MODULE+caller+" ● ["+_caller+"] ● Notes unchanged ["+ change_time +"]", lbB);
 
         return null;
     }
@@ -152,8 +152,8 @@ if(log_this) log(MODULE+caller+" ● ["+_caller+"] ● Notes unchanged ["+ chang
     //│ ● TODO: ADD URL_KEY FIELD FOR PER-PAGE NOTES_FILE NAMES                │
     //└────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
-if(tag_this) log(MODULE+caller+":\n"
-                 +" ▲ [ "+ _caller               +" ]\n"
+if(tag_this) log(MODULE+caller, lbB);
+if(log_this) log( " ▲ [ "+ _caller               +" ]\n"
                  +" ● [ "+ server_upload_pending +" ]\n"
                  +" ● nArray[ x"+nArray.length   +" ]\n"
                  +" ● time now ["+ change_time   +" ]\n");
@@ -172,11 +172,11 @@ if(log_this) log( JSON.parse( body ) );
               , headers : { "Content-Type": "application/json; charset=utf-8" }
               , body })
     .then ((response) =>    response.json() )
-    .then ((    data) => {  if(tag_this) log  ("Notes upload status:", data); request_server_upload( false ); })
+    .then ((    data) => {  if(log_this) log("Notes upload status:", data); request_server_upload( false ); })
     .catch((     err) => {/*console.error("Notes upload failed:",  err);*/}) /* eslint-disable-line handle-callback-err, no-unused-vars */
     ;
 
-if(tag_this) log(MODULE+caller+b_5+" UPLOADED: ["+ new Date( Date.now() ) +"]");
+if(log_this) log("...UPLOADED: ["+ new Date( Date.now() ) +"]");
     return promise;
 };
 /*}}}*/
@@ -238,7 +238,7 @@ let load_notes = function()
 {
 let caller = "load_notes ";
     let notes_storage_key = get_notes_storage_key();
-if(tag_this) log(MODULE+caller+b_4+" load_notes\t\t  ["+ notes_storage_key +"]");
+if(tag_this) log(MODULE+caller+" "+ notes_storage_key, lbB);
 
     return fetch("/fetch_notes?notes_storage_key="+notes_storage_key)
         .then (( res  ) => res.json())
@@ -258,7 +258,7 @@ if(tag_this) log(MODULE+caller+b_4+" load_notes\t\t  ["+ notes_storage_key +"]")
 let load_server_notes = function(data)
 {
 let caller = "load_server_notes ";
-if(tag_this) log(MODULE+caller+b_4+" load_server_notes(data: "+ (typeof data) +")");
+if(tag_this) log(MODULE+caller+" (data "+ (typeof data) +")", lbB);
 //log("data=["+data+"]");
 
     // SERVER-SIDE NOTES ARRAY
@@ -289,7 +289,7 @@ if(tag_this) log(MODULE+caller+b_4+" load_server_notes(data: "+ (typeof data) +"
 let load_client_notes = function()
 {
 let caller = "load_client_notes ";
-if(tag_this) log(MODULE+caller+b_2+" load_client_notes");
+if(tag_this) log(MODULE+caller, lbB);
 
     let notes_storage_key = get_notes_storage_key();
     try {
@@ -328,54 +328,63 @@ if(tag_this) log(MODULE+caller+b_2+" load_client_notes");
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 SAVE   ● note_1_onclick_save                                         💾 │
+//│{{{
+//│ CALLED BY:
+//│     js_details    onload  visibilitychange
+//│     js_details    onload  js_ticker( auto_save )
+//│     js_details    ......  note_DETAILS.onclick
+//│     js_details    note_5_onclick_edit
+//│     js_input      input_listener(     auto_save )
+//│     js_MODEL                save(     payload   )
+//│}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 //● note_1_onclick_save {{{
 let note_1_onclick_save = function(e_or_payload={})
 {
-//{{{
-let caller = "notes.note_1_onclick_save";
-if(tag_this) log(MODULE+caller+"("+e_or_payload.type+")");
-
-//}}}
-
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ VIEW
+    //│ 🔴 VIEW
     //│ - input
     //│ - js_VIEW.no_input_to_save ...return
     //└────────────────────────────────────────────────────────────────────────┘
-    if( js_VIEW.no_input_to_save(input, e_or_payload) )
-    {
-        return;
-    }
+//{{{
+if( js_VIEW.no_input_to_save(input, e_or_payload) )
+    return;
+
+let caller = "notes.note_1_onclick_save";
+if(tag_this) log(MODULE+caller+"("+e_or_payload.type+")", lbB);
+//}}}
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ DATA
+    //│ 🟡 DATA
     //│ - is_last_note_auto_save
     //│ - nArray
     //└────────────────────────────────────────────────────────────────────────┘
     // data last_note_auto_save:    ➔ DELETE  auto_save NOTE ... {{{
     else if( is_last_note_auto_save()  )
     {
+if(tag_this) log("...deleting auto_save last note #", nArray.length);
         nArray.splice(nArray.length-1, 1);
     }
     //}}}
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ VIEW
-    //│ - input.value ...return
+    //│ 🔴 VIEW
+    //│ - input.value ...RETURN
     //└────────────────────────────────────────────────────────────────────────┘
     // VIEW text_input_empty:       ➔ RETURN {{{
     let  text
         =  e_or_payload.content
         ||        input.value
     ;
-    if( !text )
-        return;
+    if( !text ) {
+if(tag_this) log("...no text to save");
 
+        return;
+    }
     text = text.trim();
     //}}}
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ DATA
+    //│ 🟡 DATA
     //│ - js_CNTRL.get_editing_note_index
     //│ - request_server_upload
     //│ - localStorage
@@ -405,12 +414,15 @@ if(tag_this) log(MODULE+caller+"("+e_or_payload.type+")");
     //}}}
     // data index add:              ➔ SERVER  upload {{{
     else {
+if(log_this) log("...adding note #"+(nArray.length+1)+" ("+text.length+"ch)");
+
         nArray.push(            { text, timestamp: Date.now() });
 
         request_server_upload("Note #"+(nArray.length + 1)+" ADDED");
     }
     //}}}
     // data localStorage:           ➔ STORAGE update {{{
+if(log_this) log("...updating localStorage");
     localStorage.setItem(get_notes_storage_key(), JSON.stringify( nArray ));
 
     //}}}
@@ -420,7 +432,7 @@ if(tag_this) log(MODULE+caller+"("+e_or_payload.type+")");
     //}}}
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ VIEW
+    //│ 🔴 VIEW
     //│ - js_input.reset_input
     //│ - js_notes.layout_notes
     //└────────────────────────────────────────────────────────────────────────┘
@@ -442,7 +454,7 @@ if(tag_this) log(MODULE+caller+"("+e_or_payload.type+")");
 let note_2_onclick_import = function(e)
 {
 let caller = "note_2_onclick_import ";
-if(tag_this) log(MODULE+caller+b_2+" "+e.target.innerText +"note_2_onclick_import");
+if(tag_this) log(MODULE+caller+" "+e.target.innerText, lbB);
     // IF INPUT IS EMPTY {{{
     let buffer = input.value.trim();
     if(!buffer) {
@@ -542,7 +554,7 @@ const NOTE_H_SEP = " ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●
 let note_3_onclick_export = function(e)
 {
 let caller = "note_3_onclick_export ";
-if(tag_this) log(MODULE+caller+b_1+" "+e.target.innerText +"note_3_onclick_export");
+if(tag_this) log(MODULE+caller+" "+e.target.innerText, lbB);
     if(!nArray.length) return;
 
     let buffer = "";
@@ -586,7 +598,7 @@ let center_input_placeholder = function(placeholder,delay)
 let reset_input_placeholder = function()
 {
 let caller = "reset_input_placeholder ";
-if(tag_this) log(MODULE+caller+b_8+" reset_input_placeholder");
+if(tag_this) log(MODULE+caller, lbB);
 
     input.setAttribute(    "placeholder", PLACEHOLDER_CREATE_PROMPT);
 
@@ -602,7 +614,7 @@ if(tag_this) log(MODULE+caller+b_8+" reset_input_placeholder");
 let note_4_onclick_check = function(e,index)
 {
 let caller = "note_4_onclick_check ";
-if(tag_this) log(MODULE+caller+b_4+" note_4_onclick_check: "+ e.type);
+if(tag_this) log(MODULE+caller+" "+ e.type, lbB);
 
     // cancelBubble ● cancel container's click delegation {{{
     e.cancelBubble = true;
@@ -677,7 +689,7 @@ let get_checked = function(index)
 let note_6_onclick_delete = function(e,index)
 {
 let caller = "note_6_onclick_delete ";
-if(tag_this) log(MODULE+caller+b_6+" note_6_onclick_delete: "+ e.type);
+if(tag_this) log(MODULE+caller+" "+ e.type, lbB);
 
     // cancelBubble ● cancel container's click delegation {{{
     e.cancelBubble = true;
@@ -734,7 +746,7 @@ const CLEAR_DELETED_NOTES = "Clear deleted notes";
 let note_7_onclick_wasted = function(e)
 {
 let caller = "note_7_onclick_wasted ";
-if(tag_this) log(MODULE+caller+b_3+" "+e.target.innerText +"note_7_onclick_wasted");
+if(tag_this) log(MODULE+caller+" "+e.target.innerText, lbB);
 
     if(!nArray_wasted.length) return;
 
@@ -862,7 +874,7 @@ let caller = "is_last_note_auto_save";
 //{{{
 if(reason != is_last_note_auto_save_reason)
 {
-if(tag_this) log(MODULE+caller+(reason ? reason:"YES"));
+if(tag_this) log(MODULE+caller+"%c"+(reason ? reason:"YES"), lbB, lf4);
     is_last_note_auto_save_reason = reason;
 }
 //}}}
@@ -956,7 +968,7 @@ let scroll_TR_intoView_handler = function(tr)
 {
 /*{{{*/
 let caller = "scroll_TR_intoView_handler ";
-if(tag_this) log(MODULE+caller+b_7+" scroll_TR_intoView_handler: %c"+ellipsis(tr.innerText.trim(),50), lb0);
+if(tag_this) log(MODULE+caller+"%c\t"+ellipsis(tr.innerText.trim(),50), lbB, lf4);
 
     scroll_TR_intoView_timeout = null;
 /*}}}*/

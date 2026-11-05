@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_log.js        ● $APROJECTS/LANServer/SERVER        ● _TAG (261105:01h:33)
+//│ js_log.js        ● $APROJECTS/LANServer/SERVER        ● _TAG (261105:03h:55)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //│}}}
@@ -233,8 +233,9 @@ let get_src_link = function(lvl=3)
 //│ ELLIPSIS
 //└────────────────────────────────────────────────────────────────────────┘
 /*● ellipsis {{{*/
-let ellipsis = function(str, n=128)
+let ellipsis = function(_str, n=128)
 {
+    let str = _str.replace(/\n/g,"↲");
     return  str
         ? ((str.length > n) ? str.slice(0, n - 1) + "… " : str)
         : ""

@@ -1,61 +1,152 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_md.js                                               _TAG (261031:18h:13)
+//│ js_md.js                                               _TAG (261105:21h:38)
+//├────────────────────────────────────────────────────────────────────────────┤
+//│{{{
+//│ *md_format_header_line* Opens and Close a DETAILS>SUMMARY,PRE for each MD header
+//│}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 let js_md = (function() {
-"use strict";
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ OPEN AND CLOSE A *DETAILS > SUMMARY , PRE* FOR EACH *MD HEADER*
+//└────────────────────────────────────────────────────────────────────────────┘
 /*● md_format_header_line {{{*/
-let md_head_level = 0;
-let md_format_header_line  = function(l_in, l_num)
+// GFM REGEX {{{
+//............/^0-3space(......)...[spac](few)..[space$]
+let md_head_level = null;
+//}}}
+let md_format_header_line  = function(l_in, file, l_num) /* eslint-disable-line no-unused-vars */
 {
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ IGNORE NON-MARKDOWN CONTENT LINES
+    //└────────────────────────────────────────────────────────────────────────┘
     if( document_contains_hash_comment(document.location.pathname) )
         return l_in;
     let l_out = "";
-    // CLOSE ANY OPENED HEADER {{{
-    if(!l_in)
-    {
-        while(md_head_level)
-        {
-            l_out += ""
-              //+    "md_head_level=["+md_head_level+"]\n" // DEBUG
-                +    "</pre>\n</details>";
-            md_head_level -= 1;
-        }
-        return l_out;
-    }
-    //}}}
-    // COUNT POUND SIGNS (1..6) {{{
-    let count = 1+ l_in.lastIndexOf("#");
-    if(!count)
-        return l_in;
 
-    //}}}
-//    // DETAILS LEVEL END ALL WITH LEVEL ABOVE THIS ONE {{{
-//    while(count <= md_head_level )
-//    {
-//        l_out +=  "\n</pre>\n</details>";
-//        md_head_level -= 1;
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ CLOSING PREVIOUS HEADERS
+    //├────────────────────────────────────────────────────────────────────────┤
+    //│ *rank*       ● HEADER LEVEL GFM COMPLYING
+    //│ - min: 1
+    //│ - max: 6
+    //│ - An empty line will be received at EOF
+    //│   as a request to close all headers.
+    //└────────────────────────────────────────────────────────────────────────┘
+      let rank       = rank_of(l_in); /* eslint-disable-line no-unused-vars */
+//    // close_sub_headers {{{
+//    l_out += close_sub_headers( 0 ); // CLOSE ALL HEADER
+//    //}}}
+//{{{
+// console.log(""
+// + "┌─────────────────────────────────┐\n"
+// +   l_in                           + "\n"
+// + "● rank......=["+rank            +"]\n"
+// + "└─────────────────────────────────┘"
+// );
+//}}}
+//{{{
+//    let eof = l_in.match(/^\s*EOF/);
+//    if( eof || rank )
+//        l_out += close_sub_headers( rank );
+//    else
+//        l_out  = l_in;
+//}}}
+    if(rank)
+        l_out = l_in.replace(/^ *#+ *(.*?) *$/, "<H"+rank+">$1</H"+rank+">");
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ OPENING A NEW HEADER
+    //├────────────────────────────────────────────────────────────────────────┤
+    //│ *md_head_level* is the static **CURRENT HEADER LEVEL**
+    //│ - It will have to be closed
+    //│   before opening the next higher rank header
+    //│   or when handling EOF.
+    //└────────────────────────────────────────────────────────────────────────┘
+//    // md_fold_line {{{
+//    if(rank > 0) {
+//        md_head_level += 1;
+//        l_out += md_fold_line(l_in, file, l_num);
 //    }
 //    //}}}
-    // CLOSE ALL markdown folds - single level for any # of # {{{
-    while( md_head_level )
+//{{{
+//if( l_in.match(/^\s*EOF/) ) console.log("md_format_header_line:\n"+ l_in);
+// console.log(""
+// + "┌─────────────────────────────────┐\n"
+// +    l_in                          + "\n"
+// + "● rank...=["+rank   +"]\n"
+// + "● md_head_level=["+md_head_level+"]\n"
+// + "└─────────────────────────────────┘"
+// );
+//}}}
+
+    return l_out || l_in;
+};
+/*}}}*/
+/*_ rank_of {{{*/
+const RGX_ATX = /^ {0,3}(#{1,6})(?:[ \t]+(.*?))?[ \t]*$/;   // GFM-correct
+let rank_of = function(l)
+{
+    let    m = l.match(RGX_ATX);
+    return m
+        ? m[1].length
+        : 0
+    ;
+};
+/*}}}*/
+/*_ close_sub_headers {{{*/
+let close_sub_headers = function(rank) /* eslint-disable-line no-unused-vars */
+{
+    // NO HEADER TO CLOSE ON FIRST PAGE ACCESS
+    if(md_head_level == null)
     {
-        l_out +=  "\n</pre>\n</details>";
+        md_head_level = 0;
+        return "";
+    }
+
+    // CLOSE SUB HEADERS
+    let l_out = "";
+    while(   (md_head_level >  0         )
+          && (md_head_level >= rank))
+    {
+        l_out += "</pre>\n</details>\n"
+            +    "<!-- md_head_close='"+md_head_level+"' -->\n";
         md_head_level -= 1;
     }
-
-    //}}}
-    // DETAILS LEVEL START .. [LEVEL > 0] {{{
-    if(count > 0) {
-        l_out += l_in.replace(/(^ *#+.*)/, "<details>\n<summary title='line number "+l_num+"'>$1</summary>\n<pre>");
-      //l_out += l_in.replace(/^ *#+(.*)/, "<details>\n<summary>$1</summary>\n<pre>");
-
-        md_head_level += 1;
-    }
-    //}}}
     return l_out;
 };
 /*}}}*/
-/*_ md_format_line_style {{{*/
+/*_ md_fold_line {{{*/
+// MD_HEADER REGEX ➔ REPLACEMENT {{{
+
+//... PATTERN
+const PAT_MD_HEADER       = "^ *(#+) +"; // CAPTURING BLOC
+const PAT_TAIL            = "(.*) *$"  ; // CAPTURING BLOC
+
+//... REGEX
+const RGX_MD_HEADER_LINE  = new RegExp(PAT_MD_HEADER + PAT_TAIL);
+
+//... REPLACEMENT
+const RPL_SUMMARY_TTL_LNU
+    = "<!-- md_head_open='_MD_HEAD_LEVEL_' -->"
+    + "<details>\n<summary title='_TTL_' data-badge='_LNU_'>$1 $2</summary>\n<pre>";
+
+//}}}
+let md_fold_line = function(l_in, file, l_num) /* eslint-disable-line no-unused-vars */
+{
+    let l = l_in
+        .    replace(RGX_MD_HEADER_LINE           , RPL_SUMMARY_TTL_LNU      )
+        .    replace(                  /_TTL_/    , "line number "+l_num     )
+        .    replace(                  /_LNU_/    , file +" line "+l_num     ) // SERVER/style/to_html.css
+    ;
+
+    l   =  l.replace(/_MD_HEAD_LEVEL_/, md_head_level);
+    return l;
+};
+/*}}}*/
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ FORMAT MD *EMPHASIS* AND *STRONG* TEXT STYLES
+//└────────────────────────────────────────────────────────────────────────────┘
+/*● md_format_line_style {{{*/
 let md_format_line_style = function(l_in)
 {
     // @see SERVER/style/to_html.css
@@ -69,6 +160,9 @@ let md_format_line_style = function(l_in)
     return l_out;
 };
 /*}}}*/
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ FORMAT *MD TABLE*
+//└────────────────────────────────────────────────────────────────────────────┘
 /*● md_format_table {{{*/
 const RGX_TABLE_SEP    = new RegExp("-+ *:* *\| *:* *-+");
 
@@ -301,6 +395,9 @@ let document_contains_hash_comment = function(pathname)
     return result;
 };
 /*}}}*/
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ PUBLIC
+//└────────────────────────────────────────────────────────────────────────────┘
     // return {{{
     return { name: "js_md"
         ,    md_format_header_line

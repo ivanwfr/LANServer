@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261104:20h:22)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261106:00h:03)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -180,9 +180,10 @@ let format_summary_comments = function()
     //}}}
     // populate em_hide title
     let em_hide      = top_details.querySelector(".em_hide");
-    em_hide.title = ""
-    +"⚫ … will hide all closed sections\n"
-    +"🟡 … will unhide currently hidden";
+    if( em_hide )
+        em_hide.title = ""
+            +"⚫ … will hide all closed sections\n"
+            +"🟡 … will unhide currently hidden";
 };
 /*}}}*/
 /*_ toggle_wrap {{{*/
@@ -289,14 +290,14 @@ let toggle_hide = function(e)
         if( hidden_array.length > 0)
         {
             hidden_array
-                .forEach((el) => {              toggle_hide_element(top_details, el, false); }); // unhide
+            .forEach((el) => {              toggle_hide_element(top_details, el, false); }); // UNHIDE
         }
         else {
             top_details. parentElement.querySelectorAll(":scope >DETAILS")
-                .forEach((el) => { if(!el.open) toggle_hide_element(top_details, el,  true); }); // hide
+            .forEach((el) => { if(!el.open) toggle_hide_element(top_details, el,  true); }); // HIDE
         }
     }
-    else {                         toggle_hide_element(top_details, details  ); }   //  toggle
+    else {                                  toggle_hide_element(top_details, details  ); }   // TOGGLE
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ colorize top_details em_hide button
@@ -318,9 +319,10 @@ let toggle_hide = function(e)
 };
 /*}}}*/
 /*_ toggle_hide_element {{{*/
+let place_holder_nb = 0;
 let toggle_hide_element = function(top_details, details, hide_unhide_or_toggle)
 {
-    if(top_details == details) return;  // dodge forEach call on itself
+    if(top_details == details) return;  // dodge element hinding in itself
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ 1/3 ● HIDE
     //│ 2/3 ● UNHIDE
@@ -333,16 +335,33 @@ let toggle_hide_element = function(top_details, details, hide_unhide_or_toggle)
     ;
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ HIDE or UNHIDE element
+    //│ HIDE or UNHIDE DETAILS ELEMENT
     //└────────────────────────────────────────────────────────────────────────┘
     if( hiding )
     {
+        // CLOSE MOVING ELEMENT
         details.open = false;
-        top_details              .insertBefore(details, null); // hide inside top_details
+
+        // GOING_BACK_TO_ANCHOR [place_holder_id]
+        let place_holder_id     = details.getAttribute("place_holder_id");
+        if(!place_holder_id)
+        {
+            let place_holder    = document.createElement("DIV");
+                place_holder.id = "place_holder_"+(++place_holder_nb);
+            details.parentElement.insertBefore(place_holder, details);
+            details.setAttribute("place_holder_id"   , place_holder.id   );
+        }
+        // HIDE
         details.classList.add   ("hidden");
+        top_details              .insertBefore(details, null); // hide inside top_details
     }
     else {
-        top_details.parentElement.insertBefore(details, null); // unhide: bottom of first level container
+        // MOVING BACK TO [place_holder_id] DOCUMENT ANCHOR
+        let place_holder_id     = details .getAttribute("place_holder_id"   );
+        let place_holder        = document.getElementById( place_holder_id );
+        place_holder.parentElement.insertBefore(details, place_holder.nextElementSibling);
+
+        // SHOW
         details.classList.remove("hidden");
     }
 };
@@ -533,7 +552,7 @@ if(log_this) {
 //{{{
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261101:04h:54)
+//│ url_to_href.js                                       ● _TAG (261105:16h:39)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{

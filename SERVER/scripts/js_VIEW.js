@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (261105:01h:30) │
+//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (261105:03h:09) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //{{{
 //│ Here is how `js_VIEW.js` can be structured
@@ -175,11 +175,15 @@ let caller = "no_input_to_save";
         reason = "e.type == auto_save";
     }
     //}}}
+    else if(e.type == "payload")
+    {
+        reason = false;
+    }
 //{{{
 if(reason != no_input_to_save_reason)
 {
-if(tag_this) log(MODULE+caller+": "+reason, lbB+lf6);
-    no_input_to_save_reason    =    reason;
+if(tag_this) log(MODULE+caller+": "+(reason || e.type), lbB+lf6);
+    no_input_to_save_reason    =    (reason || e.type);
 }
 //}}}
     return reason;

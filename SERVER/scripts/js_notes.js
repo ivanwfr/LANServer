@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_notes.js ● $APROJECTS/LANServer/SERVER      ● _TAG (261104:19h:05)
+//│ js_notes.js ● $APROJECTS/LANServer/SERVER     ● _TAG (261105:03h:47)
 //├─────────────────────────────────────────────────────────────────[...]
 //│{{{
 //│ 🔵 View Helper: Renders, layouts, and scrolls notes in the DOM
@@ -34,7 +34,7 @@ let js_notes    = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "★ js_notes\t\t● ";
+const MODULE = "%c★🟢 js_notes\t● ";
 let log_this = false;
 let tag_this = false  || log_this;
 //{{{
@@ -91,7 +91,7 @@ let layout_count = 0;
 let add_notes_DETAILS = function(args)
 {
 let caller = "add_notes_DETAILS";
-if(tag_this) log(MODULE+caller+"🔵 add_notes_DETAILS");
+if(tag_this) log(MODULE+caller+" add_notes_DETAILS", lbB);
 
     //┌─────────────────────────────────────────────────────────────[...]
     //│ CACHE DOM REFERENCES (from js_notes context, passed by VIEW)
@@ -103,18 +103,16 @@ if(tag_this) log(MODULE+caller+"🔵 add_notes_DETAILS");
     //│ VERIFY DOM AVAILABILITY
     //└─────────────────────────────────────────────────────────────[...]
     if(!saved_notes_DIV  ) {
-        if(log_this) log(MODULE+"%c● saved_notes_DIV not found", lb1+lbB);
+if(log_this) log("...saved_notes_DIV not found");
         return false;
     }
     if(!saved_notes_TABLE) {
-        if(log_this) log(MODULE+"%c● saved_notes_TABLE not found", lb1+lbB);
+if(log_this) log("...saved_notes_TABLE not found");
         return false;
     }
 
-    if(log_this) {
-        log(MODULE+"%c● saved_notes_DIV  :\t"+ (saved_notes_DIV   && saved_notes_DIV  .tagName), lf6 );
-        log(MODULE+"%c● saved_notes_TABLE:\t"+ (saved_notes_TABLE && saved_notes_TABLE.tagName), lf6 );
-    }
+if(log_this) log("...saved_notes_DIV..: "+ (saved_notes_DIV   && saved_notes_DIV  .tagName));
+if(log_this) log("...saved_notes_TABLE: "+ (saved_notes_TABLE && saved_notes_TABLE.tagName));
 
     return true;
 };
@@ -134,13 +132,13 @@ if(tag_this) log(MODULE+caller+"🔵 add_notes_DETAILS");
 let layout_notes = function(_caller="?", index_arg=-1)
 {
 let caller = "layout_notes";
-if(tag_this) log(MODULE+caller+"🔵 layout_notes ← "+ _caller);
+if(tag_this) log(MODULE+caller+" ← "+ _caller, lbB);
 
     //┌──────────────────────────────────────────────────────────────[...]
     //│ ENSURE TABLE IS AVAILABLE
     //└──────────────────────────────────────────────────────────────[...]
     if(!saved_notes_TABLE) {
-        if(log_this) log(MODULE+"%c● layout_notes: TABLE NOT FOUND", lb1+lbB);
+if(log_this) log("...TABLE NOT FOUND", lb1+lbB);
         return;
     }
 
@@ -187,11 +185,10 @@ if(tag_this) log(MODULE+caller+"🔵 layout_notes ← "+ _caller);
     //│ DEBUG: Log layout operation
     //└──────────────────────────────────────────────────────────────[...]
     if(log_this) {
-        log(MODULE+"%c"+caller                                   , lf6     );
-        log(MODULE+"%c● _caller...:\t%c["+ _caller           +"]", lf6, lb0);
-        log(MODULE+"%c● index.....:\t%c["+ index_arg         +"]", lf6, lb1);
-        log(MODULE+"%c● layout_cnt:\t%c["+ layout_count      +"]", lf6, lb2);
-        log(MODULE+"%c● nArray.len:\t%c["+ nArray.length     +"]", lf6, lb3);
+        log("%c● _caller...:\t%c["+ _caller           +"]", lf6, lb0);
+        log("%c● index.....:\t%c["+ index_arg         +"]", lf6, lb1);
+        log("%c● layout_cnt:\t%c["+ layout_count      +"]", lf6, lb2);
+        log("%c● nArray.len:\t%c["+ nArray.length     +"]", lf6, lb3);
     }
 };
 /*}}}*/
@@ -303,7 +300,7 @@ let standout_note_index;
 let standout_note_at_index = function(index)
 {
 let caller = "standout_note_at_index";
-if(tag_this) log(MODULE+caller+"🔵 standout_note_at_index: "+ index);
+if(tag_this) log(MODULE+caller+"(index "+index+")", lbB);
 
     if(index < 0)
         index = standout_note_index;
@@ -338,7 +335,7 @@ if(tag_this) log(MODULE+caller+"🔵 standout_note_at_index: "+ index);
 let note_scrollIntoView = function(index=-1)
 {
 let caller = "note_scrollIntoView";
-if(tag_this) log(MODULE+caller+"🔵 note_scrollIntoView: "+ index);
+if(tag_this) log(MODULE+caller+"(index "+ index+")", lbB);
 
     let nArray = notes.get_nArray();
     if( !nArray.length ) return;
@@ -362,7 +359,7 @@ let note_row_scrollIntoView_timeout;
 let note_row_scrollIntoView = function(tr)
 {
 let caller = "note_row_scrollIntoView";
-if(tag_this) log(MODULE+caller+"🔵 note_row_scrollIntoView: debounce set");
+if(tag_this) log(MODULE+caller+": debounce set", lbB);
 
     if(note_row_scrollIntoView_timeout) clearTimeout( note_row_scrollIntoView_timeout );
        note_row_scrollIntoView_timeout =  setTimeout( note_row_scrollIntoView_handler , NOTE_ROW_SCROLLINTOVIEW_DELAY, tr);
@@ -372,7 +369,7 @@ if(tag_this) log(MODULE+caller+"🔵 note_row_scrollIntoView: debounce set");
 let note_row_scrollIntoView_handler = function(tr)
 {
 let caller = "note_row_scrollIntoView_handler";
-if(tag_this) log(MODULE+caller+"🔵 note_row_scrollIntoView_handler: %c"+ellipsis(tr.innerText.trim(),50), "color: magenta");
+if(tag_this) log(MODULE+caller+"%c\t"+ellipsis(tr.innerText.trim(),50), lbB, lf5);
 
     note_row_scrollIntoView_timeout = null;
 
@@ -428,7 +425,7 @@ let getClosestScrollableAncestor = function(el)
 let wider = function()
 {
 let caller = "wider";
-if(tag_this) log(MODULE+caller+"🔵 wider");
+if(tag_this) log(MODULE+caller, lbB);
 
     let input = get_input();
     if(!input) return;
@@ -441,7 +438,7 @@ if(tag_this) log(MODULE+caller+"🔵 wider");
 let narrower = function(e) /* eslint-disable-line no-unused-vars */
 {
 let caller = "narrower";
-if(tag_this) log(MODULE+caller+"🔵 narrower");
+if(tag_this) log(MODULE+caller, lbB);
 
     let input = get_input();
     if(!input) return;
@@ -454,7 +451,7 @@ if(tag_this) log(MODULE+caller+"🔵 narrower");
 let tunesize = function(e)
 {
 let caller = "tunesize";
-if(tag_this) log(MODULE+caller+"🔵 tunesize");
+if(tag_this) log(MODULE+caller, lbB);
 
     if(!e.target) return;
 
@@ -490,7 +487,7 @@ let update_layout_width = function(w)
 let tune_status = function(e) /* eslint-disable-line no-unused-vars */
 {
 let caller = "tune_status";
-if(tag_this) log(MODULE+caller+"🔵 tune_status");
+if(tag_this) log(MODULE+caller, lbB);
 
     let status_line = get_status_line();
     if(!status_line) return;
@@ -506,7 +503,7 @@ if(tag_this) log(MODULE+caller+"🔵 tune_status");
 let show_status = function(msg)
 {
 let caller = "show_status";
-if(tag_this) log(MODULE+caller+"🔵 show_status( "+msg+" )");
+if(tag_this) log(MODULE+caller+" %c"+ msg, lbB, lb0);
 
     let status_line = get_status_line();
     if(!status_line) return;
@@ -551,7 +548,7 @@ let tail_status = function(...args)
 let tics_status = function( count )
 {
 let caller = "tics_status";
-if(tag_this) log(MODULE+caller+"🔵 tics_status: "+ count);
+if(tag_this) log(MODULE+caller+"(count "+ count +")", lbB);
 
     let   cent = parseInt(       count / 100);
     let   tens = parseInt(       count /  10);
@@ -588,7 +585,7 @@ let escapeHTML = function(text)
 let copy_to_clipboard = function(buffer)
 {
 let caller = "copy_to_clipboard";
-if(tag_this) log(MODULE+caller+"🔵 copy_to_clipboard");
+if(tag_this) log(MODULE+caller, lbB);
 if(log_this) log( buffer );
 
     navigator.clipboard.writeText( buffer );

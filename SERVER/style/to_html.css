@@ -16,6 +16,9 @@ summary::after {
 }
 summary:hover::after {
     color           :   #FFFF;
+    transform       : scale(2);
+    transform-origin: 100% 100%;
+    transition      : transform 0.3s ease-out;
 }
 /*}}}*/
 /* md ● em ● strong {{{*/

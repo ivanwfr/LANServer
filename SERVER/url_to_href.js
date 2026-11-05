@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261101:04h:54)
+//│ url_to_href.js                                       ● _TAG (261105:16h:39)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
 // RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
@@ -269,6 +269,8 @@ let parse_sub_folders = function(href, root, folder, path)
 /*{{{ SAMPLE LINKS
 
     basename =
+                   js_linkify.js
+           scripts/js_linkify.js
     SERVER/scripts/js_linkify.js
     /USR/ivan/VIM/mapKeys.func.vim
                   mapKeys.func.vim
