@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_md.js                                               _TAG (261105:21h:38)
+//│ js_md.js                                               _TAG (261107:02h:43)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //│ *md_format_header_line* Opens and Close a DETAILS>SUMMARY,PRE for each MD header
@@ -52,7 +52,7 @@ let md_format_header_line  = function(l_in, file, l_num) /* eslint-disable-line 
 //        l_out  = l_in;
 //}}}
     if(rank)
-        l_out = l_in.replace(/^ *#+ *(.*?) *$/, "<H"+rank+">$1</H"+rank+">");
+        l_out = l_in.replace(/^ *#+ *(.*?) *$/, "<h"+rank+">$1</h"+rank+">");
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ OPENING A NEW HEADER
@@ -143,23 +143,135 @@ let md_fold_line = function(l_in, file, l_num) /* eslint-disable-line no-unused-
     return l;
 };
 /*}}}*/
+
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ FORMAT MD *EMPHASIS* AND *STRONG* TEXT STYLES
+//│ FORMAT MD *EMPHASIS* AND *STRONG* TEXT STYLES @see SERVER/style/to_html.css
 //└────────────────────────────────────────────────────────────────────────────┘
 /*● md_format_line_style {{{*/
+/* eslint-disable quotes */
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ USE A UNIQUE PLACEHOLDER THAT WON'T COLLIDE WITH USER CONTENT
+//└────────────────────────────────────────────────────────────────────────────┘
+const ESCAPE_PREFIX = '\x00MD_ESC\x00';
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ BROADER CHARACTER CLASS FOR GFM / UTF-8 SUPPORT
+//│ MATCHES ANY WORD-LIKE CHARACTER INCLUDING
+//│ UNICODE LETTERS, DIGITS, HYPHENS, DOTS
+//└────────────────────────────────────────────────────────────────────────────┘
+const WORD = `(?:[\\p{L}\\p{N}_\\.=<>+*/\\\\(){}\\[\\];:,!?'"#@$%^&~\`|]|${ESCAPE_PREFIX}SPACE${ESCAPE_PREFIX})+`;
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ REGEX ● COMPILED ONCE AT MODULE LOAD, REUSED ON EVERY CALL
+//└────────────────────────────────────────────────────────────────────────────┘
+//{{{
+const RE_CODE_BLOCK   = /```([\s\S]*?)```/g; // literal — already cached
+const RE_CODE_INLINE  = new RegExp(         `\x60(${WORD})\x60`      , 'gu');
+const RE_STRIKE       = new RegExp(           `~~(${WORD})~~`        , 'gu');
+const RE_S_BOLDITALIC = new RegExp(    `\\*\\*\\*(${WORD})\\*\\*\\*` , 'gu');
+const RE_S_BOLD       = new RegExp(       `\\*\\*(${WORD})\\*\\*`    , 'gu');
+const RE_S_ITALIC     = new RegExp(          `\\*(${WORD})\\*`       , 'gu');
+const RE_QUOTE        = new RegExp(`(?<![\\p{L}\\p{N}])${ESCAPE_PREFIX}QUOTE${ESCAPE_PREFIX}(${WORD})${ESCAPE_PREFIX}QUOTE${ESCAPE_PREFIX}`  , 'gu');
+const RE_DQUOTE       = new RegExp(`(?<![\\p{L}\\p{N}])${ESCAPE_PREFIX}DQUOTE${ESCAPE_PREFIX}(${WORD})${ESCAPE_PREFIX}DQUOTE${ESCAPE_PREFIX}`, 'gu');
+
+// WORD for CONTENT inside emphasis (includes letters, digits, dots, hyphens, spaces, underscores)
+const WORD_CONTENT    = `(?:[\\p{L}\\p{N}_.\\-]|${ESCAPE_PREFIX}SPACE${ESCAPE_PREFIX})+`;
+
+// Underscore italic: _ not preceded/followed by word char or underscore
+const RE_U_ITALIC     = new RegExp(`(?<![\\p{L}_])_(${WORD_CONTENT})_(?![\\p{L}_])`    , 'gu');
+
+// Underscore bold: __ not preceded/followed by word char or underscore
+const RE_U_BOLD       = new RegExp(`(?<![\\p{L}_])__(${WORD_CONTENT})__(?![\\p{L}_])`  , 'gu');
+
+// Underscore bold+italic: ___ not preceded/followed by word char or underscore
+const RE_U_BOLDITALIC = new RegExp(`(?<![\\p{L}_])___(${WORD_CONTENT})___(?![\\p{L}_])`, 'gu');
+
+//┌────────────────────────────────────────────────────────────────────────┐
+//│ RESTORE ESCAPED CHARACTERS
+//└────────────────────────────────────────────────────────────────────────┘
+const ESC = (name) => new RegExp(ESCAPE_PREFIX + name + ESCAPE_PREFIX, 'g');
+const RE_R_STAR       = ESC('BS_STAR'     );
+const RE_R_UNDER      = ESC('BS_UNDER'    );
+const RE_R_TILDE      = ESC('BS_TILDE'    );
+const RE_R_BACKTICK   = ESC('BS_BACKTICK' );
+const RE_R_QUOTE      = ESC('QUOTE'       );
+const RE_R_DQUOTE     = ESC('DQUOTE'      );
+const RE_R_SPACE      = ESC('SPACE'       );
+const RE_R_ESC_QUOTE  = ESC('ESC_QUOTE'   );
+const RE_R_ESC_DQUOTE = ESC('ESC_DQUOTE'  );
+const RE_R_STRIP      = new RegExp(ESCAPE_PREFIX, 'g');
+
+//}}}
+
 let md_format_line_style = function(l_in)
 {
-    // @see SERVER/style/to_html.css
-    let l_out
-        = l_in
-        .replace(              /\\\*/g,"_backslash_star_"                ) // mask   escaped star
-        .replace(/\*\*([^\*\|]+)\*\*/g,"<strong class='md b'>$1</strong>")
-        .replace(    /\*([^\*\|]+)\*/g,"<em     class='md i'>$1</em>"    )
-        .replace(  /_backslash_star_/g,"*"                               ) // unmask escaped star
-    ;
+    let l_out = l_in;
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ESCAPE SPECIAL CHARACTERS WITH UNIQUE PLACEHOLDERS
+    //└────────────────────────────────────────────────────────────────────────┘
+    l_out = l_out
+        .replace(/\\\*/g, ESCAPE_PREFIX + 'BS_STAR'     + ESCAPE_PREFIX)
+        .replace( /\\_/g, ESCAPE_PREFIX + 'BS_UNDER'    + ESCAPE_PREFIX)
+        .replace( /\\~/g, ESCAPE_PREFIX + 'BS_TILDE'    + ESCAPE_PREFIX)
+        .replace( /\\`/g, ESCAPE_PREFIX + 'BS_BACKTICK' + ESCAPE_PREFIX)
+        .replace(   /'/g, ESCAPE_PREFIX + 'QUOTE'       + ESCAPE_PREFIX)
+        .replace( /\\"/g, ESCAPE_PREFIX + 'ESC_DQUOTE'  + ESCAPE_PREFIX)
+        .replace( /\\'/g, ESCAPE_PREFIX + 'ESC_QUOTE'   + ESCAPE_PREFIX)
+        .replace(   /"/g, ESCAPE_PREFIX + 'DQUOTE'      + ESCAPE_PREFIX)
+        .replace(   / /g, ESCAPE_PREFIX + 'SPACE'       + ESCAPE_PREFIX)
+        ;
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ DECORATE MARKDOWN — ORDER: STRONGEST FIRST TO AVOID NESTING ISSUES
+    //└────────────────────────────────────────────────────────────────────────┘
+    l_out = l_out
+        // STRIKETHROUGH (GFM)
+        .replace(RE_STRIKE       ,           `<del class="md d">$1</del>`        )
+
+        // BOLD+ITALIC
+        .replace(RE_S_BOLDITALIC ,    `<strong><em class="md b i">$1</em></strong>`)
+        .replace(RE_U_BOLDITALIC ,    `<strong><em class="md b i">$1</em></strong>`)
+
+        // BOLD
+        .replace(RE_S_BOLD       ,        `<strong class="md b">$1</strong>`     )
+        .replace(RE_U_BOLD       ,        `<strong class="md b">$1</strong>`     )
+
+        // ITALIC
+        .replace(RE_S_ITALIC     ,            `<em class="md i">$1</em>`         )
+        .replace(RE_U_ITALIC     ,            `<em class="md i">$1</em>`         )
+
+        // CODE
+        .replace(RE_CODE_BLOCK   ,  `<pre class="md code"><code>$1</code></pre>`)
+        .replace(RE_CODE_INLINE  ,          `<code class="md c">$1</code>`)
+
+        // STRINGS
+        .replace(RE_DQUOTE       ,            '<em class="md s">$1</em>')
+        .replace(RE_QUOTE        ,            '<em class="md s">$1</em>')
+        ;
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ RESTORE ESCAPED CHARACTERS
+    //└────────────────────────────────────────────────────────────────────────┘
+    l_out = l_out
+        .replace(RE_R_STAR       , '*')
+        .replace(RE_R_UNDER      , '_')
+        .replace(RE_R_TILDE      , '~')
+        .replace(RE_R_BACKTICK   , '`')
+        .replace(RE_R_QUOTE      , "'")
+        .replace(RE_R_DQUOTE     , '"')
+        .replace(RE_R_SPACE      , ' ')
+        .replace(RE_R_ESC_QUOTE  , "'")
+        .replace(RE_R_ESC_DQUOTE , '"')
+        .replace(RE_R_STRIP      ,  '')
+        ;
+
     return l_out;
 };
+/* eslint-enable  quotes */
 /*}}}*/
+
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ FORMAT *MD TABLE*
 //└────────────────────────────────────────────────────────────────────────────┘

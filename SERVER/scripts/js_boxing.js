@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261105:23h:18)
+//│ js_boxing.js                                           _TAG (261107:02h:58)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -156,26 +156,30 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
         //┌────────────────────────────────────────────────────────────────────┐
         //│ VIM FOLD DETAILS
         //└────────────────────────────────────────────────────────────────────┘
-        if( RGX_VOPEN_OR__VCLOSE_LINE.exec(l) ) {
+        if( RGX_VOPEN_OR__VCLOSE_LINE.exec(l) )
+        {
           //data_out += js_md.md_format_header_line(""); // CLOSE ALL PENDING DETAILS
             l =  vim_fold_line        (l, file_name, i-recently_visited_header_lines);
+
 //if( l.includes("<!-- vim_fold") ) log(l);
         }
+        //┌────────────────────────────────────────────────────────────────────┐
+        //│ MARKDOWN * ➔ font-style
+        //└────────────────────────────────────────────────────────────────────┘
+        else if( l.match(/[\*_~`'"][\S ]+[\*_~`'"]/) )
+        {
+            l = js_md.md_format_line_style( l );
 
+        }
         //┌────────────────────────────────────────────────────────────────────┐
         //│ MARKDOWN # ➔ DETAILS
         //└────────────────────────────────────────────────────────────────────┘
         if( l.match(/^ *#|^\s*EOF/) ) {
             l = js_md
                 .md_format_header_line(l, file_name, i-recently_visited_header_lines);
+
 //if( l.includes("<!-- md_head") ) log(l);
         }
-
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ MARKDOWN * ➔ font-style
-        //└────────────────────────────────────────────────────────────────────┘
-        if( l.match(/\*.*\*/) ) l = js_md.md_format_line_style( l );
-
         //┌────────────────────────────────────────────────────────────────────┐
         //│ BOXING
         //└────────────────────────────────────────────────────────────────────┘
@@ -234,7 +238,7 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
         //│ ENTERING OR LEAVING CODE SECTION
         //└────────────────────────────────────────────────────────────────────┘
         let       s = l.trim();
-        let matches = RGX_CODE.exec( s );
+        let matches = RGX_CODE.exec( lines[i] );
         if( matches )
         {
             // CODE END
@@ -244,16 +248,27 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
 //    log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
 //               , "background-color: #006"                                                   ,"background-color: #808");
 //}}}
-                l  = "```</pre>\n";
+                l = "```</pre>\n";
+                if(in_code.v_fold)
+                    l +=  vim_fold_line(STR_VCLOSE, file_name, i-recently_visited_header_lines);
+
                 in_code.line = 0;
             }
             // CODE START
             else {
-                in_code.line = i - recently_visited_header_lines;
-                in_code.code = s;
-                let language = (matches[1] || "");
+                in_code.line   = i - recently_visited_header_lines;
+
+                in_code.code   = lines[i];
+
+                let language   = (matches[1] || "");
+                let v_fold     = (matches[2] || "");
+                in_code.v_fold = v_fold;
+
+                if( v_fold )
+                    data_out  += vim_fold_line(STR_VOPEN+language, file_name, i-recently_visited_header_lines);
+
                 l = "<pre class='code "+ language +"'>\n"
-                +    "```"             + language   +"\n";
+                +   "```"              + language   +"\n";
             }
         }
         //┌────────────────────────────────────────────────────────────────────┐
@@ -261,7 +276,8 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
         //└────────────────────────────────────────────────────────────────────┘
         else if( in_code.line )
         {
-            l = "//"+ l +"\n";
+          //l = "//"+ l +"\n";
+            l = " "  +l +"\n";
 
         }
         //┌────────────────────────────────────────────────────────────────────┐
@@ -272,6 +288,12 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
            &&   !s.endsWith("<pre>"     )
            &&   !s.endsWith("</boxd>"   )
            &&   !s.endsWith("</details>")
+           &&   !s.endsWith("</h1>"     ) // Kill extra line (white-space: pre)
+           &&   !s.endsWith("</h2>"     )
+           &&   !s.endsWith("</h3>"     )
+           &&   !s.endsWith("</h4>"     )
+           &&   !s.endsWith("</h5>"     )
+           &&   !s.endsWith("</h6>"     )
           ) {
             l += "\n";
         }
@@ -319,17 +341,21 @@ let box_insert_LF = function( data_in )
 /*● vim_fold_line {{{*/
 // VIM REGEX {{{
 
+//... REGEX
+const STR_VOPEN                 = "{{"+"{";
+const STR_VCLOSE                = "}}"+"}";
+const RGX_CODE                  = new RegExp("```(\\w*) *("+STR_VOPEN+"|"+STR_VCLOSE+")?");
+
 //... PATTERN
 const PAT_VOPEN                 = "\\{\\{\\{";
 const PAT_VCLOSE                = "\\}\\}\\}";
 const PAT_BLOC                  = "(.*)"     ; // CAPTURING BLOC
 
 //... REGEX
-const RGX_CODE                  = new RegExp("```(\\w*)");
-const RGX_VOPEN_AND_VCLOSE_LINE = new RegExp(PAT_VOPEN + PAT_BLOC   + PAT_VCLOSE); // line contains both  VIM_FOLDs .. remove both
-const RGX_VOPEN_OR__VCLOSE_LINE = new RegExp(PAT_VOPEN +   "|"      + PAT_VCLOSE); // line contains     a VIM_FOLD  .. filter
-const RGX_VOPEN_LINE            = new RegExp(PAT_BLOC  + PAT_VOPEN  + PAT_BLOC  ); // line contains open  VIM_FOLD  .. replace
-const RGX_VCLOSE_LINE           = new RegExp(PAT_BLOC  + PAT_VCLOSE + PAT_BLOC  ); // line contains close VIM_FOLD  .. replace
+const RGX_VOPEN_AND_VCLOSE_LINE = new RegExp(PAT_VOPEN    + PAT_BLOC   + PAT_VCLOSE      ); // line contains both  VIM_FOLDs .. remove both
+const RGX_VOPEN_OR__VCLOSE_LINE = new RegExp(PAT_VOPEN    +   "|"      + PAT_VCLOSE      ); // line contains     a VIM_FOLD  .. filter
+const RGX_VOPEN_LINE            = new RegExp(PAT_BLOC     + PAT_VOPEN  + PAT_BLOC        ); // line contains open  VIM_FOLD  .. replace
+const RGX_VCLOSE_LINE           = new RegExp(PAT_BLOC     + PAT_VCLOSE + PAT_BLOC        ); // line contains close VIM_FOLD  .. replace
 
 //... REPLACEMENT
 const RPL_VOPEN_AND_VCLOSE_LINE = "{{ {$1} }}"                                                       ; // remove both surrounding folds

@@ -322,7 +322,7 @@ let toggle_hide = function(e)
 let place_holder_nb = 0;
 let toggle_hide_element = function(top_details, details, hide_unhide_or_toggle)
 {
-    if(top_details == details) return;  // dodge element hinding in itself
+    if(top_details == details) return;  // dodge element hinding inside itself
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ 1/3 ● HIDE
     //│ 2/3 ● UNHIDE

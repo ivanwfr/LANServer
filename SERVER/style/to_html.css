@@ -1,6 +1,8 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/to_html.css ● $APROJECTS/LANServer          ● _TAG (261103:22h:09) │*/
+/*│ style/to_html.css ● $APROJECTS/LANServer          ● _TAG (261107:01h:33) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
+h1,h2,h3,h4,h5,h6 { margin-block:      0; }
+h1,h2,h3,h4,h5,h6 { margin-left : -0.5em; }
 /* line-number badge {{{*/
 summary::after {
     position        : absolute;
@@ -32,6 +34,12 @@ summary:hover::after {
 
 .md.i { font-style   : italic; background-color : #020A !important; border-color : #0F04; color : #EFE; padding: 0 0.4em; }
 .md.b { font-weight  :   bold; background-color : #200A !important; border-color : #F004; color : #FEE; }
+.md.c { font-weight  :   bold; background-color : #008A !important; border-color : #00FD; color : #EEF; }
+.md.d { font-weight  :    100; background-color : #000A !important; border-color : #640D; color : #AAA; text-decoration: line-through; }
+.md.s { font-weight  :    100; background-color : #440A !important; border-color : #640D; color : #EA0; }
+
+.md.b { margin-top: 0.5em; }
+.md.c { margin-top: 0.5em; }
 
 /*}}}*/
 /* details open-close smoothing {{{*/
@@ -355,8 +363,8 @@ DETAILS                     {                       width: fit-content; }
 
 /*{{{
 DETAILS:open                { white-space-collapse : preserve-breaks;   }
+DETAILS:open>PRE            { white-space          : normal;            }
 }}}*/
-DETAILS:open                { white-space          : normal;            }
 
 .code                       { white-space          : pre;               }
 /*{{{
