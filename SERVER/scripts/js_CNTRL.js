@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER    ● _TAG (261105:01h:37) │
+//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER     ● _TAG (261108:16h:07)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //│ Here is a minimal, clutter-free implementation of                          │
@@ -48,9 +48,9 @@ import { js_log     } from "./js_log.js"
 const js_CNTRL     = (function()
 {
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ ◯  INTERNINGN ● SERVER/scripts/js_log.js
+//│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "%c★🟣 CNTRL\t\t● ";
+const MODULE = "%c⭐🟣 CNTRL\t\t● ";
 let log_this = false;
 let tag_this = false || log_this;
 //{{{
@@ -80,7 +80,7 @@ let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
 //}}}
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ onload ● DOM reshaping script call order
+//│ LOAD-TIME SINGLE POINT **DOM-RESHAPING** SCRIPT CALL ORDER
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{
  | ONLOAD ORDER       | RESHAPING THE DOM        |
@@ -105,9 +105,9 @@ if(tag_this) log(MODULE+caller, lbB+lf3);
 };
 /*}}}*/
 
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ PRIVATE
-    //└────────────────────────────────────────────────────────────────────────┘
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ PRIVATE
+//└────────────────────────────────────────────────────────────────────────────┘
 //  currentState listeners {{{
 //┌────────────────────────────────────────────────────────────────────────┐
 //│ INTERNAL STATE
@@ -151,15 +151,18 @@ if(log_this) {
     listeners.forEach((listener) => listener(currentState, data));
 };
 //}}}
-//    transitions {{{
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ TRANSITIONS
+//└────────────────────────────────────────────────────────────────────────────┘
+// TRANSITION TABLE {{{
 //┌────────────────────────────────────────────────────────────────────────┐
-//│ TRANSITION TABLE
 //│ ●  Current State
 //│ ●  Action
 //│ ●  Next State / Action Handler
 //└────────────────────────────────────────────────────────────────────────┘
-const transitions = {
-IDLE: {
+// IDLE     = { SELECT_NOTE() ● SAVE_NOTE() ● DELETE_NOTE() } {{{
+const IDLE = {
     // 🟠 SELECT_NOTE   ➔ [EDITING  ] {{{
     SELECT_NOTE: (payload) => {
 // log {{{
@@ -194,8 +197,10 @@ if(log_this) log("%c● noteId......:\t%c["+ noteId                    +"]", lf3
         changeState("IDLE"    );
     }
     //}}}
-},
-EDITING: {
+};
+//}}}
+/* EDITING  = { SELECT_NOTE() ● SAVE_NOTE() ● DELETE_NOTE() ● CANCEL() } {{{*/
+const EDITING = {
     // 🟠 SELECT_NOTE   ➔ [EDITING  ] ... possibly same or other notes_table entry {{{
     SELECT_NOTE: (payload) => {
 // log {{{
@@ -246,32 +251,35 @@ if(tag_this) log(MODULE+caller, lbB+lf3);
         changeState("IDLE");
     }
     //}}}
-},
-// SAVING           ➔ ....................➔ [IDLE] {{{
-SAVING: () => {
+};
+/*}}}*/
+// SAVING()         ➔ ....................➔ [IDLE] {{{
+const SAVING = () => {
 // log {{{
 let caller = "SAVING";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 //}}}
     // Lock actions during network/persistence calls
     changeState("IDLE");
-},
-    //}}}
-// DELETING         ➔ ....................➔ [IDLE] {{{
-DELETING: () => {
+};
+//}}}
+// DELETING()       ➔ ....................➔ [IDLE] {{{
+const DELETING = () => {
 // log {{{
 let caller = "DELETING";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 //}}}
     // Lock actions during network/persistence calls
-}
+};
 //}}}
+const TRANSITIONS = {
+    IDLE,
+    EDITING,
+    SAVING,
+    DELETING
 };
 //}}}
 
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ PUBLIC ADAPTER API
-    //└────────────────────────────────────────────────────────────────────────┘
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤  M V C🚧 REFACTORING ZONE ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -344,7 +352,7 @@ if(log_this) log("%c● listenerFn.\t%c["+ listenerFn.name +"]", lf3,lb1);
 //└────────────────────────────────────────────────────────────────────────┘
 let transition = function(actionName, payload)
 {
-    const stateRules    = transitions[ currentState ];
+    const stateRules    = TRANSITIONS[ currentState ];
     const actionHandler = stateRules [ actionName   ];
 //{{{
 let caller = "transition";
@@ -356,7 +364,7 @@ if(log_this) {
     log("%c● actionName:\t%c["+   actionName                +"]"                                        , lf3,lb1);
     log("%c● payload...:\t%c["+   ellipsis(JSON.stringify(payload))  +"]"                               , lf3,lb3);
     log("%c"+("                  currentState  " ).padStart(32) +"%c"+              currentState        , lf3,lb8);
-    log("%c"+(" transitions["+ currentState +"] ").padStart(32) +"%c"+ transitions[ currentState ]?.name, lf3,lb8);
+    log("%c"+(" TRANSITIONS["+ currentState +"] ").padStart(32) +"%c"+ TRANSITIONS[ currentState ]?.name, lf3,lb8);
     log("%c"+("  stateRules["+ actionName   +"] ").padStart(32) +"%c"+ stateRules [ actionName   ]?.name, lf3,lb8);
     log("%c"+("                 actionHandler  " ).padStart(32) +"%c"+              actionHandler ?.name, lf3,lb8);
 }
@@ -394,25 +402,28 @@ return { subscribe
     , get_editing_note_index
     , set_editing_note_index
     // DEBUG
-    ,  transitions
+    ,  TRANSITIONS
 };
 //}}}
 
 })();
 
+/* TLDR {{{
+### KEY TAKEAWAYS FROM THIS IMPLEMENTATION:
+
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ ### KEY TAKEAWAYS FROM THIS IMPLEMENTATION:
 //│
 //│ 1. **State Isolation**: Actions in transient states
-//│ (`SAVING`, `DELETING`) are omitted in the lookup
-//│ table. Any user clicks arriving while in these states
-//│ are automatically ignored
+//│    (`SAVING`, `DELETING`) are omitted in the lookup table.
+//│    Any user clicks arriving while in these states
+//│    are automatically **ignored**
 //│
 //│ 2. **Predictable Flow**: The state machine directly
-//│ manages the async boundary with `js_MODEL`, then cleanly
-//│ transitions back to `IDLE` before updating listeners.
+//│    manages the async boundary with `js_MODEL`, then cleanly
+//│    transitions back to `IDLE` before updating listeners.
 //└────────────────────────────────────────────────────────────────────────────┘
 
+}}}*/
 export { js_CNTRL }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
 window . js_CNTRL = js_CNTRL;
 document.addEventListener("DOMContentLoaded", js_CNTRL.onload);

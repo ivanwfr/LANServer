@@ -34,7 +34,7 @@ let js_details  = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "%c★🟢 js_details\t\t● ";
+const MODULE = "%c⭐🟢 js_details\t\t● ";
 let log_this = false;
 let tag_this = false || log_this;
 //{{{

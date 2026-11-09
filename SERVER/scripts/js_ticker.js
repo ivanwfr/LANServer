@@ -26,7 +26,7 @@ let js_ticker = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "★ js_ticker\t\t● ";
+const MODULE = "⭐ js_ticker\t\t● ";
 let   log_this = false;
 let   tag_this = false || log_this;
 //{{{

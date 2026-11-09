@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261030:03h:20)
+//│ server5_content.js                                     _TAG (261108:14h:46)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 let url_to_href      = require("./url_to_href.js");
@@ -100,6 +100,7 @@ const PAGE_HEAD_INNER_HTML = ""
     + "<script type='module'  src='/scripts/js_store.js'   ></script>\n"
     + "<script type='module'  src='/scripts/js_xpath.js'   ></script>\n"
     + "\n"
+    + "<script type='module'  src='/scripts/Bus.js'        ></script>\n"    // COMM  SM
     + "<script type='module'  src='/scripts/js_MODEL.js'   ></script>\n"    // MODEL SM
     + "<script type='module'  src='/scripts/js_VIEW.js'    ></script>\n"    // VIEW  SM
     + "<script type='module'  src='/scripts/js_CNTRL.js'   ></script>\n"    // CNTRL SM

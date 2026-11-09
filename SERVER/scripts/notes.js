@@ -35,7 +35,7 @@ let notes = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "%c★🟡 notes\t\t● ";
+const MODULE = "%c⭐🟡 notes\t\t● ";
 let log_this = false;
 let tag_this = false || log_this;
 //{{{

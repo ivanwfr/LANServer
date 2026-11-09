@@ -45,7 +45,7 @@ const js_VIEW    = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "%c★🟣 VIEW\t\t● "; const CALLING = "%c ☎ CALLING\t";
+const MODULE = "%c⭐🟣 VIEW\t\t● "; const CALLING = "%c ☎ CALLING\t";
 let log_this = false;
 let tag_this = false || log_this;
 //{{{

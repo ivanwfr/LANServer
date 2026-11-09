@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_md.js                                               _TAG (261107:02h:43)
+//│ js_md.js                                               _TAG (261109:00h:47)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //│ *md_format_header_line* Opens and Close a DETAILS>SUMMARY,PRE for each MD header
@@ -160,7 +160,7 @@ const ESCAPE_PREFIX = '\x00MD_ESC\x00';
 //│ MATCHES ANY WORD-LIKE CHARACTER INCLUDING
 //│ UNICODE LETTERS, DIGITS, HYPHENS, DOTS
 //└────────────────────────────────────────────────────────────────────────────┘
-const WORD = `(?:[\\p{L}\\p{N}_\\.=<>+*/\\\\(){}\\[\\];:,!?'"#@$%^&~\`|]|${ESCAPE_PREFIX}SPACE${ESCAPE_PREFIX})+`;
+const WORD = `(?:[\\p{L}\\p{N}_\\.=<>+/\\\\(){}\\[\\];:,!?'"#@$%^&|]|${ESCAPE_PREFIX}SPACE${ESCAPE_PREFIX})+`;
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ REGEX ● COMPILED ONCE AT MODULE LOAD, REUSED ON EVERY CALL
@@ -212,15 +212,15 @@ let md_format_line_style = function(l_in)
     //│ ESCAPE SPECIAL CHARACTERS WITH UNIQUE PLACEHOLDERS
     //└────────────────────────────────────────────────────────────────────────┘
     l_out = l_out
-        .replace(/\\\*/g, ESCAPE_PREFIX + 'BS_STAR'     + ESCAPE_PREFIX)
-        .replace( /\\_/g, ESCAPE_PREFIX + 'BS_UNDER'    + ESCAPE_PREFIX)
-        .replace( /\\~/g, ESCAPE_PREFIX + 'BS_TILDE'    + ESCAPE_PREFIX)
-        .replace( /\\`/g, ESCAPE_PREFIX + 'BS_BACKTICK' + ESCAPE_PREFIX)
-        .replace(   /'/g, ESCAPE_PREFIX + 'QUOTE'       + ESCAPE_PREFIX)
-        .replace( /\\"/g, ESCAPE_PREFIX + 'ESC_DQUOTE'  + ESCAPE_PREFIX)
-        .replace( /\\'/g, ESCAPE_PREFIX + 'ESC_QUOTE'   + ESCAPE_PREFIX)
-        .replace(   /"/g, ESCAPE_PREFIX + 'DQUOTE'      + ESCAPE_PREFIX)
-        .replace(   / /g, ESCAPE_PREFIX + 'SPACE'       + ESCAPE_PREFIX)
+        .replace(   /\\\*/g, ESCAPE_PREFIX + 'BS_STAR'     + ESCAPE_PREFIX)
+        .replace(    /\\_/g, ESCAPE_PREFIX + 'BS_UNDER'    + ESCAPE_PREFIX)
+        .replace(    /\\~/g, ESCAPE_PREFIX + 'BS_TILDE'    + ESCAPE_PREFIX)
+        .replace( /\\\x60/g, ESCAPE_PREFIX + 'BS_BACKTICK' + ESCAPE_PREFIX)
+        .replace(      /'/g, ESCAPE_PREFIX + 'QUOTE'       + ESCAPE_PREFIX)
+        .replace(    /\\"/g, ESCAPE_PREFIX + 'ESC_DQUOTE'  + ESCAPE_PREFIX)
+        .replace(    /\\'/g, ESCAPE_PREFIX + 'ESC_QUOTE'   + ESCAPE_PREFIX)
+        .replace(      /"/g, ESCAPE_PREFIX + 'DQUOTE'      + ESCAPE_PREFIX)
+        .replace(      / /g, ESCAPE_PREFIX + 'SPACE'       + ESCAPE_PREFIX)
         ;
 
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -228,27 +228,27 @@ let md_format_line_style = function(l_in)
     //└────────────────────────────────────────────────────────────────────────┘
     l_out = l_out
         // STRIKETHROUGH (GFM)
-        .replace(RE_STRIKE       ,           `<del class="md d">$1</del>`        )
+        .replace(RE_STRIKE      ,         '<del class="md d">$1</del>'         )
 
         // BOLD+ITALIC
-        .replace(RE_S_BOLDITALIC ,    `<strong><em class="md b i">$1</em></strong>`)
-        .replace(RE_U_BOLDITALIC ,    `<strong><em class="md b i">$1</em></strong>`)
+        .replace(RE_S_BOLDITALIC, '<strong><em class="md b i">$1</em></strong>')
+        .replace(RE_U_BOLDITALIC, '<strong><em class="md b i">$1</em></strong>')
 
         // BOLD
-        .replace(RE_S_BOLD       ,        `<strong class="md b">$1</strong>`     )
-        .replace(RE_U_BOLD       ,        `<strong class="md b">$1</strong>`     )
+        .replace(RE_S_BOLD      ,      '<strong class="md b">$1</strong>'      )
+        .replace(RE_U_BOLD      ,      '<strong class="md b">$1</strong>'      )
 
         // ITALIC
-        .replace(RE_S_ITALIC     ,            `<em class="md i">$1</em>`         )
-        .replace(RE_U_ITALIC     ,            `<em class="md i">$1</em>`         )
+        .replace(RE_S_ITALIC    ,          '<em class="md i">$1</em>'          )
+        .replace(RE_U_ITALIC    ,          '<em class="md i">$1</em>'          )
 
         // CODE
-        .replace(RE_CODE_BLOCK   ,  `<pre class="md code"><code>$1</code></pre>`)
-        .replace(RE_CODE_INLINE  ,          `<code class="md c">$1</code>`)
+        .replace(RE_CODE_BLOCK  ,'<pre class="md code"><code>$1</code></pre>'  )
+        .replace(RE_CODE_INLINE ,        '<code class="md c">$1</code>'        )
 
         // STRINGS
-        .replace(RE_DQUOTE       ,            '<em class="md s">$1</em>')
-        .replace(RE_QUOTE        ,            '<em class="md s">$1</em>')
+        .replace(RE_DQUOTE      ,          '<em class="md s">\x22$1\x22</em>'  )
+        .replace(RE_QUOTE       ,          '<em class="md s">\x27$1\x27</em>'  )
         ;
 
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -284,15 +284,21 @@ let md_format_table = function(data_in)
 
     let lines = data_in.split("\n");                            // keep indentation
 
+    let in_code;
     for(let i = 0; i < lines.length; ++i)
     {
+        if( lines[i].includes("```") )
+            in_code = !in_code;
+
         if(lines[i].match(/(?:BOX|^\s*\/\/)/))                  // non-capturing group
         {
-            data_out     += lines[i].replace(/ *\/\/ ?/ , "") + "\n";
+            if(in_code) data_out += lines[i]                          + "\n";
+            else        data_out += lines[i].replace(/ *\/\/ ?/ , "") + "\n";
             continue;
         }
+        let single_pipe = lines[i].match(/(?:^|[^\|])(?:\|[^\|])/);
         let reached_md_table
-            =                               lines[i    ].includes("|"       )
+            =                               single_pipe
             && (  ((i < lines.length -1) && lines[i + 1].match(RGX_TABLE_SEP) ) //   one-liner header
                 ||((i < lines.length -2) && lines[i + 2].match(RGX_TABLE_SEP) ) //   two-liner header
                 ||((i < lines.length -3) && lines[i + 3].match(RGX_TABLE_SEP) ) // three-liner header

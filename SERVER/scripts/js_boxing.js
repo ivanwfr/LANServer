@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261107:02h:58)
+//│ js_boxing.js                                           _TAG (261109:00h:47)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -29,7 +29,7 @@ let js_boxing = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "★🟣 js_boxing\t\t● ";
+const MODULE = "⭐🟣 js_boxing\t\t● ";
 let log_this = false;
 let tag_this = false || log_this;
 //{{{
@@ -168,9 +168,14 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
         //└────────────────────────────────────────────────────────────────────┘
         else if( l.match(/[\*_~`'"][\S ]+[\*_~`'"]/) )
         {
-            l = js_md.md_format_line_style( l );
-
+            l = js_md.md_format_line_style(l);
         }
+//{{{
+//        else if(in_code && l.match(/^\s*\/\//))
+//        {
+//            l = l.replace(/(\/\/.*)/, "<em class='md m'>$1</em>");
+//        }
+//}}}
         //┌────────────────────────────────────────────────────────────────────┐
         //│ MARKDOWN # ➔ DETAILS
         //└────────────────────────────────────────────────────────────────────┘
@@ -227,6 +232,8 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
 //      l =         l.  replace(     /\> *[^:]\/\/ */g, ">"              ); //       [>// ] TO []
     if(!in_code.line)
         l =         l.  replace(       / *[^:]\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
+    else
+        l = l.replace(/(\/\/.*)/, "<em class='md m'>$1</em>");    // @see SERVER/style/to_html.css
 
         //┌────────────────────────────────────────────────────────────────────┐
         //│ OPTIONAL
@@ -248,7 +255,10 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
 //    log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
 //               , "background-color: #006"                                                   ,"background-color: #808");
 //}}}
-                l = "```</pre>\n";
+                l = ""
+                //+ "</code>"
+                  + "```</pre>\n"
+                ;
                 if(in_code.v_fold)
                     l +=  vim_fold_line(STR_VCLOSE, file_name, i-recently_visited_header_lines);
 
@@ -267,8 +277,10 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
                 if( v_fold )
                     data_out  += vim_fold_line(STR_VOPEN+language, file_name, i-recently_visited_header_lines);
 
-                l = "<pre class='code "+ language +"'>\n"
-                +   "```"              + language   +"\n";
+                l =  "<pre class='code "+      language +"'>"
+                  +  "```"                   + language
+                //+  "<code class='language-"+ language +"'>"    // @see SERVER/style/to_html.css
+                ;
             }
         }
         //┌────────────────────────────────────────────────────────────────────┐
@@ -365,7 +377,7 @@ const RPL_VCLOSE_LINE = ""
 ;
 const RPL_SUMMARY_TTL_LNU = ""
 //  + "<!-- vim_fold_open ='_MD_HEAD_LEVEL_' -->"
-    + "<details>\n<summary title='_TTL_' data-badge='_LNU_'>$1 $2</summary>\n<pre>" // vim open  => CLOSE details
+    + "<details><summary title='_TTL_' data-badge='_LNU_'>$1 $2</summary><pre>" // vim open  => CLOSE details
 ;
 //}}}
 let vim_fold_level= 0;

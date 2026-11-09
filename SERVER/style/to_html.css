@@ -1,8 +1,11 @@
 /*┌──────────────────────────────────────────────────────────────────────────┐*/
-/*│ style/to_html.css ● $APROJECTS/LANServer          ● _TAG (261107:01h:33) │*/
+/*│ style/to_html.css ● $APROJECTS/LANServer          ● _TAG (261109:00h:23) │*/
 /*└──────────────────────────────────────────────────────────────────────────┘*/
 h1,h2,h3,h4,h5,h6 { margin-block:      0; }
 h1,h2,h3,h4,h5,h6 { margin-left : -0.5em; }
+/*{{{
+code { border: 3px double #F0FA; display: inline-block; }
+}}}*/
 /* line-number badge {{{*/
 summary::after {
     position        : absolute;
@@ -19,7 +22,7 @@ summary::after {
 summary:hover::after {
     color           :   #FFFF;
     transform       : scale(2);
-    transform-origin: 100% 100%;
+    transform-origin: 100%   0%;
     transition      : transform 0.3s ease-out;
 }
 /*}}}*/
@@ -37,6 +40,7 @@ summary:hover::after {
 .md.c { font-weight  :   bold; background-color : #008A !important; border-color : #00FD; color : #EEF; }
 .md.d { font-weight  :    100; background-color : #000A !important; border-color : #640D; color : #AAA; text-decoration: line-through; }
 .md.s { font-weight  :    100; background-color : #440A !important; border-color : #640D; color : #EA0; }
+.md.m { font-weight  :   bold; background-color : #0F02 !important; border-color : #0F34; color : #0F0; border-radius:  0.3em; padding: 0 0.2em; }
 
 .md.b { margin-top: 0.5em; }
 .md.c { margin-top: 0.5em; }
@@ -134,14 +138,8 @@ DETAILS.checked>SUMMARY>.em_check {
 }
 /*}}}*/
 /* background {{{*/
-.code            { background: linear-gradient(to right, #000 10%, #0001); }
-/* code             ● border {{{*/
-.code.css           { border: 1px solid #00F; background-color: #00F1; }
-.code.html          { border: 1px solid #FF0; background-color: #FF01; }
-.code.javascript    { border: 1px solid #FA0; background-color: #FA01; }
-.code.js            { border: 1px solid #FA0; background-color: #FA01; }
-.code.text          { border: 1px solid #FFF; background-color: #FFF1; }
-/*}}}*/
+/*                                                   CODE_BG_▼  ▼_BLACK_BG____▼  CODE_BG_▼  */
+.Code            { background: linear-gradient(to right, #0008, #000C 2%, #000C 98%, #0008); }
 
 /* ECC bg background {{{*/
   .bg1>SUMMARY { background: linear-gradient(to bottom, #964B0040 20%, #964B0010 80%, #000); background-color: #000 !important; }
@@ -247,7 +245,11 @@ DETAILS:open>SUMMARY { color: white !important; }
 /* border {{{*/
 /* code             ● border {{{*/
 .code               { border: 1px solid #440; }
-
+.code.css           { border: 1px solid #00F; background-color: #00FA; }
+.code.html          { border: 1px solid #FF0; background-color: #FF0A; }
+.code.javascript    { border: 1px solid #FA0; background-color: #FA0A; }
+.code.js            { border: 1px solid #FA0; background-color: #FA0A; }
+.code.text          { border: 1px solid #FFF; background-color: #FFFA; }
 /*}}}*/
 /* markdown_table   ● border {{{*/
 .markdown_table     { border-collapse : collapse; }
@@ -367,6 +369,7 @@ DETAILS:open>PRE            { white-space          : normal;            }
 }}}*/
 
 .code                       { white-space          : pre;               }
+.code                       { width: fit-content; }
 /*{{{
 .markdown_table TD          { white-space          : pre;               }
 }}}*/

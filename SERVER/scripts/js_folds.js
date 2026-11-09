@@ -41,7 +41,7 @@ let js_folds = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "%c★🟢 js_folds\t\t● ";
+const MODULE = "%c⭐🟢 js_folds\t\t● ";
 let log_this = false;
 let tag_this = false || log_this;
 // ●log-items inlining ● SERVER/scripts/js_log.js {{{

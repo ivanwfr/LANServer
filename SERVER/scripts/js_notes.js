@@ -34,7 +34,7 @@ let js_notes    = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "%c★🟢 js_notes\t● ";
+const MODULE = "%c⭐🟢 js_notes\t● ";
 let log_this = false;
 let tag_this = false  || log_this;
 //{{{

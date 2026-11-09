@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_log.js        ● $APROJECTS/LANServer/SERVER        ● _TAG (261105:03h:55)
+//│ js_log.js        ● $APROJECTS/LANServer/SERVER        ● _TAG (261108:20h:01)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //│}}}
@@ -14,7 +14,7 @@ let js_log = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│  🟤 🔴 🟠 🟡 🟢 🔵 🟣 ⚫ ⚪️
 //└────────────────────────────────────────────────────────────────────────────┘
-//nst MODULE = "★ js_log";
+//nst MODULE = "⭐ js_log";
 let log_this = false;
 let tag_this = false || log_this;
 
@@ -86,8 +86,10 @@ let logging = function(state, name="")
             {
                 log_this_fn( log_this );
                 notified += " "+b_X[module_num % 10]+" "+module_name;
+
+                // superseding / restoring tag_this
+                if( tag_this_fn ) tag_this_fn(log_this || tag_this);
             }
-            if( tag_this_fn ) tag_this_fn(log_this || tag_this); // superseding / restoring tag_this
         }
         log("★ NOTIFIED %c"+(notified || "NONE"), lb0);
     }
@@ -154,6 +156,7 @@ log("js_log.register("+ module_name +")");
     //}}}
 };
 /*}}}*/
+/*_ registered_modules_sort {{{*/
 let registered_modules_sort = function()
 {
 //log("registered_modules_sort");
@@ -163,6 +166,7 @@ let registered_modules_sort = function()
     registered_modules.sort        ((a,b) =>   a.module_num - b.module_num               );
 //console.dir(registered_modules);
 };
+/*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────┐
 //│ CONSOLE CLEAR
@@ -192,8 +196,18 @@ log("%c CLEARED BY "+ _caller +" ● prevented by console clear cooldown", lbB+"
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────┐
-//│ CALLER STACK
+//│ UTIL
 //└────────────────────────────────────────────────────────────────────────┘
+/*● ellipsis {{{*/
+let ellipsis = function(_str, n=128)
+{
+    let str = _str.replace(/\n/g,"↲");
+    return  str
+        ? ((str.length > n) ? str.slice(0, n - 1) + "… " : str)
+        : ""
+    ;
+};
+/*}}}*/
 /*● get_src_link {{{*/
 let get_src_link = function(lvl=3)
 {
@@ -228,18 +242,12 @@ let get_src_link = function(lvl=3)
     ;
 };
 /*}}}*/
-
-//┌────────────────────────────────────────────────────────────────────────┐
-//│ ELLIPSIS
-//└────────────────────────────────────────────────────────────────────────┘
-/*● ellipsis {{{*/
-let ellipsis = function(_str, n=128)
+/*● sleep {{{*/
+let sleep = async function(delay)
 {
-    let str = _str.replace(/\n/g,"↲");
-    return  str
-        ? ((str.length > n) ? str.slice(0, n - 1) + "… " : str)
-        : ""
-    ;
+    await new Promise(function executor(resolve/*,reject*/) {
+        setTimeout(() => resolve(), delay);
+    });
 };
 /*}}}*/
 
@@ -259,8 +267,9 @@ return { name: "js_log"
     ,    tagging
 
     // UTIL
-    ,    get_src_link
     ,    ellipsis
+    ,    get_src_link
+    ,    sleep
 
     // STYLE
     ,    lbX, ...lbX // js_log.lb0 .. js_log.lb9

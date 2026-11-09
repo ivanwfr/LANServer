@@ -40,7 +40,7 @@ const js_MODEL   = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "%c★🟣 MODEL\t\t● "; const CALLING = "%c ☎ CALLING\t";
+const MODULE = "%c⭐🟣 MODEL\t\t● "; const CALLING = "%c ☎ CALLING\t";
 let log_this = false;
 let tag_this = false || log_this;
 //{{{

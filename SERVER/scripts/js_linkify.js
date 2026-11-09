@@ -34,7 +34,7 @@ let js_linkify  = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "%c★🟣 js_linkify\t\t● ";
+const MODULE = "%c⭐🟣 js_linkify\t\t● ";
 let   log_this;
 let   tag_this;
 //{{{
