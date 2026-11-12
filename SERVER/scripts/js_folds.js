@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_folds.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261104:18h:50) │
+//│ js_folds.js      ● $APROJECTS/LANServer/SERVER       ● _TAG (261111:22h:29)
 //├────────────────────────────────────────────────────────────────────────────┤
 //{{{ SAVE → LOAD ● [DETAILS open state] ● [CONTAINERS scrollTop]
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -80,7 +80,7 @@ let initialized = false;
 let onload = function(e) /* eslint-disable-line no-unused-vars */
 {
 let caller = "onload";
-if(tag_this) log(MODULE+caller+"5 js_folds   \t🟢 onload:");
+if(tag_this) log(MODULE+caller, lbB+lf5);
 // log {{{
     if( initialized ) return; // ...don't run twice
     /**/initialized = true;
@@ -129,7 +129,7 @@ let save_details_open_state_handler = function()
 {
 /*{{{*/
 let caller = "save_details_open_state_handler";
-if(tag_this) log(MODULE+caller+"🟢 %c js_folds.save_details_open_state_handler:", lbB+lf5);
+if(tag_this) log(MODULE+caller, lbB+lf5);
 
     save_details_open_state_timeout = null;
 /*}}}*/
@@ -163,7 +163,7 @@ if(log_this) console.dir(el);
 let load_details_open_state = function()
 {
 let caller = "load_details_open_state";
-if(tag_this) log(MODULE+caller+"🟢 %c js_folds.load_details_open_state:", lbB+lf5);
+if(tag_this) log(MODULE+caller, lbB+lf5);
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ PREVENT CLOSING DETAILS ● so we can open more than one                 │
@@ -213,7 +213,7 @@ let save_details_checked_state_handler = function()
 {
 /*{{{*/
 let caller = "save_details_checked_state_handler";
-if(tag_this) log(MODULE+caller+"⚫ %c js_folds.save_details_checked_state_handler:", lbB+lf3);
+if(tag_this) log(MODULE+caller, lbB+lf5);
 
     save_details_checked_state_timeout = null;
 /*}}}*/
@@ -245,7 +245,7 @@ if(log_this) console.dir(el);
 let load_details_checked_state = function()
 {
 let caller = "load_details_checked_state";
-if(tag_this) log(MODULE+caller+"🟢 %c js_folds.load_details_checked_state:", lbB+lf5);
+if(tag_this) log(MODULE+caller, lbB+lf5);
 
     //┌───────────────────────────────────────────────────────────────────────┐
     //│ RESTORE             ● store details checked state from [localStorage] │
@@ -294,7 +294,7 @@ let save_containers_scrollTop = function()
 let save_containers_scrollTop_handler = function()
 {
 let caller = "save_containers_scrollTop_handler";
-if(tag_this) log(MODULE+caller+"⚫ %c js_folds.save_containers_scrollTop_handler:", lbB+lb4);
+if(tag_this) log(MODULE+caller, lbB+lb5);
 
     //┌───────────────────────────────────────────────────────────────┐
     //│ SAVE    ● scrollable-containers-scrollTop into [localStorage] │
@@ -328,7 +328,7 @@ if(log_this) log(" 🟡 %c"+xpath, "background-color:black");
 let load_containers_scrollTop = function()
 {
 let caller = "load_containers_scrollTop";
-if(tag_this) log(MODULE+caller+"🟢 %c js_folds.load_containers_scrollTop:", lbB+lf5);
+if(tag_this) log(MODULE+caller, lbB+lf5);
 
     //┌───────────────────────────────────────────────────────────────┐
     //│ RESTORE ● scrollable-containers-scrollTop from [localStorage] │
@@ -352,7 +352,7 @@ if(log_this) log(" 🟡 %c"+item.xpath, "background-color:black");
 let details_update_click_listeners = function()
 {
 let caller = "details_update_click_listeners";
-if(tag_this) log(MODULE+caller+"🟢 %c js_folds.details_update_click_listeners:", lbB+lf5);
+if(tag_this) log(MODULE+caller, lbB+lf5);
 
     // CLOSE DETAILS ● click container left margin
     let some_listener_added = "";
@@ -406,7 +406,7 @@ if(log_this) log("⚫ %c js_folds: "+ some_listener_added.split("\n").length +" 
 let details_click_listener = function(e)
 {
 let caller = "details_click_listener";
-if(tag_this) log(MODULE+caller+"⚫ %c js_folds.details_click_listener:", lbB);
+if(tag_this) log(MODULE+caller, lbB+lf5);
 
     if(e.target.onclick) return; // skip tooling elements
 
@@ -438,13 +438,16 @@ if(tag_this) log(MODULE+caller+"⚫ %c js_folds.details_click_listener:", lbB);
             e.preventDefault ();
             e.stopPropagation();
 
-            let big_scroll = move_summary_into_view( details );
-
             //┌────────────────────────────────────────────────────────────────┐
-            //│ Close DETAILS once CLOSED
+            //│ Close DETAILS once summary scrolled into view
             //└────────────────────────────────────────────────────────────────┘
-            let delay
-                = big_scroll ? 2000 : 0;
+
+          //let big_scroll = move_summary_into_view( details );
+          //let      delay = big_scroll ? 2000 : 0;
+
+            let scroll_duration = move_summary_into_view( details );
+            let      delay = (scroll_duration > 50) ? 1000 : 0;
+
             setTimeout(() => details.open = !details.open, delay);
 
             //┌────────────────────────────────────────────────────────────────┐
@@ -458,8 +461,11 @@ if(tag_this) log(MODULE+caller+"⚫ %c js_folds.details_click_listener:", lbB);
 };
 /*}}}*/
 /*_ move_summary_into_view {{{*/
-let move_summary_into_view = function( details )
+let move_summary_into_view = async function( details )
 {
+//{{{
+let caller = "move_summary_into_view";
+//}}}
     //┌────────────────────────────────────────────────────────────────┐
     //│ Move SUMMARY INTO VIEW (for a visible CLOSE ANIMATION)
     //└────────────────────────────────────────────────────────────────┘
@@ -473,17 +479,38 @@ let move_summary_into_view = function( details )
     //│ VERTICAL MARGIN ➔ SUMMARY and part of previous CONTAINER BOTTOM
     //└────────────────────────────────────────────────────────────────┘
     let delta;
-    let big_scroll = false;
+//  let big_scroll = false;
+    let scroll_duration = 0;
     if( needs_scrolling)
     {
         let    summary = details.firstElementChild;
         let top_margin = 3 * summary.getBoundingClientRect().height;
         delta          = parseInt(details_rect.top - top_margin);
-        big_scroll     = Math.abs(delta) >= 1 * window.innerHeight;
+//      big_scroll     = Math.abs(delta) >= 1 * window.innerHeight;
 
         window.scrollBy( { top: delta, behavior: "smooth" } );
+
+//{{{
+if(tag_this) log(MODULE+caller+" 🔴%c SCROLLING INTO VIEW", lbB+lf5, lb0+lf1);
+//}}}
+        let scroll_start_time = performance.now().toFixed();
+        await new Promise((resolve) => {
+            window.addEventListener("scrollend", resolve, { once: true });
+        });
+        scroll_duration = performance.now().toFixed() - scroll_start_time;
+//{{{
+if(tag_this) log(MODULE+caller+" 🟠%c SCROLL DURATION: "+ scroll_duration+"ms", lbB+lf5, lb0+lf2);
+//await js_log.sleep(1000);//FIXME
+//if(tag_this) log(" 🟡%c ...NOW INTO VIEW", lb0+lf4);
+//}}}
     }
-    return big_scroll;
+//{{{
+    else {
+if(tag_this) log(MODULE+caller+" ⚫%c NEEDS NO SCROLLING: "+ scroll_duration+"ms", lbB+lf5, lb0+lf8);
+    }
+//}}}
+//  return big_scroll;
+    return scroll_duration;
 };
 /*}}}*/
 /*_ set_DETAILS_last_toggled {{{*/
@@ -532,7 +559,7 @@ let clear_DETAILS_last_toggled = function(e)
 let get_nextContainer = function(el)
 {
 let caller = "get_nextContainer";
-if(tag_this) log(MODULE+caller+"⚫ %c js_folds.get_nextContainer:", lbB);
+if(tag_this) log(MODULE+caller, lbB+lf5);
 
     // RETURN NEXT CONTAINER SIBLING ELEMENT
     while(   (el.tagName != "DIV"  )
@@ -589,19 +616,23 @@ let track_pendingShift = function(e)
     }
 };
 /*}}}*/
-/*_ latch_pendingShift {{{*/
+/*_ set_shiftLatched {{{*/
 let set_shiftLatched = function(state, delay=1000)
 {
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ emulate user holding shift key
+    //└────────────────────────────────────────────────────────────────────────┘
     shiftLatched  = state;
     if( shiftLatched )
         setTimeout(() => shiftLatched = false, delay);
 };
 /*}}}*/
 /*_ toggle_details_open_state {{{*/
-let   toggle_details_open_state = function(e)
+let toggle_details_open_state = async function(e)
 {
 let caller = "toggle_details_open_state";
-if(tag_this) log(MODULE+caller+"⚫ %c js_folds.toggle_details_open_state:", lbB);
+//console_clear(caller);//FIXME
+if(tag_this) log(MODULE+caller, lbB+lf5);
 
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ the `details` whose state changed
@@ -639,9 +670,9 @@ if(log_this) log("🔴 %c OPENING: "+target.firstElementChild.childNodes[0].text
     //└────────────────────────────────────────────────────────────────────────┘
     if(unfold_cooldown || shiftKey)
     {
-        for(let d of ancestors_set)
-            if(!d.open)
-                d.open = true;
+        for(let a of ancestors_set)
+            if(!a.open)
+                a.open = true;
     }
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ DO ... CLOSE OTHERS, (that are not part of the target ancestors)
@@ -649,9 +680,24 @@ if(log_this) log("🔴 %c OPENING: "+target.firstElementChild.childNodes[0].text
     else {
         for(let d of doc_details)
         {
-            if( ancestors_set.has(       d   )) d.open =  true;
-            else if(                    !d.id                   // SKIP ID
-                    && !target.contains( d   )) d.open = false; // SKIP CHILD
+            if( ancestors_set.has(       d   )) {   // OPEN THE FAMILY TREE
+                /**/                     d.open = true;
+            }
+            else if(                     d.open     // CLOSE OTHERS
+                    &&                  !d.id       // SKIP TOOL CONTAINER
+                    && !target.contains( d   )      // SKIP CHILD
+                   )
+            {
+//{{{
+//log("🟤%c CLOSING %c"+ d.firstElementChild.innerText.replace(/\n/g," "), lb0+lf1, lb0+lf5);
+//}}}
+                await move_summary_into_view( d ); /* eslint-disable-line no-await-in-loop */
+//{{{
+//js_log.sleep(1000);//FIXME
+//log("🟡%c ...NOW INTO VIEW", lb0+lf4);
+//}}}
+                d.open = false;
+            }
         }
     }
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -687,7 +733,7 @@ let toggle_unfold_cooldown = function()
 let get_ancestors_with_tag = function(el, tag)
 {
 let caller = "get_ancestors_with_tag";
-if(tag_this) log(MODULE+caller+"⚫ %c js_folds.get_ancestors_with_tag:", lbB);
+if(tag_this) log(MODULE+caller, lbB+lf5);
 
     let arr = [];
     let     p = el.parentElement;

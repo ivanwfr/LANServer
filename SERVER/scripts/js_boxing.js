@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261109:00h:47)
+//│ js_boxing.js                                           _TAG (261112:02h:09)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -15,23 +15,22 @@
 //}}}
 /* IMPORT {{{*/
 
+/* globals js_linkify */
 /* globals js_log   */
 /* globals js_md    */
 /* globals js_xpath */
 
-import {   js_log   } from "./js_log.js"
-import {   js_md    } from "./js_md.js"
-import {   js_xpath } from "./js_xpath.js"
+import {   js_linkify } from "./js_linkify.js"
+import {   js_log     } from "./js_log.js"
+import {   js_md      } from "./js_md.js"
+import {   js_xpath   } from "./js_xpath.js"
 
 /*}}}*/
-let js_boxing = (function()
-{
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ ◯  INTERNING ● SERVER/scripts/js_log.js
-//└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "⭐🟣 js_boxing\t\t● ";
+let js_boxing = (function() {
+// ◯ INTERNING ● SERVER/scripts/js_log.js {{{
+const MODULE = "%c⭐🟣 js_boxing\t\t● ";
 let log_this = false;
-let tag_this = false || log_this;
+let tag_this = false || log_this; /* eslint-disable-line no-unused-vars */
 //{{{
 /* eslint-disable no-unused-vars */
 
@@ -57,14 +56,14 @@ let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
 
 /* eslint-enable  no-unused-vars */
 //}}}
-
+//}}}
 /*● onload {{{*/
 const DATA_ATTR_JS_BOXING = "data-js_boxing";
 
 let onload = function(e) /* eslint-disable-line no-unused-vars */
 {
 let caller = "onload";
-if(tag_this) log(MODULE+caller+" 2 js_boxing  \t🔴 onload:");
+if(log_this) log(MODULE+caller, lbB);
 if(log_this) log("✔ document.readyState=["+document.readyState+"]");
 
     // GUARD CHECK: ALREADY  FORMATTED {{{
@@ -94,7 +93,7 @@ if(log_this) log("✔ document.readyState=["+document.readyState+"]");
 let box_out = function(e) /* eslint-disable-line no-unused-vars */
 {
 let caller = "box_out";
-if(log_this) log(MODULE+caller);
+if(log_this) log(MODULE+caller, lbB);
 
     document.body.innerHTML = ""
       //+ "<button onclick='js_boxing.onload()'>js_boxing.onload()</button>\n"
@@ -121,7 +120,7 @@ const HEX_25A0  = "\u25A0"; // ■
 let text_to_HTML = function(data_in)
 {
 let caller = "text_to_HTML";
-if(log_this) log(MODULE+caller);
+if(log_this) log(MODULE+caller, lbB);
     // TRACK CODE-SECTION LINES ● get page header offset to first file content {{{
     let last_BOXD_index;
     let in_code = {};
@@ -132,30 +131,45 @@ if(log_this) log(MODULE+caller);
             = data_in.substr(0, first_closing_vim_fold).split("\n").length;
     }
     //}}}
+    // FILTER ● file name related {{{
+    let file_name
+        = js_xpath
+        .  parse_url(document.location.href)
+        .  path
+        .  match(/([^\/?#]*)(?:[?#]|$)/)?.[1] ?? "";  // strip any query or fragment
 
+    // CODE-PAGE
+    if(   js_linkify.line_match_supported_extension( file_name )
+       && file_name.match(/\.js$/)
+      ) {
+        in_code.code_page = file_name;
+        in_code.top_line  = 1;
+    }
+    //}}}
+    // SPLIT MULTIPLE TOKEN ON THE SAME LINE {{{
+    // i.e. ### The Workflow //PAT_VOPEN
+    data_in = data_in.replace(/(#[^\n]*)(\/\/\{\{\{)/mg, "$1\n$2");
+
+    //}}}
     // LINE FILTER {{{
-    let file_name = js_xpath
-        .parse_url(document.location.href)
-        .path
-        .match(/([^\/?#]*)(?:[?#]|$)/)?.[1] ?? "";  // strip any query or fragment
-
     let data_out = "";
     let    lines = data_in.split("\n");
     for(let i = 0; i < lines.length; ++i)
     {
+        // PAGE LINE #i {{{
         let l = lines[i];
-if(log_this) log("%c"+l, "background-color: #008;");//FIXME
 
+//{{{
+if(log_this) log("%c"+l, "background-color: #008;");//FIXME
+//}}}
+        //}}}
+        // TRIM LINE {{{
         l =         l.  replace(                  /</g, "&lt;"           ); // html entities
         l =         l.  replace(                  />/g, "&gt;"           ); // html entities
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ BLANK LINES
-        //└────────────────────────────────────────────────────────────────────┘
-        l =         l.  replace(              /^\s+$/ , ""               );
 
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ VIM FOLD DETAILS
-        //└────────────────────────────────────────────────────────────────────┘
+        l =         l.  replace(              /^\s+$/ , ""               ); // trailing-spaces
+        //}}}
+        // VIM FOLD DETAILS {{{
         if( RGX_VOPEN_OR__VCLOSE_LINE.exec(l) )
         {
           //data_out += js_md.md_format_header_line(""); // CLOSE ALL PENDING DETAILS
@@ -163,10 +177,9 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
 
 //if( l.includes("<!-- vim_fold") ) log(l);
         }
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ MARKDOWN * ➔ font-style
-        //└────────────────────────────────────────────────────────────────────┘
-        else if( l.match(/[\*_~`'"][\S ]+[\*_~`'"]/) )
+        //}}}
+        // MARKDOWN * ➔ font-style {{{
+        else if(!in_code.code_page && l.match(/[\*_~`'"][\S ]+[\*_~`'"]/))
         {
             l = js_md.md_format_line_style(l);
         }
@@ -176,18 +189,15 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
 //            l = l.replace(/(\/\/.*)/, "<em class='md m'>$1</em>");
 //        }
 //}}}
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ MARKDOWN # ➔ DETAILS
-        //└────────────────────────────────────────────────────────────────────┘
+        //}}}
+        // MARKDOWN # HEADER line ➔ H1..H6 {{{
         if( l.match(/^ *#|^\s*EOF/) ) {
             l = js_md
                 .md_format_header_line(l, file_name, i-recently_visited_header_lines);
 
-//if( l.includes("<!-- md_head") ) log(l);
         }
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ BOXING
-        //└────────────────────────────────────────────────────────────────────┘
+        //}}}
+        // BOXING {{{
             l =     l.  replace(/ *\/[\/\\*] *(┌.*$)/g, "<BOXU>$1</BOXU>"); // BOX UP
             l =     l.  replace(/ *\/[\/\\*] *(│.*$)/g, "<BOXM>$1</BOXM>"); // BOX MIDDLE
             l =     l.  replace(/ *\/[\/\\*] *(├.*$)/g, "<BOXM>$1</BOXM>"); // BOX SEP
@@ -196,15 +206,18 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
             l =     l.  replace(/ *\/[\/\\*] *(└.*$)/g, "<BOXD>$1</BOXD>"); // BOX DOWN
 
             if( l.includes("BOX") )
-            {
-                l = l.  replace(       /[└┘┌┐│─├┼┤]+/g, "" /*HTML_NBSP*/ ); // remove utf-8 boxing (or not)
-            }
-            // Handle BOXD [last_of_group] not followed by a following BOXU
-            // by altering last buffered line containing a BOXD at index
+                l = l.  replace(       /[└┘┌┐│─├┼┤]+/g, "" /*HTML_NBSP*/ ); // UTF-8 BOXING
+
+            //┌────────────────────────────────────────────────────────────────┐
+            //│ Handle BOXD [last_of_group] not followed by a following BOXU
+            //│ by altering last buffered line containing a BOXD at index
+            //└────────────────────────────────────────────────────────────────┘
             if( l.includes("BOXD") ) {
                 last_BOXD_index = data_out.length; // where it will be added
             }
-            // ENDING A BOX GROUP
+            //┌────────────────────────────────────────────────────────────────┐
+            //│ ENDING A BOX GROUP
+            //└────────────────────────────────────────────────────────────────┘
             else if(!l.includes("BOX") && last_BOXD_index)
             {
                 let at  = data_out.indexOf("<BOXD>", last_BOXD_index);
@@ -215,58 +228,56 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
                 }
                 last_BOXD_index = undefined;
             }
-
-        //┌────────────────────────────────────────────────────────────────────┐
-        //│ COMMENT
-        //└────────────────────────────────────────────────────────────────────┘
+        //}}}
+        // COMMENT {{{
         l =         l.  replace(           / *\/\* */g, ""               ); // 👉  /*   👈 // COMMENT START
         l =         l.  replace(           / *\*\/ */g, ""               ); // 👉  */   👈 // COMMENT END
         l =         l.  replace(        / *\[\.+\] */g, ""               ); // 👉 [...] 👈 Copilot comment
 
         //┌────────────────────────────────────────────────────────────────────┐
-        //│ SYMBOLS
+        //│ LF ■
         //└────────────────────────────────────────────────────────────────────┘
         l =         l.  replace(                /\\n/g,      HEX_21B2    ); // inline [LF]  TO [↲] .. (i.e. \n\n)
         l =         l.  replace(         /\> *\/\/ */g, ">"              ); //       [>// ] TO []
 //      l =         l.  replace(           / *\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
 //      l =         l.  replace(     /\> *[^:]\/\/ */g, ">"              ); //       [>// ] TO []
-    if(!in_code.line)
-        l =         l.  replace(       / *[^:]\/\/ */g,      HEX_25A0+" "); //        [//]  TO [■]
-    else
-        l = l.replace(/(\/\/.*)/, "<em class='md m'>$1</em>");    // @see SERVER/style/to_html.css
 
         //┌────────────────────────────────────────────────────────────────────┐
-        //│ OPTIONAL
+        //│ [//] TO [■]
         //└────────────────────────────────────────────────────────────────────┘
-      //l =         l.  replace(       / *;* *\{\{\{/g, " "              ); // remove VIM_FOLD markers
-      //l =         l.  replace(       / *;* *\}\}\}/g, " "              );
+        if(   (!in_code.code_page && !in_code.top_line)
+           || ( in_code.code_page &&  l.match(/^\s*\/\/\s<\/pre/))  // blank comment
+          )
+            l =     l.  replace(   /(^|[^:])(\/\/ *)/g, "$1"+HEX_25A0+" "); // [//]  TO [■]
 
         //┌────────────────────────────────────────────────────────────────────┐
-        //│ ENTERING OR LEAVING CODE SECTION
+        //│ Markdown comment decoration ● 'md m'  @see SERVER/style/to_html.css
         //└────────────────────────────────────────────────────────────────────┘
+        if(     in_code.code_page ||  in_code.top_line) {
+            l =     l.  replace(           /(\/\/.*?)(\<\/.*)/ , "<em class='md m'>$1</em>$2");
+            l =     l.  replace(         /(\u25A0.*?)(\<\/.*)/ , "<em class='md m'>$1</em>$2");
+        }
+
+        //}}}
+        // CODE_3BACK_TICS ● (entering or leaving code section) {{{
         let       s = l.trim();
-        let matches = RGX_CODE.exec( lines[i] );
+        let matches = !in_code.code_page && RGX_CODE_3BACK_TICS.exec( lines[i] );
         if( matches )
         {
             // CODE END
-            if( in_code.line ) {
-//{{{
-//if(in_code.line && (i-in_code.line) > 100)
-//    log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
-//               , "background-color: #006"                                                   ,"background-color: #808");
-//}}}
-                l = ""
-                //+ "</code>"
-                  + "```</pre>\n"
-                ;
+            if( in_code.top_line )
+            {
+                l = "```</pre>\n";
+
                 if(in_code.v_fold)
                     l +=  vim_fold_line(STR_VCLOSE, file_name, i-recently_visited_header_lines);
 
-                in_code.line = 0;
+                in_code.top_line   = 0;
             }
             // CODE START
             else {
-                in_code.line   = i - recently_visited_header_lines;
+              //in_code.top_line   = i - recently_visited_header_lines;
+                in_code.top_line   = i;
 
                 in_code.code   = lines[i];
 
@@ -283,58 +294,91 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
                 ;
             }
         }
+        //}}}
         //┌────────────────────────────────────────────────────────────────────┐
-        //│ COMMENT EVERYTHING IN CODE SECTION
+        //│ [code_line] IN CODE SECTION
         //└────────────────────────────────────────────────────────────────────┘
-        else if( in_code.line )
+        else if((i > recently_visited_header_lines) && in_code.top_line)
         {
-          //l = "//"+ l +"\n";
-            l = " "  +l +"\n";
-
+            //┌────────────────────────────────────────────────────────────────┐
+            //│ When rendering an *in_code.code_page* source code,
+            //│ while parsing the *recently visited section*
+            //│ the first *top_line* may be negative
+            //└────────────────────────────────────────────────────────────────┘
+            if( in_code.top_line < recently_visited_header_lines) {
+                in_code.top_line = recently_visited_header_lines;
+            }
+            //┌────────────────────────────────────────────────────────────────┐
+            //│ decorate only when not already rendered by vim_fold_line
+            //└────────────────────────────────────────────────────────────────┘
+            if((in_code.top_line >= 1) && !l.includes("data-badge"))
+            {
+                let code_line = i - in_code.top_line;
+              //l   =                      (""+code_line).padStart(5)          + l +"\n";
+                l   = "<em class='md l'>"+ (""+code_line).padStart(5) +"</em> "+ l +"\n";
+            }
         }
         //┌────────────────────────────────────────────────────────────────────┐
         //│ ENDING .. SECTION
         //└────────────────────────────────────────────────────────────────────┘
-        // Add Linefeed {{{
-        else if( s.length
-           &&   !s.endsWith("<pre>"     )
-           &&   !s.endsWith("</boxd>"   )
-           &&   !s.endsWith("</details>")
-           &&   !s.endsWith("</h1>"     ) // Kill extra line (white-space: pre)
-           &&   !s.endsWith("</h2>"     )
-           &&   !s.endsWith("</h3>"     )
-           &&   !s.endsWith("</h4>"     )
-           &&   !s.endsWith("</h5>"     )
-           &&   !s.endsWith("</h6>"     )
-          ) {
-            l += "\n";
+        // LF Add or Trim {{{
+        if( s.length )
+        {
+            if(      s.endsWith("</pre>"    )
+                  || s.endsWith("</boxd>"   )
+                  || s.endsWith("</details>")
+                  || s.endsWith("</h1>"     )
+                  || s.endsWith("</h2>"     )
+                  || s.endsWith("</h3>"     )
+                  || s.endsWith("</h4>"     )
+                  || s.endsWith("</h5>"     )
+                  || s.endsWith("</h6>"     )
+              )
+                l  = l.trim();
+
+            else if(!l.endsWith("\n") )
+                l += "\n";
         }
         //}}}
 
         data_out +=             l  ;
     }
     //}}}
-//{{{
-if(tag_this && in_code.line)
+// WARN MISSING A CODE-END-MARKER {{{
+if(/*tag_this &&*/ !in_code.code_page && in_code.top_line)//FIXME
 {
     let i = lines.length;
-    log( "❌ %c"+ (i-in_code.line) +" code lines: from "+in_code.line+" to "+ i +":\t%c"+ in_code.code
-            ,lf6                                                                    ,lb2              );
+    log( "❌ %c"+ (i - in_code.top_line) +" code lines: from "+in_code.top_line+" to "+ i +":\t%c"+ in_code.code
+            ,lf6                                                                              ,lb2              );
 
     log( "❌ %c missing a code-end-marker: %c ``` "
             ,lf2                          ,lb2     );
 }
 //}}}
+    // MARKDOWN BUFFER FORMAT {{{
+    // ● close markdown-header-generated-details  (✘ currently opted-out)
+    data_out += js_md.md_format_header_line( ""       );
 
-    data_out += js_md.md_format_header_line( ""       ); // CLOSE DANGLING DETAILS
+    // ● markdown table
     data_out  = js_md.md_format_table      ( data_out );
-    data_out  = box_insert_LF              ( data_out );
+
+    // ● markdown NUMBER-LINE-HEADER
+    data_out  = box_insert_md_NUMBER_LF    ( data_out );
+
+    //}}}
+    // return a TO-HTML-PRE container {{{
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● tag recently_visited section ● @see js_linkify.url_to_href decorating
+    //└────────────────────────────────────────────────────────────────────────┘
+    data_out  = data_out.replace(/<pre>/, "<pre id='recently_visited'>");
 
     return   "<pre>"+ data_out +"</pre>\n";
+    //}}}
 };
 /*}}}*/
-/*_ box_insert_LF {{{*/
-let box_insert_LF = function( data_in )
+/*_ box_insert_md_NUMBER_LF {{{*/
+let box_insert_md_NUMBER_LF = function( data_in )
 {
     //┌─────────────┐
     //│ *** NUMBER  │
@@ -356,7 +400,7 @@ let box_insert_LF = function( data_in )
 //... REGEX
 const STR_VOPEN                 = "{{"+"{";
 const STR_VCLOSE                = "}}"+"}";
-const RGX_CODE                  = new RegExp("```(\\w*) *("+STR_VOPEN+"|"+STR_VCLOSE+")?");
+const RGX_CODE_3BACK_TICS       = new RegExp("```(\\w*) *("+STR_VOPEN+"|"+STR_VCLOSE+")?");
 
 //... PATTERN
 const PAT_VOPEN                 = "\\{\\{\\{";
@@ -390,6 +434,26 @@ let vim_fold_line = function(l_in, file, l_num)
         .    replace(                  /_LNU_/    , file +" line "+l_num     ) // SERVER/style/to_html.css
         .    replace(RGX_VCLOSE_LINE              , RPL_VCLOSE_LINE          )
     ;
+    // [data-basename] ● @see js_linkify.linkify_file_pathes {{{
+    if( l_in.includes("basename") )
+    {
+        //......................./00000000000000000000000000000000/
+        //......................./                      111       /
+        //......................./ (    basename   =    DIR     ) /
+        //......................./ ▼    ▼▼▼▼▼▼▼▼   ▼    ▼▼▼     ▼ /
+        let matches = l_in.match(/\(?\s*basename\s*=\s*(\S+)\s*\)?/);
+        if( matches ) {
+            l = l.replace( matches[0], "🔗"); // CONSUME DIRECTIVE
+            let basename = matches[1].replace(/[\(\)]/,"");
+            l = l.replace(/<pre>/, "<pre data-basename='"+basename+"'>");
+//{{{
+//log("%c matches[0]=["+ matches[0] +"]", "color: yellow");
+//log("%c ..basename=["+ basename   +"]", "color: yellow");
+//log("%c .........l=["+ l          +"]", "color: yellow");
+//}}}
+        }
+    }
+    //}}}
 
     if(     l.includes("vim_fold_open" )) vim_fold_level += 1;
     else if(l.includes("vim_fold_close")) vim_fold_level -= 1;
@@ -408,6 +472,6 @@ let vim_fold_line = function(l_in, file, l_num)
     };
     //}}}
 })();
-try { module.exports = js_boxing; } catch(ex) { /*log(ex.message);*/ /*console.trace();*/ } /* eslint-disable-line no-unused-vars */
+try { module.exports = js_boxing; } catch(ex) {} /* eslint-disable-line no-unused-vars */ /* eslint-disable-line no-empty */
 export { js_boxing }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
 window.js_boxing     = js_boxing;

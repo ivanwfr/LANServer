@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ notes.js     ● $APROJECTS/LANServer/SERVER           ● _TAG (261105:03h:58)
+//│ notes.js     ● $APROJECTS/LANServer/SERVER           ● _TAG (261109:19h:58)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //│ 🔴 Create, save, load and delete Notes in a section at the end of the body
@@ -351,7 +351,7 @@ if( js_VIEW.no_input_to_save(input, e_or_payload) )
     return;
 
 let caller = "notes.note_1_onclick_save";
-if(tag_this) log(MODULE+caller+"("+e_or_payload.type+")", lbB);
+if(tag_this) log(MODULE+caller+"(type "+e_or_payload.type+")", lbB);
 //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ 🟡 DATA
@@ -359,7 +359,7 @@ if(tag_this) log(MODULE+caller+"("+e_or_payload.type+")", lbB);
     //│ - nArray
     //└────────────────────────────────────────────────────────────────────────┘
     // data last_note_auto_save:    ➔ DELETE  auto_save NOTE ... {{{
-    else if( is_last_note_auto_save()  )
+    if( is_last_note_auto_save()  )
     {
 if(tag_this) log("...deleting auto_save last note #", nArray.length);
         nArray.splice(nArray.length-1, 1);
@@ -381,6 +381,7 @@ if(tag_this) log("...no text to save");
         return;
     }
     text = text.trim();
+if(tag_this) log("...text=["+ellipsis(text,50)+"]");
     //}}}
 
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -723,7 +724,7 @@ if(tag_this) log(MODULE+caller+" "+ e.type, lbB);
     // LAYOUT GUI
     js_notes.layout_notes("note_6_onclick_delete", index);
 
-    // SHIFT EDITING NOTE DIV
+    // SHIFT STATE_EDITING NOTE DIV
     let editing_note_index  = js_CNTRL.get_editing_note_index();
     if( editing_note_index >= 0)
     {

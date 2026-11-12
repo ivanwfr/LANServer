@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_MODEL.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261105:01h:30) │
+//│ js_MODEL.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261109:21h:22) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //| SKELETON FOR SERVER/scripts/notes.js
@@ -130,10 +130,11 @@ if(log_this) log("promise:", promise);
         return promise;
     };
     /*}}}*/
-    /*_ getAll {{{*/
+    /*_ get_nArray {{{*/
     let prev_call_notes_length;
-    let getAll = function()
+    let get_nArray = function()
     {
+//if(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
         let nArray = notes.get_nArray();
 //log (debounced) {{{
 if(nArray.length != prev_call_notes_length)
@@ -141,7 +142,7 @@ if(nArray.length != prev_call_notes_length)
     prev_call_notes_length = nArray.length;
 
 //log {{{
-let caller = "getAll";
+let caller = "get_nArray";
 if(tag_this) log(MODULE  + caller              , lbB+lf1);
 
 if(log_this) log(CALLING+"notes.get_nArray() ➔ "+ nArray.length+" notes", lbB+lf1); // SERVER/scripts/notes.js
@@ -175,7 +176,7 @@ if(log_this) log("promise:", promise);
         //│ MVC MIGRATION
         //└────────────────────────────────────────────────────────────────────┘
         , load
-        , getAll
+        , get_nArray
         , check
     };
     //}}}

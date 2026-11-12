@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261106:00h:03)
+//│ js_linkify.js   ● $APROJECTS/LANServer/SERVER        ● _TAG (261112:02h:25)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│ 🟤 ecc colorize details>summary
 //│ 🟤 linkify relative source-file-path in comments
@@ -67,10 +67,18 @@ let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
 let onload  = function()
 {
 let caller = "onload";
-if(tag_this) log(MODULE+caller+"4 🟡 onload:");
+if(tag_this) log(MODULE+caller+"4 🟡 onload:", lb0);
 
     // TURN PATH INTO HTML ANCHOR
-    linkify_file_pathes();
+    let visited_pre = document.getElementById("recently_visited");
+    linkify_file_pathes( visited_pre );
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ Format href to <a href> ● for containers with [data-basename='URL']
+    //└────────────────────────────────────────────────────────────────────────┘
+    document.querySelectorAll("[data-basename]").forEach((pre) => {
+        linkify_file_pathes( pre );
+    });
 
     // DETAILS COLORIZE
     let     el = document.querySelector("DETAILS");
@@ -219,7 +227,7 @@ let caller = "clear_this_visited_url";
               , body })
         .then ((response) =>   response.json() )
         .then ((    data) => { /* eslint-disable-line no-unused-vars */
-if(tag_this) log(MODULE+caller+":"+ JSON.stringify(data));
+if(tag_this) log(MODULE+caller+":"+ JSON.stringify(data), lb0);
             e_target.style.opacity                    = "0.2";
             let a =   e_target.nextElementSibling
                    || e_target.parentElement.nextElementSibling
@@ -442,7 +450,7 @@ let caller = "fold_close_open_toggle"; /* eslint-disable-line no-unused-vars */
         if( e.stopImmediatePropagation ) event.stopImmediatePropagation();
         if( e.preventDefault           ) event.preventDefault          ();
     }
-//if(log_this) log(MODULE+caller+"%c "+ (count ? count:"NO") +" fold"+ (count>1 ? "s":"") +" "+ ((state==0) ? "closed" : ((state==1) ? "opened":"toggled") +" "), "background-color: "+BG[count]);
+if(tag_this) log(MODULE+caller+"%c "+ (count ? count:"NO") +" fold"+ (count>1 ? "s":"") +" "+ ((state==0) ? "closed" : ((state==1) ? "opened":"toggled") +" "), lb0,lfX[count % 10]);
 
     return count;
 };
@@ -457,7 +465,7 @@ const VISITED_HISTORY_UNCHECK_SYMBOL = "❌";
 
 let   RGX_CLR;
 //}}}
-let linkify_file_pathes = function()
+let linkify_file_pathes = function(container)
 {
 let caller = "linkify_file_pathes";
 
@@ -465,12 +473,24 @@ let caller = "linkify_file_pathes";
     url_to_href.basename_clear();
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ PRE CONTAINING [BARE FILE OR FOLDER PATH] TO [HTML ANCHOR]
+    //│ <PRE> CONTAINING [BARE FILE OR FOLDER PATH] TO [HTML ANCHOR]
     //└────────────────────────────────────────────────────────────────────────┘
     let innerHTML = "";
-    let       pre = document.querySelector("PRE");
-    let     lines = pre.innerHTML.split("\n");
 
+    // container.dataset.basename {{{*/
+    if(typeof container.dataset.basename != "undefined")
+    {
+if(tag_this) log(caller+": container.dataset.basename=["+container.dataset.basename+"]");
+
+        let basename_line
+            = "basename="+container.dataset.basename;
+//log("basename_line=["+basename_line+"]");//FIXME
+
+        innerHTML
+            += url_to_href.line_url_to_href( basename_line )+"\n";
+    }
+    //}}}
+    let     lines = container.innerHTML.split("\n");
     //  RGX_CLR {{{
     if(!RGX_CLR )
     {
@@ -484,10 +504,9 @@ let caller = "linkify_file_pathes";
 
         RGX_CLR = new RegExp(`${match1}${symbol}${match2}${e_href}${match3}`, "");
 
-if(log_this) log(MODULE+caller+"RGX_CLR:", RGX_CLR);
+if(log_this) log(MODULE+caller+"RGX_CLR:", RGX_CLR, lb0);
     }
     //}}}
-
     lines.forEach((line) => {
         line = url_to_href.line_url_to_href( line );
         // BUTTON to remove visited history {{{
@@ -539,7 +558,7 @@ if(log_this) {
             innerHTML  += line +"\n";
     });
 
-    pre.innerHTML = innerHTML.trim();
+    container.innerHTML = innerHTML.trim();
 };
 /*}}}*/
 
@@ -552,25 +571,10 @@ if(log_this) {
 //{{{
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261105:16h:39)
+//│ url_to_href.js                                       ● _TAG (261111:19h:14)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
-// RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
-const RGX_EXT_ARRAY
-    = [ "ahk"
-      , "asp"
-      , "awk"
-      , "css"
-      , "json"
-      , "js"
-      , "log"
-      , "lua"
-      , "md"
-      , "tmc"
-      , "txt"
-      , "vim"
-    ];
-let   RGX_EXT;
+//{{{
 let   basename;
 let   a_href_to_html_array = [];
 //}}}
@@ -588,38 +592,25 @@ let line_url_to_href = function(line, dir_href)
     let folder        = href  .substr(root.length);                   // after first '/'
         folder        = folder.substr(0, folder.length -file.length); // before file
 
-// log {{{
+/* log {{{*/
 //console.log("➔ href    = ["+href+"]");
 //console.log("➔ root    = ["+root+"]");
 //console.log("➔ file    = ["+file+"]");
 //console.log("%c folder = ["+ folder+"]", "color: yellow");
 //console.log("🟤🔴🟠🟡🟢🔵🟣⚫⚪️");
-//}}}
-    //}}}
-    //  RGX_EXT {{{
-    if(!RGX_EXT )
-    {
-        let s   = "";
-        RGX_EXT_ARRAY.forEach((ext) => s += "|"+ext);
-        s       = s.substr(1); // trim extra first pipe
-        RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9\.]+\\.("+s+"))","g");
-//console.log("RGX_EXT:", RGX_EXT);
-    }
+/*}}}*/
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ SET or CLEAR *Page relative URL* **basename** ● (runlenght)
     //└────────────────────────────────────────────────────────────────────────┘
     //{{{
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ .......................11...............22222222..33...................
-    //└────────────────────────▼▼───────────────▼▼▼▼▼▼▼▼──▼▼───────────────────┘
-    let matches = line.match(/(.*)basename *= *([^\s<>]*)(.*)/);
+    //│ ........................111...............22222222..33.................
+    //└─────────────────────────▼▼▼───────────────▼▼▼▼▼▼▼▼──▼▼─────────────────┘
+    let matches = line.match(/^(\s*)basename *= *([^\s<>]*)(.*)/);
     if( matches )
     {
-//console.log("\n"+line);
-//console.log("matches[1]=["+matches[1]+"]");
-//console.log("matches[2]=["+matches[2]+"]");
-//console.log("matches[3]=["+matches[3]+"]");
+//log("%c basename..=["+matches[2]+"]", lbB+lb4+lf2);
 
         let prev = basename;
         basename = matches[2];
@@ -687,7 +678,8 @@ let line_url_to_href = function(line, dir_href)
 //console.log(  "\nline=["+line+"]");
 //console.log(    "path=["+path+"]");
 //console.log(    "basename=["+basename+"]");
-            if( basename ) {
+            if( basename && !basename.toUpperCase().startsWith("URL") )
+            {
                 let p
                     = (path.startsWith("./") ? path.substr(2) : path);
 //console.log("p=["+p+"]");
@@ -738,6 +730,37 @@ let line_url_to_href = function(line, dir_href)
     return line;
 };
 /*}}}*/
+//_ get_RGX_EXT {{{
+//{{{
+const RGX_EXT_ARRAY
+    = [ "ahk"
+      , "asp"
+      , "awk"
+      , "css"
+      , "json"
+      , "js"
+      , "log"
+      , "lua"
+      , "md"
+      , "tmc"
+      , "txt"
+      , "vim"
+    ];
+let   RGX_EXT;
+//}}}
+let get_RGX_EXT = function()
+{
+    if(!RGX_EXT )
+    {
+        let s   = "";
+        RGX_EXT_ARRAY.forEach((ext) => s += "|"+ext);
+        s       = s.substr(1); // trim extra first pipe
+        RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9\.]+\\.("+s+"))","g");
+//console.log("RGX_EXT:", RGX_EXT);
+    }
+    return RGX_EXT;
+};
+//}}}
 /*_ get_a_list {{{*/
 let get_a_list = function(a_href, q)
 {
@@ -761,7 +784,7 @@ let get_a_list = function(a_href, q)
     for(let i=0; i < dirs.length; ++i)
     {
         let d = dirs[i];
-//console.log("...d=["+d+"]");
+//console.log("...d=["+d+"]");//FIXME
         subs +=  d;
         if(is_dir || (i  < (dirs.length - 1))) subs += "/";
         else if(     (i == (dirs.length - 1))) subs +=   q;
@@ -891,7 +914,7 @@ let line_match_supported_extension = function(l_trim)
 
     let matches
         =  l_trim.match(/\/\w+.*\/$/) // FOLDER
-        || l_trim.match( RGX_EXT  );
+        || l_trim.match( get_RGX_EXT()  );
 
 //if(matches) console.log( l_trim     );
 //if(matches) console.log( matches[0] );
@@ -915,11 +938,13 @@ let line_match_supported_extension = function(l_trim)
     //    //}}}
 };
 /*}}}*/
-
+//● PUBLIC {{{
     return { name: "url_to_href"
         ,    line_url_to_href
+        ,    line_match_supported_extension
         ,    basename_clear: () => basename = ""
     };
+//}}}
 })();
 globalThis.url_to_href  = url_to_href;
 //}}}
@@ -935,6 +960,7 @@ globalThis.url_to_href  = url_to_href;
         ,    toggle_hide            // exposed to onclick
         ,    toggle_wrap            // exposed to onclick
         ,    clear_this_visited_url // exposed to onclick
+        ,    line_match_supported_extension : url_to_href.line_match_supported_extension
         // DEBUG ONLY
         ,    linkify_file_pathes
     };

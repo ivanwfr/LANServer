@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_md.js                                               _TAG (261109:00h:47)
+//│ js_md.js                                               _TAG (261112:16h:29)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //│ *md_format_header_line* Opens and Close a DETAILS>SUMMARY,PRE for each MD header
@@ -160,7 +160,7 @@ const ESCAPE_PREFIX = '\x00MD_ESC\x00';
 //│ MATCHES ANY WORD-LIKE CHARACTER INCLUDING
 //│ UNICODE LETTERS, DIGITS, HYPHENS, DOTS
 //└────────────────────────────────────────────────────────────────────────────┘
-const WORD = `(?:[\\p{L}\\p{N}_\\.=<>+/\\\\(){}\\[\\];:,!?'"#@$%^&|]|${ESCAPE_PREFIX}SPACE${ESCAPE_PREFIX})+`;
+const WORD = `(?:[\\p{L}\\p{N}_\\.=\\-<>+/\\\\(){}\\[\\];:,!?'"#@$%^&|]|${ESCAPE_PREFIX}SPACE${ESCAPE_PREFIX})+`;
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ REGEX ● COMPILED ONCE AT MODULE LOAD, REUSED ON EVERY CALL

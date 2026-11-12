@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ server5_content.js                                     _TAG (261108:14h:46)
+//│ server5_content.js                                     _TAG (261110:17h:44)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 let url_to_href      = require("./url_to_href.js");
@@ -100,7 +100,7 @@ const PAGE_HEAD_INNER_HTML = ""
     + "<script type='module'  src='/scripts/js_store.js'   ></script>\n"
     + "<script type='module'  src='/scripts/js_xpath.js'   ></script>\n"
     + "\n"
-    + "<script type='module'  src='/scripts/Bus.js'        ></script>\n"    // COMM  SM
+    + "<script type='module'  src='/scripts/js_BUS.js'     ></script>\n"    // COMM  SM
     + "<script type='module'  src='/scripts/js_MODEL.js'   ></script>\n"    // MODEL SM
     + "<script type='module'  src='/scripts/js_VIEW.js'    ></script>\n"    // VIEW  SM
     + "<script type='module'  src='/scripts/js_CNTRL.js'   ></script>\n"    // CNTRL SM
@@ -339,7 +339,7 @@ let add_recently_visited = function(request, dir_list_page)
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ REMOVE SHORTER CONTAINED ENTRIEs
     //└────────────────────────────────────────────────────────────────────────┘
-    url_array = remove_contained( url_array );
+    url_array = remove_contained_folders( url_array );
     url_array.unshift("/");
 
     //┌────────────────────────────────────────────────────────────────────────┐
@@ -374,8 +374,8 @@ let add_recently_visited = function(request, dir_list_page)
     ;
 };
 /*}}}*/
-/*_ remove_contained {{{*/
-let remove_contained = function(str_array)
+/*_ remove_contained_folders {{{*/
+let remove_contained_folders = function(str_array)
 {
 //console.log("str_array", str_array);
     let longer_first

@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER     ● _TAG (261108:16h:07)
+//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER     ● _TAG (261109:21h:11)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //│ Here is a minimal, clutter-free implementation of                          │
@@ -95,6 +95,7 @@ let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
 /*_ onload {{{*/
 let onload = function(e)
 {
+js_log.load_logging_modules();
 let caller = "onload";
 if(tag_this) log(MODULE+caller, lbB+lf3);
     requestAnimationFrame(() => js_boxing   .onload(e));
@@ -106,30 +107,36 @@ if(tag_this) log(MODULE+caller, lbB+lf3);
 /*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ PRIVATE
+//│ PRIVATE ● suspended listeners
 //└────────────────────────────────────────────────────────────────────────────┘
-//  currentState listeners {{{
+// subscribe {{{
 //┌────────────────────────────────────────────────────────────────────────┐
-//│ INTERNAL STATE
+//│ Registers a listener callback to be called whenever state changes
+//│
+//│ @param {Function} listenerFn - Callback: (state, payload) => void
 //└────────────────────────────────────────────────────────────────────────┘
-const SM_STATES = [
-  "BADSTATE"    // 0
-, "IDLE"        // 1
-, "EDITING"     // 2
-, "SAVE_NOTE"   // 3
-, "SAVING"      // 4
-, "SELECT_NOTE" // 5
-, "DELETE_NOTE" // 6
-, "DELETING"    // 7
-, "CANCEL"      // 8
-];
-let get_state_num = function(state)
-{
-    return 1+ SM_STATES.indexOf(state); // 0 when not found
-};
-
-let currentState = "IDLE";
 let listeners = [];
+let subscribe = function(module_name, listenerFn)
+{
+// log {{{
+let caller = "subscribe";
+if(tag_this) log(MODULE+caller+"( "+module_name+" )", lbB+lf3);
+if(log_this) log("%c● listenerFn.\t%c["+ listenerFn.name +"]", lf3,lb1);
+//}}}
+
+    //┌────────────────────────────────────────────────────────────────────┐
+    //│ REGISTER
+    //└────────────────────────────────────────────────────────────────────┘
+    listeners.push( listenerFn );
+
+    //┌────────────────────────────────────────────────────────────────────┐
+    //│ NOTIFY
+    //│ Immediately notify listener of current state upon subscription
+    //└────────────────────────────────────────────────────────────────────┘
+    if( log_this ) log("%c notifying listener", lf3);
+    listenerFn(currentState, null);
+
+};
 //}}}
 // changeState {{{
 //┌────────────────────────────────────────────────────────────────────────┐
@@ -153,132 +160,149 @@ if(log_this) {
 //}}}
 
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ TRANSITIONS
+//│ STATES ● EVENTS
 //└────────────────────────────────────────────────────────────────────────────┘
-// TRANSITION TABLE {{{
 //┌────────────────────────────────────────────────────────────────────────┐
 //│ ●  Current State
 //│ ●  Action
 //│ ●  Next State / Action Handler
 //└────────────────────────────────────────────────────────────────────────┘
-// IDLE     = { SELECT_NOTE() ● SAVE_NOTE() ● DELETE_NOTE() } {{{
-const IDLE = {
-    // 🟠 SELECT_NOTE   ➔ [EDITING  ] {{{
-    SELECT_NOTE: (payload) => {
+
+// STATE_IDLE     = { EVENT_SELECT_NOTE() ● EVENT_SAVE_NOTE() ● EVENT_DELETE_NOTE() } {{{
+const STATE_IDLE = {
+    // 🟠 EVENT_SELECT_NOTE   ➔ [STATE_EDITING  ] {{{
+    EVENT_SELECT_NOTE: (payload) => {
 // log {{{
-let caller = "IDLE ● SELECT_NOTE";
+let caller = "STATE_IDLE ON: EVENT_SELECT_NOTE";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 if(log_this) log("%c● payload.....:\t%c["+ ellipsis(JSON.stringify(payload)) +"]", lf3,lb1);
 //}}}
-        changeState("EDITING", payload);
+        changeState("STATE_EDITING", payload);
     },
     //}}}
-    // 🟠 SAVE_NOTE     ➔ [SAVING   ] ➔ await ➔ [IDLE] {{{
-    SAVE_NOTE: async (payload) => {
+    // 🟠 EVENT_SAVE_NOTE     ➔ [STATE_SAVING   ] ➔ await ➔ [STATE_IDLE] {{{
+    EVENT_SAVE_NOTE: async (payload) => {
 // log {{{
-let caller = "IDLE ● SAVE_NOTE";
+let caller = "STATE_IDLE ON: EVENT_SAVE_NOTE";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 if(log_this) log("%c● payload.....:\t%c["+ JSON.stringify(payload)   +"]", lf3,lb1);
 //}}}
-        changeState("SAVING"  );
-        const               savedNote = await   js_MODEL.save(payload);
-        changeState("IDLE", savedNote);
+        changeState("STATE_SAVING");
+        let savedNote = await   js_MODEL.save( payload );
+        changeState("STATE_IDLE", savedNote);
     },
     //}}}
-    // 🟠 DELETE_NOTE   ➔ [DELETING ] ➔ await ➔ [IDLE] {{{
-    DELETE_NOTE: async (noteId) => {
+    // 🟠 EVENT_DELETE_NOTE   ➔ [STATE_DELETING ] ➔ await ➔ [STATE_IDLE] {{{
+    EVENT_DELETE_NOTE: async (noteId) => {
 // log {{{
-let caller = "IDLE ● DELETE_NOTE";
+let caller = "STATE_IDLE ON: EVENT_DELETE_NOTE";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 if(log_this) log("%c● noteId......:\t%c["+ noteId                    +"]", lf3,lb1);
 //}}}
-        changeState("DELETING", noteId);
-        /*...........................*/ await   js_MODEL.remove( noteId );
-        changeState("IDLE"    );
+        changeState("STATE_DELETING", noteId);
+        /*...........*/ await   js_MODEL.remove( noteId );
+        changeState("STATE_IDLE");
     }
     //}}}
 };
 //}}}
-/* EDITING  = { SELECT_NOTE() ● SAVE_NOTE() ● DELETE_NOTE() ● CANCEL() } {{{*/
-const EDITING = {
-    // 🟠 SELECT_NOTE   ➔ [EDITING  ] ... possibly same or other notes_table entry {{{
-    SELECT_NOTE: (payload) => {
+/* STATE_EDITING  = { EVENT_SELECT_NOTE() ● EVENT_SAVE_NOTE() ● EVENT_DELETE_NOTE() ● EVENT_CANCEL() } {{{*/
+const STATE_EDITING = {
+    // 🟠 EVENT_SELECT_NOTE   ➔ [STATE_EDITING  ] ... possibly same or other notes_table entry {{{
+    EVENT_SELECT_NOTE: (payload) => {
 // log {{{
-let caller = "IDLE ● SELECT_NOTE";
+let caller = "STATE_EDITING ON: EVENT_SELECT_NOTE";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 if(log_this) log("%c● payload.....:\t%c["+ JSON.stringify(payload)   +"]", lf3,lb1);
 //}}}
         let              index  = get_editing_note_index();
         let canceling = (index == parseInt( payload.id ));
         if( canceling ) {
-            changeState("IDLE");
+            changeState("STATE_IDLE");
         }
         else {
-            changeState("EDITING", payload);
+            changeState("STATE_EDITING", payload);
         }
     },
     //}}}
-    // 🟠 SAVE_NOTE     ➔ [SAVING   ] ➔ await ➔ [IDLE] {{{
-    SAVE_NOTE: async (payload) => {
+    // 🟠 EVENT_SAVE_NOTE     ➔ [STATE_SAVING   ] ➔ await ➔ [STATE_IDLE] {{{
+    EVENT_SAVE_NOTE: async (payload) => {
 // log {{{
-let caller = "EDITING ● SAVE_NOTE";
+let caller = "STATE_EDITING ON: EVENT_SAVE_NOTE";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 if(log_this) log("%c● payload.....:\t%c["+ JSON.stringify(payload)   +"]", lf3,lb1);
 //}}}
-        changeState("SAVING", payload);
-        const               savedNote = await   js_MODEL.save( payload );
-        changeState("IDLE", savedNote);
+        changeState("STATE_SAVING", payload);
+        let                 savedNote = await   js_MODEL.save( payload );
+        changeState("STATE_IDLE", savedNote);
     },
     //}}}
-    // 🟠 DELETE_NOTE   ➔ [SAVING   ] ➔ await ➔ [IDLE] {{{
-    DELETE_NOTE: async (noteId) => {
+    // 🟠 EVENT_DELETE_NOTE   ➔ [STATE_SAVING   ] ➔ await ➔ [STATE_IDLE] {{{
+    EVENT_DELETE_NOTE: async (noteId) => {
 // log {{{
-let caller = "EDITING ● DELETE_NOTE";
+let caller = "STATE_EDITING ON: EVENT_DELETE_NOTE";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 if(log_this) log("%c● noteId......:\t%c["+ noteId                    +"]", lf3,lb1);
 //}}}
-        changeState("DELETING", noteId);
+        changeState("STATE_DELETING", noteId);
         /*...........................*/ await   js_MODEL.remove( noteId );
-        changeState("IDLE"    );
+        changeState("STATE_IDLE"    );
     },
     //}}}
-    // 🟠 CANCEL        ➔ ....................➔ [IDLE] {{{
-    CANCEL: () => {
+    // 🟠 EVENT_CANCEL        ➔ ....................➔ [STATE_IDLE] {{{
+    EVENT_CANCEL: () => {
 // log {{{
-let caller = "EDITING ● CANCEL";
+let caller = "STATE_EDITING ON: EVENT_CANCEL";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 //}}}
-        changeState("IDLE");
+        changeState("STATE_IDLE");
     }
     //}}}
 };
 /*}}}*/
-// SAVING()         ➔ ....................➔ [IDLE] {{{
-const SAVING = () => {
+// STATE_SAVING()         ➔ ....................➔ [STATE_IDLE] {{{
+const STATE_SAVING = () => {
 // log {{{
-let caller = "SAVING";
+let caller = "STATE_SAVING";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 //}}}
     // Lock actions during network/persistence calls
-    changeState("IDLE");
+    changeState("STATE_IDLE");
 };
 //}}}
-// DELETING()       ➔ ....................➔ [IDLE] {{{
-const DELETING = () => {
+// STATE_DELETING()       ➔ ....................➔ [STATE_IDLE] {{{
+const STATE_DELETING = () => {
 // log {{{
-let caller = "DELETING";
+let caller = "STATE_DELETING";
 if(tag_this) log(MODULE+caller, lbB+lf3);
 //}}}
     // Lock actions during network/persistence calls
 };
 //}}}
-const TRANSITIONS = {
-    IDLE,
-    EDITING,
-    SAVING,
-    DELETING
+
+// SM_STATES {{ {
+const SM_STATES
+    = {   STATE_IDLE
+        , STATE_EDITING
+        , STATE_SAVING
+        , STATE_DELETING
+    };
+
+const SM_EVENTS
+    = [   "EVENT_SELECT_NOTE"
+        , "EVENT_SAVE_NOTE"
+        , "EVENT_DELETE_NOTE"
+        , "EVENT_CANCEL"
+    ];
+
+let currentState  = "STATE_IDLE";
+
+let get_state_num = function(state)
+{
+  //return 1+ Object.values( SM_STATES ).indexOf( state ); // return 0 when not found
+    return 1+ Object.keys  ( SM_STATES ).indexOf( state ); // return 0 when not found
 };
-//}}}
+//}} }
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤  M V C🚧 REFACTORING ZONE ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
@@ -315,58 +339,31 @@ if(log_this) log(MODULE+caller+"(noteId "+noteId+")", lbB+lf3);
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤  M V C🚧 REFACTORING ZONE ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 //└────────────────────────────────────────────────────────────────────────────┘
-// subscribe {{{
-//┌────────────────────────────────────────────────────────────────────────┐
-//│ Registers a listener callback to be called whenever state changes
-//│
-//│ @param {Function} listenerFn - Callback: (state, payload) => void
-//└────────────────────────────────────────────────────────────────────────┘
-let subscribe = function(module_name, listenerFn)
-{
-// log {{{
-let caller = "subscribe";
-if(tag_this) log(MODULE+caller+"( "+module_name+" )", lbB+lf3);
-if(log_this) log("%c● listenerFn.\t%c["+ listenerFn.name +"]", lf3,lb1);
-//}}}
-
-    //┌────────────────────────────────────────────────────────────────────┐
-    //│ REGISTER
-    //└────────────────────────────────────────────────────────────────────┘
-    listeners.push( listenerFn );
-
-    //┌────────────────────────────────────────────────────────────────────┐
-    //│ NOTIFY
-    //│ Immediately notify listener of current state upon subscription
-    //└────────────────────────────────────────────────────────────────────┘
-    if( log_this ) log("%c notifying listener", lf3);
-    listenerFn(currentState, null);
-
-};
-//}}}
 // transition {{{
 //┌────────────────────────────────────────────────────────────────────────┐
 //│ Attempts to trigger a transition based on user intent/action
 //│
-//│ @param {string} actionName - e.g., "SAVE_NOTE", "SELECT_NOTE"
+//│ @param {string} actionName - "EVENT_SAVE_NOTE", "EVENT_SELECT_NOTE"
 //│ @param {any} payload - Optional payload (e.g., note content or ID)
 //└────────────────────────────────────────────────────────────────────────┘
 let transition = function(actionName, payload)
 {
-    const stateRules    = TRANSITIONS[ currentState ];
-    const actionHandler = stateRules [ actionName   ];
+if(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
+    let stateRules    = SM_STATES [ currentState ];
+    let actionHandler = stateRules[ actionName   ];
 //{{{
 let caller = "transition";
 if(tag_this) console_clear("CNTRL."+caller);
-if(tag_this) log(MODULE+   caller+"%c from "+currentState+"%c actionName "+actionName, lbB+lf3, lbB+lbX[get_state_num(currentState)], lbB);
-if(tag_this) log(MODULE+caller, lbB+lf3);
+if(tag_this) log(MODULE+   caller+": %c FROM: "+currentState             +"%c ON: "+actionName
+                 ,lbB+lf3           ,lbB+lbX[get_state_num(currentState)] ,lbB);
 if(log_this) {
-    log("%c● called_by.:\t%c" +   get_src_link()                                                        , lf3,lb0);
-    log("%c● actionName:\t%c["+   actionName                +"]"                                        , lf3,lb1);
-    log("%c● payload...:\t%c["+   ellipsis(JSON.stringify(payload))  +"]"                               , lf3,lb3);
-    log("%c"+("                  currentState  " ).padStart(32) +"%c"+              currentState        , lf3,lb8);
-    log("%c"+(" TRANSITIONS["+ currentState +"] ").padStart(32) +"%c"+ TRANSITIONS[ currentState ]?.name, lf3,lb8);
-    log("%c"+("  stateRules["+ actionName   +"] ").padStart(32) +"%c"+ stateRules [ actionName   ]?.name, lf3,lb8);
-    log("%c"+("                 actionHandler  " ).padStart(32) +"%c"+              actionHandler ?.name, lf3,lb8);
+    log("%c● called_by.:\t%c" + get_src_link()                                                         , lf3,lb0);
+    log("%c● actionName:\t%c["+ actionName                        +"]"                                 , lf3,lb1);
+    log("%c● payload...:\t%c["+ ellipsis(JSON.stringify(payload)) +"]"                                 , lf3,lb3);
+    log("%c"+("                 currentState"    ).padStart(32) +"%c"+             currentState        , lf3,lb8);
+    log("%c"+(" STATE_TRANS["+  currentState +"]").padStart(32) +"%c"+ SM_STATES [ currentState ]?.name, lf3,lb8);
+    log("%c"+("  stateRules["+  actionName   +"]").padStart(32) +"%c"+ stateRules[ actionName   ]?.name, lf3,lb8);
+    log("%c"+("                 actionHandler"   ).padStart(32) +"%c"+             actionHandler ?.name, lf3,lb8);
 }
 //}}}
 
@@ -393,19 +390,26 @@ if(log_this) log("%c● currentState.\t%c["+ currentState              +"]", lb3
     return currentState;
 };
 //}}}
-// return subscribe transition getState {{{
+
+//┌────────────────────────────────────────────────────────────────────────────┐
+//│ PUBLIC
+//└────────────────────────────────────────────────────────────────────────────┘
+// subscribe transition getState {{{
 return { subscribe
     ,    transition
     ,    getState
+
     // MVC MIGRATION
     , onload
     , get_editing_note_index
     , set_editing_note_index
+
     // DEBUG
-    ,  TRANSITIONS
+    ,  SM_STATES
+    ,  SM_EVENTS
+    ,  get_state_num
 };
 //}}}
-
 })();
 
 /* TLDR {{{
@@ -413,14 +417,16 @@ return { subscribe
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│
-//│ 1. **State Isolation**: Actions in transient states
-//│    (`SAVING`, `DELETING`) are omitted in the lookup table.
+//│ 1. **State Isolation**:
+//│    Actions in transient states (`STATE_SAVING`, `STATE_DELETING`)
+//│    are omitted in the lookup table.
 //│    Any user clicks arriving while in these states
 //│    are automatically **ignored**
 //│
-//│ 2. **Predictable Flow**: The state machine directly
+//│ 2. **Predictable Flow**:
+//│    The state machine directly
 //│    manages the async boundary with `js_MODEL`, then cleanly
-//│    transitions back to `IDLE` before updating listeners.
+//│    transitions back to `STATE_IDLE` before updating listeners.
 //└────────────────────────────────────────────────────────────────────────────┘
 
 }}}*/

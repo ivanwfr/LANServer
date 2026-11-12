@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261105:00h:04)
+//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261109:21h:29)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵
 //│
@@ -34,14 +34,14 @@ let js_details  = (function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ ◯  INTERNING ● SERVER/scripts/js_log.js
 //└────────────────────────────────────────────────────────────────────────────┘
-const MODULE = "%c⭐🟢 js_details\t\t● ";
+const MODULE = "%c⭐🟢 js_details\t● ";
 let log_this = false;
 let tag_this = false || log_this;
 //{{{
 /* eslint-disable no-unused-vars */
 
 js_log.register( { module_name : "js_details"
-                 , module_num  : 0
+                 , module_num  : 6
                  , log_this_fn : (state) => log_this = state
                  , tag_this_fn : (state) => tag_this = state } );
 
@@ -97,7 +97,8 @@ const STATUS_LINE_TITLE   = "Click: brighter — bigger — dimmer";
 /*● onload ● DIV & TABLE ➔ js_notes ● listen ● ticker {{{*/
 let onload = function()
 {
-if(tag_this) log("3 js_details \t🟠 onload:");
+let caller = "onload";
+if(tag_this) log(MODULE+caller, lbB);
 
     document.addEventListener("visibilitychange", function(e) {
         if( document.hidden )
@@ -124,12 +125,16 @@ if(tag_this) log("3 js_details \t🟠 onload:");
 
 //┌─────────────────────────────────────────────────────────────────[...]
 //│ LAYOUT & RENDER             🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ ● js_CNTRL       . onload
+//│ └ ● js_details   . onload
+//│   └ ● js_details . add_notes_DETAILS
 //└─────────────────────────────────────────────────────────────────[...]
 /*_ add_notes_DETAILS ● NOTE_DETAILS_HTML ● onclick {{{*/
 let add_notes_DETAILS = function()
 {
 let caller = "add_notes_DETAILS";
-if(tag_this) log(MODULE+caller+"🔵 add_notes_DETAILS");
+if(tag_this) log(MODULE+caller, lbB);
 
 const NOTE_DETAILS_HTML   = `
 <summary >📝 My Notes for This Page</summary>
@@ -214,17 +219,17 @@ let note_5_onclick_edit = function(e,index)
 {
 // log {{{
 let caller = "note_5_onclick_edit";
-if(tag_this) log(MODULE+caller+"note_5_onclick_edit: "+ e.type, lb0);
+if(tag_this) log(MODULE+caller+"%c e.type "+ e.type +"%c index "+ index, lb0, lb0+lf1, lb0+lf2);
 //}}}
     // STORE CURRENT INPUT CONTENT (to be restored by next reload) {{{
-    js_input.input_save("note_5_onclick_edit");
+    js_input.input_save(caller);
 
     //}}}
     // TOGGLE OFF ANY CURRENT EDIT {{{
     let editing_note_index  = get_editing_note_index();
     if( editing_note_index >= 0)
     {
-        js_input.reset_input("note_5_onclick_edit");
+        js_input.reset_input(caller);
         if(index == editing_note_index)
             return;
     }
@@ -247,7 +252,7 @@ if(tag_this) log(MODULE+caller+"note_5_onclick_edit: "+ e.type, lb0);
         js_input.value = note_row.dataset.content;
     }
     else {
-        let nArray     = js_MODEL.getAll();
+        let nArray     = js_MODEL.get_nArray();
         js_input.value = nArray[index].text;
     }
 
@@ -255,7 +260,7 @@ if(tag_this) log(MODULE+caller+"note_5_onclick_edit: "+ e.type, lb0);
     input.classList.remove("auto_insert_prefix");
 
     //}}}
-    // EDITING A [checked] NOTE (OR NOT) {{{
+    // STATE_EDITING A [checked] NOTE (OR NOT) {{{
     if( notes.get_checked(index)) input.classList.add   ("checked");
     else                          input.classList.remove("checked");
 
@@ -291,20 +296,20 @@ let set_editing_note_index = function(index)
             el.classList.add   (            "edited" );
         });
 
-        // SELECTED EDITING NOTE
+        // SELECTED STATE_EDITING NOTE
         saved_notes_TABLE.firstElementChild.children[index].classList.add("editing");
     }
     //}}}
     // 2/2 - CLEAR SAVE BUTTON ATTRIBUTE EDITING_NOTE_NUM {{{
     else {
-        // EDITING NOTE LIST ITEM DONE
+        // STATE_EDITING NOTE LIST ITEM DONE
         saved_notes_TABLE.querySelectorAll(".editing").forEach((el) => {
             el.classList.remove(            "editing");
             el.classList.add   (            "edited");
         });
 
         // NEW LAST NOTE NUMBER
-        index = js_MODEL.getAll().length;
+        index = js_MODEL.get_nArray().length;
 
         let save_note_BUTTON = document.querySelector("#save_note_BUTTON");
         if( save_note_BUTTON )
@@ -363,7 +368,7 @@ if(tag_this) log(MODULE+caller, lb0);
         {
 if(tag_this) log("🔴 AUTO_SAVE DELETE NOTE");
 
-            let nArray = js_MODEL.getAll();
+            let nArray = js_MODEL.get_nArray();
             notes.note_6_onclick_delete(e, nArray.length-1);
 
             js_ticker.changeInterval( js_details.AUTO_SAVE_IDLE_INTERVAL_MS );
@@ -389,7 +394,7 @@ if(tag_this) log("🔴 AUTO_SAVE DELETE NOTE");
     }
     //}}}
     // CHANGED ● ADDING AUTO_SAVE NOTE {{{
-    let nArray = js_MODEL.getAll();
+    let nArray = js_MODEL.get_nArray();
     let index;
     if( notes.is_last_note_auto_save() )
     {
@@ -426,7 +431,7 @@ let is_input_same_as_original = function()
     // input text == note text
     let auto_save_text = AUTO_SAVE_TAG + text;
 
-    let nArray = js_MODEL.getAll();
+    let nArray = js_MODEL.get_nArray();
     if(   nArray[index].text.trim()
        != auto_save_text.substring(AUTO_SAVE_TAG.length).trim()
       )
@@ -444,7 +449,7 @@ let is_input_same_as_last_auto_save = function()
 {
     let input  = document.querySelector("#note_input_TEXTAREA");
     let text   = input.value.trim();
-    let nArray = js_MODEL.getAll();
+    let nArray = js_MODEL.get_nArray();
     if(!nArray.length)
         return false;
 
@@ -490,7 +495,7 @@ let caller = "input_blur_listener";
 if(log_this) log(MODULE+caller+"⚫ input_blur_listener", lb0);
 //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ● CANCEL AUTO-INSERT NEW NOTE NUM
+    //│ ● EVENT_CANCEL AUTO-INSERT NEW NOTE NUM
     //└────────────────────────────────────────────────────────────────────────┘
     if( is_input_auto_insert_prefix() )
     {
@@ -524,7 +529,7 @@ if(log_this) log(MODULE+caller+"⚫ input_blur_listener", lb0);
 /*_ get_input_auto_insert_prefix {{{*/
 let get_input_auto_insert_prefix = function()
 {
-    let nArray       = js_MODEL.getAll();
+    let nArray       = js_MODEL.get_nArray();
     let num =           nArray.length + 1;
 
     if( notes.is_last_note_auto_save() )

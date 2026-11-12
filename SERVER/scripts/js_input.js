@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (261105:00h:05) │
+//│ js_input.js     ● $APROJECTS/LANServer/SERVER       ● _TAG (261109:14h:40) │
 //├────────────────────────────────────────────────────────────────────────────┤
 /* IMPORT {{{*/
 
@@ -65,6 +65,11 @@ let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
 
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ 🟤 GUI (js_notes)  GUI LEAK ● DATA ➔ VIEW                               🖥 │
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ ● js_CNTRL       . onload
+//│ └ ● js_details   . onload
+//│   └ ● js_details . add_notes_DETAILS
+//│     └ ● js_input . add_notes_GUI
 //└────────────────────────────────────────────────────────────────────────────┘
 /*  add_notes_GUI {{{*/
 /*{{{*/
@@ -76,6 +81,7 @@ let saved_notes_TABLE;
 /*}}}*/
 let add_notes_GUI = function(args)
 {
+if(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
     input              = args.input;
     note_DETAILS       = args.note_DETAILS;
     saved_notes_DIV    = args.saved_notes_DIV;
@@ -261,7 +267,7 @@ if(tag_this) log(MODULE+caller, lb0);
     //└────────────────────────────────────────────────────────────────────────┘
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ RESUME EDITING SOME EXISTING NOTE                                      │
+    //│ RESUME STATE_EDITING SOME EXISTING NOTE                                      │
     //└────────────────────────────────────────────────────────────────────────┘
     let           nArray = notes.get_nArray();
     for(let index=nArray.length-1; index >= 0; --index)

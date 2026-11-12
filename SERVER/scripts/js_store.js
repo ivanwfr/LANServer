@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261104:19h:11) │
+//│ js_store.js      ● $APROJECTS/LANServer/SERVER      ● _TAG (261109:19h:45) │
 //└────────────────────────────────────────────────────────────────────────────┘
 /*{{{*/
 /*}}}*/
@@ -21,10 +21,11 @@ let delItem = function(key     ) {          try { /*...*/  localStorage.removeIt
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ Page title or URL signature                                                │
 //└────────────────────────────────────────────────────────────────────────────┘
-/*  get_page_prefix {{{*/
+/*  get_page_key {{{*/
 let     page_prefix = "";
-let get_page_prefix = function()
+let get_page_key = function(key)
 {
+    if( key.startsWith("site.") ) return key;
     if(!page_prefix )
     {
         /* FROM PAGE TITLE */
@@ -44,7 +45,7 @@ let get_page_prefix = function()
         }
 
     }
-    return page_prefix;
+    return page_prefix +"."+ key;
 };
 /*}}}*/
 /*_ get_page_storage_key ● get_page_fileName {{{*/
@@ -109,7 +110,7 @@ let getArray = function(key)
     {
 //console.log("🔴  getArray("+key+"): invalid localStorage value:", key, err);
 
-        delItem(get_page_prefix() +"."+ key);
+        delItem( get_page_key(key) );
         return [];
     }
 };
@@ -118,13 +119,12 @@ let getArray = function(key)
 /* EXPORT {{{*/
 return {  name : "js_store"
 
-    ,     localStorage_setItem  : (key, val) => setItem (get_page_prefix() +"."+ key, val)
-    ,     localStorage_getItem  : (key     ) => getItem (get_page_prefix() +"."+ key     )
-    ,     localStorage_delItem  : (key     ) => delItem (get_page_prefix() +"."+ key     )
-    ,     localStorage_getArray : (key     ) => getArray(get_page_prefix() +"."+ key     )
+    ,     localStorage_setItem  : (key, val) => setItem (get_page_key( key ), val)
+    ,     localStorage_getItem  : (key     ) => getItem (get_page_key( key )     )
+    ,     localStorage_delItem  : (key     ) => delItem (get_page_key( key )     )
+    ,     localStorage_getArray : (key     ) => getArray(get_page_key( key )     )
 
     ,     get_page_fileName
-    ,     get_page_prefix
     ,     get_page_storage_key
     ,     parse_location_href
 

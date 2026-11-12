@@ -1,13 +1,12 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_log.js        ● $APROJECTS/LANServer/SERVER        ● _TAG (261108:20h:01)
-//├────────────────────────────────────────────────────────────────────────────┤
-//│{{{
-//│}}}
+//│ js_log.js        ● $APROJECTS/LANServer/SERVER       ● _TAG (261112:21h:47)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
+/* globals  js_store */
 /* exported js_log   */
 
+import { js_store   } from "./js_store.js"
 /*}}}*/
 let js_log = (function()
 {
@@ -72,65 +71,115 @@ const b_X  = [ b_0 ,b_1 ,b_2 ,b_3 ,b_4 ,b_5 ,b_6 ,b_7 ,b_8 ,b_9 ];
 //└────────────────────────────────────────────────────────────────────────┘
 let log = console.log;
 /*_ logging {{{*/
-let logging = function(state, name="")
+let logging = function(state, name="", _caller="")
 {
-    if(typeof state != "undefined")
+    // GET
+    if(typeof state == "undefined")
     {
-        log_this = !!state; // true or false
+        log("%c⭐ logging:%c"+(js_store.localStorage_getItem( LOGGING_KEY ) || "NONE"), lbB, lbB+lf3);
+        return;
+    }
+    // SET
+    if(!registered_modules_sorted) registered_modules_sort();
 
-        let notified = "";
-        if(!registered_modules_sorted) registered_modules_sort();
-        for(let { module_name, module_num, log_this_fn, tag_this_fn } of registered_modules)
+    let notified = "";
+    for(let i=0; i< registered_modules.length; ++i)
+    {
+        let { module_name, module_num, log_this_fn, tag_this_fn } = registered_modules[i]; /* eslint-disable-line no-unused-vars */
+        if(log_this_fn && (!name || (module_name == name)) )
         {
-            if(log_this_fn && (!name || module_name.includes(name)) )
-            {
-                log_this_fn( log_this );
-                notified += " "+b_X[module_num % 10]+" "+module_name;
-
-                // superseding / restoring tag_this
-                if( tag_this_fn ) tag_this_fn(log_this || tag_this);
-            }
+            registered_modules[i].logging = state;
+            log_this_fn( state );
+            notified += " "+b_X[module_num % 10]+" "+module_name;
         }
-        log("★ NOTIFIED %c"+(notified || "NONE"), lb0);
     }
-    else {
-        log("● log_this: "+ log_this);
-    }
-    return log_this;
+    log("★ logging notified %c"+(notified || "NONE"), lb0);
+
+    // SAVE to localStorage
+    if(_caller != "load_logging_modules") save_logging_modules();
 };
 /*}}}*/
 /*_ tagging {{{*/
-let tagging = function(state, name="")
+let tagging = function(state, name="", _caller="")
 {
-    // ignored when tag_this is being superseded by log_this
-    if(log_this)
-        return (log_this || tag_this);
-
-    // SET
-    if(typeof state != "undefined")
+    // GET
+    if(typeof state == "undefined")
     {
-        tag_this = !!state; // true or false
+        log("%c⭐ tagging:%c"+(js_store.localStorage_getItem( TAGGING_KEY ) || "NONE"), lbB, lbB+lf3);
+        return;
+    }
+    // SET
+    if(!registered_modules_sorted) registered_modules_sort();
 
-        let notified = "";
-        if(!registered_modules_sorted) registered_modules_sort();
-        for(let { module_name, module_num, log_this_fn, tag_this_fn } of registered_modules) /* eslint-disable-line no-unused-vars */
+    let notified = "";
+    for(let i=0; i< registered_modules.length; ++i)
+    {
+        let { module_name, module_num, log_this_fn, tag_this_fn } = registered_modules[i]; /* eslint-disable-line no-unused-vars */
+        if(tag_this_fn && (!name || (module_name == name)) )
         {
-            if(tag_this_fn && (!name || module_name.includes(name)) )
-            {
-                tag_this_fn( tag_this );
-                notified += " "+b_X[module_num % 10]+" "+module_name;
-            }
+            registered_modules[i].tagging = state;
 
+            tag_this_fn( state );
+            notified += " "+b_X[module_num % 10]+" "+module_name;
         }
-        log("★ NOTIFIED %c"+(notified || "NONE"), lb0);
+
     }
-    else {
-        log("● tag_this: "+ tag_this);
-    }
-    return tag_this;
+    log("★ tagging notified %c"+(notified || "NONE"), lb0);
+
+    // SAVE to localStorage
+    if(_caller != "load_logging_modules") save_logging_modules();
 };
 /*}}}*/
+/*○ save_logging_modules {{{*/
+//{{{
+const LOGGING_KEY   = "site.logging";
+const TAGGING_KEY   = "site.tagging";
+const SAVE_COOLDOWN = 1000;
+let save_logging_modules_timeout;
+//}}}
+let save_logging_modules = function()
+{
+    if(save_logging_modules_timeout) clearTimeout( save_logging_modules_timeout );
+       save_logging_modules_timeout = setTimeout(save_logging_modules_handler, SAVE_COOLDOWN);
+};
+let save_logging_modules_handler = function()
+{
+    save_logging_modules_timeout = null;
 
+    let tagging_modules = "";
+    let logging_modules = "";
+    registered_modules.forEach((m) => {
+        if( m.tagging ) tagging_modules += " "+m.module_name;
+        if( m.logging ) logging_modules += " "+m.module_name;
+    });
+
+    if( tagging_modules.trim() ) js_store.localStorage_setItem( TAGGING_KEY, tagging_modules.trim());
+    else                         js_store.localStorage_delItem( TAGGING_KEY );
+    if( logging_modules.trim() ) js_store.localStorage_setItem( LOGGING_KEY, logging_modules.trim());
+    else                         js_store.localStorage_delItem( LOGGING_KEY );
+};
+/*}}}*/
+/*○ load_logging_modules {{{*/
+let load_logging_modules = function()
+{
+if(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
+//{{{
+let caller = "load_logging_modules";
+//}}}
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ This function can enforce all modules
+    //│ localStorage persistant logging and tagging sates
+    //│ after all modules have registered
+    //└────────────────────────────────────────────────────────────────────────┘
+
+    // TAGGING
+    let tagging_modules = js_store.localStorage_getItem( TAGGING_KEY );
+    if( tagging_modules ) tagging_modules.split(" ").forEach((m) => tagging(true, m, caller));
+    // LOGGING
+    let logging_modules = js_store.localStorage_getItem( LOGGING_KEY );
+    if( logging_modules ) logging_modules.split(" ").forEach((m) => logging(true, m, caller));
+};
+/*}}}*/
 
 //┌────────────────────────────────────────────────────────────────────────┐
 //│ MODULE REGISTER ● TO BE NOTIFIED OF LOG_THIS CHANGES
@@ -138,22 +187,21 @@ let tagging = function(state, name="")
 /*_ register {{{*/
 let registered_modules = [];
 let registered_modules_sorted = false;
-let register = function( { module_name, module_num, log_this_fn, tag_this_fn })
+let register = function( mod )
 {
-if(tag_this)
-log("js_log.register("+ module_name +")");
+if(tag_this) log("js_log.register("+ mod.module_name +")");
 
     registered_modules
-        .push( { module_name
-               , module_num
-               , log_this_fn
-               , tag_this_fn
-        } );
+        .push( mod  );
 
-    // LOAD TIME SYNC .. OR NOT  {{{
-    //( log_this_fn ) log_this_fn( log_this );
-    //( tag_this_fn ) tag_this_fn( tag_this );
-    //}}}
+    // Replay persisted state for late arrivals
+    if(js_store.localStorage_getItem(TAGGING_KEY)?.split(" ").includes(mod.module_name))
+        mod.tag_this_fn?.(true);
+
+    if(js_store.localStorage_getItem(LOGGING_KEY)?.split(" ").includes(mod.module_name))
+        mod.log_this_fn?.(true);
+
+    registered_modules_sorted = false;
 };
 /*}}}*/
 /*_ registered_modules_sort {{{*/
@@ -164,6 +212,7 @@ let registered_modules_sort = function()
         = registered_modules.reduce((n,a) =>   Math.max(n, a.module_num), 0              );
     registered_modules.forEach     ((a  ) => { if(!a.module_num) a.module_num = ++next; });
     registered_modules.sort        ((a,b) =>   a.module_num - b.module_num               );
+    registered_modules_sorted = true;
 //console.dir(registered_modules);
 };
 /*}}}*/
@@ -182,15 +231,12 @@ let console_clear = function(_caller)
     // COOLDOWN
     if(console_clear_cooldown_timer)
     {
-if(log_this)
-log("%c CLEARED BY "+ _caller +" ● prevented by console clear cooldown", lbB+"border-color:#444;");
-
-        return;
+        log("%c CLEARED BY "+ _caller +" ● prevented by console clear cooldown", lbB+"border-color:#444;");
     }
     else {
-        console_clear_cooldown_timer = setTimeout(() => console_clear_cooldown_timer=null, CONSOLE_CLEAR_COOLDOWN_DURATION_MS);
         console.clear();
-        console.log("%c CLEARED BY "+ _caller, lbB);
+        log("%c CLEARED BY "+ _caller, lbB);
+        console_clear_cooldown_timer = setTimeout(() => console_clear_cooldown_timer=null, CONSOLE_CLEAR_COOLDOWN_DURATION_MS);
     }
 };
 /*}}}*/
@@ -208,38 +254,160 @@ let ellipsis = function(_str, n=128)
     ;
 };
 /*}}}*/
+/*_ stringify {{{*/
+let stringify = function(v, n=128)
+{
+    let seen = new WeakSet();
+    try {
+        return ellipsis(JSON.stringify(v, (k, val) => {
+            if(typeof val === "object" && val !== null) {
+                if(seen.has(val)) return "[Circular]";
+                seen.add(val);
+            }
+            return val;
+        }), n);
+    } catch(_) { return String(v); } /* eslint-disable-line no-unused-vars */
+};
+/*}}}*/
+/*_ moveChar {{{*/
+let moveChar = function(str, fromIndex, toIndex)
+{
+// moveChar("➔xxx", 0, 1); // "x➔xx"
+
+  let  chars = [...str];
+  let [char] = chars.splice(fromIndex, 1);
+  chars.splice(toIndex, 0, char);
+  return chars.join("");
+};
+/*}}}*/
+
 /*● get_src_link {{{*/
 let get_src_link = function(lvl=3)
 {
-    //┌───────────────────────────────┐
-    //│  return new Error().stack
-    //│   .split("\n")[lvl]
-    //│   .replace(/.*\((.*)\)/,"$1")
-    //│   .replace(/ *at */    ,""  );
-    //└───────────────────────────────┘
-
     let stack
         =  new Error().stack
-        || ""
-    ;
+        || "";
 
     let lines
         = stack.split("\n").slice( 1 );
 
     let line
         =  lines[Math.max(0,lvl)]
-        || lines[0]
-        || ""
-    ;
-    if(!line )
-        return "";
+        || "";
 
-    return line
-        .  replace(/^\s*at\s+/  ,   "")
-        .  replace(/.*\((.*)\)/ , "$1")
-    //  .  replace(/.*\s+at\s+/ ,   "")
-        .  trim()
-    ;
+    if(!line ) return "";
+    else       return get_src_link_line(line);
+};
+/*}}}*/
+/*_ get_src_link_line {{{*/
+let get_src_link_line = function(line)
+{
+    //..........................111111.............22222222222222222222222222..33333...444..5555
+    //.........................(at____)...........(DOMAIN____________________)(PATH_):(LIN):(COL)
+    let matches = line.match(/^([^\(]*)?(?:\s+\()?(?:https?:\/\/(?:[^\/]*)?\/)([^:]*):(\d+):(\d+)/);
+    if(!matches )
+        return "\t" + line.trim() + "\t";   // conform to 3-col shape
+
+    let m_at     = matches[1]
+                   .  replace(/at\s+/          ,   "")
+                   .  replace(     /Object\./  ,   "")
+                   .  trim();
+    let m_domain = matches[2];
+    let m_path   = matches[3];
+    let m_src    = m_path.replace(/.*\//, "");
+    let m_line   = matches[4];
+    let m_col    = matches[5];
+//{{{
+//log(".......m_at["+ m_at     +"]");
+//log("...m_domain["+ m_domain +"]");
+//log("....m_path=["+ m_path   +"]");
+//log(".....m_src=["+ m_src    +"]");
+//log("....m_line=["+ m_line   +"]");
+//log(".....m_col=["+ m_col    +"]");
+//}}}
+    let m_fnc_or_line = (m_at || ("line "+m_line));
+    let m_link = m_domain
+         +       m_path
+         +  ":"+ m_line
+         +  ":"+ m_col;
+    line  = m_src         //.padEnd(20)
+          +"\t"+ m_fnc_or_line //.padEnd(20)
+          +"\t"+ m_link;
+
+    return line;
+};
+/*}}}*/
+/*● trace {{{*/
+//{{{
+const STACK_LAYER_MAX = 16;
+//}}}
+let trace = function()
+{
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ get call stack trace
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
+    let lines = [];
+    for(let lvl = STACK_LAYER_MAX; lvl > 1; --lvl)  // lvl=0 is js_log.log calling this function
+    {
+        let line  = get_src_link( lvl );
+        if( line )
+            lines.push(line);
+    }
+    //}}}
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ column width padding: src fnc lnk
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
+    let l_out = [];
+    let src_len_max = 0;
+    let fnc_len_max = 0;
+    lines.forEach((line) => {
+
+        let ix1 = line .indexOf("\t");
+        let src = line.substr(0, ix1); src_len_max = Math.max(src_len_max, src.length);
+
+        let ix2 = line .lastIndexOf("\t");
+        let fnc = line.substr(ix1+1, ix2-ix1-1); fnc_len_max = Math.max(fnc_len_max, fnc.length);
+
+        let lnk = line.substr(ix2+1);
+
+//{{{
+//log("src=["+src+"]");//FIXME
+//log("fnc=["+fnc+"]");//FIXME
+//log("lnk=["+lnk+"]");//FIXME
+//}}}
+        l_out.push({ src, fnc, lnk });
+    });
+//{{{
+//log("src_len_max=["+src_len_max+"]");//FIXME
+//log("fnc_len_max=["+fnc_len_max+"]");//FIXME
+//}}}
+//{{{
+//    let caller_rank = 0;
+//    lines.forEach((line) => {
+//        caller_rank += 1;
+//        log("%c"+ caller_rank +" "+ b_X[caller_rank] +" "+ line, lbB);
+//    });
+//}}}
+    //}}}
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ log call stack trace
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
+    let arrow = "\u21b3".padEnd(l_out.length);
+    let caller_rank = 0;
+    l_out.forEach((item) => {
+        caller_rank += 1;
+        log("%c"+ caller_rank +" "+ b_X[caller_rank]
+            +" "+ item.src.padEnd(src_len_max+1)
+            +" "+ arrow
+            +" "+ item.fnc.padEnd(fnc_len_max+1)
+            +" "+ item.lnk
+            , lb0);
+        arrow = moveChar(arrow, caller_rank-1, caller_rank);
+    });
+    //}}}
 };
 /*}}}*/
 /*● sleep {{{*/
@@ -262,13 +430,17 @@ return { name: "js_log"
     ,    console_clear
 
     // LOGGING
+    ,    load_logging_modules
     ,    register
     ,    logging
     ,    tagging
 
     // UTIL
     ,    ellipsis
+    ,    stringify
     ,    get_src_link
+    ,    trace
+    ,    moveChar
     ,    sleep
 
     // STYLE
@@ -279,9 +451,12 @@ return { name: "js_log"
 
     // DEBUGGER
     , tag_MVC: (state=true) => {
-        tagging(state,"MODEL");
-        tagging(state,"VIEW" );
-        tagging(state,"CNTRL");
+        tagging(state,"js_MODEL"    );
+        tagging(state,"js_VIEW"     );
+        tagging(state,"js_CNTRL"    );
+        tagging(state,"notes"       );
+        tagging(state,"js_notes"    );
+        tagging(state,"js_details"  );
     }
 };
 //}}}

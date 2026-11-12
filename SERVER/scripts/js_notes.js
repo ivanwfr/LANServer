@@ -91,7 +91,7 @@ let layout_count = 0;
 let add_notes_DETAILS = function(args)
 {
 let caller = "add_notes_DETAILS";
-if(tag_this) log(MODULE+caller+" add_notes_DETAILS", lbB);
+if(tag_this) log(MODULE+caller, lbB);
 
     //┌─────────────────────────────────────────────────────────────[...]
     //│ CACHE DOM REFERENCES (from js_notes context, passed by VIEW)

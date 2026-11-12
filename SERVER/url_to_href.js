@@ -1,23 +1,8 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ url_to_href.js                                       ● _TAG (261105:16h:39)
+//│ url_to_href.js                                       ● _TAG (261111:19h:14)
 //└────────────────────────────────────────────────────────────────────────────┘
 let url_to_href = (function() {
-// RGX_EXT_ARRAY ● RGX_EXT ● basename {{{
-const RGX_EXT_ARRAY
-    = [ "ahk"
-      , "asp"
-      , "awk"
-      , "css"
-      , "json"
-      , "js"
-      , "log"
-      , "lua"
-      , "md"
-      , "tmc"
-      , "txt"
-      , "vim"
-    ];
-let   RGX_EXT;
+//{{{
 let   basename;
 let   a_href_to_html_array = [];
 //}}}
@@ -35,38 +20,25 @@ let line_url_to_href = function(line, dir_href)
     let folder        = href  .substr(root.length);                   // after first '/'
         folder        = folder.substr(0, folder.length -file.length); // before file
 
-// log {{{
+/* log {{{*/
 //console.log("➔ href    = ["+href+"]");
 //console.log("➔ root    = ["+root+"]");
 //console.log("➔ file    = ["+file+"]");
 //console.log("%c folder = ["+ folder+"]", "color: yellow");
 //console.log("🟤🔴🟠🟡🟢🔵🟣⚫⚪️");
-//}}}
-    //}}}
-    //  RGX_EXT {{{
-    if(!RGX_EXT )
-    {
-        let s   = "";
-        RGX_EXT_ARRAY.forEach((ext) => s += "|"+ext);
-        s       = s.substr(1); // trim extra first pipe
-        RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9\.]+\\.("+s+"))","g");
-//console.log("RGX_EXT:", RGX_EXT);
-    }
+/*}}}*/
     //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ SET or CLEAR *Page relative URL* **basename** ● (runlenght)
     //└────────────────────────────────────────────────────────────────────────┘
     //{{{
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ .......................11...............22222222..33...................
-    //└────────────────────────▼▼───────────────▼▼▼▼▼▼▼▼──▼▼───────────────────┘
-    let matches = line.match(/(.*)basename *= *([^\s<>]*)(.*)/);
+    //│ ........................111...............22222222..33.................
+    //└─────────────────────────▼▼▼───────────────▼▼▼▼▼▼▼▼──▼▼─────────────────┘
+    let matches = line.match(/^(\s*)basename *= *([^\s<>]*)(.*)/);
     if( matches )
     {
-//console.log("\n"+line);
-//console.log("matches[1]=["+matches[1]+"]");
-//console.log("matches[2]=["+matches[2]+"]");
-//console.log("matches[3]=["+matches[3]+"]");
+//log("%c basename..=["+matches[2]+"]", lbB+lb4+lf2);
 
         let prev = basename;
         basename = matches[2];
@@ -185,6 +157,37 @@ let line_url_to_href = function(line, dir_href)
     return line;
 };
 /*}}}*/
+//_ get_RGX_EXT {{{
+//{{{
+const RGX_EXT_ARRAY
+    = [ "ahk"
+      , "asp"
+      , "awk"
+      , "css"
+      , "json"
+      , "js"
+      , "log"
+      , "lua"
+      , "md"
+      , "tmc"
+      , "txt"
+      , "vim"
+    ];
+let   RGX_EXT;
+//}}}
+let get_RGX_EXT = function()
+{
+    if(!RGX_EXT )
+    {
+        let s   = "";
+        RGX_EXT_ARRAY.forEach((ext) => s += "|"+ext);
+        s       = s.substr(1); // trim extra first pipe
+        RGX_EXT = new RegExp("([\/\\a-z_A-Z0-9\.]+\\.("+s+"))","g");
+//console.log("RGX_EXT:", RGX_EXT);
+    }
+    return RGX_EXT;
+};
+//}}}
 /*_ get_a_list {{{*/
 let get_a_list = function(a_href, q)
 {
@@ -208,7 +211,7 @@ let get_a_list = function(a_href, q)
     for(let i=0; i < dirs.length; ++i)
     {
         let d = dirs[i];
-//console.log("...d=["+d+"]");
+//console.log("...d=["+d+"]");//FIXME
         subs +=  d;
         if(is_dir || (i  < (dirs.length - 1))) subs += "/";
         else if(     (i == (dirs.length - 1))) subs +=   q;
@@ -338,7 +341,7 @@ let line_match_supported_extension = function(l_trim)
 
     let matches
         =  l_trim.match(/\/\w+.*\/$/) // FOLDER
-        || l_trim.match( RGX_EXT  );
+        || l_trim.match( get_RGX_EXT()  );
 
 //if(matches) console.log( l_trim     );
 //if(matches) console.log( matches[0] );
@@ -362,11 +365,13 @@ let line_match_supported_extension = function(l_trim)
     //    //}}}
 };
 /*}}}*/
-
+//● PUBLIC {{{
     return { name: "url_to_href"
         ,    line_url_to_href
+        ,    line_match_supported_extension
         ,    basename_clear: () => basename = ""
     };
+//}}}
 })();
 globalThis.url_to_href  = url_to_href;
 try { module.exports = url_to_href; } catch(ex) { /*console.log(ex.message);*/ /*console.trace();*/ } /* eslint-disable-line no-unused-vars */
