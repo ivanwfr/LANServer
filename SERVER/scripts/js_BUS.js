@@ -1,8 +1,8 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_BUS.js           ● $APROJECTS/LANServer/SERVER    ● _TAG (261112:22h:37)
+//│ js_js_BUS.js           ● $APROJECTS/LANServer/SERVER    ● _TAG (261113:04h:48)
 //└────────────────────────────────────────────────────────────────────────────┘
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ *BUS* The communication contract singleton.
+//│ *js_BUS* The communication contract singleton.
 //│     ● Everyone talks ONLY through this.
 //│     ● No direct refs anywhere.
 //└────────────────────────────────────────────────────────────────────────────┘
@@ -10,21 +10,22 @@
 
 /* globals js_log     */
 
-/* exported BUS      */
+/* exported js_BUS      */
 
 import { js_log   } from "./js_log.js"
 //}}}
-let BUS = (function () {
-// INTERN ● SERVER/scripts/js_log.js {{{
-const MODULE = "%c⭐🟡 BUS\t\t● ";
+let js_BUS = (function () {
+// INTERN log {{{
+const MODULE = "%c⭐🟡 js_BUS\t\t● ";
 let log_this = false;
 let tag_this = false || log_this;
- js_log.register({ module_name : "BUS"
+ js_log.register({ module_name : "js_BUS"
                  , module_num  : 3
                  , log_this_fn : (state) => log_this = state
                  , tag_this_fn : (state) => tag_this = state });
 
 let log                                        = js_log.log;
+let console_clear                              = js_log.console_clear;
 let lbB                                        = js_log.lbB;
 let lfX                                        = js_log.lfX;
 
@@ -55,6 +56,7 @@ let notify_event = function(e_type, details, ts)
 {
 //{{{
 let caller = "notify_event("+e_type+")";
+if(tag_this) console_clear("BUS."+caller);
 if(tag_this) log(MODULE+caller, lbB+lf4);
 //}}}
     let set = listeners[e_type];
@@ -81,7 +83,7 @@ if(tag_this) log("\t%c ✅ SENDING #"+ notifications.toFixed().padEnd  (3)
                 fn( details );
             }
             catch (err) {
-                console.error(`[BUS.notify_event] handler failed for "${e_type}"`, err);
+                console.error(`[js_BUS.notify_event] handler failed for "${e_type}"`, err);
             }
         }
     }
@@ -111,7 +113,7 @@ let log_listeners = function()
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ PUBLIC API ● MODULES INTERFACE
 //└────────────────────────────────────────────────────────────────────────────┘
-/*● TOPICS  ● The vocabulary {{{*/
+/*● TOPICS  ● The vocabulary {{ {*/
 let TOPICS_MVC = {
     TOPICS_MODEL_TO_VIEW  : {
         MODEL_CHANGED     : "MODEL_CHANGED"
@@ -134,7 +136,7 @@ let TOPICS = { ...TOPICS_MVC.TOPICS_MODEL_TO_VIEW
     ,          ...TOPICS_MVC.TOPICS_CNTRL_TO_MODEL
     ,          ...TOPICS_MVC.TOPICS_CNTRL_TO_VIEW
 };
-/*}}}*/
+/*}} }*/
 /*● on      ● Subscribe {{{*/
 let on = function(e_type, handler)
 {
@@ -184,7 +186,7 @@ let once = function(e_type, handler)
 let caller = "once("+e_type+")";
 if(tag_this) log(MODULE+caller, lbB+lb0+lf4);
 //}}}
-    let off = BUS.on(e_type, (e) => { off(); handler(e); });
+    let off = js_BUS.on(e_type, (e) => { off(); handler(e); });
     return off;
 };
 /*}}}*/
@@ -255,7 +257,7 @@ let resume = function()
         for(let {               e_type , details , ts } of backlog) {
             try { notify_event( e_type , details , ts ); }
             catch( err ) {
-                console.error(`[BUS.resume] handler failed for "${e_type}"`, err);
+                console.error(`[js_BUS.resume] handler failed for "${e_type}"`, err);
             }
         }
     }
@@ -297,16 +299,16 @@ return { TOPICS_MVC
 };
 //}}}
 })();
-export { BUS         }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
-window . BUS   = BUS  ;
+export { js_BUS            }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_BUS   = js_BUS  ;
 
-let BUS_test = (function () {
+let js_BUS_test = (function () { //{{{
 // TEST_DESCRIPTIONS {{{
 // ON_DESCRIPTION {{{
 const ON_DESCRIPTION = `
 ┌──────────────────────────────────────────────────────┐
 │ TO ADD A LISTENER:
-│  let off = BUS.on(e_type, fn);
+│  let off = js_BUS.on(e_type, fn);
 │  use ▲▲▲ to unsubscribe      ▲▲ will be called
 │                              to notify e_type events
 └──────────────────────────────────────────────────────┘`;
@@ -323,7 +325,7 @@ const FN_DESCRIPTION = `
 const ONCE_DESCRIPTION = `
 ┌──────────────────────────────────────────────────────┐
 │ TO ADD A LISTENER FOR A SINGLE EVENT:
-│  BUS.once(e_type, fn);
+│  js_BUS.once(e_type, fn);
 │  ...will unsusbscribe after first event
 └──────────────────────────────────────────────────────┘`;
 //}}}
@@ -331,21 +333,21 @@ const ONCE_DESCRIPTION = `
 const EMIT_DESCRIPTION = `
 ┌──────────────────────────────────────────────────────┐
 │ TO DISPATCH NOTIFICATION of an e_type event:
-│  BUS.emit(e_type);
+│  js_BUS.emit(e_type);
 └──────────────────────────────────────────────────────┘`;
 //}}}
 // SUSPEND_DESCRIPTION {{{
 const SUSPEND_DESCRIPTION = `
 ┌──────────────────────────────────────────────────────┐
 │ TO SUSPEND EVENTS NOTIFICATION
-│   BUS.suspend();
+│   js_BUS.suspend();
 │   ................... DO SYNC STUFF
-│   BUS.resume();
+│   js_BUS.resume();
 │ → To be used to SYNC-INJECT more than one payload
 └──────────────────────────────────────────────────────┘`;
 //}}}
 //}}}
-//{{{
+// INTERN log {{{
 /* eslint-disable no-unused-vars */
 let log                                        = js_log.log;
 let lbB                                        = js_log.lbB;
@@ -375,66 +377,46 @@ const PAYLOAD
 let run = function()
 {
     // log ● fn(payload) {{{
-    log("%c BUS_test.run", lbB+lb0+lf4);
+    log("%c js_BUS_test.run", lbB+lb0+lf4);
 
     let fn     = (payload) => log("\t%c ⏩ fn("+(payload ? js_log.stringify(payload) : "")+")", lb0+lf4);
     let off;
     let p_num  = 0;
 
-    BUS.clear();
+    js_BUS.clear();
     //}}}
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ OFF = ON
-    //└────────────────────────────────────────────────────────────────────────┘
+    // OFF=ON {{{
     console.groupCollapsed("%c🟢on", lbB);
-    log("%c"+ ON_DESCRIPTION        , lb0+lf5); //{{{
+    log("%c"+ ON_DESCRIPTION        , lb0+lf5);
     log("%c"+ FN_DESCRIPTION        , lb0+lf3);
-//await js_log.sleep(1000);
-//  log("%c ADD ● NOTIFY ● OFF:", lbB);
-    log("%c off = on:", lb0); off = BUS.on     (E_TYPE, fn);
+    log("%c off = on:", lb0); off = js_BUS.on     (E_TYPE, fn);
     console.groupEnd();
     //}}}
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ EMIT .. OFF
-    //└────────────────────────────────────────────────────────────────────────┘
+    // EMIT..OFF {{{
     console.groupCollapsed("%c🟡emit .. 🔴off", lbB);
-    log("%c"+ EMIT_DESCRIPTION      , lb0+lf4); //{{{
-    log("%c emit:"    , lb0);       BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
-    log("%c emit:"    , lb0);       BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
-    log("%c emit:"    , lb0);       BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
+    log("%c"+ EMIT_DESCRIPTION      , lb0+lf4);
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
     log("%c off:"     , lb0); off(); off = null;
     console.groupEnd();
     //}}}
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ONCE EMIT
-    //└────────────────────────────────────────────────────────────────────────┘
+    // ONCE..EMIT {{{
     console.groupCollapsed("%c🟢once .. 🟡emit", lbB);
-    log("%c"+ ONCE_DESCRIPTION      , lb0+lf5); //{{{
-//await js_log.sleep(1000);
-//  log("%c ADD ONCE ● NOTIFY:", lbB);
-    log("%c off = on:", lb0);       BUS.once   (E_TYPE, fn);
-//  log("%c listeners:",lb0);       log( BUS.listeners() );
-    log("%c emit:"    , lb0);       BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
-//  log("%c listeners:",lb0);       log( BUS.listeners() ); off = null;
+    log("%c"+ ONCE_DESCRIPTION      , lb0+lf5);
+    log("%c off = on:", lb0);       js_BUS.once   (E_TYPE, fn);
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
     console.groupEnd();
     //}}}
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ON EMIT SUSPEND RESUME OFF
-    //└────────────────────────────────────────────────────────────────────────┘
+    // ON..EMIT..SUSPEND..RESUME..OFF {{{
     console.groupCollapsed("%c🟢on .. 🟡emit .. 🔵suspend .. 🔵resume .. 🔴off", lbB);
-    log("%c"+ SUSPEND_DESCRIPTION   , lb0+lf6); //{{{
-//await js_log.sleep(1000);
-//  log("%c ADD ● NOTIFY ● SUSPEND ● NOTIFY ● OFF:", lbB);
-    log("%c off= on"  , lb0); off = BUS.on     (E_TYPE, fn);
-    log("%c emit:"    , lb0);       BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
-    log("%c suspend:" , lb0);       BUS.suspend();
-    log("%c emit:"    , lb0);       BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
-    log("%c emit:"    , lb0);       BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
-    log("%c resume:"  , lb0);       BUS.resume();
+    log("%c"+ SUSPEND_DESCRIPTION   , lb0+lf6);
+    log("%c off= on"  , lb0); off = js_BUS.on     (E_TYPE, fn);
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
+    log("%c suspend:" , lb0);       js_BUS.suspend();
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
+    log("%c resume:"  , lb0);       js_BUS.resume();
     log("%c off:"     , lb0); off(); off = null;
     console.groupEnd();
     //}}}
@@ -445,6 +427,6 @@ let run = function()
 return { run };
 //}}}
 })();
-export { BUS_test            }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
-window . BUS_test = BUS_test  ;
-
+export { js_BUS_test            }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_BUS_test = js_BUS_test  ;
+//}}}

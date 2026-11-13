@@ -724,7 +724,7 @@ if(tag_this) log(MODULE+caller+" "+ e.type, lbB);
     // LAYOUT GUI
     js_notes.layout_notes("note_6_onclick_delete", index);
 
-    // SHIFT STATE_EDITING NOTE DIV
+    // SHIFT STATE2_EDITING NOTE DIV
     let editing_note_index  = js_CNTRL.get_editing_note_index();
     if( editing_note_index >= 0)
     {

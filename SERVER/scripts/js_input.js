@@ -267,7 +267,7 @@ if(tag_this) log(MODULE+caller, lb0);
     //└────────────────────────────────────────────────────────────────────────┘
 
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ RESUME STATE_EDITING SOME EXISTING NOTE                                      │
+    //│ RESUME STATE2_EDITING SOME EXISTING NOTE                                      │
     //└────────────────────────────────────────────────────────────────────────┘
     let           nArray = notes.get_nArray();
     for(let index=nArray.length-1; index >= 0; --index)

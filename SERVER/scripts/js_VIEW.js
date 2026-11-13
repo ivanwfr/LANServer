@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (261109:03h:47) │
+//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (261113:05h:05) │
 //├────────────────────────────────────────────────────────────────────────────┤
 //{{{
 //│ Here is how `js_VIEW.js` can be structured
@@ -19,7 +19,7 @@
 /* -------- js_MODEL  */ //│ - Model     │
 /* exported js_VIEW   */ //│ ● View      │
 /* globals  js_CNTRL  */ //│ - Controler │
-                         //└─────────────┘
+/* globals  js_BUS    */ //└─────────────┘
 /* globals    notes   */
 /* globals js_details */
 /* globals js_notes   */
@@ -28,6 +28,7 @@
 import { js_CNTRL   } from "./js_CNTRL.js"
 import { js_MODEL   } from "./js_MODEL.js"
 //port { js_VIEW    } from "./js_VIEW.js"
+import { js_BUS     } from "./js_BUS.js"
 //port { js_boxing  } from "./js_boxing.js"
 //port { js_folds   } from "./js_folds.js"
 import { js_input   } from "./js_input.js"
@@ -98,17 +99,17 @@ if(tag_this) log(MODULE+caller, lbB+lf6);
 //}}}
 
     //┌────────────────────────────────────────────────────────────────────┐
-    //│ saveBtn ● EVENT_SAVE_NOTE
+    //│ saveBtn ● EVENT2_SAVE_NOTE
     //└────────────────────────────────────────────────────────────────────┘
     saveBtn.addEventListener("click", () => { //{{{
       //const content = noteInput.value;
         const content = noteInput.dataset.content;  // as set by js_input.reset_input()
-        js_CNTRL.transition("EVENT_SAVE_NOTE", { content });
+        js_CNTRL.transition("EVENT2_SAVE_NOTE", { content });
     }); //}}}
 
     //┌────────────────────────────────────────────────────────────────────┐
-    //│ notesTable ● EVENT_SELECT_NOTE
-    //│ notesTable ● EVENT_DELETE_NOTE
+    //│ notesTable ● EVENT1_SELECT_NOTE
+    //│ notesTable ● EVENT3_DELETE_NOTE
     //└────────────────────────────────────────────────────────────────────┘
     notesTable.addEventListener("click", (e) => { //{{{
         const row = e.target.closest("tr");
@@ -123,7 +124,7 @@ if(tag_this) log(MODULE+caller, lbB+lf6);
         //│ DELETE  **delete-btn**
         //└────────────────────────────────────────────────────────────────┘
         if(e.target.classList.contains("delete_button")) {
-            js_CNTRL.transition("EVENT_DELETE_NOTE", noteId);
+            js_CNTRL.transition("EVENT3_DELETE_NOTE", noteId);
         }
         //┌────────────────────────────────────────────────────────────────┐
         //│ EDIT    **default**
@@ -136,7 +137,8 @@ if(tag_this) log(MODULE+caller, lbB+lf6);
             //nst   content = row.getAttribute("title");
 //              noteInput.value = content;
 //              noteInput.title = 'VIEW\n🔵 notesTable.addEventListener("click")'; /* eslint-disable-line quotes */
-            js_CNTRL.transition("EVENT_SELECT_NOTE", { id: noteId, content });
+          //js_CNTRL.transition("EVENT1_SELECT_NOTE", { id: noteId, content });
+            js_BUS  .      emit("EVENT1_SELECT_NOTE", { id: noteId, content });
         }
     }); //}}}
 
@@ -209,8 +211,8 @@ if(log_this) {
 //}}}
     switch (currentState)
     {
-    //    STATE_IDLE {{{
-    case "STATE_IDLE":
+    //    STATE1_IDLE {{{
+    case "STATE1_IDLE":
     saveBtn   .disabled    = false;
     saveBtn   .textContent = "Save Note";
     // log {{{
@@ -222,8 +224,8 @@ if(log_this) {
     break;
 
     //}}}
-    //    STATE_EDITING {{{
-    case "STATE_EDITING":
+    //    STATE2_EDITING {{{
+    case "STATE2_EDITING":
     // log {{{
 //{{{
 //      saveBtn   .disabled    = false;
@@ -235,11 +237,11 @@ if(log_this) {
     break;
 
     //}}}
-    //    STATE_SAVING | STATE_DELETING {{{
-    case "STATE_SAVING":
-    case "STATE_DELETING":
+    //    STATE3_SAVING | STATE4_DELETING {{{
+    case "STATE3_SAVING":
+    case "STATE4_DELETING":
     saveBtn   .disabled    = true;
-    saveBtn   .textContent = currentState === "STATE_SAVING" ? "Saving..." : "Deleting...";
+    saveBtn   .textContent = currentState === "STATE3_SAVING" ? "Saving..." : "Deleting...";
     break;
     //}}}
     }
@@ -311,17 +313,17 @@ document.addEventListener("readystatechange", js_VIEW.init);
 //│ 1. **User Action $\rightarrow$ Intent (`transition`)**:
 //│ When the user clicks `save_note`, the js_VIEW doesn"t care
 //│ *how* saving works or whether it"s an update or creation.
-//│ It simply fires `js_CNTRL.transition("EVENT_SAVE_NOTE",
+//│ It simply fires `js_CNTRL.transition("EVENT2_SAVE_NOTE",
 //│ payload)`.
 //│
 //│ 2. **State Machine $\rightarrow$ Side Effect (`DATA`)**:
 //│ The state machine intercepts this, updates its internal
-//│ state to `STATE_SAVING`, and triggers the appropriate `DATA`
+//│ state to `STATE3_SAVING`, and triggers the appropriate `DATA`
 //│ module method.
 //│
 //│ 3. **State Machine $\rightarrow$ Notification (`subscribe`)**:
 //│ Once the async operation completes, the state machine
-//│ shifts back to `STATE_IDLE` and broadcasts the new state to
+//│ shifts back to `STATE1_IDLE` and broadcasts the new state to
 //│ all listeners, triggering `js_VIEW.render()` automatically.
 //│
 //│ Would you like to see how error handling (such as a network

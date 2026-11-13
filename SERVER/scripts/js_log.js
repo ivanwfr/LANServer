@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_log.js        ● $APROJECTS/LANServer/SERVER       ● _TAG (261112:21h:47)
+//│ js_log.js        ● $APROJECTS/LANServer/SERVER       ● _TAG (261113:05h:04)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -302,9 +302,9 @@ let get_src_link = function(lvl=3)
 /*_ get_src_link_line {{{*/
 let get_src_link_line = function(line)
 {
-    //..........................111111.............22222222222222222222222222..33333...444..5555
-    //.........................(at____)...........(DOMAIN____________________)(PATH_):(LIN):(COL)
-    let matches = line.match(/^([^\(]*)?(?:\s+\()?(?:https?:\/\/(?:[^\/]*)?\/)([^:]*):(\d+):(\d+)/);
+    //..........................111111.............2222222222222222222222222..33333...444..5555
+    //.........................(at____)...........(DOMAIN___________________)(PATH_):(LIN):(COL)
+    let matches = line.match(/^([^\(]*)?(?:\s+\()?(https?:\/\/(?:[^\/]*)?\/)([^:]*):(\d+):(\d+)/);
     if(!matches )
         return "\t" + line.trim() + "\t";   // conform to 3-col shape
 
@@ -454,6 +454,7 @@ return { name: "js_log"
         tagging(state,"js_MODEL"    );
         tagging(state,"js_VIEW"     );
         tagging(state,"js_CNTRL"    );
+        tagging(state,"js_BUS"      );
         tagging(state,"notes"       );
         tagging(state,"js_notes"    );
         tagging(state,"js_details"  );

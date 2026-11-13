@@ -1,5 +1,5 @@
 //┌─────────────────────────────────────────────────────────────────[...]
-//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261109:21h:29)
+//│ js_details.js ● $APROJECTS/LANServer/SERVER    ● _TAG (261113:04h:20)
 //├─────────────────────────────────────────────────────────────────[...]
 //│ 🔵
 //│
@@ -260,7 +260,7 @@ if(tag_this) log(MODULE+caller+"%c e.type "+ e.type +"%c index "+ index, lb0, lb
     input.classList.remove("auto_insert_prefix");
 
     //}}}
-    // STATE_EDITING A [checked] NOTE (OR NOT) {{{
+    // STATE2_EDITING A [checked] NOTE (OR NOT) {{{
     if( notes.get_checked(index)) input.classList.add   ("checked");
     else                          input.classList.remove("checked");
 
@@ -296,13 +296,13 @@ let set_editing_note_index = function(index)
             el.classList.add   (            "edited" );
         });
 
-        // SELECTED STATE_EDITING NOTE
+        // SELECTED STATE2_EDITING NOTE
         saved_notes_TABLE.firstElementChild.children[index].classList.add("editing");
     }
     //}}}
     // 2/2 - CLEAR SAVE BUTTON ATTRIBUTE EDITING_NOTE_NUM {{{
     else {
-        // STATE_EDITING NOTE LIST ITEM DONE
+        // STATE2_EDITING NOTE LIST ITEM DONE
         saved_notes_TABLE.querySelectorAll(".editing").forEach((el) => {
             el.classList.remove(            "editing");
             el.classList.add   (            "edited");
@@ -495,7 +495,7 @@ let caller = "input_blur_listener";
 if(log_this) log(MODULE+caller+"⚫ input_blur_listener", lb0);
 //}}}
     //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ● EVENT_CANCEL AUTO-INSERT NEW NOTE NUM
+    //│ ● EVENT4_CANCEL AUTO-INSERT NEW NOTE NUM
     //└────────────────────────────────────────────────────────────────────────┘
     if( is_input_auto_insert_prefix() )
     {
