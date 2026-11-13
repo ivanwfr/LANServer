@@ -134,7 +134,7 @@ if(log_this) log("promise:", promise);
     let prev_call_notes_length;
     let get_nArray = function()
     {
-//if(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
+if(log_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
         let nArray = notes.get_nArray();
 //log (debounced) {{{
 if(nArray.length != prev_call_notes_length)
@@ -143,7 +143,7 @@ if(nArray.length != prev_call_notes_length)
 
 //log {{{
 let caller = "get_nArray";
-if(tag_this) log(MODULE  + caller              , lbB+lf1);
+if(log_this) log(MODULE  + caller              , lbB+lf1);
 
 if(log_this) log(CALLING+"notes.get_nArray() ➔ "+ nArray.length+" notes", lbB+lf1); // SERVER/scripts/notes.js
 //}}}

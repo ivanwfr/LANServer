@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER      ● _TAG (261113:05h:05) │
+//│ js_VIEW.js       ● $APROJECTS/LANServer/SERVER       ● _TAG (261113:20h:05)
 //├────────────────────────────────────────────────────────────────────────────┤
 //{{{
 //│ Here is how `js_VIEW.js` can be structured
@@ -184,7 +184,7 @@ let caller = "no_input_to_save";
 //{{{
 if(reason != no_input_to_save_reason)
 {
-if(tag_this) log(MODULE+caller+": "+(reason || e.type), lbB+lf6);
+if(log_this) log(MODULE+caller+": "+(reason || e.type), lbB+lf6);
     no_input_to_save_reason    =    (reason || e.type);
 }
 //}}}
@@ -198,21 +198,24 @@ if(tag_this) log(MODULE+caller+": "+(reason || e.type), lbB+lf6);
 //┌────────────────────────────────────────────────────────────────────────┐
 //│ Render view changes based on state notifications
 //└────────────────────────────────────────────────────────────────────────┘
-let render = function(currentState, payload)
+let render = function(cntrl_state, payload)
 {
+//(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
 // log {{{
-let caller = "render";
+let caller = "render("+cntrl_state+")";
 if(tag_this) log(MODULE+caller, lbB+lf6);
-if(log_this) {
-    log("%c● called_by...:\t%c" + get_src_link()                        , lf6 , lb0);
-    log("%c● currentState:\t%c["+ currentState                      +"]", lf6 , lb1);
-    log("%c● payload.....:\t%c["+ ellipsis(JSON.stringify(payload)) +"]", lf6 , lb3);
+if(tag_this) {
+    log("%c● called_by..:\t%c" + get_src_link()                        , lf6 , lb0);
+    log("%c● cntrl_state:\t%c["+ cntrl_state                       +"]", lf6 , lb1);
+    log("%c● payload....:\t%c["+ ellipsis(JSON.stringify(payload)) +"]", lf6 , lb3);
 }
 //}}}
-    switch (currentState)
-    {
-    //    STATE1_IDLE {{{
-    case "STATE1_IDLE":
+    switch (cntrl_state) {
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● STATE1_IDLE
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
+    case js_CNTRL.STATE1_IDLE:
     saveBtn   .disabled    = false;
     saveBtn   .textContent = "Save Note";
     // log {{{
@@ -224,8 +227,11 @@ if(log_this) {
     break;
 
     //}}}
-    //    STATE2_EDITING {{{
-    case "STATE2_EDITING":
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● STATE2_EDITING
+    //└────────────────────────────────────────────────────────────────────────┘
+//{{{
+    case js_CNTRL.STATE2_EDITING:
     // log {{{
 //{{{
 //      saveBtn   .disabled    = false;
@@ -237,11 +243,15 @@ if(log_this) {
     break;
 
     //}}}
-    //    STATE3_SAVING | STATE4_DELETING {{{
-    case "STATE3_SAVING":
-    case "STATE4_DELETING":
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● STATE3_SAVING
+    //│ ● STATE4_DELETING
+    //└────────────────────────────────────────────────────────────────────────┘
+    //{{{
+    case  js_CNTRL.STATE3_SAVING   :
+    case  js_CNTRL.STATE4_DELETING :
     saveBtn   .disabled    = true;
-    saveBtn   .textContent = currentState === "STATE3_SAVING" ? "Saving..." : "Deleting...";
+    saveBtn   .textContent = cntrl_state === "STATE3_SAVING" ? "Saving..." : "Deleting...";
     break;
     //}}}
     }
@@ -287,7 +297,13 @@ if(log_this) {
     //┌────────────────────────────────────────────────────────────────┐
     //│ 2. Subscribe to the State Machine to receive state updates
     //└────────────────────────────────────────────────────────────────┘
-    js_CNTRL.subscribe("VIEW", render);
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● SERVER/scripts/js_BUS.js
+    //│ ● SERVER/scripts/js_CNTRL.js
+    //│ ● SERVER/scripts/js_VIEW.js
+    //└────────────────────────────────────────────────────────────────────────┘
+  //js_CNTRL.subscribe("VIEW", render);
+    js_BUS.on(js_BUS.CNTRL_STATE_CHANGED , (payload) => render(payload.cntrlStateKey      , payload.data) );
 };
 //}}}
 

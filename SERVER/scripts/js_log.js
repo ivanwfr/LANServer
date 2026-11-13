@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_log.js        ● $APROJECTS/LANServer/SERVER       ● _TAG (261113:05h:04)
+//│ js_log.js        ● $APROJECTS/LANServer/SERVER       ● _TAG (261113:18h:00)
 //└────────────────────────────────────────────────────────────────────────────┘
 /* IMPORT {{{*/
 
@@ -46,7 +46,7 @@ const lf6  = "color:#6495ED;";
 const lf7  = "color:#EE82EE;";
 const lf8  = "color:#A0A0A0;";
 const lf9  = "color:#FFFFFF;";
-const lf0  = "color:#707070; text-shadow:#000 2px 2px 1px;"; /* offset-x offset-y blur-radius */
+const lf0  = "color:#707070; text-shadow:#000 0px 1px 1px;"; /* offset-x offset-y blur-radius */
 
 const lfX  = [ lf0 ,lf1 ,lf2 ,lf3 ,lf4 ,lf5 ,lf6 ,lf7 ,lf8 ,lf9 ];
 
@@ -93,7 +93,7 @@ let logging = function(state, name="", _caller="")
             notified += " "+b_X[module_num % 10]+" "+module_name;
         }
     }
-    log("★ logging notified %c"+(notified || "NONE"), lb0);
+    log("%c ★ logging notified "+(notified || "NONE"), lb0+lf2);
 
     // SAVE to localStorage
     if(_caller != "load_logging_modules") save_logging_modules();
@@ -124,7 +124,7 @@ let tagging = function(state, name="", _caller="")
         }
 
     }
-    log("★ tagging notified %c"+(notified || "NONE"), lb0);
+    log("%c ★ tagging notified "+(notified || "NONE"), lb0+lf4);
 
     // SAVE to localStorage
     if(_caller != "load_logging_modules") save_logging_modules();
@@ -231,7 +231,7 @@ let console_clear = function(_caller)
     // COOLDOWN
     if(console_clear_cooldown_timer)
     {
-        log("%c CLEARED BY "+ _caller +" ● prevented by console clear cooldown", lbB+"border-color:#444;");
+//      log("%c CLEARED BY "+ _caller +" ● prevented by console clear cooldown", lbB+"border-color:#444;");
     }
     else {
         console.clear();
@@ -265,7 +265,7 @@ let stringify = function(v, n=128)
                 seen.add(val);
             }
             return val;
-        }), n);
+        }, 1), n); // spaces
     } catch(_) { return String(v); } /* eslint-disable-line no-unused-vars */
 };
 /*}}}*/
@@ -299,6 +299,14 @@ let get_src_link = function(lvl=3)
     else       return get_src_link_line(line);
 };
 /*}}}*/
+let get_caller = function()
+{
+//g("1. "+get_src_link(1).replace(/.*\/(.*)/, "$1"));
+//g("2. "+get_src_link(2).replace(/.*\/(.*)/, "$1"));
+//g("3. "+get_src_link(3).replace(/.*\/(.*)/, "$1"));
+return    get_src_link(3).replace(/.*\/(.*)/, "$1") ;
+
+};
 /*_ get_src_link_line {{{*/
 let get_src_link_line = function(line)
 {
@@ -439,6 +447,7 @@ return { name: "js_log"
     ,    ellipsis
     ,    stringify
     ,    get_src_link
+    ,    get_caller
     ,    trace
     ,    moveChar
     ,    sleep
@@ -455,9 +464,9 @@ return { name: "js_log"
         tagging(state,"js_VIEW"     );
         tagging(state,"js_CNTRL"    );
         tagging(state,"js_BUS"      );
-        tagging(state,"notes"       );
-        tagging(state,"js_notes"    );
-        tagging(state,"js_details"  );
+//      tagging(state,"notes"       );
+//      tagging(state,"js_notes"    );
+//      tagging(state,"js_details"  );
     }
 };
 //}}}

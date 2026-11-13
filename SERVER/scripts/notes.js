@@ -969,7 +969,7 @@ let scroll_TR_intoView_handler = function(tr)
 {
 /*{{{*/
 let caller = "scroll_TR_intoView_handler ";
-if(tag_this) log(MODULE+caller+"%c\t"+ellipsis(tr.innerText.trim(),50), lbB, lf4);
+if(tag_this) log(MODULE+caller+"%c\t"+ellipsis(tr.innerText.trim(),50), lbB, lb0+lf4);
 
     scroll_TR_intoView_timeout = null;
 /*}}}*/

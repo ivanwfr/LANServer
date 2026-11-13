@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER     ● _TAG (261113:04h:56)
+//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER     ● _TAG (261113:19h:29)
 //├────────────────────────────────────────────────────────────────────────────┤
 //│{{{
 //│ Here is a minimal, clutter-free implementation of                          │
@@ -76,6 +76,12 @@ let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
 
 /* eslint-enable  no-unused-vars */
 //}}}
+// INTERN js_BUS {{{
+const EVENT1_SELECT_NOTE   = js_BUS.EVENT1_SELECT_NOTE;
+const EVENT2_SAVE_NOTE     = js_BUS.EVENT2_SAVE_NOTE;   /* eslint-disable-line no-unused-vars */ //TODO
+const EVENT3_DELETE_NOTE   = js_BUS.EVENT3_DELETE_NOTE; /* eslint-disable-line no-unused-vars */ //TODO
+const EVENT4_CANCEL        = js_BUS.EVENT4_CANCEL;      /* eslint-disable-line no-unused-vars */ //TODO
+//}}}
 /*● onload {{{*/
 /*{{{
  | ONLOAD ORDER       | RESHAPING THE DOM        |
@@ -99,6 +105,11 @@ if(tag_this) log(MODULE+caller, lbB+lf3);
     requestAnimationFrame(() => js_VIEW     .onload(e));
 
     //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● SERVER/scripts/js_BUS.js
+    //│ ● SERVER/scripts/js_CNTRL.js
+    //│ ● SERVER/scripts/js_VIEW.js
+    //└────────────────────────────────────────────────────────────────────────┘
+    //┌────────────────────────────────────────────────────────────────────────┐
     //│ ● FROM:
     //│  scripts/js_VIEW.js .bindEvents()
     //│
@@ -109,7 +120,8 @@ if(tag_this) log(MODULE+caller, lbB+lf3);
     //│   js_BUS.emit(        "EVENT1_SELECT_NOTE", { id: noteId, content });
     //│
     //└────────────────────────────────────────────────────────────────────────┘
-    js_BUS.on(EVENT1_SELECT_NOTE, (payload) => transition(EVENT1_SELECT_NOTE, payload) ); // transition = function(actionName, payload)
+  //js_BUS.on(       EVENT1_SELECT_NOTE, (payload) => transition(EVENT1_SELECT_NOTE, payload) ); // transition = function(actionName, payload)
+    js_BUS.on(js_BUS.EVENT1_SELECT_NOTE, (payload) => transition(EVENT1_SELECT_NOTE, payload) ); // transition = function(actionName, payload)
 };
 /*}}}*/
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -122,15 +134,6 @@ const STATE3_SAVING      = "STATE3_SAVING";
 const STATE4_DELETING    = "STATE4_DELETING";
 //}}}
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ EVENT 🟤🔴🟠🟡
-//└────────────────────────────────────────────────────────────────────────────┘
-//{{{
-const EVENT1_SELECT_NOTE = "EVENT1_SELECT_NOTE";
-const EVENT2_SAVE_NOTE   = "EVENT2_SAVE_NOTE";
-const EVENT3_DELETE_NOTE = "EVENT3_DELETE_NOTE";
-const EVENT4_CANCEL      = "EVENT4_CANCEL";
-//}}}
-//┌────────────────────────────────────────────────────────────────────────────┐
 //│ TRANSITION
 //└────────────────────────────────────────────────────────────────────────────┘
 // SM_STATE1_IDLE       = { EVENT1_SELECT_NOTE() ● EVENT2_SAVE_NOTE() ● EVENT3_DELETE_NOTE() } {{{
@@ -139,7 +142,7 @@ const SM_STATE1_IDLE    = {
     EVENT1_SELECT_NOTE: (payload) => {
 // log {{{
 let caller = "SM_STATE1_IDLE ON: EVENT1_SELECT_NOTE";
-if(tag_this) log(MODULE+caller, lbB+lf3);
+if(log_this) log(MODULE+caller, lbB+lf3);
 if(log_this) log("%c● payload.....:\t%c["+ ellipsis(JSON.stringify(payload)) +"]", lf3,lb1);
 //}}}
         changeState(STATE2_EDITING, payload);
@@ -252,7 +255,7 @@ const SM_STATES
         , STATE4_DELETING: SM_STATE4_DELETING
     };
 
-let currentState  = STATE1_IDLE;
+let cntrlStateKey  = STATE1_IDLE;
 
 let get_state_num = function(state)
 {
@@ -272,6 +275,7 @@ let get_state_num = function(state)
 let listeners = [];
 let subscribe = function(module_name, listenerFn)
 {
+if(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
 // log {{{
 let caller = "subscribe";
 if(tag_this) log(MODULE+caller+"( "+module_name+" )", lbB+lf3);
@@ -285,11 +289,47 @@ if(log_this) log("%c● listenerFn.\t%c["+ listenerFn.name +"]", lf3,lb1);
 
     //┌────────────────────────────────────────────────────────────────────┐
     //│ NOTIFY
-    //│ Immediately notify listener of current state upon subscription
+    //│ Immediately notify listener of current controler state upon subscription
     //└────────────────────────────────────────────────────────────────────┘
     if( log_this ) log("%c notifying listener", lf3);
-    listenerFn(currentState, null);
+    listenerFn(cntrlStateKey, null);
 
+};
+//}}}
+// transition {{{
+//┌────────────────────────────────────────────────────────────────────────┐
+//│ INTENT TO TRIGGER A TRANSITION BASED ON A USER ACTION
+//│ @param {string} actionName
+//│ @param    {any} payload
+//└────────────────────────────────────────────────────────────────────────┘
+let transition = function(actionName, payload)
+{
+//(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
+    let stateRules    = SM_STATES [ cntrlStateKey ];
+    let actionHandler = stateRules[ actionName    ];
+//{{{
+let caller = "transition";
+//(tag_this) console_clear("CNTRL."+caller);
+if(log_this) log(MODULE+   caller+": %c FROM: "+           cntrlStateKey +"%c ON: "+js_log.stringify(actionName)
+                 ,lbB+lf3           ,lbB+lbX[get_state_num(cntrlStateKey)] ,lbB);
+if(log_this) {
+    log("%c● called_by.:\t%c" + get_src_link()                                                           , lf3,lb0);
+    log("%c● actionName:\t%c["+ actionName                        +"]"                                   , lf3,lb1);
+    log("%c● payload...:\t%c["+ ellipsis(JSON.stringify(payload)) +"]"                                   , lf3,lb3);
+    log("%c"+("                 cntrlStateKey"    ).padStart(32) +"%c"+             cntrlStateKey        , lf3,lb8);
+    log("%c"+(" STATE_TRANS["+  cntrlStateKey +"]").padStart(32) +"%c"+ SM_STATES [ cntrlStateKey ]?.name, lf3,lb8);
+    log("%c"+("  stateRules["+  actionName    +"]").padStart(32) +"%c"+ stateRules[ actionName    ]?.name, lf3,lb8);
+    log("%c"+("                 actionHandler"    ).padStart(32) +"%c"+             actionHandler  ?.name, lf3,lb8);
+}
+//}}}
+
+    if(typeof actionHandler === "function")
+    {
+        actionHandler( payload );
+    }
+    else {
+        log(`%c Action "${actionName}" is invalid in state "${cntrlStateKey}".`, lbB+lb2);
+    }
 };
 //}}}
 // changeState {{{
@@ -299,75 +339,24 @@ if(log_this) log("%c● listenerFn.\t%c["+ listenerFn.name +"]", lf3,lb1);
 let changeState = function(newState, data = null) {
 // log {{{
 let caller = "changeState";
-if(tag_this) log(MODULE+caller+"%c from "+currentState+"%c to "+newState, lbB+lf3, lbB+lbX[get_state_num(currentState)], lbB+lbX[get_state_num(newState)]);
+if(tag_this) log(MODULE+caller+"%c from "+cntrlStateKey+"%c to "+newState, lbB+lf3, lbB+lbX[get_state_num(cntrlStateKey)], lbB+lbX[get_state_num(newState)]);
 if(log_this) {
-    log("%c● called_by...:\t%c" +   get_src_link()                   , lf3,lb0);
-    log("%c● currentState:\t%c["+ currentState                   +"]", lf3,lb1);
-    log("%c● data........:\t%c["+ ellipsis(JSON.stringify(data)) +"]", lf3,lb3);
-    log("%c● newState....:\t%c["+ newState                       +"]", lb3,lb2);
+    log("%c● called_by....:\t%c" + get_src_link()                     , lf3,lb0);
+    log("%c● cntrlStateKey:\t%c["+ cntrlStateKey                  +"]", lf3,lb1);
+    log("%c● data.........:\t%c["+ ellipsis(JSON.stringify(data)) +"]", lf3,lb3);
+    log("%c● newState.....:\t%c["+ newState                       +"]", lb3,lb2);
 }
 //}}}
-    currentState = newState;
+    cntrlStateKey = newState;
 
-    listeners.forEach((listener) => listener(currentState, data));
-};
-//}}}
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ ACTION
-//└────────────────────────────────────────────────────────────────────────────┘
-// transition {{{
-//┌────────────────────────────────────────────────────────────────────────┐
-//│ INTENT TO TRIGGER A TRANSITION BASED ON A USER ACTION
-//│ @param {string} actionName
-//│ @param    {any} payload
-//└────────────────────────────────────────────────────────────────────────┘
-let transition = function(actionName, payload)
-{
-if(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
-    let stateRules    = SM_STATES [ currentState ];
-    let actionHandler = stateRules[ actionName   ];
-//{{{
-let caller = "transition";
-if(tag_this) console_clear("CNTRL."+caller);
-if(tag_this) log(MODULE+   caller+": %c FROM: "+currentState             +"%c ON: "+js_log.stringify(actionName)
-                 ,lbB+lf3           ,lbB+lbX[get_state_num(currentState)] ,lbB);
-if(log_this) {
-    log("%c● called_by.:\t%c" + get_src_link()                                                         , lf3,lb0);
-    log("%c● actionName:\t%c["+ actionName                        +"]"                                 , lf3,lb1);
-    log("%c● payload...:\t%c["+ ellipsis(JSON.stringify(payload)) +"]"                                 , lf3,lb3);
-    log("%c"+("                 currentState"    ).padStart(32) +"%c"+             currentState        , lf3,lb8);
-    log("%c"+(" STATE_TRANS["+  currentState +"]").padStart(32) +"%c"+ SM_STATES [ currentState ]?.name, lf3,lb8);
-    log("%c"+("  stateRules["+  actionName   +"]").padStart(32) +"%c"+ stateRules[ actionName   ]?.name, lf3,lb8);
-    log("%c"+("                 actionHandler"   ).padStart(32) +"%c"+             actionHandler ?.name, lf3,lb8);
-}
-//}}}
-
-    if(typeof actionHandler === "function")
-    {
-        actionHandler( payload );
-    }
-    else {
-        log(`%c Action "${actionName}" is invalid in state "${currentState}".`, lbB+lb2);
-    }
+    listeners.forEach((listener) => listener( cntrlStateKey , data)  ); // CONTROLER     direct bindings
+    js_BUS                             .emit( cntrlStateKey , data   ); //       BUS on message bindings
+    js_BUS.emit(js_BUS.CNTRL_STATE_CHANGED, { cntrlStateKey , data } ); //FIXME
 };
 //}}}
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ PRIVATE
 //└────────────────────────────────────────────────────────────────────────────┘
-// getState {{{
-//┌────────────────────────────────────────────────────────────────────────┐
-//│ Returns current state string
-//└────────────────────────────────────────────────────────────────────────┘
-let getState = function()
-{
-// log {{{
-let caller = "getState";
-if(tag_this) log(MODULE+caller, lbB+lf3);
-if(log_this) log("%c● currentState.\t%c["+ currentState              +"]", lb3,lb1);
-//}}}
-    return currentState;
-};
-//}}}
 /* set_editing_note_index {{{*/
 //{{{
 let     noteId_cache;
@@ -383,7 +372,7 @@ if(log_this) log(MODULE+caller+"(noteId "+noteId+")", lbB+lf3);
     js_details.set_editing_note_index( noteId );
 };
 /*}}}*/
-/* get_editing_note_index {{{*/
+/*  get_editing_note_index {{{*/
 let get_editing_note_index = function()
 {
 let caller = "get_editing_note_index";
@@ -403,23 +392,17 @@ if(log_this) log(MODULE+caller+"(noteId "+noteId+")", lbB+lf3);
 // return {{{
 return { subscribe
     ,    transition
-    ,    getState
 
     ,    STATE1_IDLE
     ,    STATE2_EDITING
     ,    STATE3_SAVING
     ,    STATE4_DELETING
 
-    ,    EVENT1_SELECT_NOTE
-    ,    EVENT2_SAVE_NOTE
-    ,    EVENT3_DELETE_NOTE
-    ,    EVENT4_CANCEL
-
     // MVC MIGRATION
+//  , SM_STATES
     , onload
     , get_editing_note_index
     , set_editing_note_index
-    , SM_STATES
     , get_state_num
 };
 //}}}
