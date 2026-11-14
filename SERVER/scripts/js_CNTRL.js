@@ -1,14 +1,12 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER     ● _TAG (261113:19h:29)
+//│ js_CNTRL.js        ● $APROJECTS/LANServer/SERVER     ● _TAG (261114:20h:14)
 //├────────────────────────────────────────────────────────────────────────────┤
-//│{{{
 //│ Here is a minimal, clutter-free implementation of                          │
 //│ a State Machine using an **IIFE** pattern:                                 │
 //│                                                                            │
 //│ It uses a finite state machine table where each                            │
 //│ state defines allowed transitions, target next states,                     │
 //│ and optional async side-effects (like calls to `js_MODEL` or `GUI`)        │
-//│}}}
 //└────────────────────────────────────────────────────────────────────────────┘
 // IMPORT {{{
 
@@ -78,64 +76,17 @@ let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
 //}}}
 // INTERN js_BUS {{{
 const EVENT1_SELECT_NOTE   = js_BUS.EVENT1_SELECT_NOTE;
-const EVENT2_SAVE_NOTE     = js_BUS.EVENT2_SAVE_NOTE;   /* eslint-disable-line no-unused-vars */ //TODO
-const EVENT3_DELETE_NOTE   = js_BUS.EVENT3_DELETE_NOTE; /* eslint-disable-line no-unused-vars */ //TODO
-const EVENT4_CANCEL        = js_BUS.EVENT4_CANCEL;      /* eslint-disable-line no-unused-vars */ //TODO
+const EVENT2_SAVE_NOTE     = js_BUS.EVENT2_SAVE_NOTE  ;
+const EVENT3_DELETE_NOTE   = js_BUS.EVENT3_DELETE_NOTE;
+const EVENT4_CANCEL        = js_BUS.EVENT4_CANCEL     ;
 //}}}
-/*● onload {{{*/
-/*{{{
- | ONLOAD ORDER       | RESHAPING THE DOM        |
- |--------------------|--------------------------|
- |1 🟤 **js_CNTRL**   | ONLOAD ORDER             |
- |2 🟠 **js_boxing**  | *TEXT*      to *BOX*     |
- |3 🔴 **js_details** | *VIM_FOLDS* to *DETAILS* |
- |4 🟡 **js_linkify** | *URL*       to *HTML*    |
- |5 🟢 **js_folds**   | open-close   DETAILS     |
- |6 🔵 **js_VIEW**    | *MVC* State Machine      |
-}}}*/
-let onload = function(e)
-{
-js_log.load_logging_modules();
-let caller = "onload";
-if(tag_this) log(MODULE+caller, lbB+lf3);
-    requestAnimationFrame(() => js_boxing   .onload(e));
-    requestAnimationFrame(() => js_details  .onload(e));
-    requestAnimationFrame(() => js_linkify  .onload(e));
-    requestAnimationFrame(() => js_folds    .onload(e));
-    requestAnimationFrame(() => js_VIEW     .onload(e));
-
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ● SERVER/scripts/js_BUS.js
-    //│ ● SERVER/scripts/js_CNTRL.js
-    //│ ● SERVER/scripts/js_VIEW.js
-    //└────────────────────────────────────────────────────────────────────────┘
-    //┌────────────────────────────────────────────────────────────────────────┐
-    //│ ● FROM:
-    //│  scripts/js_VIEW.js .bindEvents()
-    //│
-    //│ ● INSTEAD OF A DIRECT CALL TO scripts/js_CNTRL.js:
-    //│   js_CNTRL.transition("EVENT1_SELECT_NOTE", { id: noteId, content });
-    //│
-    //│ ● LISTEN TO scripts/js_BUS.js:
-    //│   js_BUS.emit(        "EVENT1_SELECT_NOTE", { id: noteId, content });
-    //│
-    //└────────────────────────────────────────────────────────────────────────┘
-  //js_BUS.on(       EVENT1_SELECT_NOTE, (payload) => transition(EVENT1_SELECT_NOTE, payload) ); // transition = function(actionName, payload)
-    js_BUS.on(js_BUS.EVENT1_SELECT_NOTE, (payload) => transition(EVENT1_SELECT_NOTE, payload) ); // transition = function(actionName, payload)
-};
-/*}}}*/
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ STATE 🟤🔴🟠🟡
-//└────────────────────────────────────────────────────────────────────────────┘
-//{{{
+// 🟤🔴🟠🟡 STATE {{{
 const STATE1_IDLE        = "STATE1_IDLE";
 const STATE2_EDITING     = "STATE2_EDITING";
 const STATE3_SAVING      = "STATE3_SAVING";
 const STATE4_DELETING    = "STATE4_DELETING";
 //}}}
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ TRANSITION
-//└────────────────────────────────────────────────────────────────────────────┘
+// 🟤🔴🟠🟡 SM TRANSITION {{{
 // SM_STATE1_IDLE       = { EVENT1_SELECT_NOTE() ● EVENT2_SAVE_NOTE() ● EVENT3_DELETE_NOTE() } {{{
 const SM_STATE1_IDLE    = {
     // 🟠 EVENT1_SELECT_NOTE  ➔ [STATE2_EDITING  ] {{{
@@ -249,10 +200,10 @@ if(tag_this) log(MODULE+caller, lbB+lf3);
 //}}}
 // SM_STATES {{{
 const SM_STATES
-    = {   STATE1_IDLE    : SM_STATE1_IDLE
-        , STATE2_EDITING : SM_STATE2_EDITING
-        , STATE3_SAVING  : SM_STATE3_SAVING
-        , STATE4_DELETING: SM_STATE4_DELETING
+    = {   STATE1_IDLE    : SM_STATE1_IDLE       // EVENT1_SELECT_NOTE EVENT2_SAVE_NOTE EVENT3_DELETE_NOTE
+        , STATE2_EDITING : SM_STATE2_EDITING    // EVENT1_SELECT_NOTE EVENT2_SAVE_NOTE EVENT3_DELETE_NOTE EVENT4_CANCEL
+        , STATE3_SAVING  : SM_STATE3_SAVING     // ❌ no supported action
+        , STATE4_DELETING: SM_STATE4_DELETING   // ❌ no supported action
     };
 
 let cntrlStateKey  = STATE1_IDLE;
@@ -263,10 +214,59 @@ let get_state_num = function(state)
     return 1+ Object.keys  ( SM_STATES ).indexOf( state ); // return 0 when not found
 };
 //}}}
+//}}}
+/*● onload {{{*/
+/*{{{
+ | ONLOAD ORDER       | RESHAPING THE DOM        |
+ |--------------------|--------------------------|
+ |1 🟤 **js_CNTRL**   | ONLOAD ORDER             |
+ |2 🟠 **js_boxing**  | *TEXT*      to *BOX*     |
+ |3 🔴 **js_details** | *VIM_FOLDS* to *DETAILS* |
+ |4 🟡 **js_linkify** | *URL*       to *HTML*    |
+ |5 🟢 **js_folds**   | open-close   DETAILS     |
+ |6 🔵 **js_VIEW**    | *MVC* State Machine      |
+}}}*/
+let onload = function(e)
+{
+js_log.load_logging_modules();
+let caller = "onload";
+if(tag_this) log(MODULE+caller, lbB+lf3);
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ LISTENER
+//│ ### APPLICATION BOOTSTRAP
+//├────────────────────────────────────────────────────────────────────────────┤
+//│ ● SERVER/scripts/js_BUS.js
+//│ ● SERVER/scripts/js_MODEL.js
+//│ ● SERVER/scripts/js_VIEW.js
+//│ ● SERVER/scripts/js_CNTRL.js
 //└────────────────────────────────────────────────────────────────────────────┘
-// subscribe {{{
+    requestAnimationFrame(() => js_boxing   .onload(e));
+    requestAnimationFrame(() => js_details  .onload(e));
+    requestAnimationFrame(() => js_linkify  .onload(e));
+    requestAnimationFrame(() => js_folds    .onload(e));
+    requestAnimationFrame(() => js_VIEW     .onload(e));
+
+    //┌────────────────────────────────────────────────────────────────────────┐
+    //│ ● FROM:
+    //│  scripts/js_VIEW.js .bindEvents()
+    //│
+    //│ ● INSTEAD OF A DIRECT CALL TO scripts/js_CNTRL.js:
+    //│   js_CNTRL.transition("EVENT1_SELECT_NOTE", { id: noteId, content });
+    //│
+    //│ ● LISTEN TO scripts/js_BUS.js:
+    //│   js_BUS.emit(        "EVENT1_SELECT_NOTE", { id: noteId, content });
+    //│
+    //└────────────────────────────────────────────────────────────────────────┘
+    js_BUS.on(js_BUS.EVENT1_SELECT_NOTE, js_CNTRL_on_EVENT1_SELECT_NOTE);
+    js_BUS.on(js_BUS.EVENT2_SAVE_NOTE  , js_CNTRL_on_EVENT2_SAVE_NOTE  );
+    js_BUS.on(js_BUS.EVENT3_DELETE_NOTE, js_CNTRL_on_EVENT3_DELETE_NOTE);
+    js_BUS.on(js_BUS.EVENT4_CANCEL     , js_CNTRL_on_EVENT4_CANCEL     );
+};
+let js_CNTRL_on_EVENT1_SELECT_NOTE = (payload) => transition(EVENT1_SELECT_NOTE, payload);
+let js_CNTRL_on_EVENT2_SAVE_NOTE   = (payload) => transition(EVENT2_SAVE_NOTE  , payload);
+let js_CNTRL_on_EVENT3_DELETE_NOTE = (payload) => transition(EVENT3_DELETE_NOTE, payload);
+let js_CNTRL_on_EVENT4_CANCEL      = (payload) => transition(EVENT4_CANCEL     , payload);
+/*}}}*/
+//● subscribe {{{
 //┌────────────────────────────────────────────────────────────────────────┐
 //│ Registers a listener callback to be called whenever state changes
 //│
@@ -296,7 +296,7 @@ if(log_this) log("%c● listenerFn.\t%c["+ listenerFn.name +"]", lf3,lb1);
 
 };
 //}}}
-// transition {{{
+//● transition {{{
 //┌────────────────────────────────────────────────────────────────────────┐
 //│ INTENT TO TRIGGER A TRANSITION BASED ON A USER ACTION
 //│ @param {string} actionName
@@ -304,14 +304,14 @@ if(log_this) log("%c● listenerFn.\t%c["+ listenerFn.name +"]", lf3,lb1);
 //└────────────────────────────────────────────────────────────────────────┘
 let transition = function(actionName, payload)
 {
-//(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
     let stateRules    = SM_STATES [ cntrlStateKey ];
     let actionHandler = stateRules[ actionName    ];
 //{{{
 let caller = "transition";
 //(tag_this) console_clear("CNTRL."+caller);
-if(log_this) log(MODULE+   caller+": %c FROM: "+           cntrlStateKey +"%c ON: "+js_log.stringify(actionName)
+if(tag_this) log(MODULE+   caller+": %c FROM: "+           cntrlStateKey +"%c ON: "+js_log.stringify(actionName)
                  ,lbB+lf3           ,lbB+lbX[get_state_num(cntrlStateKey)] ,lbB);
+//(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
 if(log_this) {
     log("%c● called_by.:\t%c" + get_src_link()                                                           , lf3,lb0);
     log("%c● actionName:\t%c["+ actionName                        +"]"                                   , lf3,lb1);
@@ -328,18 +328,20 @@ if(log_this) {
         actionHandler( payload );
     }
     else {
+if(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
         log(`%c Action "${actionName}" is invalid in state "${cntrlStateKey}".`, lbB+lb2);
     }
 };
 //}}}
-// changeState {{{
+//_ changeState {{{
 //┌────────────────────────────────────────────────────────────────────────┐
 //│ HELPER TO SAFELY TRANSITION AND NOTIFY SUBSCRIBERS
 //└────────────────────────────────────────────────────────────────────────┘
 let changeState = function(newState, data = null) {
 // log {{{
-let caller = "changeState";
+let caller = "js_CNTRL_changeState";
 if(tag_this) log(MODULE+caller+"%c from "+cntrlStateKey+"%c to "+newState, lbB+lf3, lbB+lbX[get_state_num(cntrlStateKey)], lbB+lbX[get_state_num(newState)]);
+if(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
 if(log_this) {
     log("%c● called_by....:\t%c" + get_src_link()                     , lf3,lb0);
     log("%c● cntrlStateKey:\t%c["+ cntrlStateKey                  +"]", lf3,lb1);
@@ -349,15 +351,12 @@ if(log_this) {
 //}}}
     cntrlStateKey = newState;
 
-    listeners.forEach((listener) => listener( cntrlStateKey , data)  ); // CONTROLER     direct bindings
-    js_BUS                             .emit( cntrlStateKey , data   ); //       BUS on message bindings
-    js_BUS.emit(js_BUS.CNTRL_STATE_CHANGED, { cntrlStateKey , data } ); //FIXME
+    listeners.forEach((listener) => listener( cntrlStateKey , data)          );     // CONTROLER DIRECT BINDINGS //TODO
+
+    js_BUS.emit(js_BUS.CNTRL_STATE_CHANGED, { cntrlStateKey , data } , caller);     // BUS STATE-CHANGE  LISTENERS
 };
 //}}}
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ PRIVATE
-//└────────────────────────────────────────────────────────────────────────────┘
-/* set_editing_note_index {{{*/
+/*_ set_editing_note_index {{{*/
 //{{{
 let     noteId_cache;
 //}}}
@@ -372,7 +371,7 @@ if(log_this) log(MODULE+caller+"(noteId "+noteId+")", lbB+lf3);
     js_details.set_editing_note_index( noteId );
 };
 /*}}}*/
-/*  get_editing_note_index {{{*/
+/*_ get_editing_note_index {{{*/
 let get_editing_note_index = function()
 {
 let caller = "get_editing_note_index";
@@ -386,10 +385,7 @@ if(log_this) log(MODULE+caller+"(noteId "+noteId+")", lbB+lf3);
     return noteId;
 };
 /*}}}*/
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ PUBLIC
-//└────────────────────────────────────────────────────────────────────────────┘
-// return {{{
+// PUBLIC ● subscribe ● transition ● STATE1..STATE4 {{{
 return { subscribe
     ,    transition
 
@@ -407,11 +403,18 @@ return { subscribe
 };
 //}}}
 })();
-/* TLDR {{{
-### KEY TAKEAWAYS FROM THIS IMPLEMENTATION:
-
+// Bootstrap ● export {{{
+export { js_CNTRL }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
+window . js_CNTRL = js_CNTRL;
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│
+//│ PAGE LOAD BOOTSTRAP
+//└────────────────────────────────────────────────────────────────────────────┘
+document.addEventListener("DOMContentLoaded", js_CNTRL.onload);
+//cument.addEventListener("readystatechange", js_CNTRL.onload);
+//}}}
+/* Leo AI {{{
+### KEY TAKEAWAYS FROM THIS IMPLEMENTATION:
+//┌────────────────────────────────────────────────────────────────────────────┐
 //│ 1. **State Isolation**:
 //│    Actions in transient states (`STATE3_SAVING`, `STATE4_DELETING`)
 //│    are omitted in the lookup table.
@@ -423,11 +426,4 @@ return { subscribe
 //│    manages the async boundary with `js_MODEL`, then cleanly
 //│    transitions back to `STATE1_IDLE` before updating listeners.
 //└────────────────────────────────────────────────────────────────────────────┘
-
 }}}*/
-export { js_CNTRL }; /* eslint-disable-line no-unused-expressions, semi, no-extra-semi */
-window . js_CNTRL = js_CNTRL;
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ PAGE LOAD BOOTSTRAP
-//└────────────────────────────────────────────────────────────────────────────┘
-document.addEventListener("DOMContentLoaded", js_CNTRL.onload);

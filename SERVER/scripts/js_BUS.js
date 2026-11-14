@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_js_BUS.js           ● SERVER/scripts              ● _TAG (261113:20h:20)
+//│ js_BUS.js           ● SERVER/scripts                 ● _TAG (261114:20h:01)
 //└────────────────────────────────────────────────────────────────────────────┘
 //┌────────────────────────────────────────────────────────────────────────────┐
 //│ *js_BUS* The communication contract singleton.
@@ -193,14 +193,18 @@ if(tag_this) log(MODULE+caller, LBB);
 };
 /*}}}*/
 /*● emit    ● Publish {{{*/
-let emit = function(e_type, details = {})
+let emit = function(e_type, details = {}, _caller = "")
 {
 //{{{
 let caller = "emit("+e_type+")";
-if(tag_this) log(MODULE+caller, LBB);
+//(tag_this) log(MODULE+caller, LBB);
+if(tag_this) log(MODULE+caller+"%c\t← "+ (_caller || js_log.get_caller()), LBB, LBB+lf7);
 if(log_this) log("⚠ details\t%c: "+(details ? js_log.stringify(details) : ""), lbB+lf5);
 //(tag_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
 //}}}
+if( cleared ) {
+    console.warn(MODULE+" ❌ MODULE HAS BEEN CLEARED ● NOBODY IS LISTENING ❌",  LBB+lb2+lf4);
+}
     //┌────────────────────────────────────────────────────────────────────────┐
     //│ Insert emit time stamp
     //└────────────────────────────────────────────────────────────────────────┘
@@ -280,6 +284,7 @@ if(tag_this) log(MODULE+caller+"("+e_type+")", LBB+lf3);
 };
 /*}}}*/
 /*● clear   ● Testing helper {{{*/
+let cleared;
 let clear = function()
 {
 //{{{
@@ -294,6 +299,7 @@ if(tag_this) log(MODULE+caller, LBB);
     suspend_level        = 0;
     notify_event_guarded = false;
     session_time         = performance.now();   // SESSION START-TIME
+    cleared              = true;
 };
 /*}}}*/
 /*● return {{{*/
@@ -393,15 +399,16 @@ const PAYLOAD
 //}}}
 let run = function()
 {
-    // log ● fn(payload) {{{
-    log("%c js_BUS_test.run", LBB);
+// log ● fn(payload) {{{
+let caller = "js_BUS_test.run";
+log("%c"+caller, LBB);
 
-    let fn     = (payload) => log("\t%c ⏩ fn("+(payload ? js_log.stringify(payload) : "")+")", lb0+lf4);
-    let off;
-    let p_num  = 0;
+let fn     = (payload) => log("\t%c ⏩ fn("+(payload ? js_log.stringify(payload) : "")+")", lb0+lf4);
+let off;
+let p_num  = 0;
 
-    js_BUS.clear();
-    //}}}
+js_BUS.clear();
+//}}}
     // OFF=ON {{{
     console.groupCollapsed("%c🟢on", LBB);
     log("%c"+ ON_DESCRIPTION        , lb0+lf5);
@@ -412,9 +419,9 @@ let run = function()
     // EMIT..OFF {{{
     console.groupCollapsed("%c🟡emit .. 🔴off", LBB);
     log("%c"+ EMIT_DESCRIPTION      , lb0+lf4);
-    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
-    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
-    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] }, caller);
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] }, caller);
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] }, caller);
     log("%c off:"     , lb0); off(); off = null;
     console.groupEnd();
     //}}}
@@ -422,21 +429,22 @@ let run = function()
     console.groupCollapsed("%c🟢once .. 🟡emit", LBB);
     log("%c"+ ONCE_DESCRIPTION      , lb0+lf5);
     log("%c off = on:", lb0);       js_BUS.once   (E_TYPE, fn);
-    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] }, caller);
     console.groupEnd();
     //}}}
     // ON..EMIT..SUSPEND..RESUME..OFF {{{
     console.groupCollapsed("%c🟢on .. 🟡emit .. 🔵suspend .. 🔵resume .. 🔴off", LBB);
     log("%c"+ SUSPEND_DESCRIPTION   , lb0+lf6);
     log("%c off= on"  , lb0); off = js_BUS.on     (E_TYPE, fn);
-    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] }, caller);
     log("%c suspend:" , lb0);       js_BUS.suspend();
-    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
-    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] });
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] }, caller);
+    log("%c emit:"    , lb0);       js_BUS.emit   (E_TYPE, { payload: PAYLOAD[++p_num % 10] }, caller);
     log("%c resume:"  , lb0);       js_BUS.resume();
     log("%c off:"     , lb0); off(); off = null;
     console.groupEnd();
     //}}}
+    js_BUS.clear();
 };
 /* eslint-enable  no-useless-assignment */
 /*}}}*/

@@ -83,6 +83,7 @@ let [lf0,lf1,lf2,lf3,lf4,lf5,lf6 ,lf7,lf8,lf9] = js_log.lfX;
     {
 let caller = "save";
 if(tag_this) log(MODULE  + caller+"(payload "+ JSON.stringify(payload) +")", lbB+lf1);
+if(log_this) js_log.trace(); // 🟤🔴🟠🟡🟢🔵🟣⚫⚪️◯
 
 if(log_this) log(CALLING + "notes.note_1_onclick_save(payload)"            , lbB+lf1); // SERVER/scripts/notes.js
         notes.note_1_onclick_save( { type: "payload", ...payload } );

@@ -1,5 +1,5 @@
 //┌────────────────────────────────────────────────────────────────────────────┐
-//│ js_boxing.js                                           _TAG (261112:02h:09)
+//│ js_boxing.js                                           _TAG (261114:18h:01)
 //└────────────────────────────────────────────────────────────────────────────┘
 // doc {{{
 //┌────────────────────────────────────────────────────────────────────────────┐
@@ -27,7 +27,7 @@ import {   js_xpath   } from "./js_xpath.js"
 
 /*}}}*/
 let js_boxing = (function() {
-// ◯ INTERNING ● SERVER/scripts/js_log.js {{{
+// INTERN log {{{
 const MODULE = "%c⭐🟣 js_boxing\t\t● ";
 let log_this = false;
 let tag_this = false || log_this; /* eslint-disable-line no-unused-vars */
@@ -89,25 +89,6 @@ if(log_this) log("✔ document.readyState=["+document.readyState+"]");
     }
 };
 /*}}}*/
-/*_ box_out {{{*/
-let box_out = function(e) /* eslint-disable-line no-unused-vars */
-{
-let caller = "box_out";
-if(log_this) log(MODULE+caller, lbB);
-
-    document.body.innerHTML = ""
-      //+ "<button onclick='js_boxing.onload()'>js_boxing.onload()</button>\n"
-     // + "<pre>"+ document.body.textContent +"</pre>"
-        +          document.body.textContent
-    ;
-    document.body.removeAttribute( DATA_ATTR_JS_BOXING );
-    document.body.style.whiteSpace = "pre";
-};
-/*}}}*/
-
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ DOCUMENT BODY TEXT HTML EMBEDDING
-//└────────────────────────────────────────────────────────────────────────────┘
 /*● text_to_HTML {{{*/
 // UTF-8 symbols {{{
 /* eslint-disable no-unused-vars */
@@ -179,7 +160,9 @@ if(log_this) log("%c"+l, "background-color: #008;");//FIXME
         }
         //}}}
         // MARKDOWN * ➔ font-style {{{
-        else if(!in_code.code_page && l.match(/[\*_~`'"][\S ]+[\*_~`'"]/))
+        else if(// **FIXME ... find out (then comment about) why this was supposed to be required!**
+                // !in_code.code_page &&
+                l.match(/[\*_~`'"][\S ]+[\*_~`'"]/))
         {
             l = js_md.md_format_line_style(l);
         }
@@ -363,7 +346,7 @@ if(/*tag_this &&*/ !in_code.code_page && in_code.top_line)//FIXME
     data_out  = js_md.md_format_table      ( data_out );
 
     // ● markdown NUMBER-LINE-HEADER
-    data_out  = box_insert_md_NUMBER_LF    ( data_out );
+    data_out  = data_out.replace(/(\n *\*+ *\d)/g, "\n$1");
 
     //}}}
     // return a TO-HTML-PRE container {{{
@@ -377,23 +360,6 @@ if(/*tag_this &&*/ !in_code.code_page && in_code.top_line)//FIXME
     //}}}
 };
 /*}}}*/
-/*_ box_insert_md_NUMBER_LF {{{*/
-let box_insert_md_NUMBER_LF = function( data_in )
-{
-    //┌─────────────┐
-    //│ *** NUMBER  │
-    //│ ↓↓↓↓↓↓↓↓↓↓  │
-    //│ LF          │
-    //│ *** NUMBER  │
-    //└─────────────┘
-    return data_in
-        . replace(/(\n *\*+ *\d)/g  , "\n$1"                        )
-    ;
-};
-/*}}}*/
-//┌────────────────────────────────────────────────────────────────────────────┐
-//│ VIM FOLDS
-//└────────────────────────────────────────────────────────────────────────────┘
 /*● vim_fold_line {{{*/
 // VIM REGEX {{{
 
@@ -462,13 +428,9 @@ let vim_fold_line = function(l_in, file, l_num)
     return l;
 };
 /*}}}*/
-
     // return {{{
     return { name: "js_boxing"
         ,    onload
-        ,    box_out
-        // DEBUG ONLY
-        ,    text_to_HTML
     };
     //}}}
 })();
